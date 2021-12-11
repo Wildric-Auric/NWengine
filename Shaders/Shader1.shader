@@ -20,7 +20,13 @@ uniform float uTime;
 in vec2 uv;
 out vec4 FragColor;
 void main(){ 
-    vec3 col = vec3(1.0, 0.0, 0.0);
+    vec2 center = vec2(0.5, 0.5);
+    float dis = distance(uv, center);
+    float factor = 0.1 * sin(uTime * .3);
+    float formula = factor / (dis);
+    vec3 col = vec3(formula);
+    col.b += .1 / dis;
+    // Output to screen
     FragColor = vec4(col, 1.0);
 }
 

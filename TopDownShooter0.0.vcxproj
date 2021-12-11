@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="src\Inputs.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\Source.cpp" />
@@ -436,6 +437,7 @@
     <ClInclude Include="dependencies\vendor\glm\vec3.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vec4.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="src\Inputs.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\ShaderManager.h" />
   </ItemGroup>

@@ -7,13 +7,19 @@
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Inputs.h"
 
 //Consts
-int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 600;
-const float SCREENRATIO = ((float) SCREEN_WIDTH )/ ((float) SCREEN_HEIGHT);
+int SCREEN_WIDTH = 300;
+int SCREEN_HEIGHT = 700;
+const float SCREENRATIO = ((float) SCREEN_WIDTH )/((float) SCREEN_HEIGHT);
+//Variable
+float fps = 60;
+int frameCount = 0;
+double deltaTime = 0.016;
+double currentTime;
+double lastTime;
 
-int left, right, up, down = 0;
 //Uniforms
 GLfloat uTime = 0;
 void sizeCallBack(GLFWwindow* window, int width, int height)
@@ -24,21 +30,7 @@ void sizeCallBack(GLFWwindow* window, int width, int height)
 	SCREEN_HEIGHT = height;
 
 }
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		left = true;
-	}
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		right = true;
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		up = true;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		down = true;
-};
+
 //The whole input solution is temporary;
 
 
@@ -50,7 +42,7 @@ GLFWwindow* InitContext()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_WIDTH, "TDS", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "TDS", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to init glfw window";
@@ -87,20 +79,17 @@ int main()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glm::mat4 proj = glm::ortho(-((float)SCREEN_WIDTH),(float) SCREEN_WIDTH, -(float) SCREEN_HEIGHT, (float) SCREEN_HEIGHT);
+	glm::mat4 proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float) SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
 	
-
+	lastTime = glfwGetTime();
+	fps = 60.0;
 	while (!glfwWindowShouldClose(window)) {
 		uTime += 0.016;
-		glClearColor(0.1f, 0.1f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		left = false;
-		right = false;
-		up = 0;
-		down = 0;
 		processInput(window);
-		pos += (-left + right) * 2.0;
-		posY += (-down + up) * 2.0;
+		pos += (-input_left + input_right)*300.0*deltaTime;
+		posY += (-input_down + input_up)*300.0*deltaTime;
 		defaultShader->SetMat4x4("projectionMat", &proj[0][0]);
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -108,8 +97,23 @@ int main()
 		//tr->Draw();
 		quad->Draw();
 		glUseProgram(defaultShader->shaderProgram);
+		
+
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		//Calculate fps
+		currentTime = glfwGetTime();
+		deltaTime = currentTime- lastTime;
+		lastTime = currentTime; //Well it's negligeable operation
+		//frameCount++;
+		//if (currentTime - lastTime >= 1.0) {
+		//	lastTime = currentTime;
+		//	fps = (float) frameCount;
+		//	std::cout << currentTime - lastTime << std::endl; //TODO: Display this when you add text system
+		//	frameCount = 0;
+		//}
 	}
 	glfwTerminate();
 }
