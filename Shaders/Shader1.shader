@@ -3,13 +3,12 @@
 
 layout (location = 0) in vec3 attribPos;
 layout(location = 1) in vec2 texCoord;
-uniform mat4 projectionMat = mat4(1.0);
+uniform mat4 uMvp = mat4(1.0);
 uniform vec2 uResolution;
-uniform vec2 uTranslation; //TODO: Improve this, it's a temporary solution
 out vec2 uv;
+
 void main() {
-    vec3 newPos = attribPos + vec3(uTranslation,0.0);
-    gl_Position = projectionMat * vec4(newPos, 1.0);
+    gl_Position = uMvp * vec4(attribPos, 1.0);
     uv = texCoord;
 };
 

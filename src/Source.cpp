@@ -8,9 +8,10 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Inputs.h"
-
+#include "Maths.h"
+#include "Game.h"
 //Consts
-int SCREEN_WIDTH = 300;
+int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
 const float SCREENRATIO = ((float) SCREEN_WIDTH )/((float) SCREEN_HEIGHT);
 //Variable
@@ -22,49 +23,15 @@ double lastTime;
 
 //Uniforms
 GLfloat uTime = 0;
-void sizeCallBack(GLFWwindow* window, int width, int height)
-{
-	float w = SCREENRATIO * SCREEN_HEIGHT;
-	glViewport(0, 0, w, height);
-	SCREEN_WIDTH = w;
-	SCREEN_HEIGHT = height;
 
-}
-
-//The whole input solution is temporary;
+glm::mat4 proj;
+glm::mat4 view(1.0);
 
 
-GLFWwindow* InitContext()
-{
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWwindow* window;
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "TDS", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to init glfw window";
-		return nullptr;
-	}
-	
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, sizeCallBack);
-	if (glewInit() != GLEW_OK)
-	{
-		std::cout << "Failed to init GLEW";
-		return 0;
-	}
-	return window;
-}
-
-float pos = 0; //TODO: Delete this temp value
-float posY = 0;
 int main()
 {
 
-	GLFWwindow* window = InitContext();
+	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
 
 	
@@ -73,27 +40,30 @@ int main()
 	Quad* quad = new Quad();
 	*defaultShader = Shader();
 	*tr = Triangle();
-	*quad = Quad(100.0, 100.0);
+	*quad = Quad(Vector2(0.0f,0.0f), 100.0, 100.0);
 
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glm::mat4 proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float) SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
+	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float) SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
 	while (!glfwWindowShouldClose(window)) {
-		uTime += 0.016;
+		uTime += deltaTime;
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
-		pos += (-input_left + input_right)*300.0*deltaTime;
-		posY += (-input_down + input_up)*300.0*deltaTime;
-		defaultShader->SetMat4x4("projectionMat", &proj[0][0]);
+		quad->position.x += (-input_left + input_right)*300.0*deltaTime;
+		quad->position.y += (-input_down + input_up)*300.0*deltaTime;
+
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(quad->position.x, quad->position.y, 0.0f));
+		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
+
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
-		defaultShader->SetVector2("uTranslation", pos, posY);
+
 		//tr->Draw();
 		quad->Draw();
 		glUseProgram(defaultShader->shaderProgram);

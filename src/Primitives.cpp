@@ -27,7 +27,7 @@ void Triangle::Draw() {
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 	}
 
-Quad::Quad(float width, float height) {
+Quad::Quad(Vector2 position,float width, float height) {
 	float vertices[20] = {
 		//VertexPos                //uv
 		-width/2, -height/2, 0.0f,      0.0f,0.0f,
@@ -36,6 +36,8 @@ Quad::Quad(float width, float height) {
 		 width/2 , height/2, 0.0f,       1.0f,1.0f,
 
 	};
+
+	this->position = position;
 
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);

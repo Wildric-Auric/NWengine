@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Maths.h"
 class Quad {
 private:
 	unsigned int VBO, VAO, EBO;
@@ -10,7 +10,9 @@ private:
 		1,2,3
 	};
 public: 
-	Quad(float width = 10.0, float height = 10.0);
+	Vector2 position;
+	Vector2 scale;
+	Quad(Vector2 position = Vector2(0.0f,0.0f),float width = 10.0, float height = 10.0);
 	void Draw();
 };
 
