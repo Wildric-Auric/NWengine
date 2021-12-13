@@ -10,6 +10,8 @@
 #include "Inputs.h"
 #include "Maths.h"
 #include "Game.h"
+#include "Texture.h"
+#include "RessourcesLoader.h"
 //Consts
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
@@ -29,18 +31,21 @@ glm::mat4 view(1.0);
 
 
 int main()
-{
-
+{ 
+    //SHOULD be in the beginning
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
+	//Start here
 
-	
+	loadImages();
+	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
+
 	Triangle* tr = new Triangle;
 	Shader* defaultShader = new Shader();
 	Quad* quad = new Quad();
-	*defaultShader = Shader();
+	*defaultShader = Shader("Shaders/Shader1.shader");
 	*tr = Triangle();
-	*quad = Quad(Vector2(0.0f,0.0f), 100.0, 100.0);
+	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
 
 
 	glEnable(GL_BLEND);
@@ -64,12 +69,12 @@ int main()
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
 
+		tex.Bind(0);
+		defaultShader->SetUniform1i("uTex0", 0);
+
 		//tr->Draw();
 		quad->Draw();
 		glUseProgram(defaultShader->shaderProgram);
-		
-
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 

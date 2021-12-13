@@ -5,6 +5,11 @@
 *.userosscache
 *.sln.docstates
 
+#Dependencies
+**/GLEW
+**/GLFW
+**/vendor
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

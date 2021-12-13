@@ -42,7 +42,6 @@ Shader::Shader(const char* path) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, log);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION FAILED\n" << log << std::endl;
 	}
-
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &(shaderSrc.second), NULL);
 	glCompileShader(fragmentShader);
@@ -66,6 +65,12 @@ void Shader::SetMat4x4(const char* name, const GLfloat* value) {
 void Shader::SetUniform1f(const char* name, GLfloat value) {
 	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
 }
+
 void Shader::SetVector2(const char* name, GLfloat value0, GLfloat value1) {
 	glUniform2f(glGetUniformLocation(shaderProgram, name), value0, value1);
 }
+
+void Shader::SetUniform1i(const char* name, const int value) {
+	glUniform1i(glGetUniformLocation(shaderProgram, name), value);
+}
+

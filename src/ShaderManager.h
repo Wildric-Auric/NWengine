@@ -8,5 +8,6 @@ class Shader {
 		void SetMat4x4(const char* name, const GLfloat* value);
 		void SetUniform1f(const char* name, const GLfloat);
 		void SetVector2(const char* name, GLfloat value0, GLfloat value1);
+		void SetUniform1i(const char* name, const int);
 };
 std::pair<const char*, const char*> parseShader(const char* path);

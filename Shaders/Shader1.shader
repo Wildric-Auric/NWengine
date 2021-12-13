@@ -16,6 +16,7 @@ void main() {
 #version 330 core
 #define pi 3.14159
 uniform float uTime;
+uniform sampler2D uTex0;
 in vec2 uv;
 out vec4 FragColor;
 void main(){ 
@@ -23,10 +24,11 @@ void main(){
     float dis = distance(uv, center);
     float factor = 0.1 * sin(uTime * .3);
     float formula = factor / (dis);
-    vec3 col = vec3(formula);
-    col.b += .1 / dis;
+   //vec4 col = vec4(vec3(formula), 1.0);
+    vec4 col = texture(uTex0, uv);
+    //col.b += .1 / dis;
     // Output to screen
-    FragColor = vec4(col, 1.0);
+    FragColor = col;
 }
 
 
