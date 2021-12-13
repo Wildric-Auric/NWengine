@@ -6,9 +6,9 @@
 *.sln.docstates
 
 #Dependencies
-**/GLEW
-**/GLFW
-**/vendor
+GLEW/
+GLFW/
+vendor/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
