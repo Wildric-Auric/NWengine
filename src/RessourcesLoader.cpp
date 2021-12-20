@@ -1,16 +1,13 @@
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #endif
-#include "stb/stb_image.h"
-
+#include "stb_image.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb/stb_write_image.h"
-
+//#include "stb_write_image.h"
 #include "RessourcesLoader.h"
 #include <string>
 #include <iostream>
-
 
 const char* path = "Ressources/test.png";
 Image TEX1;

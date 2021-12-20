@@ -8,5 +8,4 @@ void processInput(GLFWwindow* window)
 	input_right = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
 	input_up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
 	input_down = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
-
 };

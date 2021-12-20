@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MATHS_H
+#define MATHS_H
+
 class Vector2 {
 public:
 	float x;
@@ -9,6 +11,6 @@ private:
 	Vector2 operator + (float const& num);
 	Vector2 operator * (float const& num);
 	Vector2 operator * (Vector2 const& vec1);
-
-
 };
+
+#endif // !MATHS_H

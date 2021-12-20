@@ -88,12 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\include\GLFW;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glew-2.2.0\include;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glew-2.2.0\lib\Release\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -122,12 +122,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(Solution)dependencies\GLFW\include;$(Solution)dependencies\GLEW\include;$(Solution)dependencies\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\include\GLFW;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glew-2.2.0\include;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glew-2.2.0\lib\Release\Win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -151,8 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
-    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Game.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="src\Inputs.cpp" />
     <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
@@ -162,9 +163,16 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
+    <Text Include="Debug\TopDownShooter0.0.log" />
+    <Text Include="Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
     <Text Include="Shaders\Shader1.shader" />
+    <Text Include="x64\Debug\TopDownShooter0.0.Build.CppClean.log" />
+    <Text Include="x64\Debug\TopDownShooter0.0.log" />
+    <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\OneDrive\Documents\GraphicsLibrary\stb-master\stb_image.h" />
     <ClInclude Include="dependencies\vendor\glm\common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_vector_relational.hpp" />
@@ -455,9 +463,32 @@
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\RessourcesLoader.h" />
     <ClInclude Include="src\ShaderManager.h" />
+    <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include=".vs\OpenGL_TopDownShooter\v16\Browse.VC.db" />
+    <None Include=".vs\ProjectSettings.json" />
+    <None Include=".vs\slnx.sqlite" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\11690b260775dc6b\SOURCE.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\2115ddf1716fe06f\TEXTURE.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\43c8e00cb8a9df60\PRIMITIVES.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\6931d8ce7cb0c85d\RESSOURCESLOADER.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\a14d5ca824e520e8\SHADERMANAGER.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\fe905a24fd09f7eb\INPUTS.ipch" />
+    <None Include=".vs\VSWorkspaceState.json" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.command.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.read.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.write.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\unsuccessfulbuild" />
+    <None Include="Debug\vc142.idb" />
+    <None Include="Debug\vc142.pdb" />
     <None Include="dependencies\vendor\glm\detail\func_common.inl" />
     <None Include="dependencies\vendor\glm\detail\func_common_simd.inl" />
     <None Include="dependencies\vendor\glm\detail\func_exponential.inl" />
@@ -594,6 +625,25 @@
     <None Include="dependencies\vendor\glm\gtx\vector_angle.inl" />
     <None Include="dependencies\vendor\glm\gtx\vector_query.inl" />
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\unsuccessfulbuild" />
+    <None Include="x64\Debug\TopDownShooter0.0.pdb" />
+    <None Include="x64\Debug\vc142.idb" />
+    <None Include="x64\Debug\vc142.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Ressources\as.png" />
+    <Image Include="Ressources\Hellotest.png" />
+    <Image Include="Ressources\img2.png" />
+    <Image Include="Ressources\minion.jpg" />
+    <Image Include="Ressources\test.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Debug\Primitives.obj" />
+    <Object Include="Debug\ShaderManager.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

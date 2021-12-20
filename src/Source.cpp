@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <iostream>
-#include<fstream>
-#include<string>
+#include <fstream>
+#include <string>
 #include"Primitives.h"
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
@@ -29,33 +29,30 @@ GLfloat uTime = 0;
 glm::mat4 proj;
 glm::mat4 view(1.0);
 
-
 int main()
 { 
     //SHOULD be in the beginning
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
 	//Start here
-
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
 
-	Triangle* tr = new Triangle;
+	Triangle* tr = new Triangle();
 	Shader* defaultShader = new Shader();
 	Quad* quad = new Quad();
 	*defaultShader = Shader("Shaders/Shader1.shader");
 	*tr = Triangle();
 	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
 
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float) SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
+	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float)SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)){
 		uTime += deltaTime;
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -67,7 +64,7 @@ int main()
 		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
 
 		defaultShader->SetUniform1f("uTime", uTime);
-		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		defaultShader->SetVector2("uResolution", float(SCREEN_WIDTH), float(SCREEN_HEIGHT));
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);

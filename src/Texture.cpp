@@ -8,7 +8,6 @@ Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	if (repeat) {
@@ -31,5 +30,4 @@ Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool 
 void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
-
 }

@@ -10,16 +10,13 @@ Triangle::Triangle() {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBindVertexArray(VAO);
 
-
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-
 }
 void Triangle::Draw() {
 		glBindVertexArray(VAO);
@@ -27,14 +24,16 @@ void Triangle::Draw() {
 		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 	}
 
-Quad::Quad(Vector2 position,float width, float height) {
+Quad::Quad(Vector2 position,float width, float height) : position(0.0f, 0.0f),
+														 width(0) , height(0),
+														 vertices{0.0f}
+{
 	float vertices[20] = {
 		//VertexPos                //uv
-		-width/2, -height/2, 0.0f,      0.0f,0.0f,
-		 width/2, -height/2, 0.0f,      1.0f,0.0f,
-		 -width/2,  height/2, 0.0f,     0.0f,1.0f,
-		 width/2 , height/2, 0.0f,       1.0f,1.0f,
-
+		-width/2, -height/2, 0.0f,    0.0f,0.0f,
+		 width/2, -height/2, 0.0f,    1.0f,0.0f,
+		-width/2,  height/2, 0.0f,    0.0f,1.0f,
+		 width/2 , height/2, 0.0f,    1.0f,1.0f,
 	};
 
 	this->position = position;
@@ -47,7 +46,6 @@ Quad::Quad(Vector2 position,float width, float height) {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

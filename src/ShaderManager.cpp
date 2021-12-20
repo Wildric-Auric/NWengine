@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <iostream>
-#include<fstream>
-#include<string>
+#include <fstream>
+#include <string>
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
 
@@ -24,10 +24,6 @@ std::pair<const char*, const char*> parseShader(const char* path)
 
 	return std::make_pair(_strdup(&vert[0]), _strdup(&frag[0]));
 }
-
-
-
-
 
 Shader::Shader(const char* path) {
 	std::pair<const char*, const char*> shaderSrc = parseShader(path);
@@ -73,4 +69,3 @@ void Shader::SetVector2(const char* name, GLfloat value0, GLfloat value1) {
 void Shader::SetUniform1i(const char* name, const int value) {
 	glUniform1i(glGetUniformLocation(shaderProgram, name), value);
 }
-
