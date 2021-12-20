@@ -1,0 +1,3 @@
+# OpenGL_TopDownShooter
+I used SDL/Python for my project but seems it sucks...
+![light](https://github.com/Wildric-Auric/OpenGL_TopDownShooter/blob/master/TDS%202021-12-20%2020-33-04.mp4)
