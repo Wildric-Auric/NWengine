@@ -31,5 +31,5 @@ Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool 
 void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
-
+	//TODO:: Multiple Texture
 }

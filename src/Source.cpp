@@ -40,18 +40,23 @@ int main()
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
 
-	Triangle* tr = new Triangle;
 	Shader* defaultShader = new Shader();
+	Shader* lightSurfaceShader = new Shader();
+
 	Quad* quad = new Quad();
+	Quad* lightSurface = new Quad();
+
 	*defaultShader = Shader("Shaders/Shader1.shader");
-	*tr = Triangle();
+	*lightSurfaceShader = Shader("Shaders/LightSurface.shader");
+
 	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
+	*lightSurface = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0,(float) SCREEN_WIDTH/2.0, -(float) SCREEN_HEIGHT/2.0, (float) SCREEN_HEIGHT/2.0);
+	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
@@ -60,21 +65,32 @@ int main()
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
+
 		quad->position.x += (-input_left + input_right)*300.0*deltaTime;
 		quad->position.y += (-input_down + input_up)*300.0*deltaTime;
 
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(quad->position.x, quad->position.y, 0.0f));
+
+		glUseProgram(defaultShader->shaderProgram);
 		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
 
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
-
-		//tr->Draw();
+		
 		quad->Draw();
-		glUseProgram(defaultShader->shaderProgram);
+
+		
+		glUseProgram(lightSurfaceShader->shaderProgram);
+		lightSurfaceShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
+		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
+		lightSurface->Draw();
+
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -82,13 +98,7 @@ int main()
 		currentTime = glfwGetTime();
 		deltaTime = currentTime- lastTime;
 		lastTime = currentTime; //Well it's negligeable operation
-		//frameCount++;
-		//if (currentTime - lastTime >= 1.0) {
-		//	lastTime = currentTime;
-		//	fps = (float) frameCount;
-		//	std::cout << currentTime - lastTime << std::endl; //TODO: Display this when you add text system
-		//	frameCount = 0;
-		//}
+
 	}
 	glfwTerminate();
 }

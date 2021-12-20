@@ -9,6 +9,4 @@ private:
 	Vector2 operator + (float const& num);
 	Vector2 operator * (float const& num);
 	Vector2 operator * (Vector2 const& vec1);
-
-
 };

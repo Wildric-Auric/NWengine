@@ -42,6 +42,9 @@
     <ClCompile Include="src\RessourcesLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -922,6 +925,9 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\vendor\glm\detail\func_common.inl">
@@ -1332,5 +1338,6 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Shaders\LightSurface.shader" />
   </ItemGroup>
 </Project>
