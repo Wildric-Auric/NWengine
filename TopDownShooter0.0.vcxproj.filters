@@ -39,6 +39,9 @@
     <ClCompile Include="src\RessourcesLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -919,7 +922,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\vendor\stb\stb_image.h">
+     <ClInclude Include="dependencies\vendor\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\OneDrive\Documents\GraphicsLibrary\stb-master\stb_image.h">
@@ -931,7 +934,7 @@
     <ClInclude Include="src\Maths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
+    </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\vendor\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
@@ -1341,7 +1344,7 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="Debug\vc142.idb" />
+      <None Include="Debug\vc142.idb" />
     <None Include="Debug\vc142.pdb" />
     <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
     <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
@@ -1392,5 +1395,5 @@
   <ItemGroup>
     <Object Include="Debug\Primitives.obj" />
     <Object Include="Debug\ShaderManager.obj" />
-  </ItemGroup>
+    </ItemGroup>
 </Project>

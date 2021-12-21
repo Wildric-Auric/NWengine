@@ -1,7 +1,7 @@
 //vertex shader
 #version 330 core
 
-layout (location = 0) in vec3 attribPos;
+layout(location = 0) in vec3 attribPos;
 layout(location = 1) in vec2 texCoord;
 
 uniform mat4 uMvp = mat4(1.0);
@@ -17,6 +17,7 @@ void main() {
     screenPos = gl_Position;
 };
 
+
 //fragment shader
 #version 330 core
 
@@ -31,15 +32,14 @@ in vec4 screenPos;
 out vec4 FragColor;
 
 
-#define pi 3.14159
-void main(){ 
-    vec2 center = vec2(0.5, 0.5);
-    vec4 col = texture(uTex0, uv);
-    // Output to screen
+void main() {
+    vec2 mouse = uMouse / uResolution.xy;
+    float dis = distance(uv, mouse);
+    float a = 0.1; //Linear interpolation with a radius of a screen coordinates
+    float ambientLight = 0.95;
+    vec4 col = vec4(0.0, 0.0, 0.0, min((dis - a) / a, ambientLight));
+    //if (dis < 0.2) {
+    //    col = vec4(1.0, 1.0, 1.0, 0.0);
+    //}
     FragColor = col;
 }
-
-
-
-
-
