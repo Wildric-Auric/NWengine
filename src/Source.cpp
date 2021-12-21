@@ -76,7 +76,7 @@ int main()
 
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
-		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
+		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
@@ -86,7 +86,7 @@ int main()
 		
 		glUseProgram(lightSurfaceShader->shaderProgram);
 		lightSurfaceShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
-		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
+		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		lightSurface->Draw();
 
