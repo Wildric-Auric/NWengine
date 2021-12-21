@@ -91,7 +91,8 @@ int main()
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
-		
+		std::cout << GL_TEXTURE0 << std::endl;
+
 		quad->Draw();
 
 		
@@ -109,8 +110,8 @@ int main()
 
 		grabPassShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 0);
-		grabTex.Bind(0);
-		grabPassShader->SetUniform1i("uTex0", 0);
+		grabTex.Bind(1);
+		grabPassShader->SetUniform1i("uTex0", 1);
 		grabPass->Draw();
 
 		glfwSwapBuffers(window);
