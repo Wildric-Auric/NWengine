@@ -464,8 +464,8 @@
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\RessourcesLoader.h" />
     <ClInclude Include="src\ShaderManager.h" />
-        <ClInclude Include="src\stb_image.h" />
-        <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -488,6 +488,10 @@
     <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.write.1.tlog" />
     <None Include="Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
     <None Include="Debug\TopDownS.6ddaa3b5.tlog\unsuccessfulbuild" />
+    <None Include="Debug\TopDownShooter0.0.exe" />
+    <None Include="Debug\TopDownShooter0.0.exe.recipe" />
+    <None Include="Debug\TopDownShooter0.0.ilk" />
+    <None Include="Debug\TopDownShooter0.0.pdb" />
     <None Include="Debug\vc142.idb" />
     <None Include="Debug\vc142.pdb" />
     <None Include="dependencies\vendor\glm\detail\func_common.inl" />
@@ -626,7 +630,8 @@
     <None Include="dependencies\vendor\glm\gtx\vector_angle.inl" />
     <None Include="dependencies\vendor\glm\gtx\vector_query.inl" />
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
-     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
+    <None Include="Shaders\LightSurface.shader" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
@@ -643,9 +648,15 @@
     <Image Include="Ressources\test.png" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="Debug\Game.obj" />
+    <Object Include="Debug\Inputs.obj" />
+    <Object Include="Debug\Maths.obj" />
     <Object Include="Debug\Primitives.obj" />
+    <Object Include="Debug\RessourcesLoader.obj" />
     <Object Include="Debug\ShaderManager.obj" />
-    </ItemGroup>
+    <Object Include="Debug\Source.obj" />
+    <Object Include="Debug\Texture.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
