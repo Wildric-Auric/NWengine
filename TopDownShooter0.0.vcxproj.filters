@@ -1382,8 +1382,8 @@
     <None Include="Debug\TopDownShooter0.0.ilk" />
     <None Include="Debug\TopDownShooter0.0.exe.recipe" />
     <None Include="Debug\TopDownShooter0.0.exe" />
-    <None Include="Shaders\Text.shader" />
-  </ItemGroup>
+        <None Include="Shaders\Text.shader" />
+     </ItemGroup>
   <ItemGroup>
     <Image Include="Ressources\as.png">
       <Filter>Resource Files</Filter>

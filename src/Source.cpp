@@ -39,17 +39,27 @@ int main()
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
 
+	//GrabPass test
+	GLubyte* behindPixels = new GLubyte[4 * SCREEN_WIDTH * SCREEN_HEIGHT];
+
+
+
 	Shader* defaultShader = new Shader();
 	Shader* lightSurfaceShader = new Shader();
+	Shader* grabPassShader = new Shader();
 
 	Quad* quad = new Quad();
 	Quad* lightSurface = new Quad();
+	Quad* grabPass = new Quad();
 
 	*defaultShader = Shader("Shaders/Shader1.shader");
 	*lightSurfaceShader = Shader("Shaders/LightSurface.shader");
+	*grabPassShader = Shader("Shaders/GrabPass.shader");
 
 	*quad = Quad(Vector2(0.0f,0.0f), 95.0F, 95.0F);
 	*lightSurface = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+	*grabPass = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -58,9 +68,7 @@ int main()
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
-	// FREETYPE LINKING TEST
-	Text* text = new Text;
-	text->initfreetype("fonts/rockstar.otf");
+	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
 
 	while (!glfwWindowShouldClose(window)){
 		uTime += deltaTime;
@@ -68,11 +76,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
 
+		//Update dynamic object position
 		quad->position.x += (-input_left + input_right)*300.0*deltaTime;
 		quad->position.y += (-input_down + input_up)*300.0*deltaTime;
 
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(quad->position.x, quad->position.y, 0.0f));
-
+		//Drawing shapes
 		glUseProgram(defaultShader->shaderProgram);
 		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
 
@@ -90,9 +99,20 @@ int main()
 		lightSurfaceShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
 		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
-		lightSurface->Draw();
+		//lightSurface->Draw();
 
-		
+		//using gragrab pass texture; 
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		glUseProgram(grabPassShader->shaderProgram);
+		grabPassShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		grabPassShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+
+		grabPassShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
+		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 0);
+		grabTex.Bind(0);
+		grabPassShader->SetUniform1i("uTex0", 0);
+		grabPass->Draw();
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
