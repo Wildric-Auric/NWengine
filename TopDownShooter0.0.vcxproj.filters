@@ -24,9 +24,6 @@
     <ClCompile Include="src\ShaderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Inputs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,6 +47,12 @@
     <Text Include="Shaders\Shader1.shader">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="x64\Debug\TopDownShooter0.0.Build.CppClean.log" />
+    <Text Include="x64\Debug\TopDownShooter0.0.log" />
+    <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
+    <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
+    <Text Include="Debug\TopDownShooter0.0.log" />
+    <Text Include="Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Primitives.h">
@@ -907,13 +910,7 @@
     <ClInclude Include="src\Inputs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\vendor\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Texture.h">
@@ -925,7 +922,16 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text.h">
+    <ClInclude Include="dependencies\vendor\stb\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OneDrive\Documents\GraphicsLibrary\stb-master\stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1338,6 +1344,67 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Debug\vc142.idb" />
+    <None Include="Debug\vc142.pdb" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\unsuccessfulbuild" />
+    <None Include="x64\Debug\TopDownShooter0.0.pdb" />
+    <None Include="x64\Debug\vc142.idb" />
+    <None Include="x64\Debug\vc142.pdb" />
+    <None Include=".vs\VSWorkspaceState.json" />
+    <None Include=".vs\ProjectSettings.json" />
+    <None Include=".vs\slnx.sqlite" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\43c8e00cb8a9df60\PRIMITIVES.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\2115ddf1716fe06f\TEXTURE.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\6931d8ce7cb0c85d\RESSOURCESLOADER.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\11690b260775dc6b\SOURCE.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\a14d5ca824e520e8\SHADERMANAGER.ipch" />
+    <None Include=".vs\TopDownShooter0.0\v16\ipch\AutoPCH\fe905a24fd09f7eb\INPUTS.ipch" />
+    <None Include=".vs\OpenGL_TopDownShooter\v16\Browse.VC.db" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.command.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.read.1.tlog" />
+    <None Include="Debug\TopDownS.6ddaa3b5.tlog\link.write.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\TopDownShooter0.0.lastbuildstate" />
+    <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\unsuccessfulbuild" />
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="Shaders\LightSurface.shader" />
+    <None Include="Debug\TopDownShooter0.0.pdb" />
+    <None Include="Debug\TopDownShooter0.0.ilk" />
+    <None Include="Debug\TopDownShooter0.0.exe.recipe" />
+    <None Include="Debug\TopDownShooter0.0.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Ressources\as.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ressources\Hellotest.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ressources\img2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ressources\minion.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Ressources\test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Debug\Primitives.obj" />
+    <Object Include="Debug\ShaderManager.obj" />
+    <Object Include="Debug\Texture.obj" />
+    <Object Include="Debug\Source.obj" />
+    <Object Include="Debug\RessourcesLoader.obj" />
+    <Object Include="Debug\Maths.obj" />
+    <Object Include="Debug\Inputs.obj" />
+    <Object Include="Debug\Game.obj" />
   </ItemGroup>
 </Project>

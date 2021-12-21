@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <iostream>
-#include<fstream>
-#include<string>
+#include <fstream>
+#include <string>
 #include"Primitives.h"
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
@@ -29,14 +29,12 @@ GLfloat uTime = 0;
 glm::mat4 proj;
 glm::mat4 view(1.0);
 
-
 int main()
 { 
     //SHOULD be in the beginning
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
 	//Start here
-
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
 
@@ -52,7 +50,6 @@ int main()
 	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
 	*lightSurface = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -60,7 +57,7 @@ int main()
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)){
 		uTime += deltaTime;
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -76,7 +73,7 @@ int main()
 
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
-		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
