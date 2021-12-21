@@ -1379,6 +1379,7 @@
     <None Include="Debug\TopDownShooter0.0.ilk" />
     <None Include="Debug\TopDownShooter0.0.exe.recipe" />
     <None Include="Debug\TopDownShooter0.0.exe" />
+    <None Include="Shaders\GrabPass.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Ressources\as.png">

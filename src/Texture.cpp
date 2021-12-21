@@ -24,11 +24,21 @@ Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool 
 	else
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
 
- 
+
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	//TODO:: Multiple Texture
+}
+void Texture::UpdateTexture(int width, int height, unsigned char* texRes, unsigned int slot, bool alpha) {
+	glBindTexture(GL_TEXTURE_2D, texture);
+	if (alpha)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
 }

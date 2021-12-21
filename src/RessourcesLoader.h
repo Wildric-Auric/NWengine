@@ -9,7 +9,6 @@ public:
 	int channels;
 	bool alpha;
 };
-
 extern Image TEX1;
 void freeBuffer(unsigned char* buffer);
 void loadImages();
