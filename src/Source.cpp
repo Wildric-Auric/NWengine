@@ -11,6 +11,7 @@
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
+#include "Text.h"
 #include "RessourcesLoader.h"
 //Consts
 int SCREEN_WIDTH = 800;
@@ -47,7 +48,7 @@ int main()
 	*defaultShader = Shader("Shaders/Shader1.shader");
 	*lightSurfaceShader = Shader("Shaders/LightSurface.shader");
 
-	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
+	*quad = Quad(Vector2(0.0f,0.0f), 95.0F, 95.0F);
 	*lightSurface = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 
 	glEnable(GL_BLEND);
@@ -57,6 +58,10 @@ int main()
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
+	// FREETYPE LINKING TEST
+	Text* text = new Text;
+	text->initfreetype("fonts/rockstar.otf");
+
 	while (!glfwWindowShouldClose(window)){
 		uTime += deltaTime;
 		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
@@ -74,7 +79,6 @@ int main()
 		defaultShader->SetUniform1f("uTime", uTime);
 		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
 		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
-
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);

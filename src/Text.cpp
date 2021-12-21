@@ -1,13 +1,16 @@
-//#include "Text.h"
-//#include <iostream>
-//
-//FT_Library freeType;
-//
-//int initFreeType() {
-//	if (FT_Init_FreeType(&freeType)) {
-//		std::cout << "ERROR::FREETYPE: Could not initialize freetype librairy "<< std::endl;
-//		return -1;
-//	}
-//	return 0;
-//
-//}
+#include "Text.h"
+
+int	Text::initfreetype(const char *font)
+{
+	if (FT_Init_FreeType(&ft))
+	{
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		return -1;
+	}
+
+	if (FT_New_Face(ft, font, 0, &face))
+	{
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return -1;
+	}
+}

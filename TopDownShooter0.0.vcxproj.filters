@@ -934,6 +934,9 @@
     <ClInclude Include="src\Maths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\vendor\glm\detail\func_common.inl">
@@ -1379,6 +1382,7 @@
     <None Include="Debug\TopDownShooter0.0.ilk" />
     <None Include="Debug\TopDownShooter0.0.exe.recipe" />
     <None Include="Debug\TopDownShooter0.0.exe" />
+    <None Include="Shaders\Text.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Ressources\as.png">
@@ -1406,5 +1410,8 @@
     <Object Include="Debug\Maths.obj" />
     <Object Include="Debug\Inputs.obj" />
     <Object Include="Debug\Game.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fonts\rockstar.otf" />
   </ItemGroup>
 </Project>
