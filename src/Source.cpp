@@ -12,6 +12,7 @@
 #include "Game.h"
 #include "Texture.h"
 #include "RessourcesLoader.h"
+#include "Time.h"
 //Consts
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
@@ -19,7 +20,7 @@ const float SCREENRATIO = ((float) SCREEN_WIDTH )/((float) SCREEN_HEIGHT);
 //Variable
 float fps = 60;
 int frameCount = 0;
-double deltaTime = 0.016;
+
 double currentTime;
 double lastTime;
 
@@ -91,7 +92,6 @@ int main()
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
-		std::cout << GL_TEXTURE0 << std::endl;
 
 		quad->Draw();
 
@@ -101,7 +101,7 @@ int main()
 		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		//lightSurface->Draw();
-
+	
 		//using gragrab pass texture; 
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		glUseProgram(grabPassShader->shaderProgram);
