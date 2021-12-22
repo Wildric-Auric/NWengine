@@ -13,7 +13,7 @@
 #include "Texture.h"
 #include "Text.h"
 #include "RessourcesLoader.h"
-
+#include "Time.h"
 //Consts
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
@@ -21,7 +21,7 @@ const float SCREENRATIO = ((float) SCREEN_WIDTH )/((float) SCREEN_HEIGHT);
 //Variable
 float fps = 60;
 int frameCount = 0;
-double deltaTime = 0.016;
+
 double currentTime;
 double lastTime;
 
@@ -96,7 +96,7 @@ int main()
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
-		
+
 		quad->Draw();
 
 		
@@ -105,7 +105,7 @@ int main()
 		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		//lightSurface->Draw();
-
+	
 		//using gragrab pass texture; 
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		glUseProgram(grabPassShader->shaderProgram);
@@ -114,8 +114,8 @@ int main()
 
 		grabPassShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 0);
-		grabTex.Bind(0);
-		grabPassShader->SetUniform1i("uTex0", 0);
+		grabTex.Bind(1);
+		grabPassShader->SetUniform1i("uTex0", 1);
 		grabPass->Draw();
 
 		glfwSwapBuffers(window);
