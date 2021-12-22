@@ -42,6 +42,9 @@
     <ClCompile Include="src\Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -932,6 +935,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Clock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

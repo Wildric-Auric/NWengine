@@ -162,6 +162,7 @@
     <ClCompile Include="src\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="src\Clock.cpp" />
     <ClCompile Include="src\Inputs.cpp" />
     <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
@@ -467,6 +468,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Clock.h" />
     <ClInclude Include="src\Inputs.h" />
     <ClInclude Include="src\Maths.h" />
     <ClInclude Include="src\Primitives.h" />
@@ -474,6 +476,7 @@
     <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\Time.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
