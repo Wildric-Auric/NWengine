@@ -2,7 +2,7 @@
 #include "Texture.h"
 #include "RessourcesLoader.h"
 #include "GL/glew.h"
-#include "glfw3.h"
+#include "GLFW/glfw3.h"
 
 Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool repeat) {
 	glGenTextures(1, &texture);
