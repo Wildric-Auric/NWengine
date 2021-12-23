@@ -35,7 +35,10 @@ void main() {
     vec2 mouse = uMouse / uResolution.xy;
     float dis = distance(uv, mouse);
     float a = 0.15; //Linear interpolation with a radius of a screen coordinates
-    float ambientLight = 0.95;
-    vec4 col = vec4( 0.0, 0.0, 0.0, min((dis - a) / a, ambientLight));
+    float ambientLight = 0.9;
+    vec4 col = vec4(0.0, 0.0, 0.0, min(dis / a, ambientLight));
+    //if (dis < 0.2) {
+    //    col = vec4(1.0, 1.0, 1.0, 0.0);
+    //}
     FragColor = col;
 }

@@ -1,9 +1,9 @@
 #include <GL/glew.h>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include"Primitives.h"
+#include "Primitives.h"
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -11,6 +11,7 @@
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
+#include "Text.h"
 #include "RessourcesLoader.h"
 #include "Time.h"
 //Consts
@@ -43,22 +44,26 @@ int main()
 	GLubyte* behindPixels = new GLubyte[4 * SCREEN_WIDTH * SCREEN_HEIGHT];
 
 
+	Shader* defaultShader		= new Shader();
+	Shader* lightSurfaceShader	= new Shader();
+	Shader* grabPassShader		= new Shader();
+	Shader* textShader			= new Shader();
 
-	Shader* defaultShader = new Shader();
-	Shader* lightSurfaceShader = new Shader();
-	Shader* grabPassShader = new Shader();
+	Quad* quad			= new Quad();
+	Quad* lightSurface	= new Quad();
+	Quad* grabPass		= new Quad();
 
-	Quad* quad = new Quad();
-	Quad* lightSurface = new Quad();
-	Quad* grabPass = new Quad();
+	Text* text	= new Text();
+	int	init	= text->initfreetype("fonts/rockstar.otf");
 
-	*defaultShader = Shader("Shaders/Shader1.shader");
-	*lightSurfaceShader = Shader("Shaders/LightSurface.shader");
-	*grabPassShader = Shader("Shaders/GrabPass.shader");
+	*defaultShader		= Shader("Shaders/Shader1.shader");
+	*lightSurfaceShader	= Shader("Shaders/LightSurface.shader");
+	*grabPassShader		= Shader("Shaders/GrabPass.shader");
+	*textShader			= Shader("Shaders/Text.shader");
 
-	*quad = Quad(Vector2(0.0f,0.0f), 305.0F, 314.0F);
-	*lightSurface = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	*grabPass = Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+	*quad			= Quad(Vector2(0.0f,0.0f), 95.0F, 95.0F);
+	*lightSurface	= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+	*grabPass		= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 
 
 	glEnable(GL_BLEND);
@@ -68,7 +73,6 @@ int main()
 	
 	lastTime = glfwGetTime();
 	fps = 60.0;
-
 	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
 
 	while (!glfwWindowShouldClose(window)){
@@ -78,8 +82,8 @@ int main()
 		processInput(window);
 
 		//Update dynamic object position
-		quad->position.x += (-input_left + input_right)*300.0*deltaTime;
-		quad->position.y += (-input_down + input_up)*300.0*deltaTime;
+		quad->position.x += (-input_left + input_right)*300.0f*deltaTime;
+		quad->position.y += (-input_down + input_up)*300.0f*deltaTime;
 
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(quad->position.x, quad->position.y, 0.0f));
 		//Drawing shapes
@@ -87,8 +91,8 @@ int main()
 		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
 
 		defaultShader->SetUniform1f("uTime", uTime);
-		defaultShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
-		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_WIDTH - mousePosY));
+		defaultShader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
@@ -97,7 +101,7 @@ int main()
 
 		
 		glUseProgram(lightSurfaceShader->shaderProgram);
-		lightSurfaceShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		lightSurfaceShader->SetVector2("uResolution", (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		//lightSurface->Draw();
@@ -105,7 +109,7 @@ int main()
 		//using gragrab pass texture; 
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		glUseProgram(grabPassShader->shaderProgram);
-		grabPassShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
+		grabPassShader->SetVector2("uResolution", (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 		grabPassShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
 		grabPassShader->SetUniform1f("uTime", (float)uTime);
 
@@ -122,7 +126,6 @@ int main()
 		currentTime = glfwGetTime();
 		deltaTime = currentTime- lastTime;
 		lastTime = currentTime; //Well it's negligeable operation
-
 	}
 	glfwTerminate();
 }

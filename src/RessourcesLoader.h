@@ -1,5 +1,6 @@
 #pragma once
 
+
 class Image {
 public:
 	Image(const char* path = "Ressources/test.png", bool alpha = 1);

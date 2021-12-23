@@ -1,5 +1,5 @@
 #include <GL/glew.h>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -76,3 +76,9 @@ void Shader::SetVector2(const char* name, GLfloat value0, GLfloat value1) {
 void Shader::SetUniform1i(const char* name, const int value) {
 	glUniform1i(glGetUniformLocation(shaderProgram, name), value);
 }
+
+void Shader::SetUniform3f(const char* name, float x, float y, float z)
+{
+	glUniform3f(glGetUniformLocation(shaderProgram, name), x, y, z);
+}
+
