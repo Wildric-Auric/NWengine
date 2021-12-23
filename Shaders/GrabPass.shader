@@ -42,6 +42,7 @@ void main() {
     vec2 uv1 = uv;
     vec4 col;
     vec4 waterColor = vec4(1.0);
+    vec3 additional = vec3(0.0);
     float detail = 0.0;
     if (uv.y < start) {
         uv1.y = 2*start - uv.y ;
@@ -51,8 +52,11 @@ void main() {
         if ( temp % 2 == 0) sign = -1.;
         uv1.y = uv1.y + sin(1. / (uv.y) + uTime*4.0) * 0.01;
         uv1.x += sign * (random(uv) /100.) * sin(uTime/2.0);
-        waterColor = vec4(0.6, 0.85, 1.0, 1.0);
+        additional.b += uv.y / 0.38 - 1.0;
+        waterColor = vec4(0.3, 0.45, .6, 1.0);
+        //col = mix(textureLod(uTex0, uv1, detail), textureLod(uTex0,uv, 0.0), 0.3)* waterColor; //Maybe add magnifying effect for object underwater
+
     }
-    col = textureLod(uTex0, uv1, detail)*waterColor; 
+    col = textureLod(uTex0, uv1, detail) * waterColor + vec4(additional,0.0);
     FragColor = col ;
 }
