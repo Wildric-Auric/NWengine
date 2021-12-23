@@ -52,11 +52,11 @@ void main() {
         if ( temp % 2 == 0) sign = -1.;
         uv1.y = uv1.y + sin(1. / (uv.y) + uTime*4.0) * 0.01;
         uv1.x += sign * (random(uv) /100.) * sin(uTime/2.0);
-        additional.b += uv.y / 0.38 - 1.0;
-        waterColor = vec4(0.3, 0.45, .6, 1.0);
-        //col = mix(textureLod(uTex0, uv1, detail), textureLod(uTex0,uv, 0.0), 0.3)* waterColor; //Maybe add magnifying effect for object underwater
-
-    }
-    col = textureLod(uTex0, uv1, detail) * waterColor + vec4(additional,0.0);
+        additional += uv.y / 0.38 - 1.0;
+        waterColor = vec4(0.2, 0.2, .2, 0.5);
+        //col = mix(textureLod(uTex0, uv1, detail), textureLod(uTex0,uv, 0.0), 0.3)* waterColor; //Maybe should you add magnifying effect for object underwater
+        col = mix(textureLod(uTex0, uv1, detail), vec4(additional, 1.0), .6);
+    } 
+    else col = textureLod(uTex0, uv1, detail);
     FragColor = col ;
 }

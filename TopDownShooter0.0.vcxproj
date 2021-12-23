@@ -161,6 +161,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -823,6 +830,15 @@
     <ClInclude Include="dependencies\vendor\glm\vec3.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vec4.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="dependencies\vendor\imgui\imconfig.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="src\Game.h" />

@@ -14,6 +14,8 @@
 //#include "Text.h"
 #include "RessourcesLoader.h"
 #include "Time.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 //Consts
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
@@ -33,10 +35,17 @@ glm::mat4 view(1.0);
 
 int main()
 { 
-    //SHOULD be in the beginning
+    //Init GLFW context 
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
-	//Start here
+
+	//Create ImGui context
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init();
+	//Load ressources
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
 
@@ -75,9 +84,18 @@ int main()
 	fps = 60.0;
 	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
 
+	ImColor bgColor = ImColor(82, 75, 108);
 	while (!glfwWindowShouldClose(window)){
+		// ImGui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::Begin("Debug");
+		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
+		ImGui::End();
+		//----
 		uTime += deltaTime;
-		glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
+		glClearColor(bgColor.Value.x, bgColor.Value.y, bgColor.Value.z, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
 
@@ -119,13 +137,21 @@ int main()
 		grabPassShader->SetUniform1i("uTex0", 1);
 		grabPass->Draw();
 
+
+
+		//Render Im::Gui
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		//Update screen
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
 		//Calculate fps
 		currentTime = glfwGetTime();
 		deltaTime = currentTime- lastTime;
 		lastTime = currentTime; //Well it's negligeable operation
 	}
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 }
