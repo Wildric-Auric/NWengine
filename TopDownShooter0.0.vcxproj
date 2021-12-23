@@ -86,15 +86,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\include;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\include;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\vendor\glm;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\vendor;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;freetype.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -106,7 +106,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
     </ClCompile>
@@ -115,8 +115,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\GLFW\lib-vc2019;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
     <ProjectReference>
@@ -127,15 +127,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\include;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\include;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\vendor\glm;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\vendor;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;freetype.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,21 +145,22 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(Solution)dependencies\GLFW\include;$(Solution)dependencies\GLEW\include;$(Solution)dependencies\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dependecies\vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -529,6 +531,12 @@
     <ClInclude Include="dependecies\vendor\glm\vec4.hpp" />
     <ClInclude Include="dependecies\vendor\glm\vector_relational.hpp" />
     <ClInclude Include="dependecies\vendor\stb\stb_image.h" />
+    <ClInclude Include="dependencies\GLEW\include\GL\eglew.h" />
+    <ClInclude Include="dependencies\GLEW\include\GL\glew.h" />
+    <ClInclude Include="dependencies\GLEW\include\GL\glxew.h" />
+    <ClInclude Include="dependencies\GLEW\include\GL\wglew.h" />
+    <ClInclude Include="dependencies\GLFW\include\glfw3.h" />
+    <ClInclude Include="dependencies\GLFW\include\glfw3native.h" />
     <ClInclude Include="dependencies\vendor\glm\common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_vector_relational.hpp" />
@@ -614,6 +622,7 @@
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_int4x3_sized.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_int4x4.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_int4x4_sized.hpp" />
+    <ClInclude Include="dependencies\vendor\glm\ext\matrix_integer.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_projection.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_relational.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_transform.hpp" />
@@ -650,6 +659,7 @@
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_integer.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_int_sized.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_packing.hpp" />
+    <ClInclude Include="dependencies\vendor\glm\ext\scalar_reciprocal.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_relational.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_uint_sized.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\scalar_ulp.hpp" />
@@ -688,6 +698,7 @@
     <ClInclude Include="dependencies\vendor\glm\ext\vector_int4_sized.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\vector_integer.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\vector_packing.hpp" />
+    <ClInclude Include="dependencies\vendor\glm\ext\vector_reciprocal.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\vector_relational.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\vector_uint1.hpp" />
     <ClInclude Include="dependencies\vendor\glm\ext\vector_uint1_sized.hpp" />
@@ -762,6 +773,7 @@
     <ClInclude Include="dependencies\vendor\glm\gtx\number_precision.hpp" />
     <ClInclude Include="dependencies\vendor\glm\gtx\optimum_pow.hpp" />
     <ClInclude Include="dependencies\vendor\glm\gtx\orthonormalize.hpp" />
+    <ClInclude Include="dependencies\vendor\glm\gtx\pca.hpp" />
     <ClInclude Include="dependencies\vendor\glm\gtx\perpendicular.hpp" />
     <ClInclude Include="dependencies\vendor\glm\gtx\polar_coordinates.hpp" />
     <ClInclude Include="dependencies\vendor\glm\gtx\projection.hpp" />
@@ -811,6 +823,7 @@
     <ClInclude Include="dependencies\vendor\glm\vec3.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vec4.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Clock.h" />
@@ -1025,6 +1038,7 @@
     <None Include="dependencies\vendor\glm\detail\type_vec4_simd.inl" />
     <None Include="dependencies\vendor\glm\ext\matrix_clip_space.inl" />
     <None Include="dependencies\vendor\glm\ext\matrix_common.inl" />
+    <None Include="dependencies\vendor\glm\ext\matrix_integer.inl" />
     <None Include="dependencies\vendor\glm\ext\matrix_projection.inl" />
     <None Include="dependencies\vendor\glm\ext\matrix_relational.inl" />
     <None Include="dependencies\vendor\glm\ext\matrix_transform.inl" />
@@ -1039,11 +1053,13 @@
     <None Include="dependencies\vendor\glm\ext\scalar_constants.inl" />
     <None Include="dependencies\vendor\glm\ext\scalar_integer.inl" />
     <None Include="dependencies\vendor\glm\ext\scalar_packing.inl" />
+    <None Include="dependencies\vendor\glm\ext\scalar_reciprocal.inl" />
     <None Include="dependencies\vendor\glm\ext\scalar_relational.inl" />
     <None Include="dependencies\vendor\glm\ext\scalar_ulp.inl" />
     <None Include="dependencies\vendor\glm\ext\vector_common.inl" />
     <None Include="dependencies\vendor\glm\ext\vector_integer.inl" />
     <None Include="dependencies\vendor\glm\ext\vector_packing.inl" />
+    <None Include="dependencies\vendor\glm\ext\vector_reciprocal.inl" />
     <None Include="dependencies\vendor\glm\ext\vector_relational.inl" />
     <None Include="dependencies\vendor\glm\ext\vector_ulp.inl" />
     <None Include="dependencies\vendor\glm\gtc\bitfield.inl" />
@@ -1106,6 +1122,7 @@
     <None Include="dependencies\vendor\glm\gtx\number_precision.inl" />
     <None Include="dependencies\vendor\glm\gtx\optimum_pow.inl" />
     <None Include="dependencies\vendor\glm\gtx\orthonormalize.inl" />
+    <None Include="dependencies\vendor\glm\gtx\pca.inl" />
     <None Include="dependencies\vendor\glm\gtx\perpendicular.inl" />
     <None Include="dependencies\vendor\glm\gtx\polar_coordinates.inl" />
     <None Include="dependencies\vendor\glm\gtx\projection.inl" />

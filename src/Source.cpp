@@ -1,5 +1,5 @@
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,7 +11,7 @@
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
-#include "Text.h"
+//#include "Text.h"
 #include "RessourcesLoader.h"
 #include "Time.h"
 //Consts
@@ -47,21 +47,21 @@ int main()
 	Shader* defaultShader		= new Shader();
 	Shader* lightSurfaceShader	= new Shader();
 	Shader* grabPassShader		= new Shader();
-	Shader* textShader			= new Shader();
+	//Shader* textShader			= new Shader();
 
 	Quad* quad			= new Quad();
 	Quad* lightSurface	= new Quad();
 	Quad* grabPass		= new Quad();
 
-	Text* text	= new Text();
-	int	init	= text->initfreetype("fonts/rockstar.otf");
+	//Text* text	= new Text();
+	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
 	*defaultShader		= Shader("Shaders/Shader1.shader");
 	*lightSurfaceShader	= Shader("Shaders/LightSurface.shader");
 	*grabPassShader		= Shader("Shaders/GrabPass.shader");
-	*textShader			= Shader("Shaders/Text.shader");
+	//*textShader			= Shader("Shaders/Text.shader");
 
-	*quad			= Quad(Vector2(0.0f,0.0f), 95.0F, 95.0F);
+	*quad			= Quad(Vector2(0.0f,0.0f), 300.0F, 300.0F);
 	*lightSurface	= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 	*grabPass		= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 
