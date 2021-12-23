@@ -107,6 +107,7 @@ int main()
 		glUseProgram(grabPassShader->shaderProgram);
 		grabPassShader->SetVector2("uResolution", SCREEN_WIDTH, SCREEN_HEIGHT);
 		grabPassShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+		grabPassShader->SetUniform1f("uTime", (float)uTime);
 
 		grabPassShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 0);
