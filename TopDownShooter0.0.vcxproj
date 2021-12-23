@@ -88,13 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -108,15 +108,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
     <ProjectReference>
@@ -129,13 +129,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
@@ -147,19 +147,24 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib; glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\CIrrKlangAudioStreamLoaderMP3.cpp" />
+    <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\CIrrKlangAudioStreamMP3.cpp" />
+    <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\bits.c" />
+    <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\mpaudec.c" />
+    <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\ikpMP3.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
@@ -544,6 +549,33 @@
     <ClInclude Include="dependencies\GLEW\include\GL\wglew.h" />
     <ClInclude Include="dependencies\GLFW\include\glfw3.h" />
     <ClInclude Include="dependencies\GLFW\include\glfw3native.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ESoundEngineOptions.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ESoundOutputDrivers.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_EStreamModes.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IAudioRecorder.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IAudioStream.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IAudioStreamLoader.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IFileFactory.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IFileReader.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IRefCounted.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_irrKlangTypes.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISound.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundDeviceList.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundEffectControl.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundEngine.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundMixedOutputReceiver.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundSource.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_ISoundStopEventReceiver.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_IVirtualRefCounted.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_SAudioStreamFormat.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\ik_vec3d.h" />
+    <ClInclude Include="dependencies\IRRKLANG\include\irrKlang.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\CIrrKlangAudioStreamLoaderMP3.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\CIrrKlangAudioStreamMP3.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\internal.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\mpaudec.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\mpaudectab.h" />
+    <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\decoder\mpegaudio.h" />
     <ClInclude Include="dependencies\vendor\glm\common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="dependencies\vendor\glm\detail\compute_vector_relational.hpp" />
@@ -1018,6 +1050,436 @@
     <None Include="dependecies\vendor\glm\gtx\vector_angle.inl" />
     <None Include="dependecies\vendor\glm\gtx\vector_query.inl" />
     <None Include="dependecies\vendor\glm\gtx\wrap.inl" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\annotated.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classes.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1vec3d-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1vec3d.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_recorder-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_recorder.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_stream-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_stream.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_stream_loader-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_audio_stream_loader.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_captured_audio_data_receiver-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_captured_audio_data_receiver.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_file_factory-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_file_factory.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_file_reader-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_file_reader.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_ref_counted-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_ref_counted.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_device_list-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_device_list.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_effect_control-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_effect_control.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_engine-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_engine.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_mixed_output_receiver-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_mixed_output_receiver.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_source-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_stop_event_receiver-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_sound_stop_event_receiver.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_virtual_ref_counted-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\classirrklang_1_1_i_virtual_ref_counted.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\files.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x63.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x64.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x65.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x66.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x67.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x6c.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x6e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x6f.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x70.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x72.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x73.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x75.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x76.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x78.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x79.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x7a.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_0x7e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_func.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\functions_vars.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\globals.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\globals_defs.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\hierarchy.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik__irr_klang_types_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik__irr_klang_types_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik__vec3d_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik__vec3d_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_sound_engine_options_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_sound_engine_options_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_sound_output_drivers_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_sound_output_drivers_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_stream_modes_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___e_stream_modes_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_recorder_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_recorder_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_stream_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_stream_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_stream_loader_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_audio_stream_loader_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_file_factory_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_file_factory_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_file_reader_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_file_reader_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_ref_counted_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_ref_counted_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_device_list_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_device_list_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_effect_control_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_effect_control_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_engine_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_engine_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_mixed_output_receiver_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_mixed_output_receiver_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_source_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_source_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_stop_event_receiver_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_sound_stop_event_receiver_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_virtual_ref_counted_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___i_virtual_ref_counted_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___s_audio_stream_format_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\ik___s_audio_stream_format_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\index.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\irr_klang_8h.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\irr_klang_8h_source.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespaceirrklang.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers_enum.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers_eval.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers_func.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers_type.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespacemembers_vars.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\namespaces.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_61.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_63.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_64.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_65.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_66.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_67.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_6c.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_6d.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_6e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_6f.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_70.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_72.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_73.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_75.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_76.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_78.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_79.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_7a.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\all_7e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\classes_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\classes_73.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\classes_76.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\defines_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\enums_65.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\enumvalues_65.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\files_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_61.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_63.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_64.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_65.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_66.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_67.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_6c.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_6d.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_6e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_6f.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_70.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_72.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_73.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_75.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_76.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\functions_7e.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\namespaces_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\nomatches.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\typedefs_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\typedefs_76.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_63.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_66.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_69.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_70.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_73.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_78.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_79.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\search\variables_7a.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\structirrklang_1_1_s_audio_stream_format-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\structirrklang_1_1_s_audio_stream_format.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\structirrklang_1_1_s_internal_audio_interface-members.html" />
+    <None Include="dependencies\IRRKLANG\doc\cpp\structirrklang_1_1_s_internal_audio_interface.html" />
+    <None Include="dependencies\IRRKLANG\doc\doc_cpp.html" />
+    <None Include="dependencies\IRRKLANG\doc\doc_dotnet.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\contents.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\default.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\index.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.BytesPerSecond.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.ChannelCount.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.Format.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.FrameCount.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.FrameSize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.SampleDataSize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.SampleRate.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormat.SampleSize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormatConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormatFields.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormatMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.AudioFormatProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.EventForwarder.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.EventForwarderMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.FileFactoryForwarder.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.FileFactoryForwarderMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.AddSoundSourceFromRecordedAudio.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.AudioFormat.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.ClearRecordedAudioDataBuffer.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.IsRecording.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.RecordedAudioData.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.StartRecordingBufferedAudio_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.StartRecordingBufferedAudio_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.StartRecordingBufferedAudio_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorder.StopRecordingAudio.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderConstructor1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderConstructor2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderConstructor3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IAudioRecorderProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IFileFactory.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IFileFactory.openFile.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IFileFactoryMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.IFileFactoryMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Dispose.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Finished.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Looped.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.MaxDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.MinDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Pan.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Paused.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.PlaybackSpeed.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.PlayLength.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.PlayPosition.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Position.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.setSoundStopEventReceiver_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.setSoundStopEventReceiver_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.setSoundStopEventReceiver_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.SoundEffectControl.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Stop.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Velocity.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISound.Volume.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceList.DeviceCount.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceList.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceList.getDeviceDescription.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceList.getDeviceID.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceList.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListConstructor1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListConstructor2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundDeviceListProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableAllEffects.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableChorusSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableCompressorSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableDistortionSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableEchoSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableFlangerSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableGargleSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableI3DL2ReverbSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableParamEqSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.DisableWavesReverbSoundEffect.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableChorusSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableChorusSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableChorusSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableCompressorSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableCompressorSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableCompressorSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableDistortionSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableDistortionSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableDistortionSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableEchoSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableEchoSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableEchoSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableFlangerSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableFlangerSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableFlangerSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableGargleSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableGargleSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableGargleSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableI3DL2ReverbSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableI3DL2ReverbSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableI3DL2ReverbSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableParamEqSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableParamEqSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableParamEqSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableWavesReverbSoundEffect_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableWavesReverbSoundEffect_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.EnableWavesReverbSoundEffect_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsChorusSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsCompressorSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsDistortionSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsEchoSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsFlangerSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsGargleSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsI3DL2ReverbSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsParamEqSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControl.IsWavesReverbSoundEffectEnabled.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControlConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControlMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControlMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEffectControlProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddFileFactory.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceAlias.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromFile_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromFile_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromFile_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromFile_overload_3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromIOStream.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromMemory.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.AddSoundSourceFromPCMData.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Default3DSoundMaxDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Default3DSoundMinDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.GetSoundSource_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.GetSoundSource_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.GetSoundSource_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.internalGetNativeEngine.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.IsCurrentlyPlaying.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.IsMultiThreaded.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.LoadPlugins.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Name.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_4.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_5.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play2D_overload_6.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_4.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_5.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_6.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_7.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Play3D_overload_8.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.RemoveAllSoundSources.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.RemoveSoundSource.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetAllSoundsPaused.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetDopplerEffectParameters.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetListenerPosition_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetListenerPosition_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetListenerPosition_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetListenerPosition_overload_3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetListenerPosition_overload_4.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SetRolloffFactor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.SoundVolume.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.StopAllSounds.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngine.Update.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineConstructor1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineConstructor2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineConstructor3.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineConstructor4.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundEngineProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.AudioFormat.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.DefaultMaxDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.DefaultMinDistance.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.DefaultVolume.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.Dispose.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.Finalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.ForcedStreamingThreshold.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.ForceReloadAtNextUse.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.getNativeSoundSource.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.IsSeekingSupported.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.Name.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.PlayLength.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.SampleData.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSource.StreamMode.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSourceConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSourceMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSourceMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundSourceProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundStopEventReceiver.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundStopEventReceiver.OnSoundStopped.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundStopEventReceiverMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.ISoundStopEventReceiverMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.SampleFormat.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.SoundDeviceListType.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.SoundEngineOptionFlag.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.SoundOutputDriver.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.StopEventCause.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.StreamForwarder.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.StreamForwarderMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.StreamMode.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.CrossProduct.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.DotProduct.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Equals.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.GetDistanceFrom.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.GetDistanceFromSQ.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.GetInterpolated.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.GetLength.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.GetLengthSQ.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Invert.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.IsBetweenPoints.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Length.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.LengthSQ.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Normalize.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Addition.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Division.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Equality.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Multiply_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Multiply_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Multiply_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.op_Subtraction.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.SetLength.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Set_overloads.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Set_overload_1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Set_overload_2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.ToString.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.X.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Y.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3D.Z.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DConstructor.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DConstructor1.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DConstructor2.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DFields.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DMembers.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DMethods.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DOperators.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlang.Vector3DProperties.html" />
+    <None Include="dependencies\IRRKLANG\doc\dotnet\IrrKlangHierarchy.html" />
+    <None Include="dependencies\IRRKLANG\lib\Win32-gcc\libirrKlang.def" />
     <None Include="dependencies\vendor\glm\detail\func_common.inl" />
     <None Include="dependencies\vendor\glm\detail\func_common_simd.inl" />
     <None Include="dependencies\vendor\glm\detail\func_exponential.inl" />
@@ -1169,13 +1631,6 @@
     <None Include="x64\Debug\TopDownShooter0.0.pdb" />
     <None Include="x64\Debug\vc142.idb" />
     <None Include="x64\Debug\vc142.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Ressources\as.png" />
-    <Image Include="Ressources\Hellotest.png" />
-    <Image Include="Ressources\img2.png" />
-    <Image Include="Ressources\minion.jpg" />
-    <Image Include="Ressources\test.png" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\Game.obj" />

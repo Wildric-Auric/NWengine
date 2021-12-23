@@ -8,7 +8,7 @@
 
 #include "RessourcesLoader.h"
 
-const char* path = "Ressources/img2.png";
+const char* path = "Ressources/Images/img2.png";
 Image TEX1;
 
 Image::Image(const char *path, bool alpha) {

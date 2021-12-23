@@ -16,6 +16,7 @@
 #include "Time.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include <irrKlang.h>
 //Consts
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 700;
@@ -32,7 +33,7 @@ GLfloat uTime = 0;
 
 glm::mat4 proj;
 glm::mat4 view(1.0);
-
+using namespace irrklang;
 int main()
 { 
     //Init GLFW context 
@@ -45,6 +46,10 @@ int main()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
+
+	//init irrKlang
+	ISoundEngine* SoundEngine = createIrrKlangDevice();
+
 	//Load ressources
 	loadImages();
 	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
@@ -85,6 +90,10 @@ int main()
 	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
 
 	ImColor bgColor = ImColor(82, 75, 108);
+
+	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
+	if (sd) sd->setVolume(0.3);
+
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -114,7 +123,7 @@ int main()
 
 		tex.Bind(0);
 		defaultShader->SetUniform1i("uTex0", 0);
-
+		
 		quad->Draw();
 
 		

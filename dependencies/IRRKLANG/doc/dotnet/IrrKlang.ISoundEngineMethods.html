@@ -1,0 +1,88 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>ISoundEngine Methods</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">IrrKlang.NET</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">ISoundEngine Methods</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>The methods of the <b>ISoundEngine</b> class are listed below. For a complete list of <b>ISoundEngine</b> class members, see the <a href="IrrKlang.ISoundEngineMembers.html">ISoundEngine Members</a> topic.</p>
+      <h4 class="dtH4">Public Instance Methods</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddFileFactory.html">AddFileFactory</a></td><td width="50%"> Adds a file factory to the sound engine, making it possible to override file access of the sound engine. Derive your own class from IFileFactory, overwrite the openFile() method and return your own implemented System::IO::Stream to overwrite file access of irrKlang. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddSoundSourceAlias.html">AddSoundSourceAlias</a></td><td width="50%"> Adds a sound source as alias for an existing sound source, but with a different name or optional different default settings. This is useful if you want to play multiple sounds but each sound isn't necessarily one single file. Also useful if you want to or play the same sound using different names, volumes or min and max 3D distances. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddSoundSourceFromFile_overloads.html">AddSoundSourceFromFile</a></td><td width="50%">Overloaded.  Adds sound source into the sound engine as file. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddSoundSourceFromIOStream.html">AddSoundSourceFromIOStream</a></td><td width="50%"> Adds a sound source into the sound engine from a IOStream. Note that the stream is totally read into memory when adding the sound source. If you want irrKlang to dynamically open and close custom file streams without loading everything into memory, use the addFileFactory with your own IFileFactory implementation. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddSoundSourceFromMemory.html">AddSoundSourceFromMemory</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.AddSoundSourceFromPCMData.html">AddSoundSourceFromPCMData</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassEqualsTopic.htm">Equals</a> (inherited from <b>Object</b>)</td><td width="50%">
+        Determines whether the specified <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a> is equal to the current <b>Object</b>.
+      </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassGetHashCodeTopic.htm">GetHashCode</a> (inherited from <b>Object</b>)</td><td width="50%">
+        Serves as a hash function for a particular type, suitable for use in hashing algorithms and data structures like a hash table.
+      </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.GetSoundSource_overloads.html">GetSoundSource</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassGetTypeTopic.htm">GetType</a> (inherited from <b>Object</b>)</td><td width="50%">
+        Gets the <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemTypeClassTopic.htm">Type</a> of the current instance.
+      </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.internalGetNativeEngine.html">internalGetNativeEngine</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.IsCurrentlyPlaying.html">IsCurrentlyPlaying</a></td><td width="50%"> Returns if a sound with the specified name is currently playing </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.LoadPlugins.html">LoadPlugins</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.Play2D_overloads.html">Play2D</a></td><td width="50%">Overloaded.  loads a sound source (if not loaded already) from a file and plays it. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.Play3D_overloads.html">Play3D</a></td><td width="50%">Overloaded.  loads a sound source (if not loaded already) from a file and plays it as 3d sound. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.RemoveAllSoundSources.html">RemoveAllSoundSources</a></td><td width="50%"> Removes all sound sources from the engine. This will also cause all sounds to be stopped. Removing sound sources is only necessary if you know you won't use a lot of non-streamed sounds again. Sound sources of streamed sounds do not cost a lot of memory. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.RemoveSoundSource.html">RemoveSoundSource</a></td><td width="50%"> Removes a sound source from the engine, freeing the memory it occupies. This will also cause all currently playing sounds of this source to be stopped. Also note that if the source has been removed successfully, the value returned by getSoundSourceCount() will have been decreased by one. Removing sound sources is only necessary if you know you won't use a lot of non-streamed sounds again. Sound sources of streamed sounds do not cost a lot of memory. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.SetAllSoundsPaused.html">SetAllSoundsPaused</a></td><td width="50%"> pauses or unpauses all currently playing sounds </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.SetDopplerEffectParameters.html">SetDopplerEffectParameters</a></td><td width="50%"> Sets parameters affecting the doppler effect. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.SetListenerPosition_overloads.html">SetListenerPosition</a></td><td width="50%">Overloaded.  Sets the current listener 3d position. This method is being called by the scene manager automaticly if you are using one, so you might want to ignore this. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.SetRolloffFactor.html">SetRolloffFactor</a></td><td width="50%"> Sets the roll off factor for 3d sounds. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.StopAllSounds.html">StopAllSounds</a></td><td width="50%"> stops all currently playing sounds </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassToStringTopic.htm">ToString</a> (inherited from <b>Object</b>)</td><td width="50%">
+        Returns a <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">String</a> that represents the current <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a>.
+      </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="IrrKlang.ISoundEngine.Update.html">Update</a></td><td width="50%"> Updates the audio engine. This should be called several times per frame if irrKlang was started in single thread mode. This updates the 3d positions of the sounds as well as their volumes, effects streams and other stuff. Call this several times per frame (the more the better) if you specified irrKlang to run single threaded. Otherwise it is not necessary to use this method. This method is being called by the scene manager automaticly if you are using one, so you might want to ignore this. </td></tr></table>
+      </div>
+      <h4 class="dtH4">Protected Instance Methods</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="protmethod.gif"></img><a href="IrrKlang.ISoundEngine.Finalize.html">Finalize</a></td><td width="50%"> Destructor </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="protmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassMemberwiseCloneTopic.htm">MemberwiseClone</a> (inherited from <b>Object</b>)</td><td width="50%">
+        Creates a shallow copy of the current <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a>.
+      </td></tr></table>
+      </div>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="IrrKlang.ISoundEngine.html">ISoundEngine Class</a> | <a href="IrrKlang.html">IrrKlang Namespace</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="ISoundEngine class, methods">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>The irrKlang Sound Engine Documentation © 2003-2010 by Nikolaus Gebhardt.</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

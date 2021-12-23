@@ -3,7 +3,7 @@
 
 class Image {
 public:
-	Image(const char* path = "Ressources/test.png", bool alpha = 1);
+	Image(const char* path = "Ressources/Images/test.png", bool alpha = 1);
 	unsigned char* tex;
 	int width;
 	int height;

@@ -1,0 +1,190 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>IrrKlang</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">IrrKlang.NET</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">IrrKlang Namespace</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>the main namespace where every class of the sound engine can be found </p>
+      <p>
+        <a href="IrrKlangHierarchy.html">Namespace hierarchy</a>
+      </p>
+      <h3 class="dtH3">Classes</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Class</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.IAudioRecorder.html">IAudioRecorder</a>
+            </td>
+            <td width="50%"> Interface to an audio recorder. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISound.html">ISound</a>
+            </td>
+            <td width="50%"> Represents a sound which is currently played. You can stop the sound or change the volume or whatever using this interface. Don't create sounds using new ISound, this won't work anyway. You can get an instance of an ISonud class by calling ISoundEngine::Play2D or Play3D. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISoundDeviceList.html">ISoundDeviceList</a>
+            </td>
+            <td width="50%"> A list of sound devices for a sound driver. Use irrklang::createSoundDeviceList() to create this list. The function createIrrKlangDevice() has a parameter 'deviceID' which takes the value returned by ISoundDeviceList::getDeviceID() and uses that device then. The list of devices in ISoundDeviceList usually also includes the default device which is the first entry and has an empty deviceID string ("") and the description "default device".*/ </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISoundEffectControl.html">ISoundEffectControl</a>
+            </td>
+            <td width="50%"> Interface to control the active sound effects (echo, reverb,...) of an ISound object, a playing sound. Sound effects such as chorus, distorsions, echo, reverb and similar can be controlled using this. An instance of this interface can be obtained via ISound::getSoundEffectControl(). The sound containing this interface has to be started via ISoundEngine::play2D() or ISoundEngine::play3D() with the flag enableSoundEffects=true, otherwise no acccess to this interface will be available. For the DirectSound driver, these are effects available since DirectSound8. For most effects, sounds should have a sample rate of 44 khz and should be at least 150 milli seconds long for optimal quality when using the DirectSound driver. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISoundEngine.html">ISoundEngine</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISoundSource.html">ISoundSource</a>
+            </td>
+            <td width="50%"> A sound source describes an input file (.ogg, .mp3 or .wav) and its default settings. It provides some informations about the sound source like the play lenght and can have default settings for volume, distances for 3d etc. </td>
+          </tr>
+        </table>
+      </div>
+      <h3 class="dtH3">Interfaces</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Interface</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.IFileFactory.html">IFileFactory</a>
+            </td>
+            <td width="50%"> Interface to overwrite opening files. Derive your own class from IFileFactory, overwrite the openFile() method and return your own System::IO::Stream to overwrite file access of irrKlang. Use ISoundEngine::addFileFactory() to let irrKlang know about your class. Example code can be found in the tutorial 04.OverrideFileAccess. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.ISoundStopEventReceiver.html">ISoundStopEventReceiver</a>
+            </td>
+            <td width="50%"> Interface to be implemented by the user, which recieves sound stop events. The interface has only one method to be implemented by the user: OnSoundStopped(). Implement this interface and set it via ISound::setSoundStopEventReceiver(). The sound stop event is guaranteed to be called when a sound or sound stream is finished, either because the sound reached its playback end, its sound source was removed, ISoundEngine::stopAllSounds() has been called or the whole engine was deleted. </td>
+          </tr>
+        </table>
+      </div>
+      <h3 class="dtH3">Structures</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Structure</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.AudioFormat.html">AudioFormat</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.EventForwarder.html">EventForwarder</a>
+            </td>
+            <td width="50%"> Internal class, do not use. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.FileFactoryForwarder.html">FileFactoryForwarder</a>
+            </td>
+            <td width="50%"> Internal class, do not use. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.StreamForwarder.html">StreamForwarder</a>
+            </td>
+            <td width="50%"> Internal class, do not use. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.Vector3D.html">Vector3D</a>
+            </td>
+            <td width="50%"> 3d vector class with lots of operators and methods. This class has been ported directly from the native C++ Irrlicht Engine, so it may not be 100% complete yet and the design may not be 100% .NET like. </td>
+          </tr>
+        </table>
+      </div>
+      <h3 class="dtH3">Enumerations</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Enumeration</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.SampleFormat.html">SampleFormat</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.SoundDeviceListType.html">SoundDeviceListType</a>
+            </td>
+            <td width="50%"> type of a sound device list </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.SoundEngineOptionFlag.html">SoundEngineOptionFlag</a>
+            </td>
+            <td width="50%"> An enumeration for all options for starting up the sound engine When using createSoundEngine, use a combination of this these options parameter to start up the engine. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.SoundOutputDriver.html">SoundOutputDriver</a>
+            </td>
+            <td width="50%"> An enum for all types of output drivers irrKlang supports. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.StopEventCause.html">StopEventCause</a>
+            </td>
+            <td width="50%"> An enumeration listing all reasons for a fired sound stop event </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="IrrKlang.StreamMode.html">StreamMode</a>
+            </td>
+            <td width="50%"> An enum for all types of output stream modes </td>
+          </tr>
+        </table>
+      </div>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>The irrKlang Sound Engine Documentation © 2003-2010 by Nikolaus Gebhardt.</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

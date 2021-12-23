@@ -1,0 +1,97 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>irrKlang.NET API Documentation</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    
+<div id="nsbanner"> 
+  <div id="bannerrow1"> 
+    <table class="bannerparthead" cellspacing="0">
+      <tr id="hdr"> 
+        <td class="runninghead">IrrKlang.NET</td>
+        <td class="product"> </td>
+      </tr>
+    </table>
+  </div>
+  <div id="TitleRow"> 
+    <h1 class="dtH1">IrrKlang.NET documentation </h1>
+  </div>
+</div>
+    
+<div id="nstext"> 
+  <p> Welcome to the irrKlang Sound Engine API documentation. Here you'll find 
+    any information you'll need to develop applications with the irrKlang Sound 
+    Engine. If you look for a tutorial on how to start, take a look at the homepage 
+    of the irrKlang sound Engine at <a target="_blank" href="http://www.ambiera.com/irrklang/">www.ambiera.com/irrklang</a> 
+    or into the SDK in the directory \examples.net. <br>
+    <br>
+    The irrKlang library is intended to be an easy-to-use 3d and 2d sound engine, 
+    so this documentation is an important part of it. If you have any questions 
+    or suggestions, please take a look into the ambiera.com forum or just send 
+    a mail.</p>
+  <h4 class="dtH4">Overview</h4>
+  <p> This documentation is only about the .NET part of the engine, for languages 
+    such as C#, VisualBasic.NET, Delphi.NET and similar. If you want to know how 
+    to use the native engine using C++, please take a look into the other help 
+    file, which is named <a target="_blank" href="file://irrKlang.chm">irrKlang.chm</a>. 
+    <br>
+    <br>
+    irrKlang .NET can run as stand alone .DLL and does not need the native irrKlang.DLL. 
+    But please note that plugin .DLL files like the mp3 playback .DLL file ikpMP3.DLL 
+    will still be needed if you want to use the features of those plugins (mp3 
+    playback in that case) </p>
+  <dl>
+    <h4 class="dtH4">How to use irrKlang.NET</h4>
+    <p>Take a look in the /examples.net folder of the SDK, there you'll find some 
+      examples for C# and VisualBasic.NET which are using irrKlang.NET. Copy irrKlang.DLL 
+      and all plugin .DLLs (ikp*.DLL) into the folder where your application is. 
+	  The following simple example shows how to use irrKlang to play back a music file:
+    </p>
+    <dl>
+      <dt>&nbsp; </dt>
+      <div class="syntax"><span class="lang"> [C#]<br>
+        <font color="#0000FF">using</font> System;<br>
+        <font color="#0000FF">using</font> IrrKlang; <br>
+        <br />
+        <font color="#0000FF">namespace</font> HelloWorld<br>
+        {<br>
+        &nbsp; <font color="#0000FF">class</font> Example<br>
+        &nbsp;&nbsp;{<br>
+        &nbsp;&nbsp; [STAThread]<br>
+        &nbsp;&nbsp;&nbsp;<font color="#0000FF">static void</font> Main(<font color="#0000FF">string</font>[] 
+        args)<br>
+        &nbsp;&nbsp;&nbsp;{<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#006600">// start up the engine</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ISoundEngine engine = <font color="#0000FF">new</font> 
+        ISoundEngine();<br>
+        </span><span class="lang"> 
+        <p> <br>
+          &nbsp;&nbsp;&nbsp;&nbsp; <font color="#006600">// play a sound file</font><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;engine.play2D(&quot;../../media/ophelia.mp3&quot;);</p>
+        <p><br>
+          &nbsp;&nbsp;&nbsp;&nbsp; <font color="#006600">// wait until user presses 
+          ok to end application</font></p>
+        <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.Windows.Forms.MessageBox.Show(&quot;Playing, 
+          press ok.&quot;);</p>
+        <p> &nbsp;&nbsp;&nbsp;} <font color="#006600">// end main()</font></p>
+        <p> &nbsp;&nbsp;} <font color="#006600">// end class</font></p>
+        <p>} <font color="#006600">// end namespace</font></p>
+        </span></div>
+    </dl>
+  </dl>
+</div>
+<div>
+<hr />
+  <div id="footer"> 
+    <p> <a>The irrKlang Sound Engine Documentation © 2003-20010 by Nikolaus Gebhardt.</a> 
+    </p>
+    <p> </p>
+  </div>
+</div>
+  </body>
+</html>

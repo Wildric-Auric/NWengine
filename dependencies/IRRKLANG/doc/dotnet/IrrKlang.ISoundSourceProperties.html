@@ -1,0 +1,58 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>ISoundSource Properties</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">IrrKlang.NET</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">ISoundSource Properties</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>The properties of the <b>ISoundSource</b> class are listed below. For a complete list of <b>ISoundSource</b> class members, see the <a href="IrrKlang.ISoundSourceMembers.html">ISoundSource Members</a> topic.</p>
+      <h4 class="dtH4">Public Instance Properties</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.AudioFormat.html">AudioFormat</a></td><td width="50%"> Returns informations about the sound source: channel count (mono/stereo), frame count, sample rate, etc. Returns the structure filled with 0 or negative values if not known for this sound for example because because the file could not be opened or similar. Note: If the sound never has been played before, the sound engine will have to open the file and try to get the play lenght from there, so this call could take a bit depending on the type of file. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.DefaultMaxDistance.html">DefaultMaxDistance</a></td><td width="50%"> Sets or gets the default maximal distance for 3D sounds played from this source. This value influences how loud a sound is heard based on its distance. See ISound::setMaxDistance() for details about what the max distance is. This method only influences the initial distance value of sounds. For changing the distance after the sound has been started to play, use ISound::setMaxDistance() and ISound::setMaxDistance(). </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.DefaultMinDistance.html">DefaultMinDistance</a></td><td width="50%"> Sets or gets the default minimal distance for 3D sounds played from this source. This value influences how loud a sound is heard based on its distance. See ISound::setMinDistance() for details about what the min distance is. This method only influences the initial distance value of sounds. For changing the distance after the sound has been started to play, use ISound::setMinDistance() and ISound::setMaxDistance(). </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.DefaultVolume.html">DefaultVolume</a></td><td width="50%"> Sets or gets the default volume for a sound played from this source. The default value of this is 1.0f. Note that the default volume is being multiplied with the master volume of ISoundEngine, change this via ISoundEngine::setSoundVolume(). The volume is a value between 0 (silent) and 1.0f (full volume). </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.ForcedStreamingThreshold.html">ForcedStreamingThreshold</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.IsSeekingSupported.html">IsSeekingSupported</a></td><td width="50%"> Returns if sounds played from this source will support seeking via ISound::setPlayPosition(). If a sound is seekable depends on the file type and the audio format. For example MOD files cannot be seeked currently. Returns true of the sound source supports setPlayPosition() and false if not. Note: If the sound never has been played before, the sound engine will have to open the file and try to get the information from there, so this call could take a bit depending on the type of file. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.Name.html">Name</a></td><td width="50%"> Returns the name of the sound source (usually, this is the file name) </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.PlayLength.html">PlayLength</a></td><td width="50%"> Returns the play length of the sound in milliseconds. Returns -1 if not known for this sound for example because its decoder does not support lenght reporting or it is a file stream of unknown size. Note: If the sound never has been played before, the sound engine will have to open the file and try to get the play lenght from there, so this call could take a bit depending on the type of file. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.SampleData.html">SampleData</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubproperty.gif"></img><a href="IrrKlang.ISoundSource.StreamMode.html">StreamMode</a></td><td width="50%"> Sets or returns the stream mode which is used for a sound played from this source. Note that if this is set to ESM_NO_STREAMING, the engine still might decide to stream the sound if it is too big. The threashold for this can be adjusted using ISoundSource::setForcedStreamingThreshold(). Note: If the returned type is ESM_AUTO_DETECT, this mode will change after the sound has been played the first time. </td></tr></table>
+      </div>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="IrrKlang.ISoundSource.html">ISoundSource Class</a> | <a href="IrrKlang.html">IrrKlang Namespace</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="ISoundSource class, properties">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>The irrKlang Sound Engine Documentation © 2003-2010 by Nikolaus Gebhardt.</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
