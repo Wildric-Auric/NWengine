@@ -24,6 +24,7 @@ int		Text::initfreetype(const char *font)
 	return 0;
 }
 
+// Call this before calling the rendering function
 void	Text::InitTextRenderer()
 {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
