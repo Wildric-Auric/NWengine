@@ -36,7 +36,7 @@ float random(in vec2 st) {
 }
 
 float start = 0.4;
-float lod = 2.0f;
+float lod = 0.0f;
 void main() {
     vec2 mouse = uMouse / uResolution;
     vec2 uv1 = uv;
@@ -50,7 +50,7 @@ void main() {
         float sign = 1.;
         int temp = int(random(uv)*10.);
         if ( temp % 2 == 0) sign = -1.;
-        uv1.y = uv1.y + sin(1. / (uv.y) + uTime*4.0) * 0.01;
+        uv1.y = uv1.y + sin(1. / (uv.y) + uTime*4.0) * 0.001;
         uv1.x += sign * (random(uv) /100.) * sin(uTime/2.0);
         additional += uv.y / 0.38 - 1.0;
         waterColor = vec4(0.2, 0.2, .2, 0.5);

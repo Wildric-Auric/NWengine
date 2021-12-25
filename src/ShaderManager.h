@@ -19,3 +19,4 @@ void LoadShaders();
 extern Shader* shader_default;
 extern Shader* shader_lightSurface;
 extern Shader* shader_grabPass;
+extern Shader* shader_postProcessing;

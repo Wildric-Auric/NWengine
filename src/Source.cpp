@@ -52,8 +52,19 @@ int main()
 	//Load ressources
 	GLubyte* behindPixels = new GLubyte[4 * SCREEN_WIDTH * SCREEN_HEIGHT];
 	LoadImages();
+
+
 	Texture tex = Texture(IMAGE_APPLE.width, IMAGE_APPLE.height, IMAGE_APPLE.tex, 1, 0);
 	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
+	Texture warriorTex = Texture(IMAGE_WARRIOR_IDLE_1.width, IMAGE_WARRIOR_IDLE_1.height, IMAGE_WARRIOR_IDLE_1.tex, 1, 0);
+	Texture backgroundTex = Texture(IMAGE_BACKGROUND.width, IMAGE_BACKGROUND.height, IMAGE_BACKGROUND.tex, 1, 1);
+	Texture bush1Tex = Texture(IMAGE_BUSH1.width, IMAGE_BUSH1.height, IMAGE_BUSH1.tex, 1, 0);
+	Texture bush2Tex = Texture(IMAGE_BUSH2.width, IMAGE_BUSH2.height, IMAGE_BUSH2.tex, 1, 0);
+	Texture tree1Tex = Texture(IMAGE_TREE1.width, IMAGE_TREE1.height, IMAGE_TREE1.tex, 1, 0);
+	Texture tree2Tex = Texture(IMAGE_TREE2.width, IMAGE_TREE2.height, IMAGE_TREE2.tex, 1, 0);
+	Texture groundTex = Texture(IMAGE_GROUND.width, IMAGE_GROUND.height, IMAGE_GROUND.tex, 1, 0);
+
+
 	LoadShaders();
 
 	
@@ -62,10 +73,25 @@ int main()
 
 	//Shader* textShader			= new Shader();
 
-	GameObject* lesbeanApple = (GameObject*)malloc(sizeof(GameObject)); //Need default constructor to use new; I'm lazy, I can't do it now
+	GameObject* lesbeanApple = (GameObject*)malloc(sizeof(GameObject)); //Need default constructor to use ew; I'm lazy, I can't do it now
 	GameObject* lesbeanApple2 = (GameObject*)malloc(sizeof(GameObject));
 	GameObject* grabPass = (GameObject*)malloc(sizeof(GameObject));
 	GameObject* lightSurface	= (GameObject*)malloc(sizeof(GameObject));
+	GameObject* postProcessing = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* warrior = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* background = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* background1 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* background2 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* background3 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* background4 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* tree1 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* tree2 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* bush1 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* bush2 = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* ground = (GameObject*)malloc(sizeof(GameObject));
+
+
+
 
 	//Text* text	= new Text();
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
@@ -75,9 +101,24 @@ int main()
 	*lesbeanApple2 = GameObject(&tex, Vector2<int>(500, 0), Vector2<float>(-1.0f, 1.0f), shader_default);
 	*grabPass	= GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f,1.0f),
 						shader_grabPass);
-
 	*lightSurface   = GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f, 1.0f),
 						shader_lightSurface);
+	*postProcessing = GameObject(&grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f),
+						shader_postProcessing);
+	*warrior = GameObject(&warriorTex, Vector2<int>(0, -20), Vector2<float>(1.0f, 1.0f));
+	float s = 1.5;
+	*background = GameObject(&backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s));
+	*background1 = GameObject(&backgroundTex, Vector2<int>(-337 + s*background->size.x, 130), Vector2<float>(s, s));
+	*background2 = GameObject(&backgroundTex, Vector2<int>(-337 + 2*s*background->size.x, 130), Vector2<float>(s, s));
+	*background3 = GameObject(&backgroundTex, Vector2<int>(-337 + 3 * s * background->size.x, 130), Vector2<float>(s, s));
+	*background4 = GameObject(&backgroundTex, Vector2<int>(-337 + 4 * s * background->size.x, 130), Vector2<float>(s, s));
+	s = 1.5f;
+	*bush1 = GameObject(&bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s));
+	*bush2 = GameObject(&bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s));
+	*tree1 = GameObject(&tree1Tex, Vector2<int>(156, 22), Vector2<float>(s, s));
+	*tree2 = GameObject(&tree2Tex, Vector2<int>(-212, 28), Vector2<float>(s, s));
+	s = 1.0f;
+	*ground = GameObject(&groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s));
 
 	Collider collider_apple = Collider(lesbeanApple);
 	Collider collider_apple2 = Collider(lesbeanApple2);
@@ -99,6 +140,7 @@ int main()
 	
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); NANI!?
 
+	double currentSprite = 0.0;
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -106,6 +148,15 @@ int main()
 		ImGui::NewFrame();
 		ImGui::Begin("Debug");
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
+		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
+		ImGui::SliderInt2("bg", &background->position.x, -400, 400);
+		ImGui::SliderInt2("tree1", &tree1->position.x, -400, 400);
+		ImGui::SliderInt2("tree2", &tree2->position.x, -400, 400);
+		ImGui::SliderInt2("bush1", &bush1->position.x, -400, 400);
+		ImGui::SliderInt2("bush2", &bush2->position.x, -400, 400);
+		ImGui::SliderInt2("ground", &ground->position.x, -400, 400);
+
+
 		ImGui::End();
 		//Debug--------------
 
@@ -129,14 +180,33 @@ int main()
 			lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
 		}
 
-		camera.position = lesbeanApple->position;
 		camera.Update();
 		//Drawing shapes
-		lesbeanApple->Draw(0);
-		lesbeanApple2->Draw(0);
+		currentSprite += deltaTime *5.0;
+		//calling this every frame is not optimal
+		background->Draw(0);
+		background1->Draw(0);
+		background2->Draw(0);
+		background3->Draw(0);
+		background4->Draw(0);
+		bush1->Draw(0);
+		bush2->Draw(0);
+		tree1->Draw(0);
+		tree2->Draw(0);
+		ground->Draw(0);
+		warriorTex.UpdateTexture(warriorTex.size.x, warriorTex.size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
+		warrior->Draw(0);
+		//lesbeanApple->Draw(0);
+		//lesbeanApple2->Draw(0);
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		grabPass->Draw(1);
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		postProcessing->Draw(1);
+		
+
 		//lightSurface->Draw(1);
 
 

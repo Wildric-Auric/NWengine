@@ -3484,6 +3484,7 @@
     <None Include="dependencies\IRRKLANG\lib\Win32-gcc\libirrKlang.def">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Shaders\PostProcessing.shader" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\Primitives.obj" />

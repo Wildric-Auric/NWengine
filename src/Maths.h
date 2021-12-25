@@ -4,8 +4,8 @@
 template<class T>
 class Vector2 {
 public:
-	float x;
-	float y;
+	T x;
+	T y;
 	Vector2(T x = 0.0f, T y = 0.0f);
 	Vector2 operator + (Vector2 const& vec1);
 	Vector2 operator + (T const& num);

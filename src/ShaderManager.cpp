@@ -9,13 +9,14 @@
 Shader* shader_default = (Shader*)malloc(sizeof(Shader));
 Shader* shader_lightSurface = (Shader*)malloc(sizeof(Shader));
 Shader* shader_grabPass = (Shader*)malloc(sizeof(Shader));
-
+Shader* shader_postProcessing = (Shader*)malloc(sizeof(Shader));
 
 void LoadShaders() {
 
 	*shader_default = Shader("Shaders/Shader1.shader");
 	*shader_lightSurface = Shader("Shaders/LightSurface.shader");
 	*shader_grabPass = Shader("Shaders/GrabPass.shader");
+	*shader_postProcessing = Shader("Shaders/PostProcessing.shader");
 
 }
 

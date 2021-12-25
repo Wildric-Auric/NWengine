@@ -1628,6 +1628,7 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
     <None Include="Shaders\GrabPass.shader" />
     <None Include="Shaders\LightSurface.shader" />
+    <None Include="Shaders\PostProcessing.shader" />
     <None Include="Shaders\Text.shader" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
