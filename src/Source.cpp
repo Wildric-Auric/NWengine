@@ -21,6 +21,7 @@
 #include  "GameObject.h"
 #include "Globals.h"
 #include "Camera.h"
+#include "Utilities.h"
 //Variable
 float fps = 60;
 int frameCount = 0;
@@ -40,7 +41,6 @@ int main()
 
 	//Create ImGui context
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
@@ -63,6 +63,7 @@ int main()
 	//Shader* textShader			= new Shader();
 
 	GameObject* lesbeanApple = (GameObject*)malloc(sizeof(GameObject)); //Need default constructor to use new; I'm lazy, I can't do it now
+	GameObject* lesbeanApple2 = (GameObject*)malloc(sizeof(GameObject));
 	GameObject* grabPass = (GameObject*)malloc(sizeof(GameObject));
 	GameObject* lightSurface	= (GameObject*)malloc(sizeof(GameObject));
 
@@ -71,11 +72,16 @@ int main()
 
 
 	*lesbeanApple = GameObject(&tex, Vector2<int>(0,0), Vector2<float>(1.0f,1.0f), shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	*lesbeanApple2 = GameObject(&tex, Vector2<int>(500, 0), Vector2<float>(-1.0f, 1.0f), shader_default);
 	*grabPass	= GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f,1.0f),
 						shader_grabPass);
 
 	*lightSurface   = GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f, 1.0f),
 						shader_lightSurface);
+
+	Collider collider_apple = Collider(lesbeanApple);
+	Collider collider_apple2 = Collider(lesbeanApple2);
+	Collider collider_water = Collider(grabPass);
 
 
 	Camera camera = Camera(-(float)SCREEN_WIDTH/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
@@ -90,6 +96,9 @@ int main()
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
 	if (sd) sd->setVolume(0.3);
 
+	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); NANI!?
+
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -98,7 +107,11 @@ int main()
 		ImGui::Begin("Debug");
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::End();
-		//----
+		//Debug--------------
+
+		//if (isColliding(&collider_apple, &collider_apple2)) std::cout << "Hello Collision" << std::endl;
+
+		//------------------
 		uTime += deltaTime;
 		glClearColor(bgColor.Value.x, bgColor.Value.y, bgColor.Value.z, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -111,16 +124,20 @@ int main()
 		//Update dynamic object position
 		lesbeanApple->position.x += (-input_left + input_right)*300.0f*deltaTime;
 		lesbeanApple->position.y += (-input_down + input_up)*300.0f*deltaTime;
-		camera.position.x += (-input_left + input_right) * 300.0f * deltaTime;
-		camera.position.y += (-input_down + input_up) * 300.0f * deltaTime;
+		while (isColliding(&collider_apple, &collider_apple2)) {
+			lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
+			lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
+		}
+
+		camera.position = lesbeanApple->position;
 		camera.Update();
 		//Drawing shapes
 		lesbeanApple->Draw(0);
-
+		lesbeanApple2->Draw(0);
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
-		lightSurface->Draw(1);
 		grabPass->Draw(1);
+		//lightSurface->Draw(1);
 
 
 

@@ -24,3 +24,14 @@ public:
 				Vector2<float> scale = Vector2<float> (1.0f, 1.0f), Shader* shader = shader_default, bool usingImageSize = 1, Vector2<int> size = (10, 10));
 };
 
+
+class Collider {
+private: 
+	Vector2<int> manualSize;
+public:
+	Collider(GameObject* attachedObj);
+	GameObject* attachedObj;
+	Vector2<int>* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
+	Vector2<int>* size; //ReadOnly
+	void Resize(Vector2<int> newSize);
+};

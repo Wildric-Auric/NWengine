@@ -11,5 +11,5 @@ void Camera::Update() {
 }
 
 void Camera::MoveTo(Vector2<int> target, float targetTime) {
-	position = target;
+	position = target;   //No interpolation yet sincde no generator
 }

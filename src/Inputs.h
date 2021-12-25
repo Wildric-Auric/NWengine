@@ -7,5 +7,6 @@ extern double mousePosY;
 extern bool input_left, 
 input_right, 
 input_up, 
-input_down;
+input_down,
+input_d;
 void processInput(GLFWwindow* window);

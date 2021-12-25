@@ -888,6 +888,7 @@
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

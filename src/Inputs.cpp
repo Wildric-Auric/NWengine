@@ -1,6 +1,6 @@
 #include "Inputs.h"
 
-bool input_left, input_right, input_up, input_down = 0;
+bool input_left, input_right, input_up, input_down,input_d = 0;
 double mousePosX;
 double mousePosY; //TODO::Maybe add vector2 with double Values;
 void processInput(GLFWwindow* window)
@@ -10,4 +10,5 @@ void processInput(GLFWwindow* window)
 	input_right = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
 	input_up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
 	input_down = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
+	input_d = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
 };
