@@ -24,7 +24,3 @@ public:
 				Vector2<float> scale = Vector2<float> (1.0f, 1.0f), Shader* shader = shader_default, bool usingImageSize = 1, Vector2<int> size = (10, 10));
 };
 
-class Camera {
-public:
-	Vector2<int> position;
-};

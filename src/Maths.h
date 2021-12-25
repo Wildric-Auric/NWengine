@@ -7,7 +7,6 @@ public:
 	float x;
 	float y;
 	Vector2(T x = 0.0f, T y = 0.0f);
-private:
 	Vector2 operator + (Vector2 const& vec1);
 	Vector2 operator + (T const& num);
 	Vector2 operator * (T const& num);

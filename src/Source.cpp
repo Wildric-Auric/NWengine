@@ -20,7 +20,7 @@
 #include "RessourcesLoader.h"
 #include  "GameObject.h"
 #include "Globals.h"
-
+#include "Camera.h"
 //Variable
 float fps = 60;
 int frameCount = 0;
@@ -75,12 +75,15 @@ int main()
 						shader_grabPass);
 
 	*lightSurface   = GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f, 1.0f),
-						shader_grabPass);
+						shader_lightSurface);
+
+
+	Camera camera = Camera(-(float)SCREEN_WIDTH/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
+
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	projectionMatrix = glm::ortho(-((float)SCREEN_WIDTH)/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
 	lastTime = glfwGetTime();
 	ImColor bgColor = ImColor(82, 75, 108);
 
@@ -108,11 +111,13 @@ int main()
 		//Update dynamic object position
 		lesbeanApple->position.x += (-input_left + input_right)*300.0f*deltaTime;
 		lesbeanApple->position.y += (-input_down + input_up)*300.0f*deltaTime;
-
+		camera.position.x += (-input_left + input_right) * 300.0f * deltaTime;
+		camera.position.y += (-input_down + input_up) * 300.0f * deltaTime;
+		camera.Update();
 		//Drawing shapes
 		lesbeanApple->Draw(0);
 
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		lightSurface->Draw(1);
 		grabPass->Draw(1);

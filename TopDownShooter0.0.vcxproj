@@ -173,6 +173,7 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -875,6 +876,7 @@
     <ClInclude Include="dependencies\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
+    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Clock.h" />
     <ClInclude Include="src\GameObject.h" />
