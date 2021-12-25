@@ -3,24 +3,24 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Primitives.h"
-#include "ShaderManager.h"
+#include <irrKlang.h>
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
+#include "Primitives.h"
+#include "ShaderManager.h"
 #include "Inputs.h"
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
 //#include "Text.h"
 #include "RessourcesLoader.h"
-#include "Time.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include <irrKlang.h>
-//Consts
-int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 700;
-const float SCREENRATIO = ((float) SCREEN_WIDTH )/((float) SCREEN_HEIGHT);
+#include  "GameObject.h"
+#include "Globals.h"
+
 //Variable
 float fps = 60;
 int frameCount = 0;
@@ -28,14 +28,12 @@ int frameCount = 0;
 double currentTime;
 double lastTime;
 
-//Uniforms
-GLfloat uTime = 0;
 
-glm::mat4 proj;
-glm::mat4 view(1.0);
 using namespace irrklang;
+
 int main()
 { 
+
     //Init GLFW context 
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
@@ -50,45 +48,40 @@ int main()
 	//init irrKlang
 	ISoundEngine* SoundEngine = createIrrKlangDevice();
 
+
 	//Load ressources
-	loadImages();
-	Texture tex = Texture(TEX1.width, TEX1.height, TEX1.tex, 1, 0);
-
-	//GrabPass test
 	GLubyte* behindPixels = new GLubyte[4 * SCREEN_WIDTH * SCREEN_HEIGHT];
+	LoadImages();
+	Texture tex = Texture(IMAGE_APPLE.width, IMAGE_APPLE.height, IMAGE_APPLE.tex, 1, 0);
+	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
+	LoadShaders();
+
+	
 
 
-	Shader* defaultShader		= new Shader();
-	Shader* lightSurfaceShader	= new Shader();
-	Shader* grabPassShader		= new Shader();
+
 	//Shader* textShader			= new Shader();
 
-	Quad* quad			= new Quad();
-	Quad* lightSurface	= new Quad();
-	Quad* grabPass		= new Quad();
+	GameObject* lesbeanApple = (GameObject*)malloc(sizeof(GameObject)); //Need default constructor to use new; I'm lazy, I can't do it now
+	GameObject* grabPass = (GameObject*)malloc(sizeof(GameObject));
+	GameObject* lightSurface	= (GameObject*)malloc(sizeof(GameObject));
 
 	//Text* text	= new Text();
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
-	*defaultShader		= Shader("Shaders/Shader1.shader");
-	*lightSurfaceShader	= Shader("Shaders/LightSurface.shader");
-	*grabPassShader		= Shader("Shaders/GrabPass.shader");
-	//*textShader			= Shader("Shaders/Text.shader");
 
-	*quad			= Quad(Vector2(0.0f,0.0f), 300.0F, 300.0F);
-	*lightSurface	= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	*grabPass		= Quad(Vector2(0.0f, 0.0f), (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+	*lesbeanApple = GameObject(&tex, Vector2<int>(0,0), Vector2<float>(1.0f,1.0f), shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	*grabPass	= GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f,1.0f),
+						shader_grabPass);
 
+	*lightSurface   = GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f, 1.0f),
+						shader_grabPass);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	proj = glm::ortho(-((float)SCREEN_WIDTH)/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
-	
+	projectionMatrix = glm::ortho(-((float)SCREEN_WIDTH)/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
 	lastTime = glfwGetTime();
-	fps = 60.0;
-	Texture grabTex = Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
-
 	ImColor bgColor = ImColor(82, 75, 108);
 
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
@@ -107,44 +100,23 @@ int main()
 		glClearColor(bgColor.Value.x, bgColor.Value.y, bgColor.Value.z, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
+		//BindTextures
+		tex.Bind(0);
+		grabTex.Bind(1);
+		//TODO::Shader managment when it comes to draw shapes
 
 		//Update dynamic object position
-		quad->position.x += (-input_left + input_right)*300.0f*deltaTime;
-		quad->position.y += (-input_down + input_up)*300.0f*deltaTime;
+		lesbeanApple->position.x += (-input_left + input_right)*300.0f*deltaTime;
+		lesbeanApple->position.y += (-input_down + input_up)*300.0f*deltaTime;
 
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(quad->position.x, quad->position.y, 0.0f));
 		//Drawing shapes
-		glUseProgram(defaultShader->shaderProgram);
-		defaultShader->SetMat4x4("uMvp", &(proj*view*model)[0][0]);
+		lesbeanApple->Draw(0);
 
-		defaultShader->SetUniform1f("uTime", uTime);
-		defaultShader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
-		defaultShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
-
-		tex.Bind(0);
-		defaultShader->SetUniform1i("uTex0", 0);
-		
-		quad->Draw();
-
-		
-		glUseProgram(lightSurfaceShader->shaderProgram);
-		lightSurfaceShader->SetVector2("uResolution", (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-		lightSurfaceShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
-		lightSurfaceShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
-		//lightSurface->Draw();
-	
-		//using gragrab pass texture; 
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		glUseProgram(grabPassShader->shaderProgram);
-		grabPassShader->SetVector2("uResolution", (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-		grabPassShader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
-		grabPassShader->SetUniform1f("uTime", (float)uTime);
+		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		lightSurface->Draw(1);
+		grabPass->Draw(1);
 
-		grabPassShader->SetMat4x4("uMvp", &(proj * view)[0][0]);
-		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 0);
-		grabTex.Bind(1);
-		grabPassShader->SetUniform1i("uTex0", 1);
-		grabPass->Draw();
 
 
 
@@ -163,4 +135,7 @@ int main()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();
+	free(lightSurface);
+	free(lesbeanApple);
+	free(grabPass);
 }

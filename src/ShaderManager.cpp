@@ -6,6 +6,21 @@
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
 
+Shader* shader_default = (Shader*)malloc(sizeof(Shader));
+Shader* shader_lightSurface = (Shader*)malloc(sizeof(Shader));
+Shader* shader_grabPass = (Shader*)malloc(sizeof(Shader));
+
+
+void LoadShaders() {
+
+	*shader_default = Shader("Shaders/Shader1.shader");
+	*shader_lightSurface = Shader("Shaders/LightSurface.shader");
+	*shader_grabPass = Shader("Shaders/GrabPass.shader");
+
+}
+
+
+
 std::pair<const char*, const char*> parseShader(const char* path)
 {
 	std::string frag, vert = "";    //TODO: Make it directly in the heap

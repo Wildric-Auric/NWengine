@@ -1,9 +1,10 @@
 #pragma once
-
+#include"Maths.h"
 class Texture {
 private:
 	unsigned int texture;
 public:
+	Vector2<int> size;
 	Texture(int width, int height, unsigned char* texRes, bool alpha = true, bool repeat = false);
 	void Bind(unsigned int slot);
 	void UpdateTexture(int width, int height, unsigned char* texRes,unsigned int slot, bool alpha = 1);

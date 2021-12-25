@@ -9,7 +9,7 @@
 #include "RessourcesLoader.h"
 
 const char* path = "Ressources/Images/img2.png";
-Image TEX1;
+Image IMAGE_APPLE;
 
 Image::Image(const char *path, bool alpha) {
 	stbi_set_flip_vertically_on_load(1);
@@ -17,9 +17,9 @@ Image::Image(const char *path, bool alpha) {
 	tex = stbi_load(path, &width, &height, &channels, 3 + alpha);
 }
 
-void loadImages() {
-	TEX1 = Image(path, true);
+void LoadImages() {
+	IMAGE_APPLE = Image(path, true);
 }
-void freeBuffer(unsigned char* buffer) {
+void FreeBuffer(unsigned char* buffer) {
 	stbi_image_free(buffer);
 }

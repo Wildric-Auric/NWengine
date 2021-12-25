@@ -2,6 +2,7 @@
 #define PRIMITIVES_H
 #include "Maths.h"
 
+
 class Quad {
 private:
 	unsigned int VBO = 0, VAO = 0, EBO = 0;
@@ -12,9 +13,9 @@ private:
 		1,2,3
 	};
 public: 
-	Vector2 position;
-	Vector2 scale;
-	Quad(Vector2 position = Vector2(0.0f,0.0f),float width = 10.0, float height = 10.0);
+	Vector2<int> position;
+	Vector2<float> scale;
+	Quad(Vector2<int> position = Vector2<int>(0.0f,0.f),float width = 10.0f, float height = 10.0f);
 	void Draw();
 };
 
@@ -33,5 +34,6 @@ public:
 	Triangle();
 	void Draw();
 };
+
 
 #endif 

@@ -84,6 +84,12 @@
     <ClCompile Include="dependencies\IRRKLANG\plugins\ikpMP3\ikpMP3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -1936,7 +1942,7 @@
     <ClInclude Include="src\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Time.h">
+    <ClInclude Include="src\Globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\vendor\glm\ext\matrix_integer.hpp">
@@ -2156,6 +2162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\IRRKLANG\plugins\ikpMP3\CIrrKlangAudioStreamMP3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

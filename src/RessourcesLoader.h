@@ -10,6 +10,6 @@ public:
 	int channels;
 	bool alpha;
 };
-extern Image TEX1;
-void freeBuffer(unsigned char* buffer);
-void loadImages();
+extern Image IMAGE_APPLE;
+void FreeBuffer(unsigned char* buffer);
+void LoadImages();

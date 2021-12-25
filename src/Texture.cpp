@@ -1,10 +1,10 @@
 #include "Texture.h"
-#include "Texture.h"
 #include "RessourcesLoader.h"
 #include "GL/glew.h"
 #include "glfw3.h"
 
 Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool repeat) {
+	size = Vector2<int>(width, height);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
