@@ -1,5 +1,6 @@
 #pragma once
-
+#include "ShaderManager.h"
+#include "GameObject.h"
 
 class Image {
 public:
@@ -10,6 +11,14 @@ public:
 	int channels;
 	bool alpha;
 };
+extern unsigned char* behindPixels;
+
+void FreeBuffer(unsigned char* buffer);
+void LoadImages();
+void LoadShaders();
+void LoadTextures();
+void LoadGameObjects();
+
 extern Image IMAGE_APPLE;
 extern Image IMAGE_WARRIOR_IDLE_1;
 extern Image IMAGE_WARRIOR_IDLE_2;
@@ -24,5 +33,41 @@ extern Image IMAGE_TREE2;
 extern Image IMAGE_BUSH1;
 extern Image IMAGE_BUSH2;
 extern Image IMAGE_GROUND;
-void FreeBuffer(unsigned char* buffer);
-void LoadImages();
+
+
+
+extern Texture* tex;
+extern Texture* grabTex;
+extern Texture* warriorTex;
+extern Texture* backgroundTex;
+extern Texture* bush1Tex;
+extern Texture* bush2Tex;
+extern Texture* tree1Tex;
+extern Texture* tree2Tex;
+extern Texture* groundTex;
+
+
+
+extern Shader* shader_default;
+extern Shader* shader_lightSurface;
+extern Shader* shader_grabPass;
+extern Shader* shader_postProcessing;
+
+
+
+extern GameObject* lesbeanApple;
+extern GameObject* lesbeanApple2;
+extern GameObject* grabPass;
+extern GameObject* lightSurface;
+extern GameObject* postProcessing;
+extern GameObject* warrior;
+extern GameObject* background;
+extern GameObject* background1;
+extern GameObject* background2;
+extern GameObject* background3;
+extern GameObject* background4;
+extern GameObject* tree1;
+extern GameObject* tree2;
+extern GameObject* bush1;
+extern GameObject* bush2;
+extern GameObject* ground;

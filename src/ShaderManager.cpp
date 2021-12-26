@@ -6,19 +6,6 @@
 #include "ShaderManager.h"
 #include "glm/glm.hpp"
 
-Shader* shader_default = (Shader*)malloc(sizeof(Shader));
-Shader* shader_lightSurface = (Shader*)malloc(sizeof(Shader));
-Shader* shader_grabPass = (Shader*)malloc(sizeof(Shader));
-Shader* shader_postProcessing = (Shader*)malloc(sizeof(Shader));
-
-void LoadShaders() {
-
-	*shader_default = Shader("Shaders/Shader1.shader");
-	*shader_lightSurface = Shader("Shaders/LightSurface.shader");
-	*shader_grabPass = Shader("Shaders/GrabPass.shader");
-	*shader_postProcessing = Shader("Shaders/PostProcessing.shader");
-
-}
 
 
 
@@ -77,15 +64,15 @@ Shader::Shader(const char* path) {
 	glDeleteShader(fragmentShader);
 };
 
-void Shader::SetMat4x4(const char* name, const GLfloat* value) {
+void Shader::SetMat4x4(const char* name, const float* value) {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, name), 1, GL_FALSE, value);
 }
 
-void Shader::SetUniform1f(const char* name, GLfloat value) {
+void Shader::SetUniform1f(const char* name, float value) {
 	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
 }
 
-void Shader::SetVector2(const char* name, GLfloat value0, GLfloat value1) {
+void Shader::SetVector2(const char* name, float value0, float value1) {
 	glUniform2f(glGetUniformLocation(shaderProgram, name), value0, value1);
 }
 
@@ -96,5 +83,5 @@ void Shader::SetUniform1i(const char* name, const int value) {
 void Shader::SetUniform3f(const char* name, float x, float y, float z)
 {
 	glUniform3f(glGetUniformLocation(shaderProgram, name), x, y, z);
-}
+};
 

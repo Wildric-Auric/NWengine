@@ -3,6 +3,7 @@
 #include"GameObject.h"
 #include "Inputs.h"
 #include "Maths.h"
+#include "RessourcesLoader.h"
 //Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
 void GameObject::Draw(uint8_t textureSlot) {
 	container.scale = scale;
@@ -15,7 +16,7 @@ void GameObject::Draw(uint8_t textureSlot) {
 	shader->SetUniform1f("uTime", uTime);
 	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
 	shader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
-	if (image != nullptr) image->Bind(textureSlot);
+	image->Bind(textureSlot);
 	shader->SetUniform1i("uTex0", textureSlot);
 	container.Draw();
 };
@@ -25,7 +26,8 @@ GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> sca
 	this->position = position;
 	this->scale = scale;
 	this->image = image;
-	this->shader = shader;
+	if (shader == nullptr) this->shader = shader_default;
+	else this->shader = shader;
 	if (image != nullptr && usingImageSize) {
 		this->size = Vector2<int>(image->size.x * abs(scale.x), image->size.y * abs(scale.y));
 	}
@@ -41,11 +43,11 @@ Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* n
 	if (newSize != nullptr) size = newSize;
 	else size = &attachedObj->size;
 	position = &attachedObj->position;
-}
+};
 void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize;
 	size = &manualSize;
 };
 Vector2<int> Collider::GetPosition() {
 	return *position + offset;
-}
+};
