@@ -7,6 +7,8 @@ int SCREEN_WIDTH = 850;
 int SCREEN_HEIGHT = 640;
 const float SCREENRATIO = ((float)SCREEN_WIDTH) / ((float)SCREEN_HEIGHT);
 
+bool const DEBUG_MODE = true;
+
 //Uniforms
 float uTime = 0;
 glm::mat4 projectionMatrix;

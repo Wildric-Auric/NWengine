@@ -8,7 +8,7 @@ extern double deltaTime;      //Read only in everyfile except mainloops
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern const float SCREENRATIO;
-
+extern const bool DEBUG_MODE;
 //Uniforms
 extern float uTime;
 extern glm::mat4 projectionMatrix;
