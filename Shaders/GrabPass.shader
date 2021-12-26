@@ -37,6 +37,7 @@ float random(in vec2 st) {
 
 float start = 0.4;
 float lod = 0.0f;
+float brightness = .3;
 void main() {
     vec2 mouse = uMouse / uResolution;
     vec2 uv1 = uv;
@@ -55,7 +56,7 @@ void main() {
         additional += uv.y / 0.38 - 1.0;
         waterColor = vec4(0.2, 0.2, .2, 0.5);
         //col = mix(textureLod(uTex0, uv1, detail), textureLod(uTex0,uv, 0.0), 0.3)* waterColor; //Maybe should you add magnifying effect for object underwater
-        col = mix(textureLod(uTex0, uv1, detail), vec4(additional, 1.0), .6);
+        col = mix(textureLod(uTex0, uv1, detail), vec4(additional, 1.0), brightness);
     } 
     else col = textureLod(uTex0, uv1, detail);
     FragColor = col ;

@@ -3,15 +3,15 @@
 
 bool isColliding(Collider* collider1, Collider* collider2) {
 	uint8_t overlap = 0;
-	int minX1 = collider1->position->x - collider1->size->x/2;
-	int maxX1 = collider1->position->x + collider1->size->x/2;
-	int minY1 = collider1->position->y - collider1->size->y/2;
-	int maxY1 = collider1->position->y + collider1->size->y/2;
+	int minX1 = collider1->GetPosition().x - collider1->size->x / 2;
+	int maxX1 = collider1->GetPosition().x + collider1->size->x/2;
+	int minY1 = collider1->GetPosition().y - collider1->size->y/2;
+	int maxY1 = collider1->GetPosition().y + collider1->size->y/2;
 
-	int minX2 = collider2->position->x - collider2->size->x / 2;
-	int maxX2 = collider2->position->x + collider2->size->x / 2;
-	int minY2 = collider2->position->y - collider2->size->y / 2;
-	int maxY2 = collider2->position->y + collider2->size->y / 2;
+	int minX2 = collider2->GetPosition().x - collider2->size->x / 2;
+	int maxX2 = collider2->GetPosition().x + collider2->size->x / 2;
+	int minY2 = collider2->GetPosition().y - collider2->size->y / 2;
+	int maxY2 = collider2->GetPosition().y + collider2->size->y / 2;
 
 	overlap += (  
 					( (minX1 < minX2) && (minX2 < maxX1) ) ||  
