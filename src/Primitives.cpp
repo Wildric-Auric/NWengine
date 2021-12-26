@@ -26,7 +26,7 @@ void Triangle::Draw() {
 
 
 
-Quad::Quad(Vector2<int> position,float width, float height) : position(0, 0), width(0), height(0),
+Quad::Quad(Vector2<int> position,float width, float height) : position(0, 0), width(10), height(10),
 vertices{ 0.0f }
 {
 	float vertices[20] = {

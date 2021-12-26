@@ -2,14 +2,14 @@
 #include <glfw3.h>
 #include"GameObject.h"
 #include "Inputs.h"
-
+#include "Maths.h"
 //Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
 void GameObject::Draw(uint8_t textureSlot) {
 	container.scale = scale;
 	container.position = position;
 	glUseProgram(shader->shaderProgram);
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
-	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));     
+	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
 	shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
 
 	shader->SetUniform1f("uTime", uTime);
@@ -34,14 +34,18 @@ GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> sca
 	}
 
 	container = Quad(position, this->size.x, this->size.y);
-
 };
 
-Collider::Collider(GameObject* attachedObj) {
+Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
+	this->offset = offset;
+	if (newSize != nullptr) size = newSize;
+	else size = &attachedObj->size;
 	position = &attachedObj->position;
-	size = &attachedObj->size;
 }
 void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize;
 	size = &manualSize;
 };
+Vector2<int> Collider::GetPosition() {
+	return *position + offset;
+}

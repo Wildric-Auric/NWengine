@@ -29,9 +29,12 @@ class Collider {
 private: 
 	Vector2<int> manualSize;
 public:
-	Collider(GameObject* attachedObj);
+	Collider(GameObject* attachedObj, Vector2<int> offset = Vector2<int>(0, 0),
+				Vector2<int>* newSize = nullptr);
 	GameObject* attachedObj;
 	Vector2<int>* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
 	Vector2<int>* size; //ReadOnly
+	Vector2<int> offset;
+	Vector2<int> GetPosition();
 	void Resize(Vector2<int> newSize);
 };
