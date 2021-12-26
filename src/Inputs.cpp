@@ -2,7 +2,7 @@
 
 bool input_left, input_right, input_up, input_down,input_d = 0;
 double mousePosX;
-double mousePosY; //TODO::Maybe add vector2 with double Values;
+double mousePosY;
 void processInput(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
