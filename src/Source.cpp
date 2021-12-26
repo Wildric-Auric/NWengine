@@ -23,11 +23,11 @@
 #include "Camera.h"
 #include "Utilities.h"
 //Variable
-float fps = 60;
+double fps = 60;
 int frameCount = 0;
-
 double currentTime;
 double lastTime;
+double deltaTimeSum = 0;
 
 
 using namespace irrklang;
@@ -97,8 +97,8 @@ int main()
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
 
-	*lesbeanApple = GameObject(&tex, Vector2<int>(0,0), Vector2<float>(1.0f,1.0f), shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
-	*lesbeanApple2 = GameObject(&tex, Vector2<int>(500, 0), Vector2<float>(-1.0f, 1.0f), shader_default);
+	*lesbeanApple = GameObject(&tex, Vector2<int>(0,0), Vector2<float>(0.5f,0.5f), shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	*lesbeanApple2 = GameObject(&tex, Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), shader_default);
 	*grabPass	= GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f,1.0f),
 						shader_grabPass);
 	*lightSurface   = GameObject(&grabTex, Vector2<int>(0 , 0 ), Vector2<float>(1.0f, 1.0f),
@@ -106,18 +106,18 @@ int main()
 	*postProcessing = GameObject(&grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f),
 						shader_postProcessing);
 	*warrior = GameObject(&warriorTex, Vector2<int>(0, -20), Vector2<float>(1.0f, 1.0f));
-	float s = 1.5;
+	float s = 2.2;
 	*background = GameObject(&backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s));
-	*background1 = GameObject(&backgroundTex, Vector2<int>(-337 + s*background->size.x, 130), Vector2<float>(s, s));
-	*background2 = GameObject(&backgroundTex, Vector2<int>(-337 + 2*s*background->size.x, 130), Vector2<float>(s, s));
-	*background3 = GameObject(&backgroundTex, Vector2<int>(-337 + 3 * s * background->size.x, 130), Vector2<float>(s, s));
-	*background4 = GameObject(&backgroundTex, Vector2<int>(-337 + 4 * s * background->size.x, 130), Vector2<float>(s, s));
-	s = 1.5f;
+	*background1 = GameObject(&backgroundTex, Vector2<int>(-337 + background->size.x, 130), Vector2<float>(s, s));
+	*background2 = GameObject(&backgroundTex, Vector2<int>(-337 + 2 *background->size.x, 130), Vector2<float>(s, s));
+	*background3 = GameObject(&backgroundTex, Vector2<int>(-337 + 3 * background->size.x, 130), Vector2<float>(s, s));
+	*background4 = GameObject(&backgroundTex, Vector2<int>(-337 + 4 * background->size.x, 130), Vector2<float>(s, s));
+	s = 2.0f;
 	*bush1 = GameObject(&bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s));
 	*bush2 = GameObject(&bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s));
-	*tree1 = GameObject(&tree1Tex, Vector2<int>(156, 22), Vector2<float>(s, s));
-	*tree2 = GameObject(&tree2Tex, Vector2<int>(-212, 28), Vector2<float>(s, s));
-	s = 1.0f;
+	*tree1 = GameObject(&tree1Tex, Vector2<int>(156, 12), Vector2<float>(s, s));
+	*tree2 = GameObject(&tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s));
+	s = 1.5f;
 	*ground = GameObject(&groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s));
 
 	Collider collider_apple = Collider(lesbeanApple);
@@ -138,7 +138,7 @@ int main()
 	if (sd) sd->setVolume(0.3);
 
 	
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); NANI!?
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 
 	double currentSprite = 0.0;
 	while (!glfwWindowShouldClose(window)){
@@ -147,6 +147,7 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::Begin("Debug");
+		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
 		ImGui::SliderInt2("bg", &background->position.x, -400, 400);
@@ -159,9 +160,9 @@ int main()
 
 		ImGui::End();
 		//Debug--------------
-
+		//std::cout << lesbeanApple->size.x << "  " << collider_apple2.size->x << std::endl;
 		//if (isColliding(&collider_apple, &collider_apple2)) std::cout << "Hello Collision" << std::endl;
-
+		
 		//------------------
 		uTime += deltaTime;
 		glClearColor(bgColor.Value.x, bgColor.Value.y, bgColor.Value.z, 1.0); // 0.6f, .8f, .8f, 1.0f
@@ -196,13 +197,13 @@ int main()
 		ground->Draw(0);
 		warriorTex.UpdateTexture(warriorTex.size.x, warriorTex.size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
 		warrior->Draw(0);
-		//lesbeanApple->Draw(0);
-		//lesbeanApple2->Draw(0);
+		lesbeanApple->Draw(0);
+		lesbeanApple2->Draw(0);
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		grabPass->Draw(1);
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels); 
 		grabTex.UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		postProcessing->Draw(1);
 		
@@ -220,8 +221,17 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		//Calculate fps
+		if (DEBUG_MODE) {
+			frameCount += 1;
+			deltaTimeSum += deltaTime;
+			if (frameCount == 60) {
+				fps = 60.0 / deltaTimeSum;
+				deltaTimeSum = 0;
+				frameCount = 0;
+			}
+		}
 		currentTime = glfwGetTime();
-		deltaTime = currentTime- lastTime;
+		deltaTime = currentTime - lastTime;
 		lastTime = currentTime; //Well it's negligeable operation
 	}
 	ImGui_ImplOpenGL3_Shutdown();
