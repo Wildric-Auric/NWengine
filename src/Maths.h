@@ -51,4 +51,10 @@ public:
 	}
 
 
+template<typename T> 
+int sign(T number) {
+	if (number < 0) return -1;
+		return 1;
+}
+
 #endif
