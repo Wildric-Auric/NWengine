@@ -8,5 +8,7 @@ extern bool input_left,
 input_right, 
 input_up, 
 input_down,
-input_d;
+input_d,
+input_left_click
+;
 void processInput(GLFWwindow* window);

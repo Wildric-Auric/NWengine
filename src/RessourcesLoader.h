@@ -33,7 +33,7 @@ extern Image IMAGE_TREE2;
 extern Image IMAGE_BUSH1;
 extern Image IMAGE_BUSH2;
 extern Image IMAGE_GROUND;
-
+extern Image IMAGE_TILE1;
 
 
 extern Texture* tex;
@@ -45,14 +45,14 @@ extern Texture* bush2Tex;
 extern Texture* tree1Tex;
 extern Texture* tree2Tex;
 extern Texture* groundTex;
-
+extern Texture* tile1Tex;
 
 
 extern Shader* shader_default;
 extern Shader* shader_lightSurface;
 extern Shader* shader_grabPass;
 extern Shader* shader_postProcessing;
-
+extern Shader* shader_simple;
 
 
 extern GameObject* lesbeanApple;
@@ -71,3 +71,4 @@ extern GameObject* tree2;
 extern GameObject* bush1;
 extern GameObject* bush2;
 extern GameObject* ground;
+extern GameObject* tile1Obj;

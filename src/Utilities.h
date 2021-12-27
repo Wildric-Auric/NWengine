@@ -1,7 +1,6 @@
 #pragma once
 #include "GameObject.h"
-
-bool isColliding(Collider* collider1, Collider* collider2) {
+bool IsColliding(Collider* collider1, Collider* collider2) {
 	uint8_t overlap = 0;
 	int minX1 = collider1->GetPosition().x - collider1->size->x / 2;
 	int maxX1 = collider1->GetPosition().x + collider1->size->x/2;
@@ -24,4 +23,9 @@ bool isColliding(Collider* collider1, Collider* collider2) {
 			   )
 		;
 	return overlap == 2;
+}
+
+GameObject CloneOnStack(GameObject* obj) {
+	GameObject cloned = *obj;
+	return cloned;
 }

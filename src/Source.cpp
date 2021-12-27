@@ -22,6 +22,7 @@
 #include "Globals.h"
 #include "Camera.h"
 #include "Utilities.h"
+#include "TileMap.h"
 //Variable
 double fps = 60;
 int frameCount = 0;
@@ -29,6 +30,7 @@ double currentTime;
 double lastTime;
 double deltaTimeSum = 0;
 
+Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
 
 using namespace irrklang;
 
@@ -64,12 +66,10 @@ int main()
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
 
-	Collider collider_apple = Collider(lesbeanApple);
-	Collider collider_apple2 = Collider(lesbeanApple2);
+	/*Collider collider_apple = Collider(lesbeanApple);
+	Collider collider_apple2 = Collider(lesbeanApple2);*/
 	Collider collider_water = Collider(grabPass);
-
-
-	Camera camera = Camera(-(float)SCREEN_WIDTH/2.0f,(float) SCREEN_WIDTH/2.0f, -(float) SCREEN_HEIGHT/2.0f, (float) SCREEN_HEIGHT/2.0f);
+	
 
 
 	glEnable(GL_BLEND);
@@ -81,8 +81,9 @@ int main()
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
 	if (sd) sd->setVolume(0.3);
 
-	
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
+	TileMap tmt = TileMap(Vector2<int>(32,32));
+	GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 
 	double currentSprite = 0.0;
 	while (!glfwWindowShouldClose(window)){
@@ -94,12 +95,14 @@ int main()
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
-		ImGui::SliderInt2("bg", &background->position.x, -400, 400);
-		ImGui::SliderInt2("tree1", &tree1->position.x, -400, 400);
-		ImGui::SliderInt2("tree2", &tree2->position.x, -400, 400);
-		ImGui::SliderInt2("bush1", &bush1->position.x, -400, 400);
-		ImGui::SliderInt2("bush2", &bush2->position.x, -400, 400);
-		ImGui::SliderInt2("ground", &ground->position.x, -400, 400);
+		//ImGui::SliderInt2("bg", &background->position.x, -400, 400);
+		//ImGui::SliderInt2("tree1", &tree1->position.x, -400, 400);
+		//ImGui::SliderInt2("tree2", &tree2->position.x, -400, 400);
+		//ImGui::SliderInt2("bush1", &bush1->position.x, -400, 400);
+		//ImGui::SliderInt2("bush2", &bush2->position.x, -400, 400);
+		//ImGui::SliderInt2("ground", &ground->position.x, -400, 400);
+		ImGui::SliderFloat2("appleSize", &(instancingApple.scale.x), -3.0f, 3.0f);
+
 
 
 		ImGui::End();
@@ -121,12 +124,14 @@ int main()
 		//Update dynamic object position
 		lesbeanApple->position.x += (-input_left + input_right)*300.0f*deltaTime;
 		lesbeanApple->position.y += (-input_down + input_up)*300.0f*deltaTime;
-		while (isColliding(&collider_apple, &collider_apple2)) {
-			lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
-			lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
-		}
+		//while (IsColliding(&collider_apple, &collider_apple2)) {
+		//	lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
+		//	lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
+		//}
+		camera.position = lesbeanApple->position;
 
 		camera.Update();
+		tmt.Update();
 		//Drawing shapes
 		currentSprite += deltaTime *5.0;
 		//calling this every frame is not optimal
@@ -139,20 +144,27 @@ int main()
 		bush2->Draw(0);
 		tree1->Draw(0);
 		tree2->Draw(0);
+		for (auto it = tmt.tiles.begin(); it != tmt.tiles.end(); ++it) {
+			(*it).Draw(0);
+		}
 		ground->Draw(0);
 		warriorTex->UpdateTexture(warriorTex->size.x, warriorTex->size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
 		warrior->Draw(0);
-		lesbeanApple->Draw(0);
-		lesbeanApple2->Draw(0);
+		//lesbeanApple->Draw(0);
+		//instancingApple.Draw(0);
+		//lesbeanApple2->Draw(0);
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		grabPass->Draw(1);
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels); 
+		postProcessing->position = camera.position;
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		postProcessing->Draw(1);
 		//lightSurface->Draw(1);
 
 
+		//Drawing debug things and tilemap grid
+		tmt.RenderGrid();
 
 
 		//Render Im::Gui

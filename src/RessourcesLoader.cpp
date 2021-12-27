@@ -37,7 +37,7 @@ Image IMAGE_TREE2;
 Image IMAGE_BUSH1;
 Image IMAGE_BUSH2;
 Image IMAGE_GROUND;
-
+Image IMAGE_TILE1;
 
 
 Texture* tex             = (Texture*)malloc(sizeof(Texture));
@@ -49,12 +49,14 @@ Texture* bush2Tex		 = (Texture*)malloc(sizeof(Texture));
 Texture* tree1Tex		 = (Texture*)malloc(sizeof(Texture));
 Texture* tree2Tex		 = (Texture*)malloc(sizeof(Texture));
 Texture* groundTex		 = (Texture*)malloc(sizeof(Texture));
+Texture* tile1Tex        = (Texture*)malloc(sizeof(Texture));
 
 
-Shader* shader_default = (Shader*)malloc(sizeof(Shader));
-Shader* shader_lightSurface = (Shader*)malloc(sizeof(Shader));
-Shader* shader_grabPass = (Shader*)malloc(sizeof(Shader));
-Shader* shader_postProcessing = (Shader*)malloc(sizeof(Shader));
+Shader* shader_default        =		(Shader*)malloc(sizeof(Shader));
+Shader* shader_lightSurface   =		(Shader*)malloc(sizeof(Shader));
+Shader* shader_grabPass       =		(Shader*)malloc(sizeof(Shader));
+Shader* shader_postProcessing =		(Shader*)malloc(sizeof(Shader));
+Shader* shader_simple         =		(Shader*)malloc(sizeof(Shader));
 
 
 GameObject* lesbeanApple = (GameObject*)malloc(sizeof(GameObject));
@@ -73,6 +75,7 @@ GameObject* tree2 = (GameObject*)malloc(sizeof(GameObject));
 GameObject* bush1 = (GameObject*)malloc(sizeof(GameObject));
 GameObject* bush2 = (GameObject*)malloc(sizeof(GameObject));
 GameObject* ground = (GameObject*)malloc(sizeof(GameObject));
+GameObject* tile1Obj = (GameObject*)malloc(sizeof(GameObject));
 
 
 Image::Image(const char* path, bool alpha) {
@@ -90,11 +93,12 @@ void LoadImages() {
 	IMAGE_WARRIOR_IDLE_5 = Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_5.png",1);
 	IMAGE_WARRIOR_IDLE_6 = Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_6.png",1);
 	IMAGE_BACKGROUND     = Image("Ressources/Images/Forrest_Tileset/BG/NonParallax.png",1);
-	IMAGE_TREE1 = Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png", 1);
-	IMAGE_TREE2 = Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png", 1);
-	IMAGE_BUSH1 = Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png", 1);
-	IMAGE_BUSH2 = Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png", 1);
-	IMAGE_GROUND = Image("Ressources/Images/ground.png", 1);
+	IMAGE_TREE1 =		   Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png", 1);
+	IMAGE_TREE2 =		   Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png", 1);
+	IMAGE_BUSH1 =		   Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png", 1);
+	IMAGE_BUSH2 =		   Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png", 1);
+	IMAGE_GROUND	=	   Image("Ressources/Images/ground.png", 1);
+	IMAGE_TILE1          = Image("Ressources/Images/Interior Wall.png", 1);
 
 };
 
@@ -108,13 +112,15 @@ void LoadTextures() {
 	*tree1Tex = Texture(IMAGE_TREE1.width, IMAGE_TREE1.height, IMAGE_TREE1.tex, 1, 0);
 	*tree2Tex = Texture(IMAGE_TREE2.width, IMAGE_TREE2.height, IMAGE_TREE2.tex, 1, 0);
 	*groundTex = Texture(IMAGE_GROUND.width, IMAGE_GROUND.height, IMAGE_GROUND.tex, 1, 0);
+	*tile1Tex = Texture(IMAGE_TILE1.width, IMAGE_TILE1.height, IMAGE_TILE1.tex, 1, 1);
 };
 void LoadShaders() {
 
-	*shader_default = Shader("Shaders/Shader1.shader");
-	*shader_lightSurface = Shader("Shaders/LightSurface.shader");
-	*shader_grabPass = Shader("Shaders/GrabPass.shader");
-	*shader_postProcessing = Shader("Shaders/PostProcessing.shader");
+	*shader_default        =			Shader("Shaders/Shader1.shader");
+	*shader_lightSurface   =			Shader("Shaders/LightSurface.shader");
+	*shader_grabPass       =			Shader("Shaders/GrabPass.shader");
+	*shader_postProcessing =			Shader("Shaders/PostProcessing.shader");
+	*shader_simple		   =			Shader("Shaders/Line.shader");
 
 };
 
@@ -138,6 +144,7 @@ void LoadGameObjects() {
 	*tree2 =				GameObject(tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s));
 	s = 1.5f;
 	*ground =				GameObject(groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s));
+	*tile1Obj=				GameObject(tile1Tex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f));
 };
 
 void FreeBuffer(unsigned char* buffer) {

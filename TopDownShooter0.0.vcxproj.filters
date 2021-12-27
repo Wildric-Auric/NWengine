@@ -93,6 +93,9 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TileMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -2176,6 +2179,9 @@
     <ClInclude Include="src\Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\TileMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\vendor\glm\ext\matrix_clip_space.inl">
@@ -3485,6 +3491,7 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="Shaders\PostProcessing.shader" />
+    <None Include="Shaders\Line.shader" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\Primitives.obj" />

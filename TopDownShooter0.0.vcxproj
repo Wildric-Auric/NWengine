@@ -188,6 +188,7 @@
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -888,6 +889,7 @@
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
@@ -1628,6 +1630,7 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
     <None Include="Shaders\GrabPass.shader" />
     <None Include="Shaders\LightSurface.shader" />
+    <None Include="Shaders\Line.shader" />
     <None Include="Shaders\PostProcessing.shader" />
     <None Include="Shaders\Text.shader" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />

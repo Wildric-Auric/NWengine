@@ -1,7 +1,9 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include "Primitives.h"
-
+#include "ShaderManager.h"
+#include "Globals.h"
+#include "RessourcesLoader.h"
 Triangle::Triangle() {
 		glGenBuffers(1, &EBO);
 		glGenVertexArrays(1, &VAO);
@@ -65,4 +67,34 @@ void Quad::Draw() {
 	glBindVertexArray(VAO);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+
+
+Line::Line(Vector2<int> start, Vector2<int> end, Vector3<float> color): start(0,0), end(0,0), color(0.f,0.f,0.f) {
+	float vertices[6] = {
+		start.x, start.y, 0.0f,
+		end.x  ,   end.y, 0.0f,
+	};
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Line::Draw() {
+	glUseProgram(shader_simple->shaderProgram);
+	shader_simple->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix)[0][0]);
+	shader_simple->SetUniform3f("uColor", color.x, color.y, color.z);
+	shader_simple->SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_LINES, 0, 2);
 }
