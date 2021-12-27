@@ -9,13 +9,13 @@
 
 
 class GameObject {
-private:
-	Quad container;
+
 	
 public:
 	Vector2<float> scale;
 	Vector2<int> position;
 	Vector2<int> size;  //ReadOnly
+	Quad container; 
 
 	Texture* image;
 	Shader* shader;
@@ -37,4 +37,13 @@ public:
 	Vector2<int> offset;
 	Vector2<int> GetPosition();
 	void Resize(Vector2<int> newSize);
+};
+
+class GameObjectClone {
+public:
+	GameObject* originalGameObject; //ReadOnly
+	Vector2<float> scale = Vector2<float>(1.0f,1.0f);
+	Vector2<int> position = Vector2<int>(0,0);
+	GameObjectClone(GameObject* gameObject);
+	void Draw(uint8_t slot);
 };

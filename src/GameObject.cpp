@@ -6,7 +6,6 @@
 #include "RessourcesLoader.h"
 //Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
 void GameObject::Draw(uint8_t textureSlot) {
-	container.scale = scale;
 	container.position = position;
 	glUseProgram(shader->shaderProgram);
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
@@ -51,3 +50,22 @@ void Collider::Resize(Vector2<int> newSize) {
 Vector2<int> Collider::GetPosition() {
 	return *position + offset;
 };
+
+GameObjectClone::GameObjectClone(GameObject* gameObject) {
+	this->originalGameObject = gameObject;
+}
+
+void GameObjectClone::Draw(uint8_t slot) {
+	originalGameObject->container.position = position;
+	glUseProgram(originalGameObject->shader->shaderProgram);
+	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
+	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));   //Flip image if should flip  
+	originalGameObject->shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
+
+	originalGameObject->shader->SetUniform1f("uTime", uTime);
+	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	originalGameObject->shader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+	originalGameObject->image->Bind(slot);
+	originalGameObject->shader->SetUniform1i("uTex0", slot);
+	originalGameObject->container.Draw();
+}
