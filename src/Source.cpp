@@ -160,11 +160,11 @@ int main()
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		postProcessing->Draw(1);
-		//lightSurface->Draw(1);
+		lightSurface->Draw(1);
 
 
 		//Drawing debug things and tilemap grid
-		tmt.RenderGrid();
+		//tmt.RenderGrid();
 
 
 		//Render Im::Gui
