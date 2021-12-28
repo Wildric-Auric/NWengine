@@ -58,7 +58,7 @@ def AutoComplete(path):
              temp = line[:line.find("=")].strip()
              temp1 = temp.replace("*", "")
              temp = temp1
-             temp1 += " "
+             
              if state == 0 and "Image" in line:
                  if temp1 in alll: 
                      continue
@@ -78,14 +78,18 @@ def AutoComplete(path):
      with open(path, "w+") as file:
          current = 0
          write = ""
-
+         print(info)
          for line in lines:
              if current < len(l):
-                 if l[current] and "malloc" in line:
+                 if l[current] in line:
                      added = 0
                      for i in info[l[current]]:
                          added = 1
-                         write += "\n{}* {} = ({}*)malloc(sizeof({}));".format(l[current],i, l[current], l[current].replace("*", ""))
+                         if l[current] != "Image":
+                             write += "\n{}* {} = ({}*)malloc(sizeof({}));".format(l[current],i, l[current], l[current].replace("*", ""))
+                         else:
+                             write += "\n{} {};".format(l[current],i)
+                    
                      current +=1
                      write += "\n"*added
              write += line
