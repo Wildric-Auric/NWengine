@@ -9,14 +9,14 @@
 
 
 class GameObject {
-
-	
+private:
+	static int numberOfGameObjects;
 public:
+	int id;  //ReadOnly
 	Vector2<float> scale;
 	Vector2<int> position;
 	Vector2<int> size;  //ReadOnly
 	Quad container; 
-
 	Texture* image;
 	Shader* shader;
 

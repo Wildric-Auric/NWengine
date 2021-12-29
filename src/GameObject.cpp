@@ -20,11 +20,15 @@ void GameObject::Draw(uint8_t textureSlot) {
 	container.Draw();
 };
 
+int GameObject::numberOfGameObjects = 0;
+
 GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, Shader* shader, bool usingImageSize, Vector2<int> size) {
 
 	this->position = position;
 	this->scale = scale;
 	this->image = image;
+	this->id = numberOfGameObjects;
+	numberOfGameObjects += 1;
 	if (shader == nullptr) this->shader = shader_default;
 	else this->shader = shader;
 	if (image != nullptr && usingImageSize) {

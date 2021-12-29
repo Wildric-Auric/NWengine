@@ -82,7 +82,7 @@ int main()
 	if (sd) sd->setVolume(0.3);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
-	TileMap tmt = TileMap(Vector2<int>(32,32));
+	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
 	GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 
 	double currentSprite = 0.0;

@@ -24,7 +24,7 @@ std::pair<const char*, const char*> parseShader(const char* path)
 		if (current == 1) frag += line + '\n';
 		else if (current == 2) vert += line + '\n';
 	}
-
+	file.close();
 	return std::make_pair(_strdup(&vert[0]), _strdup(&frag[0]));
 }
 

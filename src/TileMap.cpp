@@ -2,10 +2,16 @@
 #include "Camera.h"
 #include "RessourcesLoader.h"
 #include "Inputs.h"
-#include <iostream>
+
+#include <fstream>
+#include <string>
+#include <cstring>
+
 extern Camera camera;
-TileMap::TileMap(Vector2<int> cellSize, Vector3<float> color) 
+static GameObjectClone til = GameObjectClone(tile1Obj);
+TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 {
+	this->name = _strdup(name);
 	this->cellSize = cellSize;
 	int lineNum = 1000;
 	int half = lineNum / 2;
@@ -18,6 +24,18 @@ TileMap::TileMap(Vector2<int> cellSize, Vector3<float> color)
 	for (int j = 0; j < half; j++) {
 		grid[j + half] = Line(Vector2<int>(j * cellSize.y - quarter * cellSize.y -  a, -1000), Vector2<int>(j * cellSize.y - quarter * cellSize.y - a, 1000), color);
 	}
+	SetUpTiles();
+}
+TileMap::~TileMap() {
+	std::ofstream tilemapData((std::string)"Maps/" + this->name + (std::string) ".txt");
+	for (auto it = tiles.begin(); it != tiles.end(); it++) {
+		tilemapData << it->originalGameObject->id << " "
+					<< it->position.x << " " << it->position.y << " " 
+					<< it->scale.x << " "<<it->scale.y << "\n";
+
+	}
+	tilemapData.close();
+
 }
 
 void TileMap::RenderGrid(){
@@ -25,16 +43,37 @@ void TileMap::RenderGrid(){
 		line.Draw();
 	}
 }
-
-GameObjectClone til = GameObjectClone(tile1Obj);
+void TileMap::SetUpTiles() {
+	std::ifstream file("Maps/" + (std::string)name + std::string(".txt"));
+	if (file) {
+		for (std::string line; std::getline(file, line);)
+		{
+			std::string arr[5] = {""};
+			uint8_t current = 0;
+			for (int i = 0; i < line.size(); i++) {
+				char letter = line[i];
+				if (letter == ' ') {
+					current++;
+					continue;
+				}
+				else if ( letter == '\n') break;
+				arr[current] += letter;
+			}
+			til.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
+			til.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
+			tiles.push_back(til);
+		}
+	}
+	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
+}
 void TileMap::Update() {
 	m_canTile -= deltaTime;
 	signed char a = cellSize.x / 2 ;
 	signed char b = cellSize.y / 2 ;
 	if (m_canTile < 0) {
 
-		int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2 + 1;
-		int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2 +1;
+		int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2;
+		int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2;
 		if (input_left_click) {
 			bool bo = false;
 
@@ -47,6 +86,7 @@ void TileMap::Update() {
 			}
 			if (!bo) {
 				til.position = pos;
+				til.scale = Vector2<float>(1.0f, 1.0f);
 				tiles.push_back(til);
 				m_canTile = canTile;
 			}
