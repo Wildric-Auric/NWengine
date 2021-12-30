@@ -155,7 +155,7 @@ int main()
 			(*it).Draw(0);
 		}
 
-		ground->Draw(0);
+		//ground->Draw(0);
 		warriorTex->UpdateTexture(warriorTex->size.x, warriorTex->size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
 		warrior->Draw(0);
 		//lesbeanApple->Draw(0);

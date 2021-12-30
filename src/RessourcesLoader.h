@@ -38,7 +38,9 @@ extern Image IMAGE_BUSH1;
 extern Image IMAGE_BUSH2;
 extern Image IMAGE_GROUND;
 extern Image IMAGE_TILE1;
-
+extern Image Image_GROUND_TILE0;
+extern Image Image_GROUND_TILE1;
+extern Image Image_GROUND_TILE2;
 
 extern Texture* tex;
 extern Texture* grabTex;
@@ -50,6 +52,10 @@ extern Texture* tree1Tex;
 extern Texture* tree2Tex;
 extern Texture* groundTex;
 extern Texture* tile1Tex;
+extern Texture* texture_groundTile0;
+extern Texture* texture_groundTile1;
+extern Texture* texture_groundTile2;
+
 
 
 extern Shader* shader_default;
@@ -75,4 +81,7 @@ extern GameObject* tree2;
 extern GameObject* bush1;
 extern GameObject* bush2;
 extern GameObject* ground;
-extern GameObject* tile1Obj;
+extern GameObject* wallTile0;
+extern GameObject* groundTile0;
+extern GameObject* groundTile1;
+extern GameObject* groundTile2;

@@ -8,7 +8,7 @@
 #include <cstring>
 
 extern Camera camera;
-static GameObjectClone til = GameObjectClone(tile1Obj);
+static GameObjectClone til = GameObjectClone(wallTile0);
 
 TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 {
@@ -95,8 +95,11 @@ void TileMap::Update() {
 				m_canTile = canTile;
 			}
 		}
-		if (input_0) til = GameObjectClone(lesbeanApple);
-		else if (input_1) til = GameObjectClone(tile1Obj);
+		if (input_0) til = GameObjectClone(groundTile0);
+		else if (input_1) til = GameObjectClone(groundTile1);
+		else if (input_2) til = GameObjectClone(groundTile2);
+		else if (input_3) til = GameObjectClone(wallTile0);
+		
 		else if(input_d && canTile && !tiles.empty()) {
 			tiles.pop_back();
 			m_canTile = canTile;
