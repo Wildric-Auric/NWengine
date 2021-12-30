@@ -9,6 +9,8 @@
 #include "RessourcesLoader.h"
 
 
+std::map<int, GameObject*> allObjects;
+
 unsigned char* behindPixels        =    new unsigned char[4*SCREEN_WIDTH*SCREEN_HEIGHT];
 
 const char* path                   =    "Ressources/Images/img2.png";
@@ -132,27 +134,27 @@ void LoadShaders() {
 };
 
 void LoadGameObjects() {
-	*lesbeanApple                     =    GameObject(tex, Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
-	*lesbeanApple2                    =    GameObject(tex, Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), shader_default);
-	*grabPass                         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), shader_grabPass);
-	*lightSurface                     =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), shader_lightSurface);
-	*postProcessing                   =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), shader_postProcessing);
-	*warrior                          =    GameObject(warriorTex, Vector2<int>(0, -20), Vector2<float>(1.0f, 1.0f));
+	*lesbeanApple                     =    GameObject(tex, Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), lesbeanApple,shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	*lesbeanApple2                    =    GameObject(tex, Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), lesbeanApple2,shader_default);
+	*grabPass                         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), grabPass,shader_grabPass);
+	*lightSurface                     =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), lightSurface,shader_lightSurface);
+	*postProcessing                   =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), postProcessing ,shader_postProcessing);
+	*warrior                          =    GameObject(warriorTex, Vector2<int>(0, -20), Vector2<float>(1.0f, 1.0f), warrior);
 	float s                           =    2.2;
-	*background                       =    GameObject(backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s));
-	*background1                      =    GameObject(backgroundTex, Vector2<int>(-337 + background->size.x, 130), Vector2<float>(s, s));
-	*background2                      =    GameObject(backgroundTex, Vector2<int>(-337 + 2 * background->size.x, 130), Vector2<float>(s, s));
-	*background3                      =    GameObject(backgroundTex, Vector2<int>(-337 + 3 * background->size.x, 130), Vector2<float>(s, s));
-	*background4                      =    GameObject(backgroundTex, Vector2<int>(-337 + 4 * background->size.x, 130), Vector2<float>(s, s));
+	*background                       =    GameObject(backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s), background);
+	*background1                      =    GameObject(backgroundTex, Vector2<int>(-337 + background->size.x, 130), Vector2<float>(s, s),background1);
+	*background2                      =    GameObject(backgroundTex, Vector2<int>(-337 + 2 * background->size.x, 130), Vector2<float>(s, s), background2);
+	*background3                      =    GameObject(backgroundTex, Vector2<int>(-337 + 3 * background->size.x, 130), Vector2<float>(s, s), background3);
+	*background4                      =    GameObject(backgroundTex, Vector2<int>(-337 + 4 * background->size.x, 130), Vector2<float>(s, s), background4);
 	s                                 =    2.0f;
-	*bush1                            =    GameObject(bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s));
-	*bush2                            =    GameObject(bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s));
-	*tree1                            =    GameObject(tree1Tex, Vector2<int>(156, 12), Vector2<float>(s, s));
-	*tree2                            =    GameObject(tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s));
+	*bush1                            =    GameObject(bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s), bush1);
+	*bush2                            =    GameObject(bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s), bush2);
+	*tree1                            =    GameObject(tree1Tex, Vector2<int>(156, 12), Vector2<float>(s, s),tree1);
+	*tree2                            =    GameObject(tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s), tree2);
 	s                                 =    1.5f;
-	*ground                           =    GameObject(groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s));
-	*tile1Obj                         =    GameObject(tile1Tex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f));
-};
+	*ground                           =    GameObject(groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s), ground);
+	*tile1Obj                         =    GameObject(tile1Tex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), tile1Obj,shader_default);
+};					  
 
 void FreeBuffer(unsigned char* buffer) {
 	stbi_image_free(buffer);

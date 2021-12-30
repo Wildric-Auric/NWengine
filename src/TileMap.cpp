@@ -9,6 +9,7 @@
 
 extern Camera camera;
 static GameObjectClone til = GameObjectClone(tile1Obj);
+
 TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 {
 	this->name = _strdup(name);
@@ -48,6 +49,7 @@ void TileMap::SetUpTiles() {
 	if (file) {
 		for (std::string line; std::getline(file, line);)
 		{
+			if (line[0] == ' ' || !line[0] || line[0] == '\n') break;
 			std::string arr[5] = {""};
 			uint8_t current = 0;
 			for (int i = 0; i < line.size(); i++) {
@@ -59,6 +61,8 @@ void TileMap::SetUpTiles() {
 				else if ( letter == '\n') break;
 				arr[current] += letter;
 			}
+
+			til = GameObjectClone( allObjects[std::stoi(arr[0])] );
 			til.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
 			til.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
 			tiles.push_back(til);
@@ -91,6 +95,8 @@ void TileMap::Update() {
 				m_canTile = canTile;
 			}
 		}
+		if (input_0) til = GameObjectClone(lesbeanApple);
+		else if (input_1) til = GameObjectClone(tile1Obj);
 		else if(input_d && canTile && !tiles.empty()) {
 			tiles.pop_back();
 			m_canTile = canTile;

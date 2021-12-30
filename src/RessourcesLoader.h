@@ -1,6 +1,7 @@
 #pragma once
 #include "ShaderManager.h"
 #include "GameObject.h"
+#include <map>
 
 class Image {
 public:
@@ -12,6 +13,9 @@ public:
 	bool alpha;
 };
 extern unsigned char* behindPixels;
+
+extern std::map<int, GameObject*> allObjects;
+
 
 void FreeBuffer(unsigned char* buffer);
 void LoadImages();

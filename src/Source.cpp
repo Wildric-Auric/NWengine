@@ -57,7 +57,7 @@ int main()
 	LoadShaders();
 	LoadGameObjects();
 
-	
+
 
 
 
@@ -81,9 +81,14 @@ int main()
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
 	if (sd) sd->setVolume(0.3);
 
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
-	GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
+	std::cout << allObjects[16]->position.x << std::endl;
+
+
+
+	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 
 	double currentSprite = 0.0;
 	while (!glfwWindowShouldClose(window)){
@@ -101,8 +106,7 @@ int main()
 		//ImGui::SliderInt2("bush1", &bush1->position.x, -400, 400);
 		//ImGui::SliderInt2("bush2", &bush2->position.x, -400, 400);
 		//ImGui::SliderInt2("ground", &ground->position.x, -400, 400);
-		ImGui::SliderFloat2("appleSize", &(instancingApple.scale.x), -3.0f, 3.0f);
-
+		//ImGui::SliderFloat2("appleSize", &(instancingApple.scale.x), -3.0f, 3.0f);
 
 
 		ImGui::End();
@@ -144,9 +148,13 @@ int main()
 		bush2->Draw(0);
 		tree1->Draw(0);
 		tree2->Draw(0);
+
 		for (auto it = tmt.tiles.begin(); it != tmt.tiles.end(); ++it) {
+			//std::cout << tmt.tiles[0].originalGameObject->position.x<< std::endl;
+			//std::cout << tmt.tiles[1].position.x << std::endl;
 			(*it).Draw(0);
 		}
+
 		ground->Draw(0);
 		warriorTex->UpdateTexture(warriorTex->size.x, warriorTex->size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
 		warrior->Draw(0);
@@ -191,7 +199,4 @@ int main()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();
-	free(lightSurface);
-	free(lesbeanApple);
-	free(grabPass);
 };

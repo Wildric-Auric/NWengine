@@ -22,12 +22,15 @@ void GameObject::Draw(uint8_t textureSlot) {
 
 int GameObject::numberOfGameObjects = 0;
 
-GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, Shader* shader, bool usingImageSize, Vector2<int> size) {
+GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, GameObject* ref, Shader* shader, bool usingImageSize, Vector2<int> size) {
 
 	this->position = position;
 	this->scale = scale;
 	this->image = image;
 	this->id = numberOfGameObjects;
+	allObjects[id] = ref;
+
+
 	numberOfGameObjects += 1;
 	if (shader == nullptr) this->shader = shader_default;
 	else this->shader = shader;
@@ -56,7 +59,7 @@ Vector2<int> Collider::GetPosition() {
 };
 
 GameObjectClone::GameObjectClone(GameObject* gameObject) {
-	this->originalGameObject = gameObject;
+	this->originalGameObject =  gameObject;
 }
 
 void GameObjectClone::Draw(uint8_t slot) {

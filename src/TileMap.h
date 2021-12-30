@@ -3,6 +3,7 @@
 #include "Primitives.h"
 #include "GameObject.h"
 #include <vector>
+
 class TileMap {
 public:
 	TileMap(const char* name, Vector2<int> cellSize = Vector2<int>(16, 16), Vector3<float> color = Vector3<float>(0.f, 0.0f, 0.0f));

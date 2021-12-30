@@ -9,6 +9,11 @@ input_right,
 input_up, 
 input_down,
 input_d,
-input_left_click
+input_left_click,
+input_0,
+input_1,
+input_2,
+input_3,
+input_4
 ;
 void processInput(GLFWwindow* window);
