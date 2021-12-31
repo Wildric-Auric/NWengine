@@ -13,10 +13,16 @@ public:
 	void SetUpTiles();
 	void RenderGrid();
 	void Update();
+	GameObject* tileObjects[10] = { nullptr };
+
+	static bool GuiActive;
+	static TileMap* currentTileMap;
+	static void Gui();
+	float m_canTile = canTile;
+
 	float canTile = 0.1f; //Tiling frequency in seconds
 private:
-	float m_canTile = canTile;
-	Line grid[1000];
+	Line grid[1000]; //TODO: make this static
 	Vector2<int> cellSize;
 	
 };

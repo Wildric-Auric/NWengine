@@ -84,30 +84,45 @@ int main()
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
-	std::cout << allObjects[16]->position.x << std::endl;
+	tmt.tileObjects[0] = groundTile0;
+	tmt.tileObjects[1] = groundTile1;
+	tmt.tileObjects[2] = groundTile2;
+	tmt.tileObjects[3] = wallTile0;
+
+
+
+
 
 
 
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 
 	double currentSprite = 0.0;
+	bool isActive = true;
+	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::Begin("Debug");
+		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
+
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
-		//ImGui::SliderInt2("bg", &background->position.x, -400, 400);
-		//ImGui::SliderInt2("tree1", &tree1->position.x, -400, 400);
-		//ImGui::SliderInt2("tree2", &tree2->position.x, -400, 400);
-		//ImGui::SliderInt2("bush1", &bush1->position.x, -400, 400);
-		//ImGui::SliderInt2("bush2", &bush2->position.x, -400, 400);
-		//ImGui::SliderInt2("ground", &ground->position.x, -400, 400);
-		//ImGui::SliderFloat2("appleSize", &(instancingApple.scale.x), -3.0f, 3.0f);
 
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Tilemap Editor", "Ctrl+W")) { TileMap::GuiActive = true; }
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+
+		}
+
+		TileMap::Gui();
 
 		ImGui::End();
 		//Debug--------------
@@ -167,12 +182,11 @@ int main()
 		postProcessing->position = camera.position;
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
-		postProcessing->Draw(1);
 		//lightSurface->Draw(1);
-
+		postProcessing->Draw(1);
 
 		//Drawing debug things and tilemap grid
-		//tmt.RenderGrid();
+		tmt.RenderGrid();
 
 
 		//Render Im::Gui

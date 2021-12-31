@@ -25,7 +25,6 @@ GLFWwindow* InitContext(int scrWidth, int scrHeight)
 		std::cout << "Failed to init glfw window";
 		return nullptr;
 	}
-
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, sizeCallBack);
 	if (glewInit() != GLEW_OK)

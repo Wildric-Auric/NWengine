@@ -38,9 +38,9 @@ extern Image IMAGE_BUSH1;
 extern Image IMAGE_BUSH2;
 extern Image IMAGE_GROUND;
 extern Image IMAGE_TILE1;
-extern Image Image_GROUND_TILE0;
-extern Image Image_GROUND_TILE1;
-extern Image Image_GROUND_TILE2;
+extern Image IMAGE_GROUND_TILE0;
+extern Image IMAGE_GROUND_TILE1;
+extern Image IMAGE_GROUND_TILE2;
 
 extern Texture* tex;
 extern Texture* grabTex;

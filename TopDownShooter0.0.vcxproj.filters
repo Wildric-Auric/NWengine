@@ -42,9 +42,6 @@
     <ClCompile Include="src\Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Clock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1937,9 +1934,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependecies\vendor\glm\gtc\reciprocal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths.h">

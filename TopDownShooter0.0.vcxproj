@@ -177,7 +177,6 @@
     <ClCompile Include="src\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="src\Clock.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\Inputs.cpp" />
@@ -879,7 +878,6 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\Clock.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Inputs.h" />
     <ClInclude Include="src\Maths.h" />

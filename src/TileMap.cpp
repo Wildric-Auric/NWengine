@@ -6,12 +6,15 @@
 #include <fstream>
 #include <string>
 #include <cstring>
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 extern Camera camera;
-static GameObjectClone til = GameObjectClone(wallTile0);
+static GameObjectClone currentTile = GameObjectClone(wallTile0);
 
 TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 {
+	TileMap::currentTileMap = this;
 	this->name = _strdup(name);
 	this->cellSize = cellSize;
 	int lineNum = 1000;
@@ -62,10 +65,10 @@ void TileMap::SetUpTiles() {
 				arr[current] += letter;
 			}
 
-			til = GameObjectClone( allObjects[std::stoi(arr[0])] );
-			til.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
-			til.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
-			tiles.push_back(til);
+			currentTile = GameObjectClone( allObjects[std::stoi(arr[0])] );
+			currentTile.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
+			currentTile.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
+			tiles.push_back(currentTile);
 		}
 	}
 	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
@@ -89,16 +92,12 @@ void TileMap::Update() {
 				}
 			}
 			if (!bo) {
-				til.position = pos;
-				til.scale = Vector2<float>(1.0f, 1.0f);
-				tiles.push_back(til);
+				currentTile.position = pos;
+				currentTile.scale = Vector2<float>(1.0f, 1.0f);
+				tiles.push_back(currentTile);
 				m_canTile = canTile;
 			}
 		}
-		if (input_0) til = GameObjectClone(groundTile0);
-		else if (input_1) til = GameObjectClone(groundTile1);
-		else if (input_2) til = GameObjectClone(groundTile2);
-		else if (input_3) til = GameObjectClone(wallTile0);
 		
 		else if(input_d && canTile && !tiles.empty()) {
 			tiles.pop_back();
@@ -106,3 +105,51 @@ void TileMap::Update() {
 		}
 	}
 }
+
+bool TileMap::GuiActive = false;
+TileMap* TileMap::currentTileMap;
+
+void TileMap::Gui() {
+	if (TileMap::GuiActive) {
+		ImGui::Begin("Tiles editor", 0, ImGuiWindowFlags_MenuBar);
+		if (ImGui::Button("Delete") && currentTileMap->canTile && !currentTileMap->tiles.empty()) {
+			currentTileMap->tiles.pop_back();
+			int i = 0;
+			for (auto it = currentTileMap->tiles.begin(); it != currentTileMap->tiles.end(); it++) {
+				i += 1;
+				std::cout << i << std::endl;
+			}
+			currentTileMap->m_canTile = currentTileMap->canTile;
+		}
+
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Close", "Ctrl+W")) TileMap::GuiActive = false;
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+
+		}
+
+
+		ImGui::BeginChild("Tilemap");
+		for (int i = 0; i < 10; i++) {
+			GameObject* temp = currentTileMap->tileObjects[i];
+			if (temp != nullptr) {
+				ImGui::Image((void*)(intptr_t)
+					temp->image->texture,
+					ImVec2(temp->image->size.x, temp->image->size.y));
+				std::string str = "Tile" + std::to_string(i);
+				if (ImGui::Button( str.c_str() )){
+					currentTile = GameObjectClone(temp);
+				};
+			}
+		}
+		ImGui::EndChild();
+		ImGui::End();
+	} 
+}
+
