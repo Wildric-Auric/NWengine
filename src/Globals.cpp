@@ -8,6 +8,7 @@ int SCREEN_HEIGHT = 640;           //GetSystemMetrics(SM_CYSCREEN); //640
 const float SCREENRATIO = ((float)SCREEN_WIDTH) / ((float)SCREEN_HEIGHT);
 
 bool const DEBUG_MODE = true;
+bool isMouseOnGui = false;
 
 //Uniforms
 float uTime = 0;

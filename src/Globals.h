@@ -13,3 +13,5 @@ extern const bool DEBUG_MODE;
 extern float uTime;
 extern glm::mat4 projectionMatrix;
 extern glm::mat4 viewMatrix;
+//Variables
+extern bool isMouseOnGui;

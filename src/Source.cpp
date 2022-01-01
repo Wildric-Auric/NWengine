@@ -46,6 +46,7 @@ int main()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	//init irrKlang
 	ISoundEngine* SoundEngine = createIrrKlangDevice();
@@ -106,7 +107,6 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
-
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
@@ -124,6 +124,8 @@ int main()
 
 		TileMap::Gui();
 
+		isMouseOnGui = io.WantCaptureMouse;
+		std::cout << isMouseOnGui << std::endl;
 		ImGui::End();
 		//Debug--------------
 		//std::cout << lesbeanApple->size.x << "  " << collider_apple2.size->x << std::endl;

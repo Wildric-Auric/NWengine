@@ -8,6 +8,7 @@
 #include <cstring>
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "Globals.h"
 
 extern Camera camera;
 static GameObjectClone currentTile = GameObjectClone(wallTile0);
@@ -77,7 +78,7 @@ void TileMap::Update() {
 	m_canTile -= deltaTime;
 	signed char a = cellSize.x / 2 ;
 	signed char b = cellSize.y / 2 ;
-	if (m_canTile < 0) {
+	if (m_canTile < 0 && !isMouseOnGui) {
 
 		int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2;
 		int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2;
@@ -117,7 +118,6 @@ void TileMap::Gui() {
 			int i = 0;
 			for (auto it = currentTileMap->tiles.begin(); it != currentTileMap->tiles.end(); it++) {
 				i += 1;
-				std::cout << i << std::endl;
 			}
 			currentTileMap->m_canTile = currentTileMap->canTile;
 		}
