@@ -1,43 +1,29 @@
-//#ifndef TEXT_H
-//#define TEXT_H
-//#include <ft2build.h>
-//#include FT_FREETYPE_H
-//#include <GL/glew.h>
-//#include <glfw3.h>
-//#include <iostream>
-//#include <vector>
-//#include <string>
-//#include <map>
-//#include <iterator>
-//#include <set>
-//#include "ShaderManager.h"
-//#include "glm/glm.hpp"
-//#include "glm/gtc/matrix_transform.hpp"
-//
-//struct character
-//{
-//	unsigned int	textureID;
-//	glm::ivec2		size;
-//	glm::ivec2		bearing;
-//	unsigned int	advance;
-//};
-//
-//class Text
-//{
-//	private:
-//
-//	public:
-//
-//		unsigned int	VAO = 0, VBO = 0;
-//
-//		FT_Library ft;
-//		FT_Face face;
-//		std::map<char, character> characters;
-//
-//		int		initfreetype(const char *font);
-//		void	InitTextRenderer();
-//		void	RenderText(Shader &shader, std::string testslist, float x, float y, float scale, glm::vec3 color);
-//		std::string	UpdateTexts();
-//};
-//
-//#endif 
+#pragma once
+
+#include "Text.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <iostream>
+#include <map>
+#include "Maths.h"
+#include "ShaderManager.h"
+#include "string"
+
+struct Character {
+	unsigned int id;
+	Vector2<int> size;
+	Vector2<int> bearing;
+	unsigned int advance;
+};
+
+class Font {
+private:
+	FT_Library ft;
+	FT_Face face;
+	unsigned int VAO, VBO;
+public:
+	Font(const char* font);
+	std::map<char, Character> chars;
+	void DisplayText(std::string text, Vector2<int> position, Shader* shader, Vector3<float> textColor, uint8_t slot = 0);
+	
+};

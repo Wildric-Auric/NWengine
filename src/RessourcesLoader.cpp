@@ -70,6 +70,7 @@ Shader* shader_lightSurface        =    (Shader*)malloc(sizeof(Shader));
 Shader* shader_grabPass            =    (Shader*)malloc(sizeof(Shader));
 Shader* shader_postProcessing      =    (Shader*)malloc(sizeof(Shader));
 Shader* shader_simple              =    (Shader*)malloc(sizeof(Shader));
+Shader* shader_text                =    (Shader*)malloc(sizeof(Shader));
 
 
 GameObject* lesbeanApple           =    (GameObject*)malloc(sizeof(GameObject));
@@ -146,6 +147,7 @@ void LoadShaders() {
 	*shader_postProcessing            =    Shader("Shaders/PostProcessing.shader");
 	*shader_simple                    =    Shader("Shaders/Line.shader");
 	*shader_simple1                   =    Shader("Shaders/Line.shader");
+	*shader_text                      =    Shader("Shaders/Text.shader");
 
 
 };

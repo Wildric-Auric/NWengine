@@ -63,7 +63,7 @@ extern Shader* shader_lightSurface;
 extern Shader* shader_grabPass;
 extern Shader* shader_postProcessing;
 extern Shader* shader_simple;
-
+extern Shader* shader_text;
 
 extern GameObject* lesbeanApple;
 extern GameObject* lesbeanApple2;
