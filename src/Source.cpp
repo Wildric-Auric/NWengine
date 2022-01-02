@@ -16,13 +16,14 @@
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
-//#include "Text.h"
+#include "Text.h"
 #include "RessourcesLoader.h"
 //#include  "GameObject.h"
 #include "Globals.h"
 #include "Camera.h"
 #include "Utilities.h"
 #include "TileMap.h"
+
 //Variable
 double fps = 60;
 int frameCount = 0;
@@ -59,7 +60,7 @@ int main()
 	LoadGameObjects();
 
 
-
+	Font font = Font("Ressources/fonts/rockstar.otf");
 
 
 	//Shader* textShader			= new Shader();
@@ -125,7 +126,7 @@ int main()
 		TileMap::Gui();
 
 		isMouseOnGui = io.WantCaptureMouse;
-		std::cout << isMouseOnGui << std::endl;
+
 		ImGui::End();
 		//Debug--------------
 		//std::cout << lesbeanApple->size.x << "  " << collider_apple2.size->x << std::endl;
@@ -139,7 +140,7 @@ int main()
 		//BindTextures
 		tex->Bind(0);
 		grabTex->Bind(1);
-
+		std::cout << lerp(0.5f, 1.0f, .5f) << std::endl;
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
@@ -189,7 +190,7 @@ int main()
 
 		//Drawing debug things and tilemap grid
 		tmt.RenderGrid();
-
+		font.DisplayText("Hello World", Vector2<int>(100, 100), shader_text, Vector3<float>(1.0f, 0.0f, 0.0f), 0);
 
 		//Render Im::Gui
 		ImGui::Render();

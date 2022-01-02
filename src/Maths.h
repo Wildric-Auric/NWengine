@@ -1,5 +1,4 @@
-#ifndef MATHS_H
-#define MATHS_H
+#pragma once
 //TODO::Add substraction and division
 template<class T>
 class Vector2 {
@@ -124,4 +123,17 @@ public:
 				return (x == vec1.x) && (y == vec1.y) && (z == vec1.z);
 			}
 
-#endif
+
+
+
+template<typename T, typename T1>
+T lerp(T source, T target, T1 percent) {
+	return source + (target - source) * percent;
+}
+
+template<typename T, typename T1>
+Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent) {
+	return Vector2<T>(  lerp(source.x, target.x, percent.x), 
+						lerp(source.y, target.y, percent.y), 
+						lerp(source.z, target.z, percent.z) );
+};
