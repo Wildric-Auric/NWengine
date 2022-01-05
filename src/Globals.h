@@ -1,4 +1,5 @@
 #pragma once
+#include "Maths.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 //Put global variables here
@@ -15,3 +16,13 @@ extern glm::mat4 projectionMatrix;
 extern glm::mat4 viewMatrix;
 //Variables
 extern bool isMouseOnGui;
+
+
+typedef Vector2<int> iVec2;
+typedef Vector2<float> fVec2;
+typedef Vector3<float> fVec3;
+typedef Vector3<int> iVec3;
+typedef Vector2<double> dVec2;
+typedef Vector3<double> dVec3;
+
+typedef Matrix<2,2, int>iMat2;
