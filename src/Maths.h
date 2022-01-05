@@ -1,6 +1,8 @@
 #pragma once
 //TODO::Add substraction and division
-template<class T>
+#include <iostream>
+
+template<typename T>
 class Vector2 {
 public:
 	T x;
@@ -15,12 +17,12 @@ public:
 
 
 
-			template<class T>
+			template<typename T>
 			Vector2<T>::Vector2(T x, T y) {
 				Vector2::x = x;
 				Vector2::y = y;
 			}
-			template<class T>
+			template<typename T>
 			Vector2<T> Vector2<T>::operator + (Vector2 const& vec1) {
 				Vector2 sum;
 				sum.x = x + vec1.x;
@@ -34,7 +36,7 @@ public:
 				newVec.y = y * vec1.y;
 				return newVec;
 			}
-			template<class T>
+			template<typename T>
 			Vector2<T> Vector2<T>::operator + (T const& num) {
 				Vector2 newVec;
 				newVec.x = x + num;
@@ -42,7 +44,7 @@ public:
 				return newVec;
 			}
 
-			template<class T>
+			template<typename T>
 			Vector2<T> Vector2<T>::operator * (T const& num) {
 				Vector2 newVec;
 				newVec.x = x * num;
@@ -50,7 +52,7 @@ public:
 				return newVec;
 			}
 			
-			template<class T>
+			template<typename T>
 			bool Vector2<T>::operator == (Vector2 const& vec1) {
 				return (x == vec1.x) && (y == vec1.y);
 			}
@@ -65,7 +67,7 @@ int sign(T number) {
 }
 
 
-template<class T>
+template<typename T>
 class Vector3 {
 public:
 	T x;
@@ -85,7 +87,7 @@ public:
 				Vector3::y = y;
 				Vector3::z = z;
 			}
-			template<class T>
+			template<typename T>
 			Vector3<T> Vector3<T>::operator + (Vector3 const& vec1) {
 				Vector3 sum;
 				sum.x = x + vec1.x;
@@ -93,7 +95,7 @@ public:
 				sum.z = z + vec1.z;
 				return sum;
 			}
-			template<class T>
+			template<typename T>
 			Vector3<T> Vector3<T>::operator * (Vector3 const& vec1) {
 				Vector3 newVec;
 				newVec.x = x * vec1.x;
@@ -101,7 +103,7 @@ public:
 				newVec.z = z * vec1.z;
 				return newVec;
 			}
-			template<class T>
+			template<typename T>
 			Vector3<T> Vector3<T>::operator + (T const& num) {
 				Vector3 newVec;
 				newVec.x = x + num;
@@ -110,7 +112,7 @@ public:
 				return newVec;
 			}
 
-			template<class T>
+			template<typename T>
 			Vector3<T> Vector3<T>::operator * (T const& num) {
 				Vector3 newVec;
 				newVec.x = x * num;
@@ -118,7 +120,7 @@ public:
 				newVec.z = z * num;
 				return newVec;
 			}
-			template<class T>
+			template<typename T>
 			bool Vector3<T>::operator == (Vector3 const& vec1) {
 				return (x == vec1.x) && (y == vec1.y) && (z == vec1.z);
 			}
@@ -137,3 +139,21 @@ Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent
 						lerp(source.y, target.y, percent.y), 
 						lerp(source.z, target.z, percent.z) );
 };
+
+template<typename T>
+class Matrix2 {
+	//You can pass a new parameter to the array thanks to template but it will be kept simpler here for optimization
+public:
+	T coeff[2][2];
+	Matrix2(T* setOfData);
+};
+
+template<typename T>
+		Matrix2<T>::Matrix2(T* setOfData) {
+			coeff[0][0] = setOfData[0];
+			coeff[0][1] = setOfData[1];
+			coeff[1][0] = setOfData[2];
+			coeff[1][1] = setOfData[3];
+			std::cout << coeff[0][0]<< "  "<< coeff[0][1]<< std::endl;
+			std::cout << coeff[1][0] << "  " << coeff[1][1] << std::endl;
+		}

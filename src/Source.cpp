@@ -37,7 +37,7 @@ using namespace irrklang;
 
 int main()
 { 
-
+	
     //Init GLFW context 
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
@@ -92,13 +92,35 @@ int main()
 	tmt.tileObjects[3] = wallTile0;
 
 
-
-
-
-
-
+	//DEBUG ZONE----------------------
+	int arr[4] = { 2,5,1,3 };
+	Matrix2<int> a = Matrix2<int>(arr);
+	
+	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
+	std::map<int, std::pair<Drawable*, uint8_t>> drawOrder;
 
+	GameObjectClone background0  = GameObjectClone(background);
+	GameObjectClone background11 = GameObjectClone(background1);
+	GameObjectClone background22 = GameObjectClone(background2) ;
+	GameObjectClone background33 = GameObjectClone(background3) ;
+	GameObjectClone background44 = GameObjectClone(background4) ;
+	GameObjectClone bush11       = GameObjectClone(bush1) ;
+	GameObjectClone bush22       = GameObjectClone(bush2) ;
+	GameObjectClone tree11       = GameObjectClone(tree1) ;
+	GameObjectClone tree22       = GameObjectClone(tree2) ;
+
+	drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
+	drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
+	drawOrder[2] = std::make_pair<Drawable*, uint8_t>(&background22, 0) ;
+	drawOrder[3] = std::make_pair<Drawable*, uint8_t>(&background33, 0) ;
+	drawOrder[4] = std::make_pair<Drawable*, uint8_t>(&background44, 0)  ;
+	drawOrder[5] = std::make_pair<Drawable*, uint8_t>(&bush11,0) ;
+	drawOrder[6] = std::make_pair<Drawable*, uint8_t>(&bush22,0) ;
+	drawOrder[7] = std::make_pair<Drawable*, uint8_t>(&tree11,0) ;
+	drawOrder[8] = std::make_pair<Drawable*, uint8_t>(&tree22,0) ;
+
+	
 	double currentSprite = 0.0;
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
@@ -140,7 +162,6 @@ int main()
 		//BindTextures
 		tex->Bind(0);
 		grabTex->Bind(1);
-		std::cout << lerp(0.5f, 1.0f, .5f) << std::endl;
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
@@ -154,22 +175,15 @@ int main()
 
 		camera.Update();
 		tmt.Update();
-		//Drawing shapes
+
 		currentSprite += deltaTime *5.0;
-		//calling this every frame is not optimal
-		background->Draw(0);
-		background1->Draw(0);
-		background2->Draw(0);
-		background3->Draw(0);
-		background4->Draw(0);
-		bush1->Draw(0);
-		bush2->Draw(0);
-		tree1->Draw(0);
-		tree2->Draw(0);
+		//Drawing shapes
+
+		for (auto& it : drawOrder) {
+			(it.second.first)->Draw(it.second.second);
+		}
 
 		for (auto it = tmt.tiles.begin(); it != tmt.tiles.end(); ++it) {
-			//std::cout << tmt.tiles[0].originalGameObject->position.x<< std::endl;
-			//std::cout << tmt.tiles[1].position.x << std::endl;
 			(*it).Draw(0);
 		}
 
@@ -185,11 +199,11 @@ int main()
 		postProcessing->position = camera.position;
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
-		//lightSurface->Draw(1);
-		postProcessing->Draw(1);
+		lightSurface->Draw(1);
+		//postProcessing->Draw(1);
 
 		//Drawing debug things and tilemap grid
-		tmt.RenderGrid();
+		//tmt.RenderGrid();
 		font.DisplayText("Hello World", Vector2<int>(100, 100), shader_text, Vector3<float>(1.0f, 0.0f, 0.0f), 0);
 
 		//Render Im::Gui

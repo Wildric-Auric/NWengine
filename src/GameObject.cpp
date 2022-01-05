@@ -60,6 +60,7 @@ Vector2<int> Collider::GetPosition() {
 
 GameObjectClone::GameObjectClone(GameObject* gameObject) {
 	this->originalGameObject =  gameObject;
+	this->position = originalGameObject->position; //TODO::Maybe delete this
 }
 
 void GameObjectClone::Draw(uint8_t slot) {

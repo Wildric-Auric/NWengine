@@ -8,6 +8,10 @@
 #include "ShaderManager.h"
 
 
+class Drawable {
+public:
+	virtual void Draw(uint8_t slot = 0) {};
+};
 
 class GameObject {
 private:
@@ -40,7 +44,7 @@ public:
 	void Resize(Vector2<int> newSize);
 };
 
-class GameObjectClone {
+class GameObjectClone : public Drawable {
 public:
 	GameObject* originalGameObject; //ReadOnly
 	Vector2<float> scale = Vector2<float>(1.0f,1.0f);
