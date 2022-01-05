@@ -91,11 +91,9 @@ int main()
 	tmt.tileObjects[2] = groundTile2;
 	tmt.tileObjects[3] = wallTile0;
 
-
 	//DEBUG ZONE----------------------
 	int arr[4] = { 2,5,1,3 };
-	Matrix2<int> a = Matrix2<int>(arr);
-	
+	iMat2 mat = iMat2(arr);
 	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 	std::map<int, std::pair<Drawable*, uint8_t>> drawOrder;
@@ -199,7 +197,7 @@ int main()
 		postProcessing->position = camera.position;
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
-		lightSurface->Draw(1);
+		//lightSurface->Draw(1);
 		//postProcessing->Draw(1);
 
 		//Drawing debug things and tilemap grid

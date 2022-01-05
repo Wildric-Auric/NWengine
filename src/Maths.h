@@ -2,6 +2,7 @@
 //TODO::Add substraction and division
 #include <iostream>
 
+
 template<typename T>
 class Vector2 {
 public:
@@ -140,20 +141,92 @@ Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent
 						lerp(source.z, target.z, percent.z) );
 };
 
-template<typename T>
-class Matrix2 {
-	//You can pass a new parameter to the array thanks to template but it will be kept simpler here for optimization
+
+template<uint8_t n, uint8_t m, typename T>
+class Matrix {
 public:
-	T coeff[2][2];
-	Matrix2(T* setOfData);
+	T coeff[n][m];
+	Matrix(T* data);
+
 };
 
-template<typename T>
-		Matrix2<T>::Matrix2(T* setOfData) {
-			coeff[0][0] = setOfData[0];
-			coeff[0][1] = setOfData[1];
-			coeff[1][0] = setOfData[2];
-			coeff[1][1] = setOfData[3];
-			std::cout << coeff[0][0]<< "  "<< coeff[0][1]<< std::endl;
-			std::cout << coeff[1][0] << "  " << coeff[1][1] << std::endl;
-		}
+template<uint8_t n, uint8_t m, typename T>
+Matrix<n, m, T>::Matrix(T* data) {
+
+	int size = sizeof(T) * n * m;
+	memcpy(coeff, data, size);
+
+};
+
+
+//class Matrix2 {
+//	//You can pass a new parameter to the array thanks to template but it will be kept simpler here for optimization
+//public:
+//	T coeff[2][2];
+//	Matrix2(T* data);
+//};
+//
+//template<typename T>
+//Matrix2<T>::Matrix2(T* data) {
+//	coeff[0][0] = data[0];
+//	coeff[0][1] = data[1];
+//	coeff[1][0] = data[2];
+//	coeff[1][1] = data[3];
+//};
+//
+//template<typename T>
+//class Matrix3 {
+//	T coeff[3][3];
+//	Matrix3(T* data);
+//};
+//
+//template<typename T>
+//Matrix3<T>::Matrix3(T* data) {
+//	coeff[0][0] = data[0];
+//	coeff[0][1] = data[1];
+//	coeff[0][2] = data[2];
+//	
+//	coeff[1][0] = data[3];
+//	coeff[1][1] = data[4];
+//	coeff[1][2] = data[5];
+//
+//	coeff[2][0] = data[6];
+//	coeff[2][1] = data[7];
+//	coeff[2][2] = data[8];
+//
+//}
+//
+//template<typename T>
+//class Matrix4 {
+//	T coeff[4][4];
+//	Matrix4(T* data);
+//};
+//
+//template<typename T>
+//Matrix3<T>::Matrix3(T* data) {
+//	coeff[0][0] = data[0];
+//	coeff[0][1] = data[1] ;
+//	coeff[0][2] = data[1];
+//	coeff[0][3] = data[1];
+//			    
+//	coeff[0][0] = data[1];
+//	coeff[0][1] = data[1];
+//	coeff[0][2] = data[1];
+//	coeff[0][3] = data[1];
+//			    
+//	coeff[0][0] = data[1];
+//	coeff[0][1] = data[1];
+//	coeff[0][2] = data[1];
+//	coeff[0][3] = data[1];
+//			   
+//	coeff[0][0] = data[1] = data[0];
+//	coeff[0][1] = data[1];
+//	coeff[0][2] = data[1];
+//	coeff[0][3] = data[1];
+//			    
+//	coeff[0][0] = data[1];
+//	coeff[0][1] = data[1];
+//	coeff[0][2] = data[1];
+//	coeff[0][3] = data[1];
+
+//};
