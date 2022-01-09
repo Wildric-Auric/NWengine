@@ -91,10 +91,10 @@ Line::Line(Vector2<int> start, Vector2<int> end, Vector3<float> color): start(0,
 }
 
 void Line::Draw() {
-	glUseProgram(shader_simple->shaderProgram);
-	shader_simple->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix)[0][0]);
-	shader_simple->SetUniform3f("uColor", color.x, color.y, color.z);
-	shader_simple->SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
+	glUseProgram(shaders["shader_simple"].shaderProgram);
+	shaders["shader_simple"].SetMat4x4("uMvp", &(projectionMatrix * viewMatrix)[0][0]);
+	shaders["shader_simple"].SetUniform3f("uColor", color.x, color.y, color.z);
+	shaders["shader_simple"].SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 2);
 }

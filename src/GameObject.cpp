@@ -33,7 +33,7 @@ GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> sca
 
 
 	numberOfGameObjects += 1;
-	if (shader == nullptr) this->shader = shader_default;
+	if (shader == nullptr) this->shader = &shaders["shader_default"];
 	else this->shader = shader;
 	if (image != nullptr && usingImageSize) {
 		this->size = Vector2<int>(image->size.x * abs(scale.x), image->size.y * abs(scale.y));

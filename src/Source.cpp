@@ -64,7 +64,6 @@ int main()
 	//Text* text	= new Text();
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
-
 	/*Collider collider_apple = Collider(lesbeanApple);
 	Collider collider_apple2 = Collider(lesbeanApple2);*/
 	Collider collider_water = Collider(&objects["grabPass"]);
@@ -91,6 +90,7 @@ int main()
 	//DEBUG ZONE----------------------
 	int arr[4] = { 2,5,1,3 };
 	iMat2 mat = iMat2(arr);
+	int isRunning = 0;
 	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
@@ -104,6 +104,7 @@ int main()
 	GameObjectClone bush22       = GameObjectClone(&objects["bush2"]) ;
 	GameObjectClone tree11       = GameObjectClone(&objects["tree1"]) ;
 	GameObjectClone tree22       = GameObjectClone(&objects["tree2"]) ;
+	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"]);
 
 	drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
 	drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
@@ -155,8 +156,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
 		//BindTextures
-		tex->Bind(0);
-		grabTex->Bind(1);
+		textures["tex"].Bind(0);
+		textures["grabTex"].Bind(1);
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
@@ -166,10 +167,13 @@ int main()
 		//	lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
 		//	lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
 		//}
-		camera.position = objects["lesbeanApple"].position;
-
+		//camera.position = objects["lesbeanApple"].position;
+		warriorClone.position.x += isRunning * 200 * deltaTime;
+		warriorClone.scale.x = sign(isRunning);
 		camera.Update();
 		tmt.Update();
+
+		isRunning = input_right - input_left;
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
@@ -183,19 +187,27 @@ int main()
 		}
 
 		//ground->Draw(0);
-		warriorTex->UpdateTexture(warriorTex->size.x, warriorTex->size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
-		objects["warrior"].Draw(0);
+
+		if (isRunning == 0) {
+			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
+		}
+		else {
+			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_RUN_ARRAY[((int)currentSprite) % 8]->tex, 0, 1);
+		}
+
+		warriorClone.Draw(0);
+		//objects["warrior"].Draw(0);
 
 
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		objects["grabPass"].Draw(1);
 		objects["postProcessing"].position = camera.position;
-		//glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		//grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 
 		//lightSurface->Draw(1);
-		//postProcessing->Draw(1);
+		objects["postProcessing"].Draw(1);
 
 		//Drawing debug things and tilemap grid
 		//tmt.RenderGrid();

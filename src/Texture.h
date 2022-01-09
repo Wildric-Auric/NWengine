@@ -5,6 +5,7 @@ private:
 public:
 	unsigned int texture;  //Public for im::Gui
 	Vector2<int> size;
+	Texture(){};
 	Texture(int width, int height, unsigned char* texRes, bool alpha = true, bool repeat = false);
 	void Bind(unsigned int slot);
 	void UpdateTexture(int width, int height, unsigned char* texRes,unsigned int slot, bool alpha = 1);
