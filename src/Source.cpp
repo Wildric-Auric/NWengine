@@ -66,7 +66,7 @@ int main()
 
 	/*Collider collider_apple = Collider(lesbeanApple);
 	Collider collider_apple2 = Collider(lesbeanApple2);*/
-	Collider collider_water = Collider(&objects["grabPass"]);
+	Collider groundCollider[20];
 	
 
 
@@ -87,10 +87,16 @@ int main()
 	tmt.tileObjects[2] = &objects["groundTile2"];
 	tmt.tileObjects[3] = &objects["wallTile0"];
 
+	for (int i = 0; i <15; i++)
+	{
+		groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]) );
+	}
+	
 	//DEBUG ZONE----------------------
 	int arr[4] = { 2,5,1,3 };
 	iMat2 mat = iMat2(arr);
 	int isRunning = 0;
+
 	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
@@ -106,6 +112,8 @@ int main()
 	GameObjectClone tree22       = GameObjectClone(&objects["tree2"]) ;
 	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"]);
 
+	Collider playerCol = Collider(&warriorClone);
+
 	drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
 	drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
 	drawOrder[2] = std::make_pair<Drawable*, uint8_t>(&background22, 0) ;
@@ -120,6 +128,7 @@ int main()
 	double currentSprite = 0.0;
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
+	float yspd = 0;
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -168,11 +177,28 @@ int main()
 		//	lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
 		//}
 		//camera.position = objects["lesbeanApple"].position;
-		warriorClone.position.x += isRunning * 200 * deltaTime;
-		warriorClone.scale.x = sign(isRunning);
+		yspd -= 10 * deltaTime;
+
 		camera.Update();
 		tmt.Update();
-
+		for (int i = 0; i < 15; i++) {
+			while (IsColliding(&playerCol, &groundCollider[i])) {
+				warriorClone.position.y += 1;
+				//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
+				//TODO::Add debug mode to see colliders
+			};
+			if (IsColliding(&playerCol, &groundCollider[i], Vector2<int>(0, -1))) {
+				yspd = 0;
+				if (input_space) {
+					yspd = 200*deltaTime;
+					warriorClone.position.y += 1;
+				}
+			}
+		}
+		warriorClone.position.x += isRunning * 200 * deltaTime;
+		warriorClone.position.y += yspd;
+		warriorClone.scale.x = sign(isRunning);
+	
 		isRunning = input_right - input_left;
 
 		currentSprite += deltaTime *5.0;

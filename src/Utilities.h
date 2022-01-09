@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
-bool IsColliding(Collider* collider1, Collider* collider2) {
+bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
 	uint8_t overlap = 0;
-	int minX1 = collider1->GetPosition().x - collider1->size->x / 2;
-	int maxX1 = collider1->GetPosition().x + collider1->size->x/2;
-	int minY1 = collider1->GetPosition().y - collider1->size->y/2;
-	int maxY1 = collider1->GetPosition().y + collider1->size->y/2;
+	int minX1 = collider1->GetPosition().x + offset1.x -  collider1->size->x / 2;
+	int maxX1 = collider1->GetPosition().x + offset1.x +  collider1->size->x/2;
+	int minY1 = collider1->GetPosition().y + offset1.y -  collider1->size->y/2;
+	int maxY1 = collider1->GetPosition().y + offset1.y +  collider1->size->y/2;
 
 	int minX2 = collider2->GetPosition().x - collider2->size->x / 2;
 	int maxX2 = collider2->GetPosition().x + collider2->size->x / 2;

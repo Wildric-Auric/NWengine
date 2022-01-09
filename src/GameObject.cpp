@@ -45,10 +45,10 @@ GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> sca
 	container = Quad(position, this->size.x, this->size.y);
 };
 
-Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
+Collider::Collider(GameObjectClone* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
 	this->offset = offset;
 	if (newSize != nullptr) size = newSize;
-	else size = &attachedObj->size;
+	else size = &attachedObj->originalGameObject->size;
 	position = &attachedObj->position;
 };
 void Collider::Resize(Vector2<int> newSize) {

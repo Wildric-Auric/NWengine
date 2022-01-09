@@ -13,7 +13,7 @@ public:
 	void SetUpTiles();
 	void RenderGrid();
 	void Update();
-	GameObject* tileObjects[10] = { nullptr };
+	GameObject* tileObjects[10] = { nullptr }; //write only;
 
 	static bool GuiActive;
 	static TileMap* currentTileMap;
