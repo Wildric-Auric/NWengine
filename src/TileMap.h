@@ -22,7 +22,8 @@ public:
 
 	float canTile = 0.1f; //Tiling frequency in seconds
 private:
-	Line grid[1000]; //TODO: make this static
+	//Line grid[1000]; //TODO: make this static 
+	//Commented because it puts too much data on stack memory
 	Vector2<int> cellSize;
 	
 };

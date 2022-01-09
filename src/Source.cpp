@@ -11,14 +11,12 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include "Primitives.h"
-//#include "ShaderManager.h"
 #include "Inputs.h"
 #include "Maths.h"
 #include "Game.h"
 #include "Texture.h"
 #include "Text.h"
 #include "RessourcesLoader.h"
-//#include  "GameObject.h"
 #include "Globals.h"
 #include "Camera.h"
 #include "Utilities.h"
@@ -37,7 +35,6 @@ using namespace irrklang;
 
 int main()
 { 
-	
     //Init GLFW context 
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
@@ -70,7 +67,7 @@ int main()
 
 	/*Collider collider_apple = Collider(lesbeanApple);
 	Collider collider_apple2 = Collider(lesbeanApple2);*/
-	Collider collider_water = Collider(grabPass);
+	Collider collider_water = Collider(&objects["grabPass"]);
 	
 
 
@@ -86,27 +83,27 @@ int main()
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
-	tmt.tileObjects[0] = groundTile0;
-	tmt.tileObjects[1] = groundTile1;
-	tmt.tileObjects[2] = groundTile2;
-	tmt.tileObjects[3] = wallTile0;
+	tmt.tileObjects[0] = &objects["groundTile0"];
+	tmt.tileObjects[1] = &objects["groundTile1"];
+	tmt.tileObjects[2] = &objects["groundTile2"];
+	tmt.tileObjects[3] = &objects["wallTile0"];
 
 	//DEBUG ZONE----------------------
 	int arr[4] = { 2,5,1,3 };
 	iMat2 mat = iMat2(arr);
 	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
-	std::map<int, std::pair<Drawable*, uint8_t>> drawOrder;
+	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
 
-	GameObjectClone background0  = GameObjectClone(background);
-	GameObjectClone background11 = GameObjectClone(background1);
-	GameObjectClone background22 = GameObjectClone(background2) ;
-	GameObjectClone background33 = GameObjectClone(background3) ;
-	GameObjectClone background44 = GameObjectClone(background4) ;
-	GameObjectClone bush11       = GameObjectClone(bush1) ;
-	GameObjectClone bush22       = GameObjectClone(bush2) ;
-	GameObjectClone tree11       = GameObjectClone(tree1) ;
-	GameObjectClone tree22       = GameObjectClone(tree2) ;
+	GameObjectClone background0  = GameObjectClone(&objects["background"]);
+	GameObjectClone background11 = GameObjectClone(&objects["background1"]);
+	GameObjectClone background22 = GameObjectClone(&objects["background2"]) ;
+	GameObjectClone background33 = GameObjectClone(&objects["background3"]) ;
+	GameObjectClone background44 = GameObjectClone(&objects["background4"]) ;
+	GameObjectClone bush11       = GameObjectClone(&objects["bush1"]) ;
+	GameObjectClone bush22       = GameObjectClone(&objects["bush2"]) ;
+	GameObjectClone tree11       = GameObjectClone(&objects["tree1"]) ;
+	GameObjectClone tree22       = GameObjectClone(&objects["tree2"]) ;
 
 	drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
 	drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
@@ -130,7 +127,7 @@ int main()
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
-		ImGui::SliderInt2("WarriorPos", &warrior->position.x, -400, 400);
+		ImGui::SliderInt2("WarriorPos", &(objects["warrior"].position.x), -400, 400);
 
 		if (ImGui::BeginMenuBar())
 		{
@@ -163,13 +160,13 @@ int main()
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
-		lesbeanApple->position.x += (-input_left + input_right)*300.0f*deltaTime;
-		lesbeanApple->position.y += (-input_down + input_up)*300.0f*deltaTime;
+		objects["lesbeanApple"].position.x += (-input_left + input_right)*300.0f*deltaTime;
+		objects["lesbeanApple"].position.y += (-input_down + input_up)*300.0f*deltaTime;
 		//while (IsColliding(&collider_apple, &collider_apple2)) {
 		//	lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
 		//	lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
 		//}
-		camera.position = lesbeanApple->position;
+		camera.position = objects["lesbeanApple"].position;
 
 		camera.Update();
 		tmt.Update();
@@ -187,22 +184,22 @@ int main()
 
 		//ground->Draw(0);
 		warriorTex->UpdateTexture(warriorTex->size.x, warriorTex->size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
-		warrior->Draw(0);
-		//lesbeanApple->Draw(0);
-		//instancingApple.Draw(0);
-		//lesbeanApple2->Draw(0);
+		objects["warrior"].Draw(0);
+
+
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
-		grabPass->Draw(1);
-		postProcessing->position = camera.position;
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		objects["grabPass"].Draw(1);
+		objects["postProcessing"].position = camera.position;
+		//glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		//grabTex->UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+
 		//lightSurface->Draw(1);
 		//postProcessing->Draw(1);
 
 		//Drawing debug things and tilemap grid
 		//tmt.RenderGrid();
-		font.DisplayText("Hello World", Vector2<int>(100, 100), shader_text, Vector3<float>(1.0f, 0.0f, 0.0f), 0);
+		//font.DisplayText("Hello World", Vector2<int>(100, 100), shader_text, Vector3<float>(1.0f, 0.0f, 0.0f), 0);
 
 		//Render Im::Gui
 		ImGui::Render();

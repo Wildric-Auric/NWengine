@@ -10,41 +10,16 @@
 
 
 std::map<int, GameObject*> allObjects;
+std::map<const char*, GameObject> objects;
+std::map<const char*, Image> images;
 
 unsigned char* behindPixels        =    new unsigned char[4*SCREEN_WIDTH*SCREEN_HEIGHT];
 
 const char* path                   =    "Ressources/Images/img2.png";
 
-Image IMAGE_APPLE;
-Image IMAGE_WARRIOR_IDLE_1;
-Image IMAGE_WARRIOR_IDLE_2;
-Image IMAGE_WARRIOR_IDLE_3;
-Image IMAGE_WARRIOR_IDLE_4;
-Image IMAGE_WARRIOR_IDLE_5;
-Image IMAGE_WARRIOR_IDLE_6;
 
 
-Image* IMAGES_WARRIOR_IDLE_ARRAY[6] =    {
-	&IMAGE_WARRIOR_IDLE_1,
-	&IMAGE_WARRIOR_IDLE_2,
-	&IMAGE_WARRIOR_IDLE_3,
-	&IMAGE_WARRIOR_IDLE_4,
-	&IMAGE_WARRIOR_IDLE_5,
-	&IMAGE_WARRIOR_IDLE_6,
-};
-
-
-Image IMAGE_BACKGROUND;
-Image IMAGE_TREE1;
-Image IMAGE_TREE2;
-Image IMAGE_BUSH1;
-Image IMAGE_BUSH2;
-Image IMAGE_GROUND;
-Image IMAGE_TILE1;
-Image IMAGE_GROUND_TILE0;
-Image IMAGE_GROUND_TILE1;
-Image IMAGE_GROUND_TILE2;
-
+Image* IMAGES_WARRIOR_IDLE_ARRAY[6];
 
 
 Texture* tex                       =    (Texture*)malloc(sizeof(Texture));
@@ -73,26 +48,26 @@ Shader* shader_simple              =    (Shader*)malloc(sizeof(Shader));
 Shader* shader_text                =    (Shader*)malloc(sizeof(Shader));
 
 
-GameObject* lesbeanApple           =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* lesbeanApple2          =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* grabPass               =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* lightSurface           =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* postProcessing         =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* warrior                =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* background             =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* background1            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* background2            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* background3            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* background4            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* tree1                  =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* tree2                  =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* bush1                  =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* bush2                  =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* ground                 =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* wallTile0              =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* groundTile0            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* groundTile1            =    (GameObject*)malloc(sizeof(GameObject));
-GameObject* groundTile2            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* lesbeanApple           =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* lesbeanApple2          =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* grabPass               =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* lightSurface           =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* postProcessing         =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* warrior                =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* background             =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* background1            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* background2            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* background3            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* background4            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* tree1                  =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* tree2                  =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* bush1                  =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* bush2                  =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* ground                 =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* wallTile0              =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* groundTile0            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* groundTile1            =    (GameObject*)malloc(sizeof(GameObject));
+//GameObject* groundTile2            =    (GameObject*)malloc(sizeof(GameObject));
 
 
 Image::Image(const char* path, bool alpha) {
@@ -102,41 +77,50 @@ Image::Image(const char* path, bool alpha) {
 };
 
 void LoadImages() {
-	IMAGE_APPLE                       =    Image(path,true);
-	IMAGE_WARRIOR_IDLE_1              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png",true);
-	IMAGE_WARRIOR_IDLE_2              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_2.png",1);
-	IMAGE_WARRIOR_IDLE_3              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_3.png",1);
-	IMAGE_WARRIOR_IDLE_4              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_4.png",1);
-	IMAGE_WARRIOR_IDLE_5              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_5.png",1);
-	IMAGE_WARRIOR_IDLE_6              =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_6.png",1);
-	IMAGE_BACKGROUND                  =    Image("Ressources/Images/Forrest_Tileset/BG/NonParallax.png",1);
-	IMAGE_TREE1                       =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png",1);
-	IMAGE_TREE2                       =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png",1);
-	IMAGE_BUSH1                       =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png",1);
-	IMAGE_BUSH2                       =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png",1);
-	IMAGE_GROUND                      =    Image("Ressources/Images/ground.png",1);
-	IMAGE_TILE1                       =    Image("Ressources/Images/Interior Wall.png",1);
-    IMAGE_GROUND_TILE0				  =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_0.png", 1);
-	IMAGE_GROUND_TILE1                =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_6.png", 1);
-	IMAGE_GROUND_TILE2                =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_12.png", 1);
+	images["IMAGE_APPLE"]			            =    Image(path,true);
+	images["IMAGE_WARRIOR_IDLE_1"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png",true);
+	images["IMAGE_WARRIOR_IDLE_2"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_2.png",1);
+	images["IMAGE_WARRIOR_IDLE_3"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_3.png",1);
+	images["IMAGE_WARRIOR_IDLE_4"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_4.png",1);
+	images["IMAGE_WARRIOR_IDLE_5"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_5.png",1);
+	images["IMAGE_WARRIOR_IDLE_6"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_6.png",1);
+	images["IMAGE_BACKGROUND"]		        =    Image("Ressources/Images/Forrest_Tileset/BG/NonParallax.png",1);
+	images["IMAGE_TREE1"]					    =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png",1);
+	images["IMAGE_TREE2"]			   =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png",1);
+	images["IMAGE_BUSH1"]			   =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png",1);
+	images["IMAGE_BUSH2"]			   =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png",1);
+	images["IMAGE_GROUND"]			    =    Image("Ressources/Images/ground.png",1);
+	images["IMAGE_TILE1"]			   =    Image("Ressources/Images/Interior Wall.png",1);
+    images["IMAGE_GROUND_TILE0"]			    =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_0.png", 1);
+	images["IMAGE_GROUND_TILE1"]	          =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_6.png", 1);
+	images["IMAGE_GROUND_TILE2"]	          =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_12.png", 1);
+
+	IMAGES_WARRIOR_IDLE_ARRAY[0] = &images["IMAGE_WARRIOR_IDLE_1"];
+	IMAGES_WARRIOR_IDLE_ARRAY[1] = &images["IMAGE_WARRIOR_IDLE_2"];
+	IMAGES_WARRIOR_IDLE_ARRAY[2] = &images["IMAGE_WARRIOR_IDLE_3"];
+	IMAGES_WARRIOR_IDLE_ARRAY[3] = &images["IMAGE_WARRIOR_IDLE_4"];
+	IMAGES_WARRIOR_IDLE_ARRAY[4] = &images["IMAGE_WARRIOR_IDLE_5"];
+	IMAGES_WARRIOR_IDLE_ARRAY[5] = &images["IMAGE_WARRIOR_IDLE_6"];
+
+
 
 
 };
 
 void LoadTextures() {
-	*tex                              =    Texture(IMAGE_APPLE.width, IMAGE_APPLE.height, IMAGE_APPLE.tex, 1, 0);
+	*tex                              =    Texture(images["IMAGE_APPLE"].width, images["IMAGE_APPLE"].height, images["IMAGE_APPLE"].tex, 1, 0);
 	*grabTex                          =    Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
-	*warriorTex                       =    Texture(IMAGE_WARRIOR_IDLE_1.width, IMAGE_WARRIOR_IDLE_1.height, IMAGE_WARRIOR_IDLE_1.tex, 1, 0);
-	*backgroundTex                    =    Texture(IMAGE_BACKGROUND.width, IMAGE_BACKGROUND.height, IMAGE_BACKGROUND.tex, 1, 1);
-	*bush1Tex                         =    Texture(IMAGE_BUSH1.width, IMAGE_BUSH1.height, IMAGE_BUSH1.tex, 1, 0);
-	*bush2Tex                         =    Texture(IMAGE_BUSH2.width, IMAGE_BUSH2.height, IMAGE_BUSH2.tex, 1, 0);
-	*tree1Tex                         =    Texture(IMAGE_TREE1.width, IMAGE_TREE1.height, IMAGE_TREE1.tex, 1, 0);
-	*tree2Tex                         =    Texture(IMAGE_TREE2.width, IMAGE_TREE2.height, IMAGE_TREE2.tex, 1, 0);
-	*groundTex                        =    Texture(IMAGE_GROUND.width, IMAGE_GROUND.height, IMAGE_GROUND.tex, 1, 0);
-	*tile1Tex                         =    Texture(IMAGE_TILE1.width, IMAGE_TILE1.height, IMAGE_TILE1.tex, 1, 1);
-	*texture_groundTile0              =    Texture(IMAGE_GROUND_TILE0.width, IMAGE_GROUND_TILE0.height, IMAGE_GROUND_TILE0.tex, 1, 1);
-	*texture_groundTile1              =    Texture(IMAGE_GROUND_TILE1.width, IMAGE_GROUND_TILE1.height, IMAGE_GROUND_TILE1.tex, 1, 1);
-	*texture_groundTile2              =    Texture(IMAGE_GROUND_TILE2.width, IMAGE_GROUND_TILE2.height, IMAGE_GROUND_TILE2.tex, 1, 1);
+	*warriorTex                       =    Texture(images["IMAGE_WARRIOR_IDLE_1"].width, images["IMAGE_WARRIOR_IDLE_1"].height, images["IMAGE_WARRIOR_IDLE_1"].tex, 1, 0);
+	*backgroundTex                    =    Texture(images["IMAGE_BACKGROUND"].width, images["IMAGE_BACKGROUND"].height, images["IMAGE_BACKGROUND"].tex, 1, 1);
+	*bush1Tex                         =    Texture(images["IMAGE_BUSH1"].width, images["IMAGE_BUSH1"].height, images["IMAGE_BUSH1"].tex, 1, 0);
+	*bush2Tex                         =    Texture(images["IMAGE_BUSH2"].width, images["IMAGE_BUSH2"].height, images["IMAGE_BUSH2"].tex, 1, 0);
+	*tree1Tex                         =    Texture(images["IMAGE_TREE1"].width, images["IMAGE_TREE1"].height, images["IMAGE_TREE1"].tex, 1, 0);
+	*tree2Tex                         =    Texture(images["IMAGE_TREE2"].width, images["IMAGE_TREE2"].height, images["IMAGE_TREE2"].tex, 1, 0);
+	*groundTex                        =    Texture(images["IMAGE_GROUND"].width, images["IMAGE_GROUND"].height, images["IMAGE_GROUND"].tex, 1, 0);
+	*tile1Tex                         =    Texture(images["IMAGE_TILE1"].width, images["IMAGE_TILE1"].height, images["IMAGE_TILE1"].tex, 1, 1);
+	*texture_groundTile0              =    Texture(images["IMAGE_GROUND_TILE0"].width, images["IMAGE_GROUND_TILE0"].height, images["IMAGE_GROUND_TILE0"].tex, 1, 1);
+	*texture_groundTile1              =    Texture(images["IMAGE_GROUND_TILE1"].width, images["IMAGE_GROUND_TILE1"].height, images["IMAGE_GROUND_TILE1"].tex, 1, 1);
+	*texture_groundTile2              =    Texture(images["IMAGE_GROUND_TILE2"].width, images["IMAGE_GROUND_TILE2"].height, images["IMAGE_GROUND_TILE2"].tex, 1, 1);
 
 };
 void LoadShaders() {
@@ -153,29 +137,30 @@ void LoadShaders() {
 };
 
 void LoadGameObjects() {
-	*lesbeanApple                     =    GameObject(tex, Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), lesbeanApple,shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
-	*lesbeanApple2                    =    GameObject(tex, Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), lesbeanApple2,shader_default);
-	*grabPass                         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), grabPass,shader_grabPass);
-	*lightSurface                     =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), lightSurface,shader_lightSurface);
-	*postProcessing                   =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), postProcessing ,shader_postProcessing);
-	*warrior                          =    GameObject(warriorTex, Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), warrior);
-	float s                           =    2.2;
-	*background                       =    GameObject(backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s), background);
-	*background1                      =    GameObject(backgroundTex, Vector2<int>(-337 + background->size.x, 130), Vector2<float>(s, s),background1);
-	*background2                      =    GameObject(backgroundTex, Vector2<int>(-337 + 2 * background->size.x, 130), Vector2<float>(s, s), background2);
-	*background3                      =    GameObject(backgroundTex, Vector2<int>(-337 + 3 * background->size.x, 130), Vector2<float>(s, s), background3);
-	*background4                      =    GameObject(backgroundTex, Vector2<int>(-337 + 4 * background->size.x, 130), Vector2<float>(s, s), background4);
-	s                                 =    2.0f;
-	*bush1                            =    GameObject(bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s), bush1);
-	*bush2                            =    GameObject(bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s), bush2);
-	*tree1                            =    GameObject(tree1Tex, Vector2<int>(156, 12), Vector2<float>(s, s),tree1);
-	*tree2                            =    GameObject(tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s), tree2);
-	s                                 =    1.5f;
-	*ground                           =    GameObject(groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s), ground);
-	*wallTile0                        =    GameObject(tile1Tex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), wallTile0,shader_default);
-	*groundTile0                      =    GameObject(texture_groundTile0, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), groundTile0);
-	*groundTile1                      =    GameObject(texture_groundTile1, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), groundTile1);
-	*groundTile2                      =    GameObject(texture_groundTile2, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), groundTile2);
+	
+	objects["lesbeanApple"]		         =    GameObject(tex, Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), &objects["lesbeanApple"],shader_default);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	objects["lesbeanApple2"]	         =    GameObject(tex, Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), &objects["lesbeanApple2"],shader_default);
+	objects["grabPass"]			         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["grabPass"],shader_grabPass);
+	objects["lightSurface"]		         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["lightSurface"],shader_lightSurface);
+	objects["postProcessing"]	         =    GameObject(grabTex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["postProcessing"],shader_postProcessing);
+	objects["warrior"]					 =    GameObject(warriorTex, Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), &objects["warrior"]);
+	float s =    2.2;
+	objects["background"]	         =    GameObject(backgroundTex, Vector2<int>(-337, 130), Vector2<float>(s, s), &objects["background"]);
+	objects["background1"]	         =    GameObject(backgroundTex, Vector2<int>(-337 +		objects["background"].size.x, 130), Vector2<float>(s, s),		&objects["background1"]	);
+	objects["background2"]	         =    GameObject(backgroundTex, Vector2<int>(-337 + 2 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background2"]	);
+	objects["background3"]	         =    GameObject(backgroundTex, Vector2<int>(-337 + 3 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background3"]	);
+	objects["background4"]	         =    GameObject(backgroundTex, Vector2<int>(-337 + 4 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background4"]	);
+	s            =    2.0f;
+	objects["bush1"]	         =    GameObject(bush1Tex, Vector2<int>(113, -28), Vector2<float>(s, s), &objects["bush1"]);
+	objects["bush2"]	         =    GameObject(bush2Tex, Vector2<int>(-119, -28), Vector2<float>(s, s), &objects["bush2"]);
+	objects["tree1"]	         =    GameObject(tree1Tex, Vector2<int>(156, 12), Vector2<float>(s, s), &objects["tree1"]);
+	objects["tree2"]	         =    GameObject(tree2Tex, Vector2<int>(-212, 19), Vector2<float>(s, s), &objects["tree2"]);
+	s           =    1.5f;
+	objects["ground"]	             =    GameObject(groundTex, Vector2<int>(-100, -40), Vector2<float>(s, s), &objects["ground"]);
+	objects["wallTile0"]	         =    GameObject(tile1Tex, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["wallTile0"],shader_default);
+	objects["groundTile0"]	         =    GameObject(texture_groundTile0, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile0"]);
+	objects["groundTile1"]	         =    GameObject(texture_groundTile1, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile1"]);
+	objects["groundTile2"]	         =    GameObject(texture_groundTile2, Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile2"]);
 
 };					  
 

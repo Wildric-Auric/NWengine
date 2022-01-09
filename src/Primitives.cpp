@@ -40,7 +40,7 @@ vertices{ 0.0f }
 	};
 
 	this->position = position;
-
+	std::cout << EBO << " " << &EBO << std::endl;
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);

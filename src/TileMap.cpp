@@ -10,11 +10,15 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "Globals.h"
 
+#include<iostream>
+
 extern Camera camera;
-static GameObjectClone currentTile = GameObjectClone(wallTile0);
+static GameObjectClone currentTile;
 
 TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 {
+	currentTile = GameObjectClone(&objects["wallTile0"]); //Handles exception
+
 	TileMap::currentTileMap = this;
 	this->name = _strdup(name);
 	this->cellSize = cellSize;
@@ -23,12 +27,12 @@ TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 	int quarter = lineNum / 4;
 	signed char a = cellSize.x / 2*0;
 	signed char b = cellSize.y / 2*0;
-	for (int i = 0; i < half; i++) {
-		grid[i] = Line(Vector2<int>(-1000, i * cellSize.x- quarter*cellSize.x - b), Vector2<int>(1000, i * cellSize.x - quarter * cellSize.x -b), color);
-	}
-	for (int j = 0; j < half; j++) {
-		grid[j + half] = Line(Vector2<int>(j * cellSize.y - quarter * cellSize.y -  a, -1000), Vector2<int>(j * cellSize.y - quarter * cellSize.y - a, 1000), color);
-	}
+	//for (int i = 0; i < half; i++) {
+	//	grid[i] = Line(Vector2<int>(-1000, i * cellSize.x- quarter*cellSize.x - b), Vector2<int>(1000, i * cellSize.x - quarter * cellSize.x -b), color);
+	//}
+	//for (int j = 0; j < half; j++) {
+	//	grid[j + half] = Line(Vector2<int>(j * cellSize.y - quarter * cellSize.y -  a, -1000), Vector2<int>(j * cellSize.y - quarter * cellSize.y - a, 1000), color);
+	//}
 	SetUpTiles();
 }
 TileMap::~TileMap() {
@@ -44,9 +48,9 @@ TileMap::~TileMap() {
 }
 
 void TileMap::RenderGrid(){
-	for (Line line : grid) {
-		line.Draw();
-	}
+	//for (Line line : grid) {
+	//	line.Draw();
+	//}
 }
 void TileMap::SetUpTiles() {
 	std::ifstream file("Maps/" + (std::string)name + std::string(".txt"));

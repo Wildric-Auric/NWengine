@@ -22,7 +22,8 @@ void GameObject::Draw(uint8_t textureSlot) {
 
 int GameObject::numberOfGameObjects = 0;
 
-GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, GameObject* ref, Shader* shader, bool usingImageSize, Vector2<int> size) {
+GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, GameObject* ref, Shader* shader, bool usingImageSize, Vector2<int> size) 
+{
 
 	this->position = position;
 	this->scale = scale;

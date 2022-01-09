@@ -26,8 +26,12 @@ public:
 	Shader* shader;
 
 	void Draw(uint8_t textureSlot = 0);
-	GameObject(Texture* image, Vector2<int> position = Vector2<int>(0 , 0), 
-				Vector2<float> scale = Vector2<float> (1.0f, 1.0f), GameObject* ref = 0, Shader* shader = nullptr, bool usingImageSize = 1, Vector2<int> size = (10, 10));
+	GameObject() {};
+	GameObject(Texture* image, Vector2<int> position = Vector2<int>(0, 0),
+		Vector2<float> scale = Vector2<float>(1.0f, 1.0f),
+		GameObject* ref = 0,
+		Shader* shader = nullptr,
+		bool usingImageSize = 1, Vector2<int> size = (10, 10));
 };
 
 
@@ -49,6 +53,7 @@ public:
 	GameObject* originalGameObject; //ReadOnly
 	Vector2<float> scale = Vector2<float>(1.0f,1.0f);
 	Vector2<int> position = Vector2<int>(0,0);
+	GameObjectClone() {};
 	GameObjectClone(GameObject* gameObject);
 	void Draw(uint8_t slot);
 };
