@@ -1,5 +1,6 @@
 #pragma once
 //TODO::Add substraction and division
+//TODO::Add direct multiplication and addition operator
 #include <iostream>
 
 
@@ -145,88 +146,70 @@ Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent
 template<uint8_t n, uint8_t m, typename T>
 class Matrix {
 public:
-	T coeff[n][m];
+	Vector2<int> dimension;
+	T coeff[n*m];
 	Matrix(T* data);
+	Matrix operator + (T const& num);
+	Matrix operator * (T const& num);
+	Matrix operator + (Matrix* const& matrix);
+	template<uint8_t b>
+	Matrix<n, b, T> operator * (Matrix<m, b, T>* const& matrix);
 
 };
 
 template<uint8_t n, uint8_t m, typename T>
 Matrix<n, m, T>::Matrix(T* data) {
-
+	dimension.x = n;
+	dimension.y = m;
 	int size = sizeof(T) * n * m;
-	memcpy(coeff, data, size);
+	if (data!=nullptr) memcpy(coeff, data, size);
+	else {
+		for (int i = 0; i < n * m; i++) {
+			coeff[i] = (T)0;
+		};
+	}
 
 };
 
+template<uint8_t n, uint8_t m, typename T>
+Matrix<n, m, T> Matrix<n, m, T>::operator + (T const& num) {
+	Matrix<n, m, T> result = Matrix<n, m, T>(coeff);
+	for (uint8_t i = 0; i < n * m; i++) {
+		result.coeff[i] += num;
+	};
+	return result;
+}
 
-//class Matrix2 {
-//	//You can pass a new parameter to the array thanks to template but it will be kept simpler here for optimization
-//public:
-//	T coeff[2][2];
-//	Matrix2(T* data);
-//};
-//
-//template<typename T>
-//Matrix2<T>::Matrix2(T* data) {
-//	coeff[0][0] = data[0];
-//	coeff[0][1] = data[1];
-//	coeff[1][0] = data[2];
-//	coeff[1][1] = data[3];
-//};
-//
-//template<typename T>
-//class Matrix3 {
-//	T coeff[3][3];
-//	Matrix3(T* data);
-//};
-//
-//template<typename T>
-//Matrix3<T>::Matrix3(T* data) {
-//	coeff[0][0] = data[0];
-//	coeff[0][1] = data[1];
-//	coeff[0][2] = data[2];
-//	
-//	coeff[1][0] = data[3];
-//	coeff[1][1] = data[4];
-//	coeff[1][2] = data[5];
-//
-//	coeff[2][0] = data[6];
-//	coeff[2][1] = data[7];
-//	coeff[2][2] = data[8];
-//
-//}
-//
-//template<typename T>
-//class Matrix4 {
-//	T coeff[4][4];
-//	Matrix4(T* data);
-//};
-//
-//template<typename T>
-//Matrix3<T>::Matrix3(T* data) {
-//	coeff[0][0] = data[0];
-//	coeff[0][1] = data[1] ;
-//	coeff[0][2] = data[1];
-//	coeff[0][3] = data[1];
-//			    
-//	coeff[0][0] = data[1];
-//	coeff[0][1] = data[1];
-//	coeff[0][2] = data[1];
-//	coeff[0][3] = data[1];
-//			    
-//	coeff[0][0] = data[1];
-//	coeff[0][1] = data[1];
-//	coeff[0][2] = data[1];
-//	coeff[0][3] = data[1];
-//			   
-//	coeff[0][0] = data[1] = data[0];
-//	coeff[0][1] = data[1];
-//	coeff[0][2] = data[1];
-//	coeff[0][3] = data[1];
-//			    
-//	coeff[0][0] = data[1];
-//	coeff[0][1] = data[1];
-//	coeff[0][2] = data[1];
-//	coeff[0][3] = data[1];
+template<uint8_t n, uint8_t m, typename T>
+Matrix<n,m,T> Matrix<n, m, T>::operator * (T const& num) {
+    Matrix<n,m,T> result = Matrix<n,m,T>(coeff);
+	for (uint8_t i = 0; i < n * m; i++) {
+		result.coeff[i] *= num;
+	};
+	return result;
+}
 
-//};
+template<uint8_t n, uint8_t m, typename T>
+Matrix<n, m, T> Matrix<n, m, T>::operator + (Matrix* const& matrix) {
+	Matrix<n, m, T> result = Matrix<n, m, T>(coeff);
+	for (uint8_t i ; i < n * m; i++) {
+		result.coeff += coeff[i] + matrix->coeff[i];
+	}
+	return result;
+}
+
+template<uint8_t n, uint8_t m, typename T>
+template<uint8_t b>
+Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
+	Matrix<n, b, T> result = Matrix<n, b, T>(nullptr);
+	for (uint8_t i = 0; i < n; i++) {
+		for (uint8_t j = 0; j < b; j++) {
+			T sum = 0;
+			for (uint8_t cur = 0; cur < m; cur++) {
+				sum += coeff[m * i + cur] * matrix->coeff[j + cur*b];
+			};
+			result.coeff[i * b + j] = sum;
+		};
+	}
+	return result;
+}

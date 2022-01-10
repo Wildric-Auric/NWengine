@@ -25,4 +25,4 @@ typedef Vector3<int> iVec3;
 typedef Vector2<double> dVec2;
 typedef Vector3<double> dVec3;
 
-typedef Matrix<2,2, int>iMat2;
+typedef Matrix<2,2, int> iMat2;

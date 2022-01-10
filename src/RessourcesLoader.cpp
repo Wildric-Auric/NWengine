@@ -1,4 +1,3 @@
-//TODO::Use map structure for ressources
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION

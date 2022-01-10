@@ -11,7 +11,7 @@
 
 std::pair<const char*, const char*> parseShader(const char* path)
 {
-	std::string frag, vert = "";    //TODO: Make it directly in the heap
+	std::string frag, vert = "";    //TODO:: Make it directly in the heap
 	unsigned int current = 0;
 	std::ifstream file(path);
 	for (std::string line; std::getline(file, line);)
@@ -52,7 +52,7 @@ Shader::Shader(const char* path) {
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram); //TODO: Add error message
+	glLinkProgram(shaderProgram);
 
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &successInfo);
 	if (!successInfo) {

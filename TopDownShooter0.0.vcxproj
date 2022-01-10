@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;"$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio";$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
@@ -115,7 +115,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;"$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio";$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
@@ -134,7 +134,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;"$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio";$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glfw-3.3.4.bin.WIN32\lib-vc2019;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\GLEW\lib\Release\Win32;C:\Users\mouni\source\repos\OpenGL_TopDownShooter\dependecies\freetype\release dll\win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
@@ -154,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;"$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio";$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;$(Solution)dependencies\GLFW\lib-vc2019;$(Solution)dependencies\GLEW\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;irrKlang.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
