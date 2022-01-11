@@ -93,21 +93,15 @@ int main()
 	}
 	
 	//DEBUG ZONE----------------------
-	int arr[6] = { 2,5,
+	int arr[4] = { 2,5,
 				   1,3};
-	int arr1[8] = {
-					1,2,3, 8,
-					5,6,7,8
+	int arr1[4] = {
+					1,2,
+					5,6,
 				   };
 	iMat2 mat1 = iMat2(arr);
-	Matrix<2,4, int> mat2 = Matrix<2,4,int>(arr1);
-
-	Matrix<2,4,int> mat = mat1 * &mat2;
-		//std::cout << "Beg" << std::endl;
-		//std::cout << mat.coeff[0] <<"  "<< mat.coeff[1] << "   ";
-		//std::cout << mat.coeff[2] << "  " << mat.coeff[3] << std::endl;
-		//std::cout << mat.coeff[4] << "  " << mat.coeff[5] << "   ";
-		//std::cout << mat.coeff[6] << "  " << mat.coeff[7] << std::endl;
+	Matrix<2,2, int> mat2 = Matrix<2,2,int>(arr1);
+	mat1 += &mat2;
 
 
 

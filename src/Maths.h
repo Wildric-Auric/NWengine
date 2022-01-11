@@ -152,8 +152,12 @@ public:
 	Matrix operator + (T const& num);
 	Matrix operator * (T const& num);
 	Matrix operator + (Matrix* const& matrix);
+	void operator += (T const& num);
+	void operator *= (T const& num);
+	void operator += (Matrix* const& matrix);
 	template<uint8_t b>
 	Matrix<n, b, T> operator * (Matrix<m, b, T>* const& matrix);
+	//void operator *= (Matrix<m, b, T>* const& matrix); Can you do it without creating another matrix??
 
 };
 
@@ -181,6 +185,13 @@ Matrix<n, m, T> Matrix<n, m, T>::operator + (T const& num) {
 }
 
 template<uint8_t n, uint8_t m, typename T>
+void Matrix<n, m, T>::operator += (T const& num) {
+	for (uint8_t i = 0; i < n * m; i++) {
+		coeff[i] += num;
+	};
+}
+
+template<uint8_t n, uint8_t m, typename T>
 Matrix<n,m,T> Matrix<n, m, T>::operator * (T const& num) {
     Matrix<n,m,T> result = Matrix<n,m,T>(coeff);
 	for (uint8_t i = 0; i < n * m; i++) {
@@ -190,12 +201,26 @@ Matrix<n,m,T> Matrix<n, m, T>::operator * (T const& num) {
 }
 
 template<uint8_t n, uint8_t m, typename T>
+void Matrix<n, m, T>::operator *= (T const& num) {
+	for (uint8_t i = 0; i < n * m; i++) {
+		coeff[i] *= num;
+	};
+}
+
+template<uint8_t n, uint8_t m, typename T>
 Matrix<n, m, T> Matrix<n, m, T>::operator + (Matrix* const& matrix) {
 	Matrix<n, m, T> result = Matrix<n, m, T>(coeff);
-	for (uint8_t i ; i < n * m; i++) {
-		result.coeff += coeff[i] + matrix->coeff[i];
+	for (uint8_t i = 0; i < n * m; i++) {
+		result.coeff[i] += coeff[i] + matrix->coeff[i];
 	}
 	return result;
+}
+
+template<uint8_t n, uint8_t m, typename T>
+void Matrix<n, m, T>::operator += (Matrix* const& matrix) {
+	for (uint8_t i = 0; i < n * m; i++) {
+		coeff[i] += matrix->coeff[i];
+	}
 }
 
 template<uint8_t n, uint8_t m, typename T>
@@ -213,3 +238,4 @@ Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
 	}
 	return result;
 }
+
