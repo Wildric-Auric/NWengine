@@ -97,3 +97,27 @@ void Line::Draw() {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_LINES, 0, 2);
 }
+
+
+Square::Square(Vector2<int> position, int size, Vector3<float> color, float alpha) {
+	this->alpha = alpha;
+	this->position = position;
+	this->size = size;
+	this->color = color;
+	quad = Quad(position, size, size);
+
+};
+
+void Square::Draw() {
+	quad.position = this->position;
+	glUseProgram(shaders["shader_simple"].shaderProgram);
+	shaders["shader_simple"].SetMat4x4("uMvp", &(projectionMatrix * viewMatrix)[0][0]);
+	shaders["shader_simple"].SetUniform3f("uColor", color.x, color.y, color.z);
+	shaders["shader_simple"].SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
+	//TODO:: Pass following lines directly to Quad class
+	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
+	shaders["shader_simple"].SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
+
+	quad.Draw();
+
+};

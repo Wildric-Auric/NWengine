@@ -31,10 +31,13 @@ double deltaTimeSum = 0;
 
 Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
 
+float d1, d2 = 0.0f;
 using namespace irrklang;
 
+
+
 int main()
-{ 
+{
     //Init GLFW context 
 	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
@@ -45,6 +48,8 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+
 
 	//init irrKlang
 	ISoundEngine* SoundEngine = createIrrKlangDevice();
@@ -57,6 +62,7 @@ int main()
 	LoadGameObjects();
 
 
+
 	Font font = Font("Ressources/fonts/rockstar.otf");
 
 
@@ -64,7 +70,8 @@ int main()
 	//Text* text	= new Text();
 	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
-	/*Collider collider_apple = Collider(lesbeanApple);
+	/*Collider collider_apple = Collider(
+	Apple);
 	Collider collider_apple2 = Collider(lesbeanApple2);*/
 	Collider groundCollider[20];
 	
@@ -137,11 +144,16 @@ int main()
 	drawOrder[7] = std::make_pair<Drawable*, uint8_t>(&tree11,0) ;
 	drawOrder[8] = std::make_pair<Drawable*, uint8_t>(&tree22,0) ;
 
+
+
 	
 	double currentSprite = 0.0;
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	float yspd = 0;
+	Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->x, fVec3(0.0, 0, 0), .5f);
+	Square s32 = Square(iVec2(groundCollider[0].GetPosition().x, groundCollider[0].GetPosition().y), groundCollider[0].size->x, fVec3(0.0, 0, 0), .5f);
+
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -150,7 +162,9 @@ int main()
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
-		ImGui::SliderInt2("WarriorPos", &(objects["warrior"].position.x), -400, 400);
+		ImGui::Text("Var: %f, %f", d1, d2);
+		//ImGui::SliderInt2("WarriorPos", &(points[0].position.x), -400, 400);
+
 
 		if (ImGui::BeginMenuBar())
 		{
@@ -169,8 +183,8 @@ int main()
 
 		ImGui::End();
 		//Debug--------------
-		//std::cout << lesbeanApple->size.x << "  " << collider_apple2.size->x << std::endl;
-		//if (isColliding(&collider_apple, &collider_apple2)) std::cout << "Hello Collision" << std::endl;
+		Vector2<float> m = Vector2<float>(mousePosX, mousePosY).normalize();
+
 		
 		//------------------
 		uTime += deltaTime;
@@ -237,6 +251,14 @@ int main()
 		warriorClone.Draw(0);
 		//objects["warrior"].Draw(0);
 
+		d1 = playerCol.GetPosition().y;
+		s64.position = playerCol.GetPosition();
+		s64.Draw();
+		for (int i = 0; i < 15; i++) {
+			s32.position = groundCollider[i].GetPosition();
+			s32 .Draw();
+		}
+
 
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
@@ -245,8 +267,9 @@ int main()
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 
-		objects["lightSurface"].Draw(1);
-		//objects["postProcessing"].Draw(1);
+		//objects["lightSurface"].Draw(1);
+
+		objects["postProcessing"].Draw(1);
 
 		//Drawing debug things and tilemap grid
 		//tmt.RenderGrid();

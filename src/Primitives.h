@@ -46,7 +46,19 @@ public:
 	Vector3<float> color;
 	float alpha = 1.0f;
 	void Draw();
+};
 
+class Square {
+//ONLY FOR DEBUGGING!
+private: 
 
+public:
+	Vector2<int> position;
+	Quad quad;
+	Vector3<float> color;
+	int size = size;
+	float alpha = 1.0f;
+	Square(Vector2<int> position, int size = 32, Vector3<float> color = Vector3<float>(0, 0, 0), float alpha = 1.0f);
+	void Draw();
 };
 

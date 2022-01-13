@@ -14,7 +14,7 @@ void GameObject::Draw(uint8_t textureSlot) {
 
 	shader->SetUniform1f("uTime", uTime);
 	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
-	shader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+	shader->SetVector2("uMouse", (float)mousePosX, (float)( SCREEN_HEIGHT - mousePosY));
 	image->Bind(textureSlot);
 	shader->SetUniform1i("uTex0", textureSlot);
 	container.Draw();
@@ -56,7 +56,7 @@ void Collider::Resize(Vector2<int> newSize) {
 	size = &manualSize;
 };
 Vector2<int> Collider::GetPosition() {
-	return *position + offset;
+	return (*position) + offset;
 };
 
 GameObjectClone::GameObjectClone(GameObject* gameObject) {

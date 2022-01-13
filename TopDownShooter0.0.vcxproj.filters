@@ -93,6 +93,9 @@
     <ClCompile Include="src\TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaders\Shader1.shader">
@@ -2174,6 +2177,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\TileMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
