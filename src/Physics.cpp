@@ -1,4 +1,23 @@
 #include "Physics.h"
+#include "Globals.h"
+Rigidbody::Rigidbody(GameObjectClone* attached) {
+	attachedGameObject = attached;
+}
+iVec2 Rigidbody::GetPosition() {
+	return attachedGameObject->position;
+};
+void Rigidbody::Update() {
+	attachedGameObject->position = attachedGameObject->position + grav*deltaTime;
+};
+
+
+
+
+
+
+
+
+
 //class point {
 //public:
 //	Vector2<int> position = Vector2<int>();

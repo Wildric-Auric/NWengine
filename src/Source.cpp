@@ -84,7 +84,7 @@ int main()
 	ImColor bgColor = ImColor(82, 75, 108);
 
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
-	if (sd) sd->setVolume(0.3);
+	if (sd) sd->setVolume(0.0);
 
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
@@ -151,7 +151,7 @@ int main()
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	float yspd = 0;
-	Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->x, fVec3(0.0, 0, 0), .5f);
+	Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->y, fVec3(0.0, 0, 0), .5f);
 	Square s32 = Square(iVec2(groundCollider[0].GetPosition().x, groundCollider[0].GetPosition().y), groundCollider[0].size->x, fVec3(0.0, 0, 0), .5f);
 
 	while (!glfwWindowShouldClose(window)){
@@ -197,12 +197,6 @@ int main()
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
-		objects["lesbeanApple"].position.x += (-input_left + input_right)*300.0f*deltaTime;
-		objects["lesbeanApple"].position.y += (-input_down + input_up)*300.0f*deltaTime;
-		//while (IsColliding(&collider_apple, &collider_apple2)) {
-		//	lesbeanApple->position.x -= (-input_left + input_right) * 300.0f * deltaTime;
-		//	lesbeanApple->position.y -= (-input_down + input_up) * 300.0f * deltaTime;
-		//}
 		//camera.position = objects["lesbeanApple"].position;
 		yspd -= 10 * deltaTime;
 
