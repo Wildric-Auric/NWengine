@@ -79,34 +79,37 @@ void TileMap::SetUpTiles() {
 	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
 }
 void TileMap::Update() {
-	m_canTile -= deltaTime;
-	signed char a = cellSize.x / 2 ;
-	signed char b = cellSize.y / 2 ;
-	if (m_canTile < 0 && !isMouseOnGui) {
 
-		int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2;
-		int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2;
-		if (input_left_click) {
-			bool bo = false;
+	if (GuiActive) {
+		m_canTile -= deltaTime;
+		signed char a = cellSize.x / 2 ;
+		signed char b = cellSize.y / 2 ;
+		if (m_canTile < 0 && !isMouseOnGui) {
 
-			Vector2<int> pos = Vector2<int>((X / cellSize.x - (X<0)) * cellSize.x + a, (Y / cellSize.y - (Y < 0)) * cellSize.y + b);
-			for (auto it = tiles.begin(); it != tiles.end(); it++) {
-				if (it->position == pos) {
-					bo = true;
-					break;
+			int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2;
+			int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2;
+			if (input_left_click) {
+				bool bo = false;
+
+				Vector2<int> pos = Vector2<int>((X / cellSize.x - (X < 0)) * cellSize.x + a, (Y / cellSize.y - (Y < 0)) * cellSize.y + b);
+				for (auto it = tiles.begin(); it != tiles.end(); it++) {
+					if (it->position == pos) {
+						bo = true;
+						break;
+					}
+				}
+				if (!bo) {
+					currentTile.position = pos;
+					currentTile.scale = Vector2<float>(1.0f, 1.0f);
+					tiles.push_back(currentTile);
+					m_canTile = canTile;
 				}
 			}
-			if (!bo) {
-				currentTile.position = pos;
-				currentTile.scale = Vector2<float>(1.0f, 1.0f);
-				tiles.push_back(currentTile);
+
+			else if (input_d && canTile && !tiles.empty()) {
+				tiles.pop_back();
 				m_canTile = canTile;
 			}
-		}
-		
-		else if(input_d && canTile && !tiles.empty()) {
-			tiles.pop_back();
-			m_canTile = canTile;
 		}
 	}
 }
@@ -147,13 +150,20 @@ void TileMap::Gui() {
 					temp->image->texture,
 					ImVec2(temp->image->size.x, temp->image->size.y));
 				std::string str = "Tile" + std::to_string(i);
-				if (ImGui::Button( str.c_str() )){
+				if (ImGui::Button(str.c_str())) {
 					currentTile = GameObjectClone(temp);
 				};
 			}
 		}
 		ImGui::EndChild();
 		ImGui::End();
-	} 
+	};
+
+}
+
+void TileMap::Draw() {
+	for (auto it = tiles.begin(); it != tiles.end(); ++it) {
+		(*it).Draw(0);
+	}
 }
 

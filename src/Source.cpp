@@ -131,6 +131,7 @@ int main()
 	GameObjectClone tree11       = GameObjectClone(&objects["tree1"]) ;
 	GameObjectClone tree22       = GameObjectClone(&objects["tree2"]) ;
 	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"]);
+	GameObjectClone postProcessing = GameObjectClone(&objects["postProcessing"]);
 
 	Collider playerCol = Collider(&warriorClone);
 
@@ -151,8 +152,8 @@ int main()
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	float yspd = 0;
-	Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->y, fVec3(0.0, 0, 0), .5f);
-	Square s32 = Square(iVec2(groundCollider[0].GetPosition().x, groundCollider[0].GetPosition().y), groundCollider[0].size->x, fVec3(0.0, 0, 0), .5f);
+	//Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->y, fVec3(0.0, 0, 0), .5f);
+	//Square s32 = Square(iVec2(groundCollider[0].GetPosition().x, groundCollider[0].GetPosition().y), groundCollider[0].size->x, fVec3(0.0, 0, 0), .5f);
 
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
@@ -163,6 +164,10 @@ int main()
 		ImGui::Text("fps = %f", fps);
 		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 		ImGui::Text("Var: %f, %f", d1, d2);
+
+		ImGui::SliderFloat("xScale", &postProcessing.scale.x, 0.0f,2.0f);
+		ImGui::SliderFloat("yScale", &postProcessing.scale.y, 0.0f,2.0f);
+
 		//ImGui::SliderInt2("WarriorPos", &(points[0].position.x), -400, 400);
 
 
@@ -229,9 +234,7 @@ int main()
 			(it.second.first)->Draw(it.second.second);
 		}
 
-		for (auto it = tmt.tiles.begin(); it != tmt.tiles.end(); ++it) {
-			(*it).Draw(0);
-		}
+		tmt.Draw();
 
 		//ground->Draw(0);
 
@@ -246,28 +249,36 @@ int main()
 		//objects["warrior"].Draw(0);
 
 		d1 = playerCol.GetPosition().y;
-		s64.position = playerCol.GetPosition();
-		s64.Draw();
-		for (int i = 0; i < 15; i++) {
-			s32.position = groundCollider[i].GetPosition();
-			s32 .Draw();
-		}
-
+		//s64.position = playerCol.GetPosition();
+		//s64.Draw();
+		//for (int i = 0; i < 15; i++) {
+		//	s32.position = groundCollider[i].GetPosition();
+		//	s32 .Draw();
+		//}
+	
 
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
 		objects["grabPass"].Draw(1);
-		objects["postProcessing"].position = camera.position;
+		postProcessing.position = camera.position;
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		glClearColor(0.0, 0.0, 0.01, 1.0); // 0.6f, .8f, .8f, 1.0f
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;
+		float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
+		glViewport(offsetX,offsetY,RENDERING_WIDTH, RENDERING_HEIGHT);
 
 		//objects["lightSurface"].Draw(1);
+		postProcessing.scale.x = (float)(RENDERING_WIDTH) / (float)SCREEN_WIDTH;
+		postProcessing.scale.y = (float)(RENDERING_HEIGHT) / (float)SCREEN_HEIGHT;
+		postProcessing.Draw(1);
 
-		objects["postProcessing"].Draw(1);
+		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
 		//Drawing debug things and tilemap grid
-		//tmt.RenderGrid();
-		//font.DisplayText("Hello World", Vector2<int>(100, 100), shader_text, Vector3<float>(1.0f, 0.0f, 0.0f), 0);
 
 		//Render Im::Gui
 		ImGui::Render();

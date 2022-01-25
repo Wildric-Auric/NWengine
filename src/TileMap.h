@@ -13,6 +13,7 @@ public:
 	void SetUpTiles();
 	void RenderGrid();
 	void Update();
+	void Draw();
 	GameObject* tileObjects[10] = { nullptr }; //write only;
 
 	static bool GuiActive;

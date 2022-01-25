@@ -184,6 +184,7 @@
     <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Primitives.cpp" />
     <ClCompile Include="src\RessourcesLoader.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\Text.cpp" />
@@ -885,6 +886,7 @@
     <ClInclude Include="src\Maths.h" />
     <ClInclude Include="src\Primitives.h" />
     <ClInclude Include="src\RessourcesLoader.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\Text.h" />
     <ClInclude Include="src\Texture.h" />

@@ -1,14 +1,14 @@
 #include "Game.h"
+#include "Globals.h"
 #include <iostream>
-
-extern int SCREEN_WIDTH;
-extern int SCREEN_HEIGHT;
 
 void sizeCallBack(GLFWwindow* window, int width, int height)
 {
-	SCREEN_WIDTH = width;
-	SCREEN_HEIGHT = height;
-	glViewport(0, 0, width, height);
+		WINDOW_WIDTH = width;
+		WINDOW_HEIGHT = height;
+		RENDERING_WIDTH = (int)(height * SCREENRATIO);
+		RENDERING_HEIGHT = height;
+	//glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 GLFWwindow* InitContext(int scrWidth, int scrHeight)
@@ -19,7 +19,7 @@ GLFWwindow* InitContext(int scrWidth, int scrHeight)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(scrWidth, scrHeight, "TDS", NULL, NULL);
+	window = glfwCreateWindow(scrWidth, scrHeight, "NWengine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to init glfw window";
