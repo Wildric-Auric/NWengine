@@ -14,7 +14,7 @@ void GameObject::Draw(uint8_t textureSlot) {
 
 	shader->SetUniform1f("uTime", uTime);
 	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
-	shader->SetVector2("uMouse", (float)mousePosX, (float)( SCREEN_HEIGHT - mousePosY));
+	shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
 	image->Bind(textureSlot);
 	shader->SetUniform1i("uTex0", textureSlot);
 	container.Draw();
@@ -73,7 +73,7 @@ void GameObjectClone::Draw(uint8_t slot) {
 
 	originalGameObject->shader->SetUniform1f("uTime", uTime);
 	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
-	originalGameObject->shader->SetVector2("uMouse", (float)mousePosX, (float)(SCREEN_HEIGHT - mousePosY));
+	originalGameObject->shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
 	originalGameObject->image->Bind(slot);
 	originalGameObject->shader->SetUniform1i("uTex0", slot);
 	originalGameObject->container.Draw();

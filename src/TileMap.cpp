@@ -78,6 +78,8 @@ void TileMap::SetUpTiles() {
 	}
 	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
 }
+
+//TODO::fix tilling in other resolution
 void TileMap::Update() {
 
 	if (GuiActive) {
@@ -86,8 +88,8 @@ void TileMap::Update() {
 		signed char b = cellSize.y / 2 ;
 		if (m_canTile < 0 && !isMouseOnGui) {
 
-			int X = camera.position.x + mousePosX - SCREEN_WIDTH / 2;
-			int Y = camera.position.y - mousePosY + SCREEN_HEIGHT / 2;
+			int X = camera.position.x + mousePosX - WINDOW_WIDTH / 2;
+			int Y = camera.position.y + mousePosY - WINDOW_HEIGHT / 2;
 			if (input_left_click) {
 				bool bo = false;
 

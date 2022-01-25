@@ -1,5 +1,5 @@
 #include "Inputs.h"
-
+#include "Globals.h"
 bool input_left, input_right, input_up, input_down, input_d,
 input_1, input_2, input_3, input_0, input_4, input_left_click,
 input_space
@@ -9,6 +9,7 @@ double mousePosY;
 void processInput(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
+	mousePosY = WINDOW_HEIGHT - mousePosY;
 	input_left = glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
 	input_right = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
 	input_up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;

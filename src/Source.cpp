@@ -188,7 +188,6 @@ int main()
 
 		ImGui::End();
 		//Debug--------------
-		Vector2<float> m = Vector2<float>(mousePosX, mousePosY).normalize();
 
 		
 		//------------------
@@ -271,8 +270,9 @@ int main()
 		glViewport(offsetX,offsetY,RENDERING_WIDTH, RENDERING_HEIGHT);
 
 		//objects["lightSurface"].Draw(1);
-		postProcessing.scale.x = (float)(RENDERING_WIDTH) / (float)SCREEN_WIDTH;
-		postProcessing.scale.y = (float)(RENDERING_HEIGHT) / (float)SCREEN_HEIGHT;
+		//NO NEED to scale if you change viewport
+	/*	postProcessing.scale.x = (float)(RENDERING_WIDTH) / (float)SCREEN_WIDTH;
+		postProcessing.scale.y = (float)(RENDERING_HEIGHT) / (float)SCREEN_HEIGHT;*/
 		postProcessing.Draw(1);
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
