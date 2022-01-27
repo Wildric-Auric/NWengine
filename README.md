@@ -1,5 +1,7 @@
 # NWEngine
 
+![IM](https://raw.githubusercontent.com/Wildric-Auric/OpenGL_TopDownShooter/master/NW%20engine.png)
+
 ## Dev Historical note
 After my adventure with game engine, firstly GameMaker and secondly Unity, I passed to low level learning.
 Before trying graphics API, I looked for a librairy to make a complete game. Thanks to a pretty solid knowledge in Python and after listenting to some videos of [DaFluffyPotato](https://www.youtube.com/c/DaFluffyPotato/videos) which praises it, I used Pygame. I tried to focus on the gameplay programming side but I dave in the technical side I figured out then that the use of Pygame is too unfortunate, especially when I tried to enhance the game with lighting. Using C++ with a framework such as sdl is a bad idea in my case since it has same problems encountred in Pygame (because of this being just a wrapper which inhererent it's problem and adds to them by the way). The main issue of SDL is it usage of shaders: It just does not allow you to use them or to pass any calculation to them directly! It is absurd in the sens that SDL is a framework built on top of OpenGL but it remove some important funcionalities from it.
