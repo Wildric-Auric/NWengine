@@ -21,7 +21,7 @@
 #include "Camera.h"
 #include "Utilities.h"
 #include "TileMap.h"
-
+#include "Scene.h"
 //Variable
 double fps = 60;
 int frameCount = 0;
@@ -84,7 +84,7 @@ int main()
 	ImColor bgColor = ImColor(82, 75, 108);
 
 	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
-	if (sd) sd->setVolume(0.0);
+	if (sd) sd->setVolume(0.1);
 
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
@@ -122,10 +122,6 @@ int main()
 	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
 
 	GameObjectClone background0  = GameObjectClone(&objects["background"]);
-	GameObjectClone background11 = GameObjectClone(&objects["background1"]);
-	GameObjectClone background22 = GameObjectClone(&objects["background2"]) ;
-	GameObjectClone background33 = GameObjectClone(&objects["background3"]) ;
-	GameObjectClone background44 = GameObjectClone(&objects["background4"]) ;
 	GameObjectClone bush11       = GameObjectClone(&objects["bush1"]) ;
 	GameObjectClone bush22       = GameObjectClone(&objects["bush2"]) ;
 	GameObjectClone tree11       = GameObjectClone(&objects["tree1"]) ;
@@ -133,17 +129,37 @@ int main()
 	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"]);
 	GameObjectClone postProcessing = GameObjectClone(&objects["postProcessing"]);
 
-	Collider playerCol = Collider(&warriorClone);
 
-	drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
-	drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
-	drawOrder[2] = std::make_pair<Drawable*, uint8_t>(&background22, 0) ;
-	drawOrder[3] = std::make_pair<Drawable*, uint8_t>(&background33, 0) ;
-	drawOrder[4] = std::make_pair<Drawable*, uint8_t>(&background44, 0)  ;
-	drawOrder[5] = std::make_pair<Drawable*, uint8_t>(&bush11,0) ;
-	drawOrder[6] = std::make_pair<Drawable*, uint8_t>(&bush22,0) ;
-	drawOrder[7] = std::make_pair<Drawable*, uint8_t>(&tree11,0) ;
-	drawOrder[8] = std::make_pair<Drawable*, uint8_t>(&tree22,0) ;
+	Scene scene0 = Scene("scene0");
+	//scene0.sceneObjs.push_back(background0);
+	//scene0.sceneObjs.push_back(background0);
+	//scene0.sceneObjs.push_back(background0);
+	//scene0.sceneObjs.push_back(bush11);
+	//scene0.sceneObjs.push_back(bush22);
+	//scene0.sceneObjs.push_back(tree11);
+	//scene0.sceneObjs.push_back(tree22);
+	//scene0.sceneObjs.push_back(warriorClone);
+
+
+	////scene0.sceneObjs.push_back(postProcessing);
+
+
+
+	scene0.LoadScene();
+
+	//scene0.Save();
+
+	Collider playerCol = Collider(&scene0.sceneObjs[7]);
+	
+	//drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
+	//drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
+	//drawOrder[2] = std::make_pair<Drawable*, uint8_t>(&background22, 0) ;
+	//drawOrder[3] = std::make_pair<Drawable*, uint8_t>(&background33, 0) ;
+	//drawOrder[4] = std::make_pair<Drawable*, uint8_t>(&background44, 0)  ;
+	//drawOrder[5] = std::make_pair<Drawable*, uint8_t>(&bush11,0) ;
+	//drawOrder[6] = std::make_pair<Drawable*, uint8_t>(&bush22,0) ;
+	//drawOrder[7] = std::make_pair<Drawable*, uint8_t>(&tree11,0) ;
+	//drawOrder[8] = std::make_pair<Drawable*, uint8_t>(&tree22,0) ;
 
 
 
@@ -175,7 +191,8 @@ int main()
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Tilemap Editor", "Ctrl+W")) { TileMap::GuiActive = true; }
+				if (ImGui::MenuItem("Tilemap Editor")) { TileMap::GuiActive = true; }
+				if (ImGui::MenuItem("Scene Editor")) { Scene::GuiActive = true; }
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -183,6 +200,7 @@ int main()
 		}
 
 		TileMap::Gui();
+		Scene::Gui();
 
 		isMouseOnGui = io.WantCaptureMouse;
 
@@ -208,7 +226,7 @@ int main()
 		tmt.Update();
 		for (int i = 0; i < 15; i++) {
 			while (IsColliding(&playerCol, &groundCollider[i])) {
-				warriorClone.position.y += 1;
+				scene0.sceneObjs[7].position.y += 1;
 				//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
 				//TODO::Add debug mode to see colliders
 			};
@@ -216,23 +234,25 @@ int main()
 				yspd = 0;
 				if (input_space) {
 					yspd = 200*deltaTime;
-					warriorClone.position.y += 1;
+					scene0.sceneObjs[7].position.y += 1;
 				}
 			}
 		}
-		warriorClone.position.x += isRunning * 200 * deltaTime;
-		warriorClone.position.y += yspd;
-		warriorClone.scale.x = sign(isRunning);
+		scene0.sceneObjs[7].position.x += isRunning * 200 * deltaTime;
+		scene0.sceneObjs[7].position.y += yspd;
+		scene0.sceneObjs[7].scale.x = sign(isRunning);
 	
 		isRunning = input_right - input_left;
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
 
-		for (auto& it : drawOrder) {
-			(it.second.first)->Draw(it.second.second);
-		}
 
+	/*	for (auto& it : drawOrder) {
+			(it.second.first)->Draw(it.second.second);
+		}*/
+
+		scene0.Draw();
 		tmt.Draw();
 
 		//ground->Draw(0);
@@ -244,7 +264,7 @@ int main()
 			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_RUN_ARRAY[((int)currentSprite) % 8]->tex, 0, 1);
 		}
 
-		warriorClone.Draw(0);
+		//scene0.sceneObjs[7].Draw(0);
 		//objects["warrior"].Draw(0);
 
 		d1 = playerCol.GetPosition().y;

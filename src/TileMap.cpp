@@ -143,8 +143,6 @@ void TileMap::Gui() {
 
 		}
 
-
-		ImGui::BeginChild("Tilemap");
 		for (int i = 0; i < 10; i++) {
 			GameObject* temp = currentTileMap->tileObjects[i];
 			if (temp != nullptr) {
@@ -157,7 +155,6 @@ void TileMap::Gui() {
 				};
 			}
 		}
-		ImGui::EndChild();
 		ImGui::End();
 	};
 

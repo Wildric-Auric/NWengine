@@ -12,6 +12,6 @@ public:
 	void Draw();
 	void Save();
 	static bool GuiActive;
-	static Scene* currentTileMap;
+	static Scene* currentScene;
 	static void Gui();
 };
