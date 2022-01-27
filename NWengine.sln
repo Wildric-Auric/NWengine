@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TopDownShooter0.0", "TopDownShooter0.0.vcxproj", "{6DDAA3B5-6ABB-401E-B140-DCB47830B9BA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NWengine", "NWengine.vcxproj", "{6DDAA3B5-6ABB-401E-B140-DCB47830B9BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
