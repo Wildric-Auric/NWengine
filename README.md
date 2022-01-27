@@ -20,12 +20,63 @@ b.scale.x = 2.0f;
 c.scale.x = .5f;
 ```
 Hence, the width of **b** is two times **a**'s one, and 1/2 time for **c**.
-GameObjectClone does not contain texture nor VBO or EBO; it's Draw function is a wrapper of GameObject draw function.
-
+GameObjectClone does not contain texture nor VBO nor EBO; it's Draw function is a wrapper of GameObject draw function.
+This system can be seen as a prefab system; the name can be changed later to be more representative.
 ### Drawable, Updatable...
-
+```Drawable``` and ```Updatable``` are two classes containing corresponding methods. Objects having those methods; should inherit from these classes and override base method.
+Drawable for instance has it class virtual; and is defined as following: 
+```
+class Drawable {
+public:
+	virtual void Draw(uint8_t slot = 0) {};
+};
+```
+GameObjectClone inherit from it: 
+```
+class GameObjectClone : public Drawable {...}
+```
+This system is useful in that it allows you to put pointers of Drawable objects for example in a map with draw order and an iteration over its elements draws objects. Note that this won't be simple otherwise since those objects aren't of same type. I'm taking advantage here of C++ [polymorphism](http://labmaster.mi.infn.it/Laboratorio2/serale/www.cplusplus.com/doc/tutorial/polymorphism/)
 ### Maths
+Initially, **glm** librairy was used. It's a solid mathematical librairy and a complete one. However, to have full control on the engine and its processing speed, in a long term perspective, building an internal maths librairy is necessary.
+Everything there is set as templates. There are some fucntions like min, max among others; and classes like Matrix and Vector2, Vector3, Vector4. 
+Matrix is defined for the general case (n row m column) meanwhile size of vector is 2,3 or 4. Such choice was done for processing speed, since a general size vector requires more time for operations to be done. Look at this example:
+``` 
+#include <iostream>
+#include <chrono>
 
+void func(int i) {
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+  i+=1;
+}
+void func1(int i) {
+  for (int j = 0; j < 10; j++) {
+    i += 1;
+  }
+}
+int main() {
+    long ITER = 10e7;
+    auto start = std::chrono::system_clock::now();
+    for (int i = 0; i<ITER; i++) {
+      func(0);
+      };
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> t = end-start;
+    std::cout<< t.count()<<std::endl;
+
+}
+
+```
+Compiled on Replit; the program ouputs: *2.68272*
+Changing func(0) by func1(0) make its output: *4.42551*
+It a big difference especially when you are making an engine where speed is essential.
 ### TileMaps
 
 ### Gui 
