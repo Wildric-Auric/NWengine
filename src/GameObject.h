@@ -38,11 +38,12 @@ public:
 
 class GameObjectClone : public Drawable {
 public:
+	const char* name;
 	GameObject* originalGameObject; //ReadOnly
 	Vector2<float> scale = Vector2<float>(1.0f,1.0f);
 	Vector2<int> position = Vector2<int>(0,0);
 	GameObjectClone(){};
-	GameObjectClone(GameObject* gameObject);
+	GameObjectClone(GameObject* gameObject, const char* name = "None");
 	void Draw(uint8_t slot);
 };
 

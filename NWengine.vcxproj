@@ -1646,14 +1646,6 @@
     <None Include="x64\Debug\vc142.pdb" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="Debug\Game.obj" />
-    <Object Include="Debug\Inputs.obj" />
-    <Object Include="Debug\Maths.obj" />
-    <Object Include="Debug\Primitives.obj" />
-    <Object Include="Debug\RessourcesLoader.obj" />
-    <Object Include="Debug\ShaderManager.obj" />
-    <Object Include="Debug\Source.obj" />
-    <Object Include="Debug\Texture.obj" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="fonts\rockstar.otf" />

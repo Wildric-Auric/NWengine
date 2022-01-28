@@ -17,12 +17,13 @@ void Scene::Draw() {
 	}
 }
 void Scene::LoadScene() {
+	sceneObjs.clear(); 
 	std::ifstream file("Scenes/" + (std::string)name + std::string(".txt"));
 	if (file) {
 		for (std::string line; std::getline(file, line);)
 		{
 			if (line[0] == ' ' || !line[0] || line[0] == '\n') break;
-			std::string arr[5] = { "" };
+			std::string arr[6] = { "" };
 			uint8_t current = 0;
 			for (int i = 0; i < line.size(); i++) {
 				char letter = line[i];
@@ -34,7 +35,7 @@ void Scene::LoadScene() {
 				arr[current] += letter;
 			}
 
-			currentObj = GameObjectClone(allObjects[std::stoi(arr[0])]);
+			currentObj = GameObjectClone(allObjects[std::stoi(arr[0])], arr[5].c_str());
 			currentObj.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
 			currentObj.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
 			sceneObjs.push_back(currentObj);
@@ -53,7 +54,9 @@ void Scene::Save() {
 	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
 		data << it->originalGameObject->id << " "
 			<< it->position.x << " " << it->position.y << " "
-			<< it->scale.x << " " << it->scale.y << "\n";
+			<< it->scale.x << " " << it->scale.y << " "
+			<< it->name
+			<<"\n";
 
 	}
 	data.close();
@@ -71,7 +74,7 @@ static bool slider0 = true;
 static bool slider1 = true;
 void Scene::Gui() {
 	if (Scene::GuiActive) {
-		ImGui::Begin("Tiles editor", 0, ImGuiWindowFlags_MenuBar);
+		ImGui::Begin("Scene editor", 0, ImGuiWindowFlags_MenuBar);
 		if (currentScene != nullptr) {
 			unsigned int num = 0;
 			std::string c = "slider scale?";
@@ -83,7 +86,7 @@ void Scene::Gui() {
 			for (auto it = currentScene->sceneObjs.begin(); it != currentScene->sceneObjs.end(); it++) {
 				num += 1;
 				//TODO::Add names to GameObjectClone
-				std::string label = "Obj" + std::to_string(num);
+				std::string label = it->name + std::to_string(num);
 				ImGui::LabelText(label.c_str(),"");
 				std::string a = "scale" + std::to_string(num);
 				std::string b = "position" + std::to_string(num);

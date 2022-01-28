@@ -59,7 +59,8 @@ Vector2<int> Collider::GetPosition() {
 	return (*position) + offset;
 };
 
-GameObjectClone::GameObjectClone(GameObject* gameObject) {
+GameObjectClone::GameObjectClone(GameObject* gameObject, const char* name) {
+	this->name = _strdup(name);
 	this->originalGameObject =  gameObject;
 	this->position = originalGameObject->position; 
 }

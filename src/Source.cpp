@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <irrKlang.h>
+//#include <irrKlang.h>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -32,7 +32,7 @@ double deltaTimeSum = 0;
 Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
 
 float d1, d2 = 0.0f;
-using namespace irrklang;
+//using namespace irrklang;
 
 
 
@@ -52,7 +52,7 @@ int main()
 
 
 	//init irrKlang
-	ISoundEngine* SoundEngine = createIrrKlangDevice();
+	//ISoundEngine* SoundEngine = createIrrKlangDevice();
 
 
 	//Load ressources
@@ -63,7 +63,7 @@ int main()
 
 
 
-	Font font = Font("Ressources/fonts/rockstar.otf");
+	//Font font = Font("Ressources/fonts/rockstar.otf");
 
 
 	//Shader* textShader			= new Shader();
@@ -83,8 +83,8 @@ int main()
 	lastTime = glfwGetTime();
 	ImColor bgColor = ImColor(82, 75, 108);
 
-	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
-	if (sd) sd->setVolume(0.1);
+	//irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
+	//if (sd) sd->setVolume(0.1);
 
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
@@ -121,12 +121,12 @@ int main()
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
 	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
 
-	GameObjectClone background0  = GameObjectClone(&objects["background"]);
-	GameObjectClone bush11       = GameObjectClone(&objects["bush1"]) ;
-	GameObjectClone bush22       = GameObjectClone(&objects["bush2"]) ;
-	GameObjectClone tree11       = GameObjectClone(&objects["tree1"]) ;
-	GameObjectClone tree22       = GameObjectClone(&objects["tree2"]) ;
-	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"]);
+	GameObjectClone background0  = GameObjectClone(&objects["background"], "Background");
+	GameObjectClone bush11       = GameObjectClone(&objects["bush1"], "Bush1") ;
+	GameObjectClone bush22       = GameObjectClone(&objects["bush2"], "Bush2") ;
+	GameObjectClone tree11       = GameObjectClone(&objects["tree1"], "Tree1") ;
+	GameObjectClone tree22       = GameObjectClone(&objects["tree2"], "Tree2") ;
+	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"], "Warrior");
 	GameObjectClone postProcessing = GameObjectClone(&objects["postProcessing"]);
 
 
@@ -143,11 +143,10 @@ int main()
 
 	////scene0.sceneObjs.push_back(postProcessing);
 
-
+	//scene0.Save();
 
 	scene0.LoadScene();
 
-	//scene0.Save();
 
 	Collider playerCol = Collider(&scene0.sceneObjs[7]);
 	
