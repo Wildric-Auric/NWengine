@@ -87,6 +87,22 @@ int sign(T number) {
 		return 1;
 }
 
+template<typename T> 
+T Min(T x, T y) {
+	return x <= y ? x : y;
+};
+
+template<typename T>
+T Max(T x, T y) {
+	return x >= y ? x : y;
+};
+
+template<typename T>
+T Clamp(T num, T min, T max) {
+	if (num < min) return min;
+	else if (num > max) return max;
+	return num;
+}
 
 template<typename T>
 class Vector3 {
