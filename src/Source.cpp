@@ -115,7 +115,7 @@ int main()
 
 
 
-	int isRunning = 0;
+	float isRunning = 0.0f;
 
 	//END ZONE
 	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
@@ -241,7 +241,9 @@ int main()
 		scene0.sceneObjs[7].position.y += yspd;
 		scene0.sceneObjs[7].scale.x = sign(isRunning);
 	
-		isRunning = input_right - input_left;
+
+		float a = joystickAxis[0];
+		isRunning = Clamp( (float)(input_right - input_left) + a, -1.0f, 1.0f );
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes

@@ -3,6 +3,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+typedef unsigned int  int8;
+
 typedef Vector2<int> iVec2;
 typedef Vector2<float> fVec2;
 typedef Vector3<float> fVec3;
