@@ -148,7 +148,7 @@ void TileMap::Gui() {
 			if (temp != nullptr) {
 				ImGui::Image((void*)(intptr_t)
 					temp->image->texture,
-					ImVec2(temp->image->size.x, temp->image->size.y));
+					ImVec2(temp->image->size.x, temp->image->size.y), ImVec2(0, 1), ImVec2(1, 0));
 				std::string str = "Tile" + std::to_string(i);
 				if (ImGui::Button(str.c_str())) {
 					currentTile = GameObjectClone(temp);

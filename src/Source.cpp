@@ -49,7 +49,12 @@ int main()
 	ImGui_ImplOpenGL3_Init();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f);
+
+	// then place this where ever you want the font to be changed.
+	//ImGui::PushFont(ftest);
 
 	//init irrKlang
 	//ISoundEngine* SoundEngine = createIrrKlangDevice();
@@ -183,8 +188,8 @@ int main()
 		ImGui::SliderFloat("xScale", &postProcessing.scale.x, 0.0f,2.0f);
 		ImGui::SliderFloat("yScale", &postProcessing.scale.y, 0.0f,2.0f);
 
+		ImGui::ShowDemoWindow();
 		//ImGui::SliderInt2("WarriorPos", &(points[0].position.x), -400, 400);
-
 
 		if (ImGui::BeginMenuBar())
 		{
@@ -203,6 +208,17 @@ int main()
 
 		isMouseOnGui = io.WantCaptureMouse;
 
+		ImGui::End();
+
+		ImGui::Begin("Scene");
+		ImGui::Image((void*)(intptr_t)
+			textures["grabTex"].texture,
+			ImVec2(RENDERING_WIDTH, RENDERING_HEIGHT),ImVec2(0,1), ImVec2(1,0));
+		auto temp =  ImGui::GetWindowSize();
+		RENDERING_HEIGHT = temp.y;
+		RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
+		
+		
 		ImGui::End();
 		//Debug--------------
 
