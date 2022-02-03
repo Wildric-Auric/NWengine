@@ -32,4 +32,3 @@ extern glm::mat4 viewMatrix;
 //Variables
 extern bool isMouseOnGui;
 extern iVec2 grav;
-

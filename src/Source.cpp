@@ -3,13 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-//#include <irrKlang.h>
+#include <irrKlang.h>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "Interface.h"
 
+#include "Globals.h"
 #include "Primitives.h"
 #include "Inputs.h"
 #include "Maths.h"
@@ -17,7 +19,6 @@
 #include "Texture.h"
 #include "Text.h"
 #include "RessourcesLoader.h"
-#include "Globals.h"
 #include "Camera.h"
 #include "Utilities.h"
 #include "TileMap.h"
@@ -32,32 +33,22 @@ double deltaTimeSum = 0;
 Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
 
 float d1, d2 = 0.0f;
-//using namespace irrklang;
+using namespace irrklang;
 
 
 
 int main()
 {
     //Init GLFW context 
-	GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
+    GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (window == nullptr) return -1;
 
-	//Create ImGui context
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//init imgui
+    InitInterface((int)window);
 
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f);
-
-	// then place this where ever you want the font to be changed.
-	//ImGui::PushFont(ftest);
 
 	//init irrKlang
-	//ISoundEngine* SoundEngine = createIrrKlangDevice();
+	ISoundEngine* SoundEngine = createIrrKlangDevice();
 
 
 	//Load ressources
@@ -71,13 +62,7 @@ int main()
 	//Font font = Font("Ressources/fonts/rockstar.otf");
 
 
-	//Shader* textShader			= new Shader();
-	//Text* text	= new Text();
-	//int	init	= text->initfreetype("fonts/rockstar.otf");
 
-	/*Collider collider_apple = Collider(
-	Apple);
-	Collider collider_apple2 = Collider(lesbeanApple2);*/
 	Collider groundCollider[20];
 	
 
@@ -86,10 +71,9 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	lastTime = glfwGetTime();
-	ImColor bgColor = ImColor(82, 75, 108);
 
-	//irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
-	//if (sd) sd->setVolume(0.1);
+	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
+	if (sd) sd->setVolume(0.1);
 
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
@@ -180,52 +164,14 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
-		ImGui::Text("fps = %f", fps);
-		ImGui::ColorEdit3("Background Color", (float*)&bgColor);
-		ImGui::Text("Var: %f, %f", d1, d2);
 
-		ImGui::SliderFloat("xScale", &postProcessing.scale.x, 0.0f,2.0f);
-		ImGui::SliderFloat("yScale", &postProcessing.scale.y, 0.0f,2.0f);
-
-		ImGui::ShowDemoWindow();
-		//ImGui::SliderInt2("WarriorPos", &(points[0].position.x), -400, 400);
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Tilemap Editor")) { TileMap::GuiActive = true; }
-				if (ImGui::MenuItem("Scene Editor")) { Scene::GuiActive = true; }
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-
-		}
-
-		TileMap::Gui();
-		Scene::Gui();
-
-		isMouseOnGui = io.WantCaptureMouse;
-
-		ImGui::End();
-
-		ImGui::Begin("Scene");
-		ImGui::Image((void*)(intptr_t)
-			textures["grabTex"].texture,
-			ImVec2(RENDERING_WIDTH, RENDERING_HEIGHT),ImVec2(0,1), ImVec2(1,0));
-		auto temp =  ImGui::GetWindowSize();
-		RENDERING_HEIGHT = temp.y;
-		RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
-		
-		
-		ImGui::End();
+		UpdateInferface();
 		//Debug--------------
 
 		
 		//------------------
 		uTime += deltaTime;
-		glClearColor(bgColor.Value.x, bgColor.Value.y, bgColor.Value.z, 1.0); // 0.6f, .8f, .8f, 1.0f
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 		processInput(window);
 		//BindTextures
