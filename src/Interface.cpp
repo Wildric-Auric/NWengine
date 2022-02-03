@@ -8,8 +8,13 @@
 
 
 static ImColor bgColor = ImColor(82, 75, 108);
-static bool isActive = true;
 extern double fps;
+
+static bool isActive = true;
+static bool sceneViewActive = true;
+static bool hierarchyActive = false;
+static bool inspectorActive = false;
+static int8 selected = -1; //for hiearchy
 
 void InitInterface(int window) {
 	//Create ImGui context
@@ -25,6 +30,57 @@ void InitInterface(int window) {
 }
 
 
+
+void SceneViewGui() {
+	if (sceneViewActive) {
+		ImGui::Begin("Scene", 0, ImGuiWindowFlags_MenuBar);
+		ImGui::Image((void*)(intptr_t)
+			textures["grabTex"].texture,
+			ImVec2(RENDERING_WIDTH, RENDERING_HEIGHT), ImVec2(0, 1), ImVec2(1, 0));
+		auto temp = ImGui::GetWindowSize();
+		RENDERING_HEIGHT = temp.y;
+		RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Options"))
+			{
+				if (ImGui::MenuItem("Close")) sceneViewActive = false;
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+		ImGui::End();
+	}
+}
+
+void HierarchyGui() {
+	if (hierarchyActive) {
+		ImGui::Begin("Hierarchy", &hierarchyActive, ImGuiWindowFlags_MenuBar);
+		int8 i = 0;
+		for (auto it = Scene::currentScene->sceneObjs.begin(); it < Scene::currentScene->sceneObjs.end(); it++) {
+			if (ImGui::Selectable(it->name, selected == i))
+				selected = i;
+			i++;
+		}
+		ImGui::End();
+	}
+	else selected = -1;
+}
+
+void InspectorGui() {
+	if (inspectorActive) {
+		ImGui::Begin("Inspector", &inspectorActive, ImGuiWindowFlags_MenuBar);
+		if (selected >= 0 && selected < Scene::currentScene->sceneObjs.size()) {
+			ImGui::LabelText(Scene::currentScene->sceneObjs[selected].name, "");
+			ImGui::DragInt2("position", &Scene::currentScene->sceneObjs[selected].position.x);
+			ImGui::DragFloat2("Scale", &Scene::currentScene->sceneObjs[selected].scale.x);
+
+		}
+		ImGui::End();
+	}
+}
+
 void UpdateInferface() {
 	ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 	ImGui::Text("fps = %f", fps);
@@ -35,33 +91,35 @@ void UpdateInferface() {
 
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMenu("Explore"))
 		{
-			if (ImGui::MenuItem("Tilemap Editor")) { TileMap::GuiActive = true; }
-			if (ImGui::MenuItem("Scene Editor")) { Scene::GuiActive = true; }
+			if (ImGui::MenuItem("Tilemap Editor"))		TileMap::GuiActive = true; 
+			if (ImGui::MenuItem("Scene Editor"))		Scene::GuiActive = true; 
+			if (ImGui::MenuItem("Scene View"))			sceneViewActive = true; 
+			if (ImGui::MenuItem("Hierarchy"))			hierarchyActive = true; 
+			if (ImGui::MenuItem("Inspector"))			inspectorActive = true;
+
+
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
 
 	}
 
+	//Capture mouse
+	isMouseOnGui = io.WantCaptureMouse;
 	//calling all extern gui functions
 	TileMap::Gui();
 	Scene::Gui();
+	//Calling internal Gui functions
 
-	//Capture mouse
-	isMouseOnGui = io.WantCaptureMouse;
 
-	ImGui::End();
-
-	ImGui::Begin("Scene");
-	ImGui::Image((void*)(intptr_t)
-		textures["grabTex"].texture,
-		ImVec2(RENDERING_WIDTH, RENDERING_HEIGHT), ImVec2(0, 1), ImVec2(1, 0));
-	auto temp = ImGui::GetWindowSize();
-	RENDERING_HEIGHT = temp.y;
-	RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
-
+	SceneViewGui();
+	HierarchyGui();
+	InspectorGui();
 
 	ImGui::End();
+	//TODO::Find compromise for intern-extern gui
+
 }

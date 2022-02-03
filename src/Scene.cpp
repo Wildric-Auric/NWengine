@@ -115,7 +115,6 @@ void Scene::Gui() {
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
-
 		}
 		/*ImGui::EndChild*/
 		ImGui::End();
