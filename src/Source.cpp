@@ -3,14 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <irrKlang.h>
-
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "Interface.h"
-
 #include "Globals.h"
 #include "Primitives.h"
 #include "Inputs.h"
@@ -23,6 +20,9 @@
 #include "Utilities.h"
 #include "TileMap.h"
 #include "Scene.h"
+#include "Audio.h"
+
+
 //Variable
 double fps = 60;
 int frameCount = 0;
@@ -32,10 +32,8 @@ double deltaTimeSum = 0;
 
 Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
 
+
 float d1, d2 = 0.0f;
-using namespace irrklang;
-
-
 
 int main()
 {
@@ -45,12 +43,17 @@ int main()
 
 	//init imgui
     InitInterface((int)window);
+	//init OpenAL
+	if (InitOpenAL() == 0) return -1;
+	//const ALCchar* a = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+	//std::cout << a << std::endl;
 
+	ALuint snd = LoadSound("Ressources/Sounds/Mystery.wav");
+	ALuint source;
+	alGenSources(1, &source);
+	alSourcei(source, AL_BUFFER, snd);
 
-	//init irrKlang
-	ISoundEngine* SoundEngine = createIrrKlangDevice();
-
-
+	alSourcePlay(source);
 	//Load ressources
 	LoadImages();
 	LoadTextures();
@@ -71,10 +74,6 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	lastTime = glfwGetTime();
-
-	irrklang::ISound* sd = SoundEngine->play2D("Ressources/Sounds/Mystery.mp3", true, false, true);
-	if (sd) sd->setVolume(0.1);
-
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
@@ -138,17 +137,6 @@ int main()
 
 
 	Collider playerCol = Collider(&scene0.sceneObjs[7]);
-	
-	//drawOrder[0] = std::make_pair<Drawable*, uint8_t>(&background0, 0) ;
-	//drawOrder[1] = std::make_pair<Drawable*, uint8_t>(&background11, 0) ;
-	//drawOrder[2] = std::make_pair<Drawable*, uint8_t>(&background22, 0) ;
-	//drawOrder[3] = std::make_pair<Drawable*, uint8_t>(&background33, 0) ;
-	//drawOrder[4] = std::make_pair<Drawable*, uint8_t>(&background44, 0)  ;
-	//drawOrder[5] = std::make_pair<Drawable*, uint8_t>(&bush11,0) ;
-	//drawOrder[6] = std::make_pair<Drawable*, uint8_t>(&bush22,0) ;
-	//drawOrder[7] = std::make_pair<Drawable*, uint8_t>(&tree11,0) ;
-	//drawOrder[8] = std::make_pair<Drawable*, uint8_t>(&tree22,0) ;
-
 
 
 	
@@ -156,9 +144,6 @@ int main()
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	float yspd = 0;
-	//Square s64 = Square(iVec2(playerCol.GetPosition().x, playerCol.GetPosition().y), playerCol.size->y, fVec3(0.0, 0, 0), .5f);
-	//Square s32 = Square(iVec2(groundCollider[0].GetPosition().x, groundCollider[0].GetPosition().y), groundCollider[0].size->x, fVec3(0.0, 0, 0), .5f);
-
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
