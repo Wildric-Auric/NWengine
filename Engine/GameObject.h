@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderManager.h"
+#include "map"
 
 
 class Drawable {
@@ -50,6 +51,29 @@ public:
 	GameObjectClone(){};
 	GameObjectClone(GameObject* gameObject, const char* name = "None");
 	void Draw(uint8_t slot);
+
+	template<typename T>
+	T* GetComponent() {
+		T* component = nullptr;
+		for (auto it = T::componentList.begin(); it != T::componentList.end(); it++) {
+			if (it->first == this) {
+				component = &(it->second);
+				break;
+			}
+		}
+		return component;
+	};
+
+	template<typename T>
+	T* AddComponent() {
+		T::componentList[this] = T(this);
+		return &(T::componentList[this]);
+	};
+
+	template<typename T>
+	void DeleteComponent() {
+		T::componentList.erase(this);
+	};
 };
 
 
@@ -65,4 +89,6 @@ public:
 	Vector2<int> offset;
 	Vector2<int> GetPosition();
 	void Resize(Vector2<int> newSize);
+
+	static std::map<GameObjectClone*, Collider> componentList;
 };

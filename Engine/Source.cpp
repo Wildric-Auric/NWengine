@@ -93,55 +93,20 @@ int main()
 	}
 	
 	//DEBUG ZONE----------------------
-	int arr[4] = { 2,5,
-				   1,3};
-	int arr1[4] = {
-					1,2,
-					5,6,
-				   };
-	iMat2 mat1 = iMat2(arr);
-	Matrix<2,2, int> mat2 = Matrix<2,2,int>(arr1);
-	mat1 += &mat2;
-
-
-
-
-
-
 
 	//END ZONE
-	//GameObjectClone instancingApple = GameObjectClone(lesbeanApple);
-	std::map<unsigned int, std::pair<Drawable*, uint8_t>> drawOrder;
 
-	GameObjectClone background0  = GameObjectClone(&objects["background"], "Background");
-	GameObjectClone bush11       = GameObjectClone(&objects["bush1"], "Bush1") ;
-	GameObjectClone bush22       = GameObjectClone(&objects["bush2"], "Bush2") ;
-	GameObjectClone tree11       = GameObjectClone(&objects["tree1"], "Tree1") ;
-	GameObjectClone tree22       = GameObjectClone(&objects["tree2"], "Tree2") ;
-	GameObjectClone warriorClone = GameObjectClone(&objects["warrior"], "Warrior");
 	GameObjectClone postProcessing = GameObjectClone(&objects["postProcessing"]);
 
 
 	Scene scene0 = Scene("scene0");
-	//scene0.sceneObjs.push_back(background0);
-	//scene0.sceneObjs.push_back(background0);
-	//scene0.sceneObjs.push_back(background0);
-	//scene0.sceneObjs.push_back(bush11);
-	//scene0.sceneObjs.push_back(bush22);
-	//scene0.sceneObjs.push_back(tree11);
-	//scene0.sceneObjs.push_back(tree22);
-	//scene0.sceneObjs.push_back(warriorClone);
 
-
-	////scene0.sceneObjs.push_back(postProcessing);
-
-	//scene0.Save();
 
 	scene0.LoadScene();
 
 
-	Collider playerCol = Collider(&scene0.sceneObjs[7]);	
-	player pl = player(&scene0.sceneObjs[7], &playerCol); //TODO::ECS architecture; it starts to be messy
+	Collider playerCol = Collider(&scene0.sceneObjs[7]);
+	player pl = player(&scene0.sceneObjs[7]);
 	
 
 	
@@ -172,7 +137,6 @@ int main()
 		//TODO::Shader managment when it comes to draw shapes
 		// 
 		//Update dynamic object position
-		//camera.position = objects["lesbeanApple"].position;
 		//yspd -=  deltaTime;
 
 		camera.Update();

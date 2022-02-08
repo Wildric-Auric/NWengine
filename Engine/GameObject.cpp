@@ -51,6 +51,8 @@ Collider::Collider(GameObjectClone* attachedObj, Vector2<int> offset, Vector2<in
 	else size = &attachedObj->originalGameObject->size;
 	position = &attachedObj->position;
 };
+
+std::map<GameObjectClone*, Collider> Collider::componentList;
 void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize;
 	size = &manualSize;

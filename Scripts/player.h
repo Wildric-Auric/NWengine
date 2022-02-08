@@ -14,22 +14,21 @@ public:
 	float timer = 0.0f;
 	float jumpHeight = 50.0f;
 	GameObjectClone* goc;
-	Collider* collider;
 	float yspd = 0.0f;
-	player(GameObjectClone* goc, Collider* collider) {
+	player(GameObjectClone* goc) {
 		this->goc = goc;
-		this->collider = collider;
+		goc->AddComponent<Collider>();
 	};
 	void Update() {
 
 		isGrounded = 0;
 		for (int i = 0; i < 15; i++) {
-			while (IsColliding(collider, &groundCollider[i])) {
+			while (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i])) {
 				goc->position.y += 1;
 				//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
 			
 			};
-			if (IsColliding(collider, &groundCollider[i], Vector2<int>(0, -1))) {
+			if (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i], Vector2<int>(0, -1))) {
 				isGrounded = 1;
 				break;
 			}
