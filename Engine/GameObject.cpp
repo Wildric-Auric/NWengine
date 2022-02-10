@@ -5,21 +5,31 @@
 #include "Maths.h"
 #include "RessourcesLoader.h"
 //Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
-void GameObject::Draw(uint8_t textureSlot) {
+void GameObject::Draw(int8 textureSlot) {
 	container.position = position;
 	glUseProgram(shader->shaderProgram);
+	shader->SetUniform1f("uTime", uTime);
+	shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
+	shader->SetUniform1i("uTex0", textureSlot);
+
+	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
 	shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
 
-	shader->SetUniform1f("uTime", uTime);
-	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
-	shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
 	image->Bind(textureSlot);
-	shader->SetUniform1i("uTex0", textureSlot);
 	container.Draw();
 };
 
+void GameObject::BasicDraw(int8 textureSlot) {
+	container.position = position;
+	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
+	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
+	shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
+	    //TODO::Fix confusion between image and texture
+	container.Draw();
+}
 int GameObject::numberOfGameObjects = 0;
 
 GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, GameObject* ref, Shader* shader, bool usingImageSize, Vector2<int> size) 
@@ -67,7 +77,7 @@ GameObjectClone::GameObjectClone(GameObject* gameObject, const char* name) {
 	this->position = originalGameObject->position; 
 }
 
-void GameObjectClone::Draw(uint8_t slot) {
+void GameObjectClone::Draw(int8 slot) {
 	originalGameObject->container.position = position;
 	glUseProgram(originalGameObject->shader->shaderProgram);
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
@@ -79,5 +89,16 @@ void GameObjectClone::Draw(uint8_t slot) {
 	originalGameObject->shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
 	originalGameObject->image->Bind(slot);
 	originalGameObject->shader->SetUniform1i("uTex0", slot);
+	originalGameObject->container.Draw();
+}
+
+
+void GameObjectClone::BasicDraw(int8 slot) {
+	originalGameObject->container.position = position;
+	glUseProgram(originalGameObject->shader->shaderProgram);
+	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
+	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));   //Flip image if should flip  
+	originalGameObject->shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
+	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
 	originalGameObject->container.Draw();
 }

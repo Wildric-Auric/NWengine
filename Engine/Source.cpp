@@ -1,43 +1,4 @@
-/*
-
-
-					 /$$   /$$ /$$      /$$                               /$$
-					| $$$ | $$| $$  /$ | $$                              |__/
-					| $$$$| $$| $$ /$$$| $$  /$$$$$$  /$$$$$$$   /$$$$$$  /$$ /$$$$$$$   /$$$$$$
-					| $$ $$ $$| $$/$$ $$ $$ /$$__  $$| $$__  $$ /$$__  $$| $$| $$__  $$ /$$__  $$
-					| $$  $$$$| $$$$_  $$$$| $$$$$$$$| $$  \ $$| $$  \ $$| $$| $$  \ $$| $$$$$$$$
-					| $$\  $$$| $$$/ \  $$$| $$_____/| $$  | $$| $$  | $$| $$| $$  | $$| $$_____/
-					| $$ \  $$| $$/   \  $$|  $$$$$$$| $$  | $$|  $$$$$$$| $$| $$  | $$|  $$$$$$$
-					|__/  \__/|__/     \__/ \_______/|__/  |__/ \____  $$|__/|__/  |__/ \_______/
-																/$$  \ $$
-															   |  $$$$$$/
-																\______/
-
-																														*/
-
-#include <GL/glew.h>
-#include <glfw3.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include "Interface.h"
-#include "Globals.h"
-#include "Primitives.h"
-#include "Inputs.h"
-#include "Maths.h"
-#include "Game.h"
-#include "Texture.h"
-#include "Text.h"
-#include "RessourcesLoader.h"
-#include "Camera.h"
-#include "Utilities.h"
-#include "TileMap.h"
-#include "Scene.h"
-#include "Audio.h"
+#include "NWengine.h"
 //Include game scripts
 #include "Scripts/player.h"
 
@@ -54,7 +15,7 @@ Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, 
 float d1, d2 = 0.0f;
 
 float pitch = 1.0f;
-
+float uniformTest = 1;
 
 Collider groundCollider[20];
 int main()
@@ -151,8 +112,6 @@ int main()
 		//BindTextures
 		textures["tex"].Bind(0);
 		textures["grabTex"].Bind(1);
-		//TODO::Shader managment when it comes to draw shapes
-		// 
 		//Update dynamic object position
 		//yspd -=  deltaTime;
 
@@ -201,18 +160,22 @@ int main()
 		glClearColor(0.0, 0.0, 0.01, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glUseProgram(postProcessing.originalGameObject->shader->shaderProgram);
+		postProcessing.originalGameObject->image->Bind(1);
+		postProcessing.originalGameObject->shader->SetUniform1i("uTex0", 1);
+		postProcessing.originalGameObject->shader->SetUniform1f("uCells", uniformTest);
+		postProcessing.BasicDraw(1);
+		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1); //WARINING::Temporary solution
+
 		float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;
 		float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
 		glViewport(offsetX,offsetY,RENDERING_WIDTH, RENDERING_HEIGHT);
 
 		//objects["lightSurface"].Draw(1);
-		//NO NEED to scale if you change viewport
-	/*	postProcessing.scale.x = (float)(RENDERING_WIDTH) / (float)SCREEN_WIDTH;
-		postProcessing.scale.y = (float)(RENDERING_HEIGHT) / (float)SCREEN_HEIGHT;*/
-		postProcessing.Draw(1);
+
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
 
 		//Drawing debug things and tilemap grid
 

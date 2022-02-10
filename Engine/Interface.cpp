@@ -83,6 +83,7 @@ void InspectorGui() {
 //extern float pitch;
 //extern float jumpHeight;
 //extern float jumpTime;
+extern float uniformTest;
 void UpdateInferface() {
 	ImGui::DockSpaceOverViewport();
 
@@ -91,7 +92,8 @@ void UpdateInferface() {
 	ImGui::ColorEdit3("Background Color", (float*)&bgColor);
 	/*ImGui::SliderFloat("pitch", &pitch, 0.0f, 2.0f);
 	ImGui::DragFloat("jump height", &jumpHeight);
-	ImGui::DragFloat("jump time", &jumpTime);*/
+	*/
+	ImGui::DragFloat("Post processing cells", &uniformTest);
 
 
 	ImGui::ShowDemoWindow();

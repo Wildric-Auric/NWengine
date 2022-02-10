@@ -193,7 +193,6 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
-    <ClCompile Include="Scripts\player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -884,6 +883,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\Interface.h" />
+    <ClInclude Include="Engine\NWengine.h" />
     <ClInclude Include="Engine\Physics.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Game.h" />

@@ -31,7 +31,9 @@ public:
 	Texture* image;
 	Shader* shader;
 
-	void Draw(uint8_t textureSlot = 0);
+	void Draw(int8 textureSlot = 0);
+	void BasicDraw(int8 textureSlot = 0);
+
 	GameObject() {};
 	GameObject(Texture* image, Vector2<int> position = Vector2<int>(0, 0),
 		Vector2<float> scale = Vector2<float>(1.0f, 1.0f),
@@ -50,7 +52,9 @@ public:
 	Vector2<int> position = Vector2<int>(0,0);
 	GameObjectClone(){};
 	GameObjectClone(GameObject* gameObject, const char* name = "None");
-	void Draw(uint8_t slot);
+
+	void Draw(int8 slot);
+	void BasicDraw(int8 slot);
 
 	template<typename T>
 	T* GetComponent() {
