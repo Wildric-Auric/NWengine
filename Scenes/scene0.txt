@@ -1,8 +1,14 @@
-6 294 125 1.471 1 Background1
-6 16 125 1.691 1 Background2
-6 -287 125 1.765 1 Background3
-11 113 -28 1.25 1 Bush1
-12 -174 -21 1 1 Bush2
-13 35 12 1 0.912 Tree1
-14 721 1000 5 5 Tree2
-5 -50 -10 1 1 Warrior
+GameObjectClones:
+	"Warrior":
+		OriginalGameObject:{warrior}
+		Position:{98,15}
+		Scale:{1,1}
+		Collider:
+		end
+	end
+	"Background":
+		OriginalGameObject:{background}
+		Position:{338,125}
+		Scale:{1,1}
+	end
+end

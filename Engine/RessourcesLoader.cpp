@@ -10,7 +10,7 @@
 
 std::map<int, GameObject*> allObjects;
 
-std::map<const char*, GameObject> objects;
+std::map<std::string, GameObject> objects;
 std::map<const char*, Image> images;
 std::map<const char*, Texture> textures;
 std::map<const char*, Shader> shaders;
@@ -112,29 +112,29 @@ void LoadShaders() {
 
 void LoadGameObjects() {
 	
-	objects["lesbeanApple"]		         =    GameObject(&textures["tex"], Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), &objects["lesbeanApple"],&shaders["shader_default"]);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
-	objects["lesbeanApple2"]	         =    GameObject(&textures["tex"], Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), &objects["lesbeanApple2"],&shaders["shader_default"]);
-	objects["grabPass"]			         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["grabPass"],&shaders["shader_grabPass"]);
-	objects["lightSurface"]		         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["lightSurface"],&shaders["shader_lightSurface"]);
-	objects["postProcessing"]	         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["postProcessing"],&shaders["shader_postProcessing"]);
-	objects["warrior"]					 =    GameObject(&textures["warriorTex"], Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), &objects["warrior"]);
+	objects["lesbeanApple"]		         =    GameObject(&textures["tex"], Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), "lesbeanApple",&shaders["shader_default"]);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
+	objects["lesbeanApple2"]	         =    GameObject(&textures["tex"], Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), "lesbeanApple2",&shaders["shader_default"]);
+	objects["grabPass"]			         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "grabPass",&shaders["shader_grabPass"]);
+	objects["lightSurface"]		         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "lightSurface",&shaders["shader_lightSurface"]);
+	objects["postProcessing"]	         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "postProcessing",&shaders["shader_postProcessing"]);
+	objects["warrior"]					 =    GameObject(&textures["warriorTex"], Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), "warrior");
 	float s =    2.2;
-	objects["background"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337, 130), Vector2<float>(s, s), &objects["background"]);
-	objects["background1"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 +		objects["background"].size.x, 130), Vector2<float>(s, s),		&objects["background1"]	);
-	objects["background2"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 2 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background2"]	);
-	objects["background3"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 3 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background3"]	);
-	objects["background4"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 4 * objects["background"].size.x, 130), Vector2<float>(s, s), &objects["background4"]	);
+	objects["background"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337, 130), Vector2<float>(s, s), "background");
+	objects["background1"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 +		objects["background"].size.x, 130), Vector2<float>(s, s),	"background1"	);
+	objects["background2"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 2 * objects["background"].size.x, 130), Vector2<float>(s, s), "background2"	);
+	objects["background3"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 3 * objects["background"].size.x, 130), Vector2<float>(s, s), "background3"	);
+	objects["background4"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 4 * objects["background"].size.x, 130), Vector2<float>(s, s), "background4"	);
 	s            =    2.0f;
-	objects["bush1"]	         =    GameObject(&textures["bush1Tex"], Vector2<int>(113, -28), Vector2<float>(s, s), &objects["bush1"]);
-	objects["bush2"]	         =    GameObject(&textures["bush2Tex"], Vector2<int>(-119, -28), Vector2<float>(s, s), &objects["bush2"]);
-	objects["tree1"]	         =    GameObject(&textures["tree1Tex"], Vector2<int>(156, 12), Vector2<float>(s, s), &objects["tree1"]);
-	objects["tree2"]	         =    GameObject(&textures["tree2Tex,"], Vector2<int>(-212, 19), Vector2<float>(s, s), &objects["tree2"]);
+	objects["bush1"]	         =    GameObject(&textures["bush1Tex"], Vector2<int>(113, -28), Vector2<float>(s, s), "bush1");
+	objects["bush2"]	         =    GameObject(&textures["bush2Tex"], Vector2<int>(-119, -28), Vector2<float>(s, s), "bush2");
+	objects["tree1"]	         =    GameObject(&textures["tree1Tex"], Vector2<int>(156, 12), Vector2<float>(s, s), "tree1");
+	objects["tree2"]	         =    GameObject(&textures["tree2Tex,"], Vector2<int>(-212, 19), Vector2<float>(s, s), "tree2");
 	s           =    1.5f;
-	objects["ground"]	             =    GameObject(&textures["groundTex"], Vector2<int>(-100, -40), Vector2<float>(s, s), &objects["ground"]);
-	objects["wallTile0"]	         =    GameObject(&textures["tile1Tex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["wallTile0"],&shaders["shader_default"]);
-	objects["groundTile0"]	         =    GameObject(&textures["texture_groundTile0"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile0"]);
-	objects["groundTile1"]	         =    GameObject(&textures["texture_groundTile1"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile1"]);
-	objects["groundTile2"]	         =    GameObject(&textures["texture_groundTile2"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), &objects["groundTile2"]);
+	objects["ground"]	             =    GameObject(&textures["groundTex"], Vector2<int>(-100, -40), Vector2<float>(s, s), "ground");
+	objects["wallTile0"]	         =    GameObject(&textures["tile1Tex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "wallTile0", &shaders["shader_default"]);
+	objects["groundTile0"]	         =    GameObject(&textures["texture_groundTile0"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile0");
+	objects["groundTile1"]	         =    GameObject(&textures["texture_groundTile1"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile1");
+	objects["groundTile2"]	         =    GameObject(&textures["texture_groundTile2"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile2");
 
 };					  
 

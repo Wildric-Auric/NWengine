@@ -2,6 +2,7 @@
 #include "ShaderManager.h"
 #include "GameObject.h"
 #include <map>
+#include <string>
 
 class Image {
 public:
@@ -15,7 +16,7 @@ public:
 extern unsigned char* behindPixels;
 
 extern std::map<int, GameObject*> allObjects;
-extern std::map<const char*, GameObject> objects;
+extern std::map<std::string, GameObject> objects;
 extern std::map<const char*, Texture> textures;
 extern std::map<const char*, Shader> shaders;
 

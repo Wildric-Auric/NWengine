@@ -23,21 +23,22 @@ class GameObject {
 private:
 	static int numberOfGameObjects;
 public:
-	int id;  //ReadOnly
+	//int id;  //ReadOnly
 	Vector2<float> scale;
 	Vector2<int> position;
 	Vector2<int> size;  //ReadOnly
 	Quad container; 
 	Texture* image;
 	Shader* shader;
-
+	std::string name;
+	
 	void Draw(int8 textureSlot = 0);
 	void BasicDraw(int8 textureSlot = 0);
 
 	GameObject() {};
 	GameObject(Texture* image, Vector2<int> position = Vector2<int>(0, 0),
 		Vector2<float> scale = Vector2<float>(1.0f, 1.0f),
-		GameObject* ref = 0,
+		std::string name = "NULL",
 		Shader* shader = nullptr,
 		bool usingImageSize = 1, Vector2<int> size = (10, 10));
 };

@@ -83,8 +83,8 @@ int main()
 	scene0.LoadScene();
 
 
-	Collider playerCol = Collider(&scene0.sceneObjs[7]);
-	player pl = player(&scene0.sceneObjs[7]);
+	Collider playerCol = Collider(&scene0.sceneObjs[0]);
+	player pl = player(&scene0.sceneObjs[0]);
 	
 
 	
@@ -139,17 +139,9 @@ int main()
 			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_RUN_ARRAY[((int)currentSprite) % 8]->tex, 0, 1);
 		}
 
-		//scene0.sceneObjs[7].Draw(0);
-		//objects["warrior"].Draw(0);
 
 		d1 = playerCol.GetPosition().y;
-		//s64.position = playerCol.GetPosition();
-		//s64.Draw();
-		//for (int i = 0; i < 15; i++) {
-		//	s32.position = groundCollider[i].GetPosition();
-		//	s32 .Draw();
-		//}
-	
+
 
 		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
@@ -173,7 +165,6 @@ int main()
 		glViewport(offsetX,offsetY,RENDERING_WIDTH, RENDERING_HEIGHT);
 
 		//objects["lightSurface"].Draw(1);
-
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 

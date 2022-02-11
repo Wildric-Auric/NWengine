@@ -38,7 +38,7 @@ TileMap::TileMap(const char* name,Vector2<int> cellSize, Vector3<float> color)
 TileMap::~TileMap() {
 	std::ofstream tilemapData((std::string)"Maps/" + this->name + (std::string) ".txt");
 	for (auto it = tiles.begin(); it != tiles.end(); it++) {
-		tilemapData << it->originalGameObject->id << " "
+		tilemapData << it->originalGameObject->name << " "
 					<< it->position.x << " " << it->position.y << " " 
 					<< it->scale.x << " "<<it->scale.y << "\n";
 
@@ -70,7 +70,7 @@ void TileMap::SetUpTiles() {
 				arr[current] += letter;
 			}
 
-			currentTile = GameObjectClone( allObjects[std::stoi(arr[0])] );
+			currentTile = GameObjectClone( &objects[arr[0]] );
 			currentTile.position = Vector2<int>(std::stoi(arr[1]), std::stoi(arr[2]));
 			currentTile.scale = Vector2<float>(std::stof(arr[3]), std::stof(arr[4]));
 			tiles.push_back(currentTile);
