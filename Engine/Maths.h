@@ -19,6 +19,7 @@ public:
 	Vector2 operator * (T1 const& num);
 	Vector2 operator * (Vector2 const& vec1);
 	bool operator == (Vector2 const& vec1);
+	T* operator [] (int index);
 };
 
 
@@ -78,6 +79,10 @@ bool Vector2<T>::operator == (Vector2 const& vec1) {
 	return (x == vec1.x) && (y == vec1.y);
 }
 
+template<typename T> 
+T* Vector2<T>::operator [] (int index) {
+	return  index == 0 ? &x : &y;
+}
 
 
 
