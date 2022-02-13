@@ -1,6 +1,6 @@
-#include "GameObject.h"
-#include "Utilities.h"
-#include "Inputs.h"
+#pragma once
+
+#include "NWengine.h"
 
 extern Collider groundCollider[20];
 
@@ -22,17 +22,17 @@ public:
 	void Update() {
 
 		isGrounded = 0;
-		for (int i = 0; i < 15; i++) {
-			while (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i])) {
-				goc->position.y += 1;
-				//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
-			
-			};
-			if (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i], Vector2<int>(0, -1))) {
-				isGrounded = 1;
-				break;
-			}
-		}
+		//for (int i = 0; i < 15; i++) {
+		//	while (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i])) {
+		//		goc->position.y += 1;
+		//		//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
+		//	
+		//	};
+		//	if (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i], Vector2<int>(0, -1))) {
+		//		isGrounded = 1;
+		//		break;
+		//	}
+		//}
 		static float maxJump = 0.0f;
 		//yspd *= 1-isGrounded;
 		if (isGrounded && input_space) {
