@@ -1,14 +1,14 @@
 GameObjectClones:
-	"Warrior":
-		OriginalGameObject:{warrior}
-		Position:{98,15}
-		Scale:{1,1}
-		Collider:
-		end
-	end
-	"Background":
-		OriginalGameObject:{background}
-		Position:{338,125}
-		Scale:{1,1}
-	end
+"Warrior":
+OriginalGameObject:{warrior}
+Position:{-31,15}
+Scale:{1,1}
+Collider:
+end
+end
+"Background":
+OriginalGameObject:{background}
+Position:{202,124}
+Scale:{1,1}
+end
 end
