@@ -1,5 +1,13 @@
 #pragma once
 #include "GameObject.h"
+#include <string>
+#include <vector>
+#include <windows.h>
+
+#define WIN 
+
+
+
 bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
 	uint8_t overlap = 0;
 	int minX1 = collider1->GetPosition().x + offset1.x -  collider1->size->x / 2;
@@ -25,7 +33,128 @@ bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 
 	return overlap == 2;
 }
 
-GameObject CloneOnStack(GameObject* obj) {
-	GameObject cloned = *obj;
-	return cloned;
+
+template<typename T> 
+void ExtendVector(std::vector<T>* a, std::vector<T> b) {
+	for (auto c : b) {
+		a->push_back(c);
+	}
 }
+
+
+//Next functions use windows api; LATETODO:: Add their equivelent for mac, linux etc...
+#ifdef WIN
+
+/*See Interface.cpp to know these functions role. I could have used only one loop to get number and string but it's cleaner when done like
+* like this and think it won't affect too much engine performance.
+*/
+
+std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	std::string path = directory + "\\*";
+	std::vector<int> dirList;
+
+	hFind = FindFirstFileA(path.c_str(), &findData);
+	int count = -1;
+	while (FindNextFileA(hFind, &findData) != 0)
+	{
+
+		if (count >= 0) {
+			std::string fileName = std::string(findData.cFileName);
+			if (fileName.find(".") == -1) {
+				ExtendVector(&dirList, GetRecusivelyFilesNumber(directory + "/" + fileName));
+			}
+			else dirList.push_back(0);
+		}
+		count += 1;
+	}
+	dirList.insert(dirList.begin(), count);
+
+	FindClose(hFind);
+
+	return dirList;
+}
+//DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
+//C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
+std::vector<std::string> GetDirFiles(const std::string& directory)
+{
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	std::string path = directory + "\\*";
+	std::vector<std::string> dirList;
+
+	hFind = FindFirstFileA(path.c_str(), &findData);
+
+	if (hFind == INVALID_HANDLE_VALUE)
+		throw std::runtime_error("Invalid handle value! Please check your path...");
+
+	bool first = 0; //first file found is always ".." and I don't know why so i'm not adding it to the list
+	while (FindNextFileA(hFind, &findData) != 0)
+	{
+		if  (first) dirList.push_back(std::string(findData.cFileName));
+		first = 1;
+	}
+
+	FindClose(hFind);
+	return dirList;
+}
+
+std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	std::string path = directory + "\\*";
+	std::vector<std::string> dirList;
+
+	hFind = FindFirstFileA(path.c_str(), &findData);
+	bool first = 0;
+	while (FindNextFileA(hFind, &findData) != 0)
+	{
+		if (first) {
+			std::string fileName = std::string(findData.cFileName);
+			dirList.push_back(fileName);
+			if (fileName.find(".") == -1) {
+				ExtendVector(&dirList, GetRecusivelyDirFiles(directory + "/" + fileName));
+			}
+		}
+		first = 1;
+	}
+
+	FindClose(hFind);
+	return dirList;
+
+	if (hFind == INVALID_HANDLE_VALUE)
+		throw std::runtime_error("Invalid handle value! Please check your path...");
+
+}
+
+//int AccumulateChildren(std::vector<int>* a, int index = 0) {
+//	static std::vector<int> b;
+//	int count = 0;
+//	for (int i = 0; i < a->size(); i++) {
+//		count += a->[i];
+//		for (int j = 0; j < a->[i]; j++) {
+//			count += AccumulateChildren();
+//		}
+//		i+=2
+//	}
+//	b[index] = count;
+//	return count;
+//}
+
+std::string GetCurrentDir() {
+	char dir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, dir);
+	return std::string(dir);
+}
+
+std::string GetExePath() {
+	char path[MAX_PATH];
+	GetModuleFileName(NULL,path, MAX_PATH);
+	return std::string(path);
+}
+
+#endif
