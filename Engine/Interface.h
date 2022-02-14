@@ -88,14 +88,18 @@ void InspectorGui() {
 }
 
 static std::vector<   std::tuple<std::string, int>   > explorerData;
-static int iteration = 0;
+
+static std::vector<int> accumulation;
+
+//Function Solution explorer code is the least readable or maintainable in this project...
+//TODO:: Add refresh button; hint: button triggering "first" variable
+
 static void func(int i) {
 
 	std::string type;
 	int childNum = std::get<1>(explorerData[i]);
 	ImGui::TableNextRow();
 	ImGui::TableNextColumn();
-
 	if (childNum > 0) {
 		type = "Folder";
 		bool open = ImGui::TreeNodeEx(std::get<0>(explorerData[i]).c_str(), ImGuiTreeNodeFlags_SpanFullWidth);
@@ -103,8 +107,13 @@ static void func(int i) {
 		ImGui::Text(type.c_str());
 		if (open)
 		{
+			int count = i;
 			for (int j = 0; j < childNum; j++) {
-				func(i + j);
+				int n	  = accumulation[count + 1];
+				count += n + (n==0);
+				std::cout << count << " " << i << std::endl;
+				func(count+1);
+
 			}
 			ImGui::TreePop();
 		}
@@ -116,22 +125,32 @@ static void func(int i) {
 		ImGui::TableNextColumn();
 		ImGui::Text(type.c_str());
 	}
-	iteration += childNum + 1;
 }
 
 void SolutionExplorerGui() {
 	if (solutionExplorerActive) {
+		ImGui::Begin("Solution Explorer", &solutionExplorerActive, ImGuiWindowFlags_MenuBar);
+
 		//Building files list
 		static bool first = 1;
 		static ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 		if (first) {
-			auto files = GetRecusivelyDirFiles("C:/Users/HP/Desktop/Debug");
-			auto childNum = GetRecusivelyFilesNumber("C:/Users/HP/Desktop/Debug");
+			auto files = GetRecusivelyDirFiles("C:/Users/HP/Desktop/NWengine");
+			auto childNum = GetRecusivelyFilesNumber("C:/Users/HP/Desktop/NWengine");
+			std::vector<int> temp;
+			accumulation.clear();
 			for (int8 i = 0; i < files.size(); i++) {
 				int num = childNum[i + 1];
 				auto a = std::make_tuple(files[i], num);
 				explorerData.push_back(a);
+				temp.push_back(num);
+				accumulation.push_back(-1);
 			}
+			auto a = std::make_tuple("Debug", GetDirFiles("C:/Users/HP/Desktop/NWengine").size());
+			explorerData.insert(explorerData.begin(), a);
+			temp.insert(temp.begin(), GetDirFiles("C:/Users/HP/Desktop/NWengine").size());
+			accumulation.push_back(-1);
+			AccumulateChildren(&temp, &accumulation);
 			first = false;
 		};
 
@@ -141,13 +160,11 @@ void SolutionExplorerGui() {
 			ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableHeadersRow();
-
-			while (iteration < explorerData.size()) {
-				func(iteration);
-			}
+			func(0);
 			ImGui::EndTable();
 		}
-		iteration = 0;
+
+		ImGui::End();
 	}
 
 };

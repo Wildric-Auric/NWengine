@@ -131,19 +131,20 @@ std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
 
 }
 
-//int AccumulateChildren(std::vector<int>* a, int index = 0) {
-//	static std::vector<int> b;
-//	int count = 0;
-//	for (int i = 0; i < a->size(); i++) {
-//		count += a->[i];
-//		for (int j = 0; j < a->[i]; j++) {
-//			count += AccumulateChildren();
-//		}
-//		i+=2
-//	}
-//	b[index] = count;
-//	return count;
-//}
+int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) {
+	int count = 0;
+	int children = (*a)[index];
+	count += children;
+	int last = 1;
+	for (int i = 0; i < children; i++) {
+		int temp = AccumulateChildren(a, b, index + last);
+		last += temp + 1;
+		count += temp;
+	}
+	(*b)[index] = count;
+
+	return count;
+}
 
 std::string GetCurrentDir() {
 	char dir[MAX_PATH];

@@ -1,7 +1,7 @@
 GameObjectClones:
 "Warrior":
 OriginalGameObject:{warrior}
-Position:{-31,15}
+Position:{-379,-10}
 Scale:{1,1}
 Collider:
 end
