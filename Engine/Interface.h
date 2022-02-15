@@ -109,11 +109,9 @@ static void func(int i) {
 		{
 			int count = i;
 			for (int j = 0; j < childNum; j++) {
-				int n	  = accumulation[count + 1];
-				count += n + (n==0);
-				std::cout << count << " " << i << std::endl;
-				func(count+1);
-
+				count += 1;
+				func(count);
+				count += accumulation[count];
 			}
 			ImGui::TreePop();
 		}
@@ -135,8 +133,8 @@ void SolutionExplorerGui() {
 		static bool first = 1;
 		static ImGuiTableFlags flags = ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
 		if (first) {
-			auto files = GetRecusivelyDirFiles("C:/Users/HP/Desktop/NWengine");
-			auto childNum = GetRecusivelyFilesNumber("C:/Users/HP/Desktop/NWengine");
+			auto files = GetRecusivelyDirFiles("C:/Users/HP/Desktop/NWengine/Ressources");
+			auto childNum = GetRecusivelyFilesNumber("C:/Users/HP/Desktop/NWengine/Ressources");
 			std::vector<int> temp;
 			accumulation.clear();
 			for (int8 i = 0; i < files.size(); i++) {
@@ -146,9 +144,9 @@ void SolutionExplorerGui() {
 				temp.push_back(num);
 				accumulation.push_back(-1);
 			}
-			auto a = std::make_tuple("Debug", GetDirFiles("C:/Users/HP/Desktop/NWengine").size());
+			auto a = std::make_tuple("Debug", GetDirFiles("C:/Users/HP/Desktop/NWengine/Ressources").size());
 			explorerData.insert(explorerData.begin(), a);
-			temp.insert(temp.begin(), GetDirFiles("C:/Users/HP/Desktop/NWengine").size());
+			temp.insert(temp.begin(), GetDirFiles("C:/Users/HP/Desktop/NWengine/Ressources").size());
 			accumulation.push_back(-1);
 			AccumulateChildren(&temp, &accumulation);
 			first = false;
@@ -186,7 +184,7 @@ void UpdateInferface() {
 	ImGui::DragFloat("Post processing cells", &uniformTest);
 
 
-	ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow(); 
 	ImGuiIO& io = ImGui::GetIO(); (void)io; //TODO::Fix this
 	ImGui::End();
 
