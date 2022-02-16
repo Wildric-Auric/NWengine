@@ -10,10 +10,13 @@ The abstraction of SDL is not too complete; everything it does (graphically) can
 The renderer is meant to be 2D. It's based on rendering quads through vertex buffer and element buffer since the draw method uses ```GL_ELEMENT_ARRAY_BUFFER```; they are associated to each GameObject (see abstraction). Every texture is mapped in a quad and shown on the screen.
 ## Engine abstraction
 ### GameObject vs GameObjectClone
-Each object you would need to draw in the game is loaded initially and stored in an object of the class ```GameObject```.This information consist in a texture which is generated from ```Image``` class object and stored in ```Texture``` class object. GameObject *static* by convention which mean it characteristics are defined once and that it' a very bad practice to change after creation. Note also and even if GameObject has a Draw method, it should not be called directly, which leads us to ```GameObjectClone```.
+Each object you would need to draw in the game is loaded initially and stored in an object of the class ```GameObject```.This information consist in a texture which is generated from ```Image``` class object and stored in ```Texture``` class object. GameObject is *static* by convention which mean it characteristics are defined once and that it's a very bad practice to change after creation. Note also and even if GameObject has a Draw method, it should not be called directly, which leads us to ```GameObjectClone```.
 
 GameObjectClone is an object which can be seen as GameObject but which characteristics can be changed, meanwhile GameObjects attributes are constants and are basis to defone GameObjectClone objects. Let's say for example you have mapped your texture in a GameObject **a** and that you gave it the size of *100px* by *100px*.
 Creating two GameObjectClone **b** and **c** will allow you to do such manipulation.
+
+###Post processing
+After drawing all instances of ```GameObjectClone```, ```glReadPixels``` is final image is rendered in one big quad. This allows the game to be scalable, allows the implementation of post processing and passing capture to scene GUI.
 ```
 b = GameObjectClone(&a);
 c = GameObjectClone(&a);
@@ -81,6 +84,8 @@ It a big difference especially when you are making an engine where speed is esse
 ### TileMaps
 
 ### Gui 
+Like most nowadays engines, *NWengine* uses *Dear ImGui*. The script ```Interface.h``` does almost everything related to GUI; it has an ```Update``` function called in ```Source.cpp``` which calls function for GUI's elements: inspector, tilemap editor, scene... 
+Scene gui is the image captured using ```glReadPixels()``` to which post processing and scaling is applied.
 
 ### Physics engine
 
