@@ -90,7 +90,7 @@ It a big difference especially when you are making an engine where speed is esse
 
 ### Particle system
 ### Audio 
-
+*Irrklang* was used to read sounds and play them. It is a pretty cool librairy since it provides some sound effects. Unfortunately, it is nor open source nor free to use in commercial projects. For long term engine developpement, it is surely a bad idea to use only *Irrklang* for audio. OpenAL was then implemented. Reading audio files is now done by the excellent *sndlib*; it may be changed by a custom algorithm in the future.
 ###
 ## Dependencies
 
