@@ -85,7 +85,7 @@ It a big difference especially when you are making an engine where speed is esse
 
 ### Gui 
 Like most nowadays engines, *NWengine* uses *Dear ImGui*. The script ```Interface.h``` does almost everything related to GUI; it has an ```Update``` function called in ```Source.cpp``` which calls function for GUI's elements: inspector, tilemap editor, scene... 
-Scene gui is the image captured using ```glReadPixels()``` to which post processing and scaling is applied.
+Scene gui is the image captured using ```glReadPixels()``` to which post processing and scaling is applied. You will however notice that there are some GUI functions external to this script. All of them belong to classes, are ```static``` and are named ```GUI```. 
 
 ### Physics engine
 
