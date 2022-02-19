@@ -17,7 +17,7 @@ Creating two GameObjectClone **b** and **c** will allow you to do such manipulat
 
 ###Post processing
 After drawing all instances of ```GameObjectClone```, ```glReadPixels``` is final image is rendered in one big quad. This allows the game to be scalable, allows the implementation of post processing and passing capture to scene GUI.
-```
+```c++
 b = GameObjectClone(&a);
 c = GameObjectClone(&a);
 b.scale.x = 2.0f;
@@ -29,7 +29,7 @@ This system can be seen as a prefab system; the name can be changed later to be 
 ### Drawable, Updatable...
 ```Drawable``` and ```Updatable``` are two classes containing corresponding methods. Objects having those methods; should inherit from these classes and override base method.
 Drawable for instance has it class virtual; and is defined as following: 
-```
+```c++
 class Drawable {
 public:
 	virtual void Draw(uint8_t slot = 0) {};
@@ -44,7 +44,7 @@ This system is useful in that it allows you to put pointers of Drawable objects 
 Initially, **glm** librairy was used. It's a solid mathematical librairy and a complete one. However, to have full control on the engine and its processing speed, in a long term perspective, building an internal maths librairy is necessary.
 Everything there is set as templates. There are some fucntions like min, max among others; and classes like Matrix and Vector2, Vector3, Vector4. 
 Matrix is defined for the general case (n row m column) meanwhile size of vector is 2,3 or 4. Such choice was done for processing speed, since a general size vector requires more time for operations to be done. Look at this example:
-``` 
+```c++
 #include <iostream>
 #include <chrono>
 
