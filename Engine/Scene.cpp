@@ -133,7 +133,7 @@ void Scene::Save() {
 	data << "GameObjectClones:\n";
 	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
 		data << '"' << it->name << '"' << ":\n"
-			<< "OriginalGameObject:{" << it->originalGameObject->name << "}\n" //TODO::Fix this by changing objects id to its names
+			<< "OriginalGameObject:{" << it->originalGameObject->name << "}\n"
 			<< "Position:{"
 			<< it->position.x << "," << it->position.y << "}\n"
 			<< "Scale:{"
@@ -159,52 +159,7 @@ Scene* Scene::currentScene = nullptr;
 
 static bool slider0 = true;
 static bool slider1 = true;
+
 void Scene::Gui() {
-	if (Scene::GuiActive) {
-		ImGui::Begin("Scene editor", 0, ImGuiWindowFlags_MenuBar);
-		if (currentScene != nullptr) {
-			unsigned int num = 0;
-			std::string c = "slider scale?";
-			std::string d = "slider position?";
-
-
-			ImGui::Checkbox(c.c_str(), &slider0);
-			ImGui::Checkbox(d.c_str(), &slider1);
-			for (auto it = currentScene->sceneObjs.begin(); it != currentScene->sceneObjs.end(); it++) {
-				num += 1;
-				//TODO::Add names to GameObjectClone
-				std::string label = it->name + std::to_string(num);
-				ImGui::LabelText(label.c_str(),"");
-				std::string a = "scale" + std::to_string(num);
-				std::string b = "position" + std::to_string(num);
-
-				
-
-
-				if (slider0) 
-					ImGui::SliderFloat2(a.c_str(), &(it->scale.x), -5.0f, 5.0f, "%.3f", 1.0f);
-				else
-					ImGui::InputFloat2(a.c_str(), &(it->scale.x));
-				if (slider1)
-					ImGui::SliderInt2(b.c_str(), &(it->position.x), -1000, +1000);
-				else 
-					ImGui::InputInt2(b.c_str(), &(it->position.x));
-
-				//ImGui::SliderFloat2()
-			}
-		}
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Close", "Ctrl+W")) Scene::GuiActive = false;
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-		/*ImGui::EndChild*/
-		ImGui::End();
-	}
 
 }
