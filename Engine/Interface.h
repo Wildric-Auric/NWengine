@@ -36,6 +36,8 @@ void InitInterface(int window) {
 }
 
 
+int p1;
+int p2;
 
 void SceneViewGui() {
 	if (sceneViewActive) {
@@ -47,6 +49,9 @@ void SceneViewGui() {
 		RENDERING_HEIGHT = temp.y;
 		RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
 
+		p1 = ImGui::GetWindowPos().x;
+		p2 = ImGui::GetWindowPos().y + 55;
+		isMouseOnGui = ImGui::IsWindowHovered();
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Options"))
@@ -93,8 +98,10 @@ static std::vector<int> accumulation;
 
 //Function Solution explorer code is the least readable or maintainable in this project...
 //TODO:: Add refresh button; hint: button triggering "first" variable
+//TODO:: Fix folder with dot considered 
 
 static void func(int i) {
+	static int selected = 0;
 
 	std::string type;
 	int childNum = std::get<1>(explorerData[i]);
@@ -118,7 +125,14 @@ static void func(int i) {
 
 	}
 	else {
-		ImGui::TreeNodeEx(std::get<0>(explorerData[i]).c_str(), ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
+		ImGui::Selectable(std::get<0>(explorerData[i]).c_str());
+
+		if (ImGui::BeginDragDropSource()) {
+			std::cout << strlen(std::get<0>(explorerData[i]).c_str()) << std::endl;
+			ImGui::SetDragDropPayload("0", std::get<0>(explorerData[i]).c_str(), strlen(std::get<0>(explorerData[i]).c_str()));
+			ImGui::Text(std::get<0>(explorerData[i]).c_str());
+			ImGui::EndDragDropSource();
+		}
 		type = "File";
 		ImGui::TableNextColumn();
 		ImGui::Text(type.c_str());
@@ -161,7 +175,6 @@ void SolutionExplorerGui() {
 			func(0);
 			ImGui::EndTable();
 		}
-
 		ImGui::End();
 	}
 
@@ -182,10 +195,18 @@ void UpdateInferface() {
 	ImGui::DragFloat("jump height", &jumpHeight);
 	*/
 	ImGui::DragFloat("Post processing cells", &uniformTest);
-
-
+	char buffer[500];
+	std::string data = "hello";
+	ImGui::InputText("E", buffer, 20);
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("0")) {
+			 std::cout<<  (const char*)payload->Data<< std::endl;
+		}
+		ImGui::EndDragDropTarget();
+	}
+	
 	ImGui::ShowDemoWindow(); 
-	ImGuiIO& io = ImGui::GetIO(); (void)io; //TODO::Fix this
+	static ImGuiIO& io = ImGui::GetIO(); (void)io; //TODO::Fix this
 	ImGui::End();
 
 	if (ImGui::BeginMainMenuBar())
@@ -204,7 +225,7 @@ void UpdateInferface() {
 	}
 
 	//Capture mouse
-	isMouseOnGui = io.WantCaptureMouse;
+	//isMouseOnGui = io.WantCaptureMouse;
 	//calling all extern gui functions
 	TileMap::Gui();
 	Scene::Gui();
