@@ -14,7 +14,7 @@ float joystickAxis[6];
 void processInput(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
-	mousePosY = WINDOW_HEIGHT - mousePosY;
+	mousePosY = WINDOW_HEIGHT - mousePosY;   //Down left as origin
 	usingJoyStick = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	const unsigned char* buttons = 0;
 	if (usingJoyStick) {
