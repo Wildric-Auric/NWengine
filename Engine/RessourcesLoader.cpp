@@ -90,7 +90,7 @@ void LoadTextures() {
 	textures["bush2Tex"            ]             =    Texture(images["IMAGE_BUSH2"].width, images["IMAGE_BUSH2"].height, images["IMAGE_BUSH2"].tex, 1, 0);
 	textures["tree1Tex"            ]             =    Texture(images["IMAGE_TREE1"].width, images["IMAGE_TREE1"].height, images["IMAGE_TREE1"].tex, 1, 0);
 	textures["tree2Tex"            ]             =    Texture(images["IMAGE_TREE2"].width, images["IMAGE_TREE2"].height, images["IMAGE_TREE2"].tex, 1, 0);
-	textures["groundTex"           ]             =    Texture(images["IMAGE_GROUND"].width, images["IMAGE_GROUND"].height, images["IMAGE_GROUND"].tex, 1, 0);
+	textures["groundTex"           ]             =    Texture(images["IMAGE_GROUND"].width, images["IMAGE_GROUND"].height, images["IMAGE_GROUND"].tex, 1, 1);
 	textures["tile1Tex"]					     =    Texture(images["IMAGE_TILE1"].width, images["IMAGE_TILE1"].height, images["IMAGE_TILE1"].tex, 1, 1);
 	textures["texture_groundTile0"]              =    Texture(images["IMAGE_GROUND_TILE0"].width, images["IMAGE_GROUND_TILE0"].height, images["IMAGE_GROUND_TILE0"].tex, 1, 1);
 	textures["texture_groundTile1"]              =    Texture(images["IMAGE_GROUND_TILE1"].width, images["IMAGE_GROUND_TILE1"].height, images["IMAGE_GROUND_TILE1"].tex, 1, 1);
@@ -118,19 +118,11 @@ void LoadGameObjects() {
 	objects["lightSurface"]		         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "lightSurface",&shaders["shader_lightSurface"]);
 	objects["postProcessing"]	         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "postProcessing",&shaders["shader_postProcessing"]);
 	objects["warrior"]					 =    GameObject(&textures["warriorTex"], Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), "warrior");
-	float s =    2.2;
-	objects["background"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337, 130), Vector2<float>(s, s), "background");
-	objects["background1"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 +		objects["background"].size.x, 130), Vector2<float>(s, s),	"background1"	);
-	objects["background2"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 2 * objects["background"].size.x, 130), Vector2<float>(s, s), "background2"	);
-	objects["background3"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 3 * objects["background"].size.x, 130), Vector2<float>(s, s), "background3"	);
-	objects["background4"]	         =    GameObject(&textures["backgroundTex"], Vector2<int>(-337 + 4 * objects["background"].size.x, 130), Vector2<float>(s, s), "background4"	);
-	s            =    2.0f;
-	objects["bush1"]	         =    GameObject(&textures["bush1Tex"], Vector2<int>(113, -28), Vector2<float>(s, s), "bush1");
-	objects["bush2"]	         =    GameObject(&textures["bush2Tex"], Vector2<int>(-119, -28), Vector2<float>(s, s), "bush2");
-	objects["tree1"]	         =    GameObject(&textures["tree1Tex"], Vector2<int>(156, 12), Vector2<float>(s, s), "tree1");
-	objects["tree2"]	         =    GameObject(&textures["tree2Tex,"], Vector2<int>(-212, 19), Vector2<float>(s, s), "tree2");
-	s           =    1.5f;
-	objects["ground"]	             =    GameObject(&textures["groundTex"], Vector2<int>(-100, -40), Vector2<float>(s, s), "ground");
+
+	objects["background"]				=    GameObject(&textures["backgroundTex"], Vector2<int>(-337, 130), Vector2<float>(1.0f, 1.0f), "background");
+
+
+	objects["ground"]				 =	  GameObject(&textures["groundTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "ground");
 	objects["wallTile0"]	         =    GameObject(&textures["tile1Tex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "wallTile0", &shaders["shader_default"]);
 	objects["groundTile0"]	         =    GameObject(&textures["texture_groundTile0"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile0");
 	objects["groundTile1"]	         =    GameObject(&textures["texture_groundTile1"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile1");
