@@ -1,3 +1,4 @@
+
 #include "TileMap.h"
 #include "Camera.h"
 #include "RessourcesLoader.h"
@@ -79,20 +80,21 @@ void TileMap::SetUpTiles() {
 	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
 }
 
-//TODO::fix tilling in other resolution
+//TODO::Working tilling system
+extern int  p1;
+extern int p2;
 void TileMap::Update() {
 
 	if (GuiActive) {
 		m_canTile -= deltaTime;
 		signed char a = cellSize.x / 2 ;
 		signed char b = cellSize.y / 2 ;
-		if (m_canTile < 0 && !isMouseOnGui) {
+		if (m_canTile < 0 && isMouseOnGui) {
 
-			int X = camera.position.x + mousePosX - WINDOW_WIDTH / 2;
-			int Y = camera.position.y + mousePosY - WINDOW_HEIGHT / 2;
+			int X = camera.position.x + mousePosX - p1 - RENDERING_WIDTH /2;
+			int Y = camera.position.y + mousePosY - WINDOW_HEIGHT + p2 + RENDERING_HEIGHT/2;		//Suffering...
 			if (input_left_click) {
 				bool bo = false;
-
 				Vector2<int> pos = Vector2<int>((X / cellSize.x - (X < 0)) * cellSize.x + a, (Y / cellSize.y - (Y < 0)) * cellSize.y + b);
 				for (auto it = tiles.begin(); it != tiles.end(); it++) {
 					if (it->position == pos) {

@@ -16,6 +16,8 @@ float d1, d2 = 0.0f;
 
 float pitch = 1.0f;
 float uniformTest = 1;
+float sizeX;
+float sizeY;
 
 Collider groundCollider[20];
 int main()
@@ -160,16 +162,16 @@ int main()
 		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1); //WARINING::Temporary solution
 
-		float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;
-		float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
-		glViewport(offsetX,offsetY,RENDERING_WIDTH, RENDERING_HEIGHT);
+		//float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;  // Don't need offset since I render on quad
+		//float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
+		glViewport(0,0,RENDERING_WIDTH, RENDERING_HEIGHT);
 
 		//objects["lightSurface"].Draw(1);
 
 		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		//Drawing debug things and tilemap grid
 
+		glClear(GL_COLOR_BUFFER_BIT);
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
