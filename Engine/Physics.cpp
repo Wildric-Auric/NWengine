@@ -45,8 +45,8 @@ void Rigidbody::Update() {
 //
 //	for (int i = 0; i < m; i++) {
 //
-//		points[0].position.x = -SCREEN_WIDTH / 2 + mousePosX;
-//		points[0].position.y = +SCREEN_HEIGHT / 2 - mousePosY;
+//		points[0].position.x = -ORIGINAL_WIDTH / 2 + mousePosX;
+//		points[0].position.y = +ORIGINAL_HEIGHT / 2 - mousePosY;
 //
 //
 //		if (!points[i].lock) {
@@ -82,8 +82,8 @@ void Rigidbody::Update() {
 //				}
 //			}
 //			else {
-//				s.pointB->position.x = -SCREEN_WIDTH / 2 + mousePosX;
-//				s.pointB->position.y = +SCREEN_HEIGHT / 2 - mousePosY;
+//				s.pointB->position.x = -ORIGINAL_WIDTH / 2 + mousePosX;
+//				s.pointB->position.y = +ORIGINAL_HEIGHT / 2 - mousePosY;
 //			}
 //		}
 //	}

@@ -28,7 +28,7 @@ public:
 	Vector2<int> position;
 	Vector2<int> size;  //ReadOnly
 	Quad container; 
-	Texture* image;
+	Texture* texture;
 	Shader* shader;
 	std::string name;
 	
@@ -36,7 +36,7 @@ public:
 	void BasicDraw(int8 textureSlot = 0);
 
 	GameObject() {};
-	GameObject(Texture* image, Vector2<int> position = Vector2<int>(0, 0),
+	GameObject(Texture* texture, Vector2<int> position = Vector2<int>(0, 0),
 		Vector2<float> scale = Vector2<float>(1.0f, 1.0f),
 		std::string name = "NULL",
 		Shader* shader = nullptr,

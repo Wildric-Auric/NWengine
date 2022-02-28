@@ -17,8 +17,8 @@ typedef Matrix<2, 2, int> iMat2;
 extern double deltaTime;      //Read only in everyfile except mainloops
 
 //Consts
-extern int SCREEN_WIDTH;
-extern int SCREEN_HEIGHT;
+extern int ORIGINAL_WIDTH;
+extern int ORIGINAL_HEIGHT;
 extern int RENDERING_WIDTH;
 extern int RENDERING_HEIGHT;
 extern int WINDOW_WIDTH;

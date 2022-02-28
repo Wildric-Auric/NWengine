@@ -12,32 +12,31 @@ void GameObject::Draw(int8 textureSlot) {
 	shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
 	shader->SetUniform1i("uTex0", textureSlot);
 
-	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	shader->SetVector2("uResolution", static_cast<float>(ORIGINAL_WIDTH), static_cast<float>(ORIGINAL_HEIGHT));
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
 	shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
 
-	image->Bind(textureSlot);
+	texture->Bind(textureSlot);
 	container.Draw();
 };
 
 void GameObject::BasicDraw(int8 textureSlot) {
 	container.position = position;
-	shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	shader->SetVector2("uResolution", static_cast<float>(ORIGINAL_WIDTH), static_cast<float>(ORIGINAL_HEIGHT));
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
 	shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
-	    //TODO::Fix confusion between image and texture
 	container.Draw();
 }
 int GameObject::numberOfGameObjects = 0;
 
-GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> scale, std::string ref, Shader* shader, bool usingImageSize, Vector2<int> size) 
+GameObject::GameObject(Texture* texture, Vector2<int> position, Vector2<float> scale, std::string ref, Shader* shader, bool usingImageSize, Vector2<int> size) 
 {
 
 	this->position = position;
 	this->scale = scale;
-	this->image = image;
+	this->texture = texture;
 	//this->id = numberOfGameObjects;
 	this->name = ref;
 
@@ -45,8 +44,8 @@ GameObject::GameObject(Texture* image, Vector2<int> position, Vector2<float> sca
 	numberOfGameObjects += 1;
 	if (shader == nullptr) this->shader = &shaders["shader_default"];
 	else this->shader = shader;
-	if (image != nullptr && usingImageSize) {
-		this->size = Vector2<int>(image->size.x * abs(scale.x), image->size.y * abs(scale.y));
+	if (texture != nullptr && usingImageSize) {
+		this->size = Vector2<int>(texture->size.x * abs(scale.x), texture->size.y * abs(scale.y));
 	}
 	else {
 		this->size = Vector2<int>(size.x * abs(scale.x), size.y * abs(scale.y));
@@ -85,9 +84,9 @@ void GameObjectClone::Draw(int8 slot) {
 	originalGameObject->shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
 
 	originalGameObject->shader->SetUniform1f("uTime", uTime);
-	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(ORIGINAL_WIDTH), static_cast<float>(ORIGINAL_HEIGHT));
 	originalGameObject->shader->SetVector2("uMouse", (float)mousePosX, (float)(mousePosY));
-	originalGameObject->image->Bind(slot);
+	originalGameObject->texture->Bind(slot);
 	originalGameObject->shader->SetUniform1i("uTex0", slot);
 	originalGameObject->container.Draw();
 }
@@ -99,6 +98,6 @@ void GameObjectClone::BasicDraw(int8 slot) {
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));   //Flip image if should flip  
 	originalGameObject->shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
-	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT));
+	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(ORIGINAL_WIDTH), static_cast<float>(ORIGINAL_HEIGHT));
 	originalGameObject->container.Draw();
 }

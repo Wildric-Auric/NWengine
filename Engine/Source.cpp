@@ -9,7 +9,7 @@ double currentTime;
 double lastTime;
 double deltaTimeSum = 0;
 
-Camera camera = Camera(-(float)SCREEN_WIDTH / 2.0f, (float)SCREEN_WIDTH / 2.0f, -(float)SCREEN_HEIGHT / 2.0f, (float)SCREEN_HEIGHT / 2.0f);
+Camera camera = Camera(-(float)ORIGINAL_WIDTH / 2.0f, (float)ORIGINAL_WIDTH / 2.0f, -(float)ORIGINAL_HEIGHT / 2.0f, (float)ORIGINAL_HEIGHT / 2.0f);
 
 
 float d1, d2 = 0.0f;
@@ -23,7 +23,7 @@ Collider groundCollider[20];
 int main()
 {
     //Init GLFW context 
-    GLFWwindow* window = InitContext(SCREEN_WIDTH, SCREEN_HEIGHT);
+    GLFWwindow* window = InitContext(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
 	if (window == nullptr) return -1;
 
 	//init imgui
@@ -145,22 +145,22 @@ int main()
 		d1 = playerCol.GetPosition().y;
 
 
-		glReadPixels(-camera.position.x, -camera.position.y, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		glReadPixels(-camera.position.x, -camera.position.y, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1);
 		objects["grabPass"].Draw(1);
 		postProcessing.position = camera.position;
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1);
+		glReadPixels(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1);
 		glClearColor(0.0, 0.0, 0.01, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(postProcessing.originalGameObject->shader->shaderProgram);
-		postProcessing.originalGameObject->image->Bind(1);
+		postProcessing.originalGameObject->texture->Bind(1);
 		postProcessing.originalGameObject->shader->SetUniform1i("uTex0", 1);
 		postProcessing.originalGameObject->shader->SetUniform1f("uCells", uniformTest);
 		postProcessing.BasicDraw(1);
-		glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		textures["grabTex"].UpdateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels, 1); //WARINING::Temporary solution
+		glReadPixels(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
+		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1); //WARINING::Temporary solution
 
 		//float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;  // Don't need offset since I render on quad
 		//float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
@@ -168,7 +168,7 @@ int main()
 
 		//objects["lightSurface"].Draw(1);
 
-		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		glViewport(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
 
 
 		glClear(GL_COLOR_BUFFER_BIT);

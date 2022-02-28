@@ -8,7 +8,7 @@ void sizeCallBack(GLFWwindow* window, int width, int height)
 		WINDOW_HEIGHT = height;
 		RENDERING_WIDTH = (int)(height * SCREENRATIO);
 		RENDERING_HEIGHT = height;
-	//glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	//glViewport(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
 }
 
 GLFWwindow* InitContext(int scrWidth, int scrHeight)

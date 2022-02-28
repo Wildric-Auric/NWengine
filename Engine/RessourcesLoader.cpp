@@ -15,7 +15,7 @@ std::map<const char*, Image> images;
 std::map<const char*, Texture> textures;
 std::map<const char*, Shader> shaders;
 
-unsigned char* behindPixels        =    new unsigned char[4*SCREEN_WIDTH*SCREEN_HEIGHT];
+unsigned char* behindPixels        =    new unsigned char[4*ORIGINAL_WIDTH*ORIGINAL_HEIGHT];
 
 const char* path                   =    "Ressources/Images/img2.png";
 
@@ -83,7 +83,7 @@ void LoadImages() {
 
 void LoadTextures() {
 	textures["tex"]                              =    Texture(images["IMAGE_APPLE"].width, images["IMAGE_APPLE"].height, images["IMAGE_APPLE"].tex, 1, 0);
-	textures["grabTex"             ]             =    Texture(SCREEN_WIDTH, SCREEN_HEIGHT, behindPixels);
+	textures["grabTex"             ]             =    Texture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels);
 	textures["warriorTex"          ]             =    Texture(images["IMAGE_WARRIOR_IDLE_1"].width, images["IMAGE_WARRIOR_IDLE_1"].height, images["IMAGE_WARRIOR_IDLE_1"].tex, 1, 0);
 	textures["backgroundTex"       ]             =    Texture(images["IMAGE_BACKGROUND"].width, images["IMAGE_BACKGROUND"].height, images["IMAGE_BACKGROUND"].tex, 1, 1);
 	textures["bush1Tex"            ]             =    Texture(images["IMAGE_BUSH1"].width, images["IMAGE_BUSH1"].height, images["IMAGE_BUSH1"].tex, 1, 0);

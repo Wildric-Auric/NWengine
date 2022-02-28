@@ -206,7 +206,7 @@ void UpdateInferface() {
 	}
 	
 	ImGui::ShowDemoWindow(); 
-	static ImGuiIO& io = ImGui::GetIO(); (void)io; //TODO::Fix this
+	static ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::End();
 
 	if (ImGui::BeginMainMenuBar())
