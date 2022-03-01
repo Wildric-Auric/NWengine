@@ -15,7 +15,7 @@ Each object you would need to draw in the game is loaded initially and stored in
 GameObjectClone is an object which can be seen as GameObject but which characteristics can be changed, meanwhile GameObjects attributes are constants and are basis to defone GameObjectClone objects. Let's say for example you have mapped your texture in a GameObject **a** and that you gave it the size of *100px* by *100px*.
 Creating two GameObjectClone **b** and **c** will allow you to do such manipulation.
 
-###Post processing
+### Post processing
 After drawing all instances of ```GameObjectClone```, ```glReadPixels``` is final image is rendered in one big quad. This allows the game to be scalable, allows the implementation of post processing and passing capture to scene GUI.
 ```c++
 b = GameObjectClone(&a);
@@ -109,5 +109,5 @@ You can download dependencies folder [here](https://drive.google.com/drive/folde
 ![gui](https://user-images.githubusercontent.com/70033490/152257615-c879b64f-734e-4ea7-8200-a0af8afdfba9.png)
 
 
-##IMPORTANT TODO
+## Important Todo
 -Fix mouse coordinate hovering over scene; tilemap system depends on that
