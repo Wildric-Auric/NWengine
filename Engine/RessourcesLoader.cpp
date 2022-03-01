@@ -10,7 +10,6 @@
 #include "RessourcesLoader.h"
 
 
-
 std::map<int, GameObject*> allObjects;
 
 std::map<std::string, GameObject> objects;
@@ -93,7 +92,7 @@ void LoadRessources() {
 					}
 
 					else if (state[state.size() - 2] == "Shaders")
-						shaders[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = Shader(args[0].c_str());
+						shaders[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = Shader(args[0].c_str(), state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2));
 
 					else if (state[state.size() - 2] == "GameObjects")
 						objects[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = GameObject(&textures[args[0]], iVec2(0, 0), fVec2(1, 1),
@@ -112,11 +111,7 @@ void LoadRessources() {
 
 };
 
-void Save() {
-	;
-}
- 
-			  
+
 
 void FreeBuffer(unsigned char* buffer) {
 	stbi_image_free(buffer);

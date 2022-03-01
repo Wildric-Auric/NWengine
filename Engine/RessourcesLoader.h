@@ -18,6 +18,7 @@ extern unsigned char* behindPixels;
 extern std::map<int, GameObject*> allObjects;
 extern std::map<std::string, GameObject> objects;
 extern std::map<std::string, Texture> textures;
+extern std::map<std::string, Image> images;
 extern std::map<std::string, Shader> shaders;
 
 void FreeBuffer(unsigned char* buffer);
