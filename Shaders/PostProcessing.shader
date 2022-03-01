@@ -59,8 +59,8 @@ void main() {
     vec4 col = texture(uTex0, uv);
     if (floatPart.x > depth || floatPart.y > depth) col = mix(vec4(0.0,0.0,0.0,1.0), col, strength);
     //Smoothstep light test
-    vec3 test = circle(uv, vec2(0.5, 0.5), 0.35, 0.25);
-    col.xyz *= test;
+    //vec3 test = circle(uv, vec2(0.5, 0.5), 0.35, 0.25);
+    //col.xyz *= test;
     //----
     FragColor = col;
 
