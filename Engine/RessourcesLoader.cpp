@@ -5,24 +5,22 @@
 
 #include "stb/stb_image.h"
 #include <string>
+#include <fstream>
+#include <vector>
 #include "RessourcesLoader.h"
+
 
 
 std::map<int, GameObject*> allObjects;
 
 std::map<std::string, GameObject> objects;
-std::map<const char*, Image> images;
-std::map<const char*, Texture> textures;
-std::map<const char*, Shader> shaders;
+std::map<std::string, Image> images;
+std::map<std::string, Texture> textures;
+std::map<std::string, Shader> shaders;
 
 unsigned char* behindPixels        =    new unsigned char[4*ORIGINAL_WIDTH*ORIGINAL_HEIGHT];
 
-const char* path                   =    "Ressources/Images/img2.png";
 
-
-
-Image* IMAGES_WARRIOR_IDLE_ARRAY[6];
-Image* IMAGES_WARRIOR_RUN_ARRAY[8];     //TODO::Change this temporary solution
 
 
 Image::Image(const char* path, bool alpha) {
@@ -31,104 +29,94 @@ Image::Image(const char* path, bool alpha) {
 	tex                               =    stbi_load(path,&width,&height,&channels,3+alpha);
 };
 
-void LoadImages() {
-	images["IMAGE_APPLE"]			            =    Image(path,true);
-	images["IMAGE_WARRIOR_IDLE_1"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png",true);
-	images["IMAGE_WARRIOR_IDLE_2"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_2.png",1);
-	images["IMAGE_WARRIOR_IDLE_3"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_3.png",1);
-	images["IMAGE_WARRIOR_IDLE_4"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_4.png",1);
-	images["IMAGE_WARRIOR_IDLE_5"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_5.png",1);
-	images["IMAGE_WARRIOR_IDLE_6"]	            =    Image("Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_6.png",1);
-	images["IMAGE_BACKGROUND"]				    =    Image("Ressources/Images/Forrest_Tileset/BG/NonParallax.png",1);
-	images["IMAGE_TREE1"]					    =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png",1);
-	images["IMAGE_TREE2"]					    =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png",1);
-	images["IMAGE_BUSH1"]					    =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png",1);
-	images["IMAGE_BUSH2"]			            =    Image("Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png",1);
-	images["IMAGE_GROUND"]			            =    Image("Ressources/Images/ground.png",1);
-	images["IMAGE_TILE1"]			            =    Image("Ressources/Images/Interior Wall.png",1);
-    images["IMAGE_GROUND_TILE0"]		        =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_0.png", 1);
-	images["IMAGE_GROUND_TILE1"]	            =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_6.png", 1);
-	images["IMAGE_GROUND_TILE2"]	            =    Image("Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_12.png", 1);
-	images["IMAGE_WARRIOR_RUN_1"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_1.png");
-	images["IMAGE_WARRIOR_RUN_2"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_2.png");
-	images["IMAGE_WARRIOR_RUN_3"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_3.png");
-	images["IMAGE_WARRIOR_RUN_4"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_4.png");
-	images["IMAGE_WARRIOR_RUN_5"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_5.png");
-	images["IMAGE_WARRIOR_RUN_6"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_6.png");
-	images["IMAGE_WARRIOR_RUN_7"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_7.png");
-	images["IMAGE_WARRIOR_RUN_8"]               =    Image("Ressources/Images/Warrior/Individual Sprite/Run/Warrior_Run_8.png");
-	
-		
+void LoadRessources() {
+	std::ifstream file("Engine Data/Ressources Data/data.txt");
+	textures["grabTex"] = Texture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels);
+	if (file) {
+		std::vector<std::string> state;
+		/*
 
-	IMAGES_WARRIOR_IDLE_ARRAY[0] = &images["IMAGE_WARRIOR_IDLE_1"];
-	IMAGES_WARRIOR_IDLE_ARRAY[1] = &images["IMAGE_WARRIOR_IDLE_2"];
-	IMAGES_WARRIOR_IDLE_ARRAY[2] = &images["IMAGE_WARRIOR_IDLE_3"];
-	IMAGES_WARRIOR_IDLE_ARRAY[3] = &images["IMAGE_WARRIOR_IDLE_4"];
-	IMAGES_WARRIOR_IDLE_ARRAY[4] = &images["IMAGE_WARRIOR_IDLE_5"];
-	IMAGES_WARRIOR_IDLE_ARRAY[5] = &images["IMAGE_WARRIOR_IDLE_6"];
+		*/
+		for (std::string line; std::getline(file, line);) {
+			std::string key = "";
+			bool keyPassed = false;
+			for (int i = 0; i <= line.size(); i++) {
 
-	IMAGES_WARRIOR_RUN_ARRAY[0]  = &images["IMAGE_WARRIOR_RUN_1"];
-	IMAGES_WARRIOR_RUN_ARRAY[1] = &images["IMAGE_WARRIOR_RUN_2"];
-	IMAGES_WARRIOR_RUN_ARRAY[2] = &images["IMAGE_WARRIOR_RUN_3"];
-	IMAGES_WARRIOR_RUN_ARRAY[3] = &images["IMAGE_WARRIOR_RUN_4"];
-	IMAGES_WARRIOR_RUN_ARRAY[4] = &images["IMAGE_WARRIOR_RUN_5"];
-	IMAGES_WARRIOR_RUN_ARRAY[5] = &images["IMAGE_WARRIOR_RUN_6"];
-	IMAGES_WARRIOR_RUN_ARRAY[6] = &images["IMAGE_WARRIOR_RUN_7"];
-	IMAGES_WARRIOR_RUN_ARRAY[7] = &images["IMAGE_WARRIOR_RUN_8"];
+				char currentChar = line[i];
+
+				//Getting key and setting state
+				if (i == line.size()) {
+					if (key == "end") {
+						state.pop_back();
+						continue;
+					}
+				}
+				if (currentChar == ' ' || currentChar == '\t') continue;
+
+				if (currentChar == ':') {
+					keyPassed = true;
+					state.push_back(key);
+					key = "";
+					continue;
+				}
+
+				key += currentChar;
+				if (!keyPassed) continue;
+
+				//Dealing with values if any
+				if (currentChar == '{') {
+					key = "";
+					std::string arg = "";
+					std::vector<std::string> args;
+					i += 1;
+					//parsing arguments
+					int argNum = 0;
+					while (1) {
+						currentChar = line[i];
+						i += 1;
+						if (currentChar == ',' || currentChar == '}') {
+							args.push_back(arg);
+							arg = "";
+							if (currentChar == '}') break;
+							continue;
+						}
+						arg += currentChar;
+					}
 
 
 
+					if (state[state.size() - 2] == "Images")
+						images[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = Image(args[0].c_str(), stoi(args[1]));
+
+					else if (state[state.size() - 2] == "Textures") {
+						textures[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = Texture(images[args[0]].width, images[args[0]].height, images[args[0]].tex, stoi(args[1]), stoi(args[2]));
+					}
+
+					else if (state[state.size() - 2] == "Shaders")
+						shaders[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = Shader(args[0].c_str());
+
+					else if (state[state.size() - 2] == "GameObjects")
+						objects[state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2)] = GameObject(&textures[args[0]], iVec2(0, 0), fVec2(1, 1),
+							state[state.size() - 1].substr(1, state[state.size() - 1].size() - 2), &shaders[args[1]]);
+
+
+					state.pop_back();
+					if (i >= line.size()) break;
+				}
+			}
+		}
+	}
+
+	shaders["shader_postProcessing"] = Shader("Shaders/PostProcessing.shader");
+	objects["postProcessing"] = GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "postProcessing", &shaders["shader_postProcessing"]);
 
 };
 
-void LoadTextures() {
-	textures["tex"]                              =    Texture(images["IMAGE_APPLE"].width, images["IMAGE_APPLE"].height, images["IMAGE_APPLE"].tex, 1, 0);
-	textures["grabTex"             ]             =    Texture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels);
-	textures["warriorTex"          ]             =    Texture(images["IMAGE_WARRIOR_IDLE_1"].width, images["IMAGE_WARRIOR_IDLE_1"].height, images["IMAGE_WARRIOR_IDLE_1"].tex, 1, 0);
-	textures["backgroundTex"       ]             =    Texture(images["IMAGE_BACKGROUND"].width, images["IMAGE_BACKGROUND"].height, images["IMAGE_BACKGROUND"].tex, 1, 1);
-	textures["bush1Tex"            ]             =    Texture(images["IMAGE_BUSH1"].width, images["IMAGE_BUSH1"].height, images["IMAGE_BUSH1"].tex, 1, 0);
-	textures["bush2Tex"            ]             =    Texture(images["IMAGE_BUSH2"].width, images["IMAGE_BUSH2"].height, images["IMAGE_BUSH2"].tex, 1, 0);
-	textures["tree1Tex"            ]             =    Texture(images["IMAGE_TREE1"].width, images["IMAGE_TREE1"].height, images["IMAGE_TREE1"].tex, 1, 0);
-	textures["tree2Tex"            ]             =    Texture(images["IMAGE_TREE2"].width, images["IMAGE_TREE2"].height, images["IMAGE_TREE2"].tex, 1, 0);
-	textures["groundTex"           ]             =    Texture(images["IMAGE_GROUND"].width, images["IMAGE_GROUND"].height, images["IMAGE_GROUND"].tex, 1, 1);
-	textures["tile1Tex"]					     =    Texture(images["IMAGE_TILE1"].width, images["IMAGE_TILE1"].height, images["IMAGE_TILE1"].tex, 1, 1);
-	textures["texture_groundTile0"]              =    Texture(images["IMAGE_GROUND_TILE0"].width, images["IMAGE_GROUND_TILE0"].height, images["IMAGE_GROUND_TILE0"].tex, 1, 1);
-	textures["texture_groundTile1"]              =    Texture(images["IMAGE_GROUND_TILE1"].width, images["IMAGE_GROUND_TILE1"].height, images["IMAGE_GROUND_TILE1"].tex, 1, 1);
-	textures["texture_groundTile2"]              =    Texture(images["IMAGE_GROUND_TILE2"].width, images["IMAGE_GROUND_TILE2"].height, images["IMAGE_GROUND_TILE2"].tex, 1, 1);
-
-};
-void LoadShaders() {
-
-	shaders["shader_default"]                   =    Shader("Shaders/Shader1.shader");
-	shaders["shader_lightSurface"]              =    Shader("Shaders/LightSurface.shader");
-	shaders["shader_grabPass"]                  =    Shader("Shaders/GrabPass.shader");
-	shaders["shader_postProcessing"]            =    Shader("Shaders/PostProcessing.shader");
-	shaders["shader_simple"]                    =    Shader("Shaders/Line.shader");
-	shaders["shader_simple1"]                   =    Shader("Shaders/Line.shader");
-	shaders["shader_text"]                      =    Shader("Shaders/Text.shader");
-
-
-};
-
-void LoadGameObjects() {
-	
-	objects["lesbeanApple"]		         =    GameObject(&textures["tex"], Vector2<int>(0, 0), Vector2<float>(0.5f, 0.5f), "lesbeanApple",&shaders["shader_default"]);					//Quad(Vector2<int>(0 ,0 ), 300.0F, 300.0F);
-	objects["lesbeanApple2"]	         =    GameObject(&textures["tex"], Vector2<int>(200, 100), Vector2<float>(-.5f, .5f), "lesbeanApple2",&shaders["shader_default"]);
-	objects["grabPass"]			         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "grabPass",&shaders["shader_grabPass"]);
-	objects["lightSurface"]		         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "lightSurface",&shaders["shader_lightSurface"]);
-	objects["postProcessing"]	         =    GameObject(&textures["grabTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "postProcessing",&shaders["shader_postProcessing"]);
-	objects["warrior"]					 =    GameObject(&textures["warriorTex"], Vector2<int>(0, -12), Vector2<float>(1.0f, 1.0f), "warrior");
-
-	objects["background"]				=    GameObject(&textures["backgroundTex"], Vector2<int>(-337, 130), Vector2<float>(1.0f, 1.0f), "background");
-
-
-	objects["ground"]				 =	  GameObject(&textures["groundTex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "ground");
-	objects["wallTile0"]	         =    GameObject(&textures["tile1Tex"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "wallTile0", &shaders["shader_default"]);
-	objects["groundTile0"]	         =    GameObject(&textures["texture_groundTile0"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile0");
-	objects["groundTile1"]	         =    GameObject(&textures["texture_groundTile1"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile1");
-	objects["groundTile2"]	         =    GameObject(&textures["texture_groundTile2"], Vector2<int>(0, 0), Vector2<float>(1.0f, 1.0f), "groundTile2");
-
-};					  
+void Save() {
+	;
+}
+ 
+			  
 
 void FreeBuffer(unsigned char* buffer) {
 	stbi_image_free(buffer);

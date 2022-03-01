@@ -17,15 +17,8 @@ extern unsigned char* behindPixels;
 
 extern std::map<int, GameObject*> allObjects;
 extern std::map<std::string, GameObject> objects;
-extern std::map<const char*, Texture> textures;
-extern std::map<const char*, Shader> shaders;
+extern std::map<std::string, Texture> textures;
+extern std::map<std::string, Shader> shaders;
 
 void FreeBuffer(unsigned char* buffer);
-void LoadImages();
-void LoadShaders();
-void LoadTextures();
-void LoadGameObjects();
-
-
-extern Image* IMAGES_WARRIOR_IDLE_ARRAY[6];
-extern Image* IMAGES_WARRIOR_RUN_ARRAY[8];
+void LoadRessources();

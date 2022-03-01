@@ -42,10 +42,7 @@ int main()
 	alSourcePlay(source);
 
 	//Load ressources
-	LoadImages();
-	LoadTextures();
-	LoadShaders();
-	LoadGameObjects();
+	LoadRessources();
 
 
 
@@ -134,12 +131,6 @@ int main()
 
 		//ground->Draw(0);
 
-		if (pl.isRunning == 0) {
-			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_IDLE_ARRAY[((int)currentSprite) % 6]->tex, 0, 1);
-		}
-		else {
-			textures["warriorTex"].UpdateTexture(textures["warriorTex"].size.x, textures["warriorTex"].size.y, IMAGES_WARRIOR_RUN_ARRAY[((int)currentSprite) % 8]->tex, 0, 1);
-		}
 
 
 		d1 = playerCol.GetPosition().y;
