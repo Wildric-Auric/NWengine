@@ -1,7 +1,7 @@
 GameObjectClones:
 "Warrior":
 OriginalGameObject:{warrior}
-Position:{89,-10}
+Position:{107,-10}
 Scale:{1,1}
 Collider:
 end
@@ -10,5 +10,15 @@ end
 OriginalGameObject:{background}
 Position:{-125,124}
 Scale:{2,2}
+end
+"None":
+OriginalGameObject:{background}
+Position:{35,124}
+Scale:{2,1}
+end
+"None":
+OriginalGameObject:{wallTile0}
+Position:{0,0}
+Scale:{1,1}
 end
 end

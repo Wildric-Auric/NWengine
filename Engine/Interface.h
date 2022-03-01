@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "RessourcesLoader.h"
 #include "Utilities.h"
+#include "Texture.h"
 #include <tuple>
 
 
@@ -67,13 +68,25 @@ void SceneViewGui() {
 
 void HierarchyGui() {
 	if (hierarchyActive) {
+
 		ImGui::Begin("Hierarchy", &hierarchyActive, ImGuiWindowFlags_MenuBar);
+
+		ImGui::OpenPopupOnItemClick("create", ImGuiPopupFlags_MouseButtonRight);
+		if (ImGui::BeginPopupContextWindow("create")) {
+			if (ImGui::Selectable("new GameObjectClone")) {
+				Scene::currentScene->sceneObjs.push_back(GameObjectClone(&objects["wallTile0"]));
+			}
+			ImGui::EndPopup();
+		}
+
 		int8 i = 0;
 		for (auto it = Scene::currentScene->sceneObjs.begin(); it < Scene::currentScene->sceneObjs.end(); it++) {
 			if (ImGui::Selectable(it->name, selected == i))
 				selected = i;
 			i++;
 		}
+
+
 		ImGui::End();
 	}
 	else selected = -1;
@@ -83,11 +96,49 @@ void InspectorGui() {
 	if (inspectorActive) {
 		ImGui::Begin("Inspector", &inspectorActive, ImGuiWindowFlags_MenuBar);
 		if (selected >= 0 && selected < Scene::currentScene->sceneObjs.size()) {
-			ImGui::LabelText(Scene::currentScene->sceneObjs[selected].name, "");
+			ImGui::Text(Scene::currentScene->sceneObjs[selected].name,"test");
 			ImGui::DragInt2("position", &Scene::currentScene->sceneObjs[selected].position.x);
 			ImGui::DragFloat2("Scale", &Scene::currentScene->sceneObjs[selected].scale.x);
 
+			std::vector<std::string> vec;
+			static std::string currentItem = "d";
+
+			if (ImGui::BeginCombo("GameObject", (Scene::currentScene->sceneObjs[selected].originalGameObject->name).c_str())) {
+				for (auto it = objects.begin(); it != objects.end(); it++) {
+					if (ImGui::Selectable(it->first.c_str()))
+						Scene::currentScene->sceneObjs[selected].originalGameObject = &it->second;
+				}
+				ImGui::EndCombo();
+
+
+			}
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
+					std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
+					images["1"] = Image(resPath.c_str(), 1);
+					textures["1"] = Texture(images["1"].width, images["1"].height, images["1"].tex, 1, 0);
+					objects["test"] = GameObject(&textures["1"]);
+				}
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::NewLine();
+			ImGui::NewLine();
+			ImGui::Text(Scene::currentScene->sceneObjs[selected].originalGameObject->name.c_str(), "");
+
+
+			if (ImGui::BeginCombo("GameObject Shader", (Scene::currentScene->sceneObjs[selected].originalGameObject->shader->name).c_str())) {
+				for (auto it = shaders.begin(); it != shaders.end(); it++) {
+					if (ImGui::Selectable(it->first.c_str()))
+						Scene::currentScene->sceneObjs[selected].originalGameObject->shader = &it->second;
+				}
+				ImGui::EndCombo();
+			}
+
+
 		}
+
+
 		ImGui::End();
 	}
 }
@@ -100,7 +151,7 @@ static std::vector<int> accumulation;
 //TODO:: Add refresh button; hint: button triggering "first" variable
 //TODO:: Fix folder with dot considered 
 
-static void func(int i) {
+static void func(int i, std::string currentPath) {
 	static int selected = 0;
 
 	std::string type;
@@ -117,7 +168,7 @@ static void func(int i) {
 			int count = i;
 			for (int j = 0; j < childNum; j++) {
 				count += 1;
-				func(count);
+				func(count, currentPath + std::get<0>(explorerData[i]) + "/");
 				count += accumulation[count];
 			}
 			ImGui::TreePop();
@@ -126,10 +177,8 @@ static void func(int i) {
 	}
 	else {
 		ImGui::Selectable(std::get<0>(explorerData[i]).c_str());
-
 		if (ImGui::BeginDragDropSource()) {
-			std::cout << strlen(std::get<0>(explorerData[i]).c_str()) << std::endl;
-			ImGui::SetDragDropPayload("0", std::get<0>(explorerData[i]).c_str(), strlen(std::get<0>(explorerData[i]).c_str()));
+			ImGui::SetDragDropPayload("DAD ressource0", (currentPath + std::get<0>(explorerData[i])).c_str(), sizeof(char)* (currentPath + std::get<0>(explorerData[i])).length());
 			ImGui::Text(std::get<0>(explorerData[i]).c_str());
 			ImGui::EndDragDropSource();
 		}
@@ -158,7 +207,7 @@ void SolutionExplorerGui() {
 				temp.push_back(num);
 				accumulation.push_back(-1);
 			}
-			auto a = std::make_tuple("Debug", GetDirFiles("C:/Users/HP/Desktop/NWengine/Ressources").size());
+			auto a = std::make_tuple("Ressources", GetDirFiles("C:/Users/HP/Desktop/NWengine/Ressources").size());
 			explorerData.insert(explorerData.begin(), a);
 			temp.insert(temp.begin(), GetDirFiles("C:/Users/HP/Desktop/NWengine/Ressources").size());
 			accumulation.push_back(-1);
@@ -172,7 +221,7 @@ void SolutionExplorerGui() {
 			ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed);
 			ImGui::TableHeadersRow();
-			func(0);
+			func(0, "");
 			ImGui::EndTable();
 		}
 		ImGui::End();
@@ -195,16 +244,6 @@ void UpdateInferface() {
 	ImGui::DragFloat("jump height", &jumpHeight);
 	*/
 	ImGui::DragFloat("Post processing cells", &uniformTest);
-	char buffer[500];
-	std::string data = "hello";
-	ImGui::InputText("E", buffer, 20);
-	if (ImGui::BeginDragDropTarget()) {
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("0")) {
-			 std::cout<<  (const char*)payload->Data<< std::endl;
-		}
-		ImGui::EndDragDropTarget();
-	}
-	
 	ImGui::ShowDemoWindow(); 
 	static ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::End();
