@@ -37,8 +37,9 @@ GameObject::GameObject(Texture* texture, Vector2<int> position, Vector2<float> s
 	this->position = position;
 	this->scale = scale;
 	this->texture = texture;
-	//this->id = numberOfGameObjects;
 	this->name = ref;
+	//this->id = numberOfGameObjects;
+	//TODO::Find a way to implement universal unique id
 
 
 	numberOfGameObjects += 1;
