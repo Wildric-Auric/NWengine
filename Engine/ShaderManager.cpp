@@ -28,7 +28,8 @@ std::pair<const char*, const char*> parseShader(const char* path)
 	return std::make_pair(_strdup(&vert[0]), _strdup(&frag[0]));
 }
 
-Shader::Shader(const char* path) {
+Shader::Shader(const char* path, std::string name) {
+	this->name = name;
 	std::pair<const char*, const char*> shaderSrc = parseShader(path);
 
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
