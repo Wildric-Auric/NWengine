@@ -80,22 +80,22 @@ void TileMap::SetUpTiles() {
 	else std::cout <<("Maps/" + (std::string)name + std::string(".txt"));
 }
 
-//TODO::Working tilling system
+//TODO::Working tilling system; cellsize should change with resizing
 extern int  p1;
 extern int p2;
 void TileMap::Update() {
 
 	if (GuiActive) {
 		m_canTile -= deltaTime;
-		signed char a = cellSize.x / 2 ;
-		signed char b = cellSize.y / 2 ;
+		auto Testcellsize = Vector2<int>(cellSize.x * RENDERING_WIDTH / ORIGINAL_WIDTH, cellSize.y * RENDERING_HEIGHT /ORIGINAL_HEIGHT);
+		signed char a = Testcellsize.x / 2 ; 
+		signed char b = Testcellsize.y / 2 ;
 		if (m_canTile < 0 && isMouseOnGui) {
-
-			int X = camera.position.x + mousePosX - p1 - RENDERING_WIDTH /2;
-			int Y = camera.position.y + mousePosY - WINDOW_HEIGHT + p2 + RENDERING_HEIGHT/2;		//Suffering...
+			int X = (camera.position.x + mousePosX - p1 - RENDERING_WIDTH / 2);
+			int Y = (camera.position.y + mousePosY - WINDOW_HEIGHT + p2 + RENDERING_HEIGHT / 2);	//Suffering...
 			if (input_left_click) {
 				bool bo = false;
-				Vector2<int> pos = Vector2<int>((X / cellSize.x - (X < 0)) * cellSize.x + a, (Y / cellSize.y - (Y < 0)) * cellSize.y + b);
+				Vector2<int> pos = Vector2<int>((X / Testcellsize.x - (X < 0)) * Testcellsize.x + a, (Y / Testcellsize.y - (Y < 0)) * Testcellsize.y + b);
 				for (auto it = tiles.begin(); it != tiles.end(); it++) {
 					if (it->position == pos) {
 						bo = true;
