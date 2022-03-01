@@ -105,3 +105,5 @@ groundTile2 112 592 1 1
 groundTile2 144 624 1 1
 groundTile2 144 656 1 1
 groundTile2 208 -400 1 1
+groundTile0 80 368 1 1
+groundTile0 80 336 1 1
