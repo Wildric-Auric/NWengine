@@ -1,7 +1,7 @@
 #include "NWengine.h"
 #include "FrameBuffer.h"
 //Include game scripts
-#include "Scripts/player.h"
+//#include "Scripts/player.h"
 
 //Variables
 double fps = 60;
@@ -86,9 +86,9 @@ int main()
 	scene0.LoadScene();
 
 
-	Collider playerCol = Collider(&scene0.sceneObjs[0]);
-	player pl = player(&scene0.sceneObjs[0]);
-	
+	//Collider playerCol = Collider(&scene0.sceneObjs[0]);
+	//player pl = player(&scene0.sceneObjs[0]);
+	//
 
 	
 	double currentSprite = 0.0;
@@ -120,7 +120,7 @@ int main()
 
 		camera.Update();
 		tmt.Update();
-		pl.Update();
+	/*	pl.Update();*/
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
@@ -135,9 +135,11 @@ int main()
 
 		//ground->Draw(0);
 
+		//Update Scripts
 
-
-		d1 = playerCol.GetPosition().y;
+		for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
+			it->second.script->Update();
+		}
 
 
 		glReadPixels(-camera.position.x, -camera.position.y, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);

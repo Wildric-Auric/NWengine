@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include<vector>
+
 class Scene {
 public:
 	const char* name;

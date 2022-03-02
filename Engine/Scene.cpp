@@ -7,6 +7,9 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
 #include <iostream>
+#include "Scripts/player.h"
+
+
 static GameObjectClone currentObj;
 
 Scene::Scene(const char* name) {
@@ -33,6 +36,7 @@ void Scene::LoadScene() {
 		*/
 
 		bool hasCollider = false;
+		bool hasScript = false;
 		for (std::string line; std::getline(file, line);) {
 			std::string key = "";
 			bool keyPassed = false;
@@ -61,7 +65,8 @@ void Scene::LoadScene() {
 					if (key == "Collider")
 						hasCollider = true;
 
-
+					if (key == "Script")
+						hasScript = true;
 					key = "";
 					continue;
 
@@ -84,6 +89,7 @@ void Scene::LoadScene() {
 							if (state[state.size() - 1] == "OriginalGameObject")
 								sceneObjs[sceneObjs.size() - 1] = GameObjectClone(&objects[arg], state[state.size() - 2].substr(1, state[state.size() - 2].size()-2).c_str());
 							if (hasCollider) sceneObjs[sceneObjs.size() - 1].AddComponent<Collider>();
+							if (hasScript) sceneObjs[sceneObjs.size() - 1].AddComponent<Script>();
 
 							if (state[state.size() - 2].find('"') != -1) {
 
@@ -98,7 +104,7 @@ void Scene::LoadScene() {
 								}
 
 							}
-
+							//Game Components settings
 							else if (state[state.size() - 2] == "Collider") {
 								if (state[state.size() - 1] == "Position")
 									continue;//MODIFY POSITION
@@ -106,6 +112,10 @@ void Scene::LoadScene() {
 								else if (state[state.size() - 1] == "Scale")
 									continue;
 							}
+
+						     if (state[state.size() - 1] == "Script") {
+								sceneObjs[sceneObjs.size() - 1].GetComponent<Script>()->script = new player(&sceneObjs[sceneObjs.size() - 1]);
+							 }
 							arg = "";
 							if (currentChar == '}') break;
 							continue;
@@ -142,6 +152,9 @@ void Scene::Save() {
 			data << "Collider:\n"
 				 << "end\n";
 		};
+		if (it->GetComponent<Script>() != nullptr) {
+			data << "Script:{}\n";
+		}
 		data <<"end\n";
 
 	}

@@ -63,6 +63,9 @@ Collider::Collider(GameObjectClone* attachedObj, Vector2<int> offset, Vector2<in
 };
 
 std::map<GameObjectClone*, Collider> Collider::componentList;
+std::map<GameObjectClone*, Script> Script::componentList;
+
+
 void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize;
 	size = &manualSize;
@@ -102,3 +105,10 @@ void GameObjectClone::BasicDraw(int8 slot) {
 	originalGameObject->shader->SetVector2("uResolution", static_cast<float>(ORIGINAL_WIDTH), static_cast<float>(ORIGINAL_HEIGHT));
 	originalGameObject->container.Draw();
 }
+
+
+Script::Script(GameObjectClone* attachedObj) {
+	this->attachedObj = attachedObj;
+}
+
+
