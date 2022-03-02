@@ -1,4 +1,5 @@
 #include "NWengine.h"
+#include "FrameBuffer.h"
 //Include game scripts
 #include "Scripts/player.h"
 
@@ -41,6 +42,9 @@ int main()
 	alSourcei(source, AL_LOOPING, 1);
 	alSourcePlay(source);
 
+
+	//init frame buffer
+	FrameBuffer fbo = FrameBuffer();
 	//Load ressources
 	LoadRessources();
 
@@ -140,26 +144,25 @@ int main()
 		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1);
 		objects["grabPass"].Draw(1);
 		postProcessing.position = camera.position;
+
 		glReadPixels(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1);
+
 		glClearColor(0.0, 0.0, 0.01, 1.0); // 0.6f, .8f, .8f, 1.0f
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		fbo.Bind();
 		glUseProgram(postProcessing.originalGameObject->shader->shaderProgram);
 		postProcessing.originalGameObject->texture->Bind(1);
 		postProcessing.originalGameObject->shader->SetUniform1i("uTex0", 1);
 		postProcessing.originalGameObject->shader->SetUniform1f("uCells", uniformTest);
 		postProcessing.BasicDraw(1);
-		glReadPixels(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
-		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1); //WARINING::Temporary solution
+		fbo.Unbind();
+	
+	
 
-		//float offsetX = (WINDOW_WIDTH - RENDERING_WIDTH)*0.5f;  // Don't need offset since I render on quad
-		//float offsetY = (WINDOW_HEIGHT - RENDERING_HEIGHT)*0.5f;
-		glViewport(0,0,RENDERING_WIDTH, RENDERING_HEIGHT);
+		
 
-		//objects["lightSurface"].Draw(1);
-
-		glViewport(0, 0, ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
 
 
 		glClear(GL_COLOR_BUFFER_BIT);

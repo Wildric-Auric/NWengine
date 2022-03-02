@@ -175,7 +175,6 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
-    <ClCompile Include="Engine\Interface.cpp" />
     <ClCompile Include="Engine\Physics.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Game.cpp">
@@ -184,7 +183,6 @@
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Globals.cpp" />
     <ClCompile Include="Engine\Inputs.cpp" />
-    <ClCompile Include="Engine\Maths.cpp" />
     <ClCompile Include="Engine\Primitives.cpp" />
     <ClCompile Include="Engine\RessourcesLoader.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
@@ -882,6 +880,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio.h" />
+    <ClInclude Include="Engine\FrameBuffer.h" />
     <ClInclude Include="Engine\Interface.h" />
     <ClInclude Include="Engine\NWengine.h" />
     <ClInclude Include="Engine\Physics.h" />

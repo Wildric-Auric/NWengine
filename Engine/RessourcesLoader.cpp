@@ -8,6 +8,7 @@
 #include <fstream>
 #include <vector>
 #include "RessourcesLoader.h"
+#include "FrameBuffer.h"
 
 
 std::map<int, GameObject*> allObjects;
@@ -30,7 +31,7 @@ Image::Image(const char* path, bool alpha) {
 
 void LoadRessources() {
 	std::ifstream file("Engine Data/Ressources Data/data.txt");
-	textures["grabTex"] = Texture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels);
+	//textures["grabTex"] = Texture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels);
 	if (file) {
 		std::vector<std::string> state;
 		/*
