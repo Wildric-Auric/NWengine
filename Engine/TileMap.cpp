@@ -81,8 +81,8 @@ void TileMap::SetUpTiles() {
 }
 
 //TODO::Working tilling system; cellsize should change with resizing
-extern int  p1;
-extern int p2;
+ int  p1 = 0;
+ int  p2 = 0;
 void TileMap::Update() {
 
 	if (GuiActive) {
