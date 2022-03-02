@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Interface.h"
 #include <GL/glew.h>
 #include <glfw3.h>
 #include "imgui/imgui_impl_glfw.h"
@@ -23,7 +22,7 @@ static bool inspectorActive = true;
 static bool solutionExplorerActive = true;
 static int8 selected = -1; //for hiearchy
 
-void InitInterface(int window) {
+inline void InitInterface(int window) {
 	//Create ImGui context
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
@@ -37,10 +36,8 @@ void InitInterface(int window) {
 }
 
 
-int p1;
-int p2;
 
-void SceneViewGui() {
+inline void SceneViewGui() {
 	if (sceneViewActive) {
 		ImGui::Begin("Scene", 0, ImGuiWindowFlags_MenuBar);
 		ImGui::Image((void*)(intptr_t)
@@ -50,8 +47,6 @@ void SceneViewGui() {
 		RENDERING_HEIGHT = temp.y;
 		RENDERING_WIDTH = (int)(temp.y * SCREENRATIO);
 
-		p1 = ImGui::GetWindowPos().x;
-		p2 = ImGui::GetWindowPos().y + 55;
 		isMouseOnGui = ImGui::IsWindowHovered();
 		if (ImGui::BeginMenuBar())
 		{
@@ -66,7 +61,7 @@ void SceneViewGui() {
 	}
 }
 
-void HierarchyGui() {
+inline void HierarchyGui() {
 	if (hierarchyActive) {
 
 		ImGui::Begin("Hierarchy", &hierarchyActive, ImGuiWindowFlags_MenuBar);
@@ -92,7 +87,7 @@ void HierarchyGui() {
 	else selected = -1;
 }
 
-void InspectorGui() {
+inline void InspectorGui() {
 	if (inspectorActive) {
 		ImGui::Begin("Inspector", &inspectorActive, ImGuiWindowFlags_MenuBar);
 		if (selected >= 0 && selected < Scene::currentScene->sceneObjs.size()) {
@@ -151,7 +146,7 @@ static std::vector<int> accumulation;
 //TODO:: Add refresh button; hint: button triggering "first" variable
 //TODO:: Fix folder with dot considered 
 
-static void func(int i, std::string currentPath) {
+inline static void func(int i, std::string currentPath) {
 	static int selected = 0;
 
 	std::string type;
@@ -188,7 +183,7 @@ static void func(int i, std::string currentPath) {
 	}
 }
 
-void SolutionExplorerGui() {
+inline void SolutionExplorerGui() {
 	if (solutionExplorerActive) {
 		ImGui::Begin("Solution Explorer", &solutionExplorerActive, ImGuiWindowFlags_MenuBar);
 
@@ -234,7 +229,7 @@ void SolutionExplorerGui() {
 //extern float jumpHeight;
 //extern float jumpTime;
 extern float uniformTest;
-void UpdateInferface() {
+inline void UpdateInferface() {
 	ImGui::DockSpaceOverViewport();
 
 	ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);

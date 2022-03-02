@@ -8,7 +8,7 @@
 
 
 
-bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
+inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
 	uint8_t overlap = 0;
 	int minX1 = collider1->GetPosition().x + offset1.x -  collider1->size->x / 2;
 	int maxX1 = collider1->GetPosition().x + offset1.x +  collider1->size->x/2;
@@ -49,7 +49,7 @@ void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 * like this and think it won't affect too much engine performance.
 */
 
-std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
+inline std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
@@ -78,7 +78,7 @@ std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
 }
 //DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
 //C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
-std::vector<std::string> GetDirFiles(const std::string& directory)
+inline std::vector<std::string> GetDirFiles(const std::string& directory)
 {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -102,7 +102,7 @@ std::vector<std::string> GetDirFiles(const std::string& directory)
 	return dirList;
 }
 
-std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
+inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
@@ -131,7 +131,7 @@ std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
 
 }
 
-int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) {
+inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) {
 	int count = 0;
 	int children = (*a)[index];
 	count += children;
@@ -146,13 +146,13 @@ int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) 
 	return count;
 }
 
-std::string GetCurrentDir() {
+inline std::string GetCurrentDir() {
 	char dir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, dir);
 	return std::string(dir);
 }
 
-std::string GetExePath() {
+inline std::string GetExePath() {
 	char path[MAX_PATH];
 	GetModuleFileName(NULL,path, MAX_PATH);
 	return std::string(path);
