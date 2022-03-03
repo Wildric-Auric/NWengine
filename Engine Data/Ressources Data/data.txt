@@ -21,7 +21,7 @@ end
 Textures:
 	"tex":{IMAGE_APPLE,1,0}
 	"warriorTex":{IMAGE_WARRIOR_IDLE_1,1,0}
-	"backgroundTex":{IMAGE_BACKGROUND,1,0}
+	"backgroundTex":{IMAGE_BACKGROUND,1,1}
 	"bush1Tex":{IMAGE_BUSH1,1,0}
 	"bush2Tex":{IMAGE_BUSH2,1,0}
 	"tree1Tex":{IMAGE_TREE1,1,0}
@@ -41,6 +41,7 @@ Shaders:
 	"shader_simple":{Shaders/Line.shader}
 	"shader_simple1":{Shaders/Line.shader}
 	"shader_text":{Shaders/Text.shader}
+	"shader_bg":{Shaders/Background.shader}
 end
 
 GameObjects:

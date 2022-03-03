@@ -191,6 +191,7 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
+    <ClCompile Include="Scripts\player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -1634,6 +1635,7 @@
     <None Include="dependencies\vendor\glm\gtx\vector_angle.inl" />
     <None Include="dependencies\vendor\glm\gtx\vector_query.inl" />
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
+    <None Include="Shaders\Background.shader" />
     <None Include="Shaders\GrabPass.shader" />
     <None Include="Shaders\LightSurface.shader" />
     <None Include="Shaders\Line.shader" />
