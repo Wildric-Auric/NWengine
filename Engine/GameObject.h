@@ -90,6 +90,7 @@ public:
 	Scriptable(GameObjectClone* goc = nullptr) {}
 	virtual void Start() {};
 	virtual void Update() {};
+	virtual std::string name() { return "None"; };
 	GameObjectClone* goc;
 };
 

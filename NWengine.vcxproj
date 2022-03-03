@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,7 +191,8 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
-    <ClCompile Include="Scripts\player.cpp" />
+    <ClCompile Include="Ressources\Scripts\player.cpp" />
+    <ClCompile Include="Ressources\Scripts\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -893,13 +894,15 @@
     <ClInclude Include="Engine\Primitives.h" />
     <ClInclude Include="Engine\RessourcesLoader.h" />
     <ClInclude Include="Engine\Scene.h" />
+    <ClInclude Include="Engine\ScriptManager.h" />
     <ClInclude Include="Engine\ShaderManager.h" />
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\TileMap.h" />
     <ClInclude Include="Engine\Utilities.h" />
-    <ClInclude Include="Scripts\player.h" />
+    <ClInclude Include="Ressources\Scripts\player.h" />
+    <ClInclude Include="Ressources\Scripts\test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

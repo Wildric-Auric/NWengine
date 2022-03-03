@@ -7,7 +7,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
 #include <iostream>
-#include "Scripts/player.h"
+#include "ScriptManager.h"
 
 
 static GameObjectClone currentObj;
@@ -114,7 +114,7 @@ void Scene::LoadScene() {
 							}
 
 						     if (state[state.size() - 1] == "Script") {
-								sceneObjs[sceneObjs.size() - 1].GetComponent<Script>()->script = new player(&sceneObjs[sceneObjs.size() - 1]);
+								sceneObjs[sceneObjs.size() - 1].GetComponent<Script>()->script = CreateScript(arg,&sceneObjs[sceneObjs.size() - 1]);
 							 }
 							arg = "";
 							if (currentChar == '}') break;
@@ -144,16 +144,18 @@ void Scene::Save() {
 	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
 		data << '"' << it->name << '"' << ":\n"
 			<< "OriginalGameObject:{" << it->originalGameObject->name << "}\n"
-			<< "Position:{"
+			<< "  Position:{"
 			<< it->position.x << "," << it->position.y << "}\n"
-			<< "Scale:{"
+			<< "  Scale:{"
 			<< it->scale.x << "," << it->scale.y << "}\n";
 		if (it->GetComponent<Collider>() != nullptr) {
-			data << "Collider:\n"
-				 << "end\n";
+			data << "  Collider:\n"
+				 << "  end\n";
 		};
 		if (it->GetComponent<Script>() != nullptr) {
-			data << "Script:{}\n";
+			std::string scriptName = typeid(*it->GetComponent<Script>()->script).name(); //DevNote: Typeid is compiler dependent so pay attention
+			data << "  Script:{" << scriptName.substr(6, scriptName.length() - 1) <<"}\n";
+
 		}
 		data <<"end\n";
 

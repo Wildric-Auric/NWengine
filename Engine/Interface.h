@@ -9,6 +9,7 @@
 #include "RessourcesLoader.h"
 #include "Utilities.h"
 #include "Texture.h"
+#include "ScriptManager.h"
 #include <tuple>
 
 
@@ -97,7 +98,7 @@ inline void InspectorGui() {
 
 			std::vector<std::string> vec;
 			static std::string currentItem = "d";
-
+			//GameObject editing
 			if (ImGui::BeginCombo("GameObject", (Scene::currentScene->sceneObjs[selected].originalGameObject->name).c_str())) {
 				for (auto it = objects.begin(); it != objects.end(); it++) {
 					if (ImGui::Selectable(it->first.c_str()))
@@ -116,12 +117,44 @@ inline void InspectorGui() {
 				}
 				ImGui::EndDragDropTarget();
 			}
+			//Scrîpt editing;
+			Script* scriptComponent = Scene::currentScene->sceneObjs[selected].GetComponent<Script>();
+			std::string scriptName = "None";
+			if (scriptComponent != nullptr) {
+				scriptName = scriptComponent->script->name(); //DevNote: Typeid is compiler dependent so pay attention
+			}
+			ImGui::Button(scriptName.c_str());
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
+					std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
+					scriptName = "";
+					for (char c : resPath) {
+						if (c == '/') {
+							scriptName = "";
+							continue;
+						}
+						if (c == '.')
+							break;
+						scriptName+=c;
+
+					}
+					if (scriptComponent != nullptr) {
+						Scene::currentScene->sceneObjs[selected].GetComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+					}
+					else {
+						Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+
+					}
+					
+				}
+				ImGui::EndDragDropTarget();
+			}
 
 			ImGui::NewLine();
 			ImGui::NewLine();
 			ImGui::Text(Scene::currentScene->sceneObjs[selected].originalGameObject->name.c_str(), "");
 
-
+			//Shader editing
 			if (ImGui::BeginCombo("GameObject Shader", (Scene::currentScene->sceneObjs[selected].originalGameObject->shader->name).c_str())) {
 				for (auto it = shaders.begin(); it != shaders.end(); it++) {
 					if (ImGui::Selectable(it->first.c_str()))
