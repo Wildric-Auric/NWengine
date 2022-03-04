@@ -10,6 +10,7 @@
 
 inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
 	uint8_t overlap = 0;
+	if (collider1 == nullptr || collider2 == nullptr) return false;
 	int minX1 = collider1->GetPosition().x + offset1.x -  collider1->size->x / 2;
 	int maxX1 = collider1->GetPosition().x + offset1.x +  collider1->size->x/2;
 	int minY1 = collider1->GetPosition().y + offset1.y -  collider1->size->y/2;
