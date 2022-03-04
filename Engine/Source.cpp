@@ -11,15 +11,8 @@ double lastTime;
 double deltaTimeSum = 0;
 
 Camera camera = Camera(-(float)ORIGINAL_WIDTH / 2.0f, (float)ORIGINAL_WIDTH / 2.0f, -(float)ORIGINAL_HEIGHT / 2.0f, (float)ORIGINAL_HEIGHT / 2.0f);
-
-
-float d1, d2 = 0.0f;
-
 float pitch = 1.0f;
 float uniformTest = 1;
-float sizeX;
-float sizeY;
-
 Collider groundCollider[20];
 int main()
 {
@@ -31,8 +24,6 @@ int main()
     InitInterface((int)window);
 	//init OpenAL
 	if (InitOpenAL() == 0) return -1;
-	//const ALCchar* a = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
-	//std::cout << a << std::endl;
 
 	ALuint snd = LoadSound("Ressources/Sounds/Mystery.wav");
 	ALuint source;
@@ -51,10 +42,6 @@ int main()
 
 
 	//Font font = Font("Ressources/fonts/rockstar.otf");
-
-
-
-
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -85,11 +72,6 @@ int main()
 
 	scene0.LoadScene();
 
-
-	//Collider playerCol = Collider(&scene0.sceneObjs[0]);
-	//player pl = player(&scene0.sceneObjs[0]);
-	//
-
 	
 	double currentSprite = 0.0;
 	bool isActive = true;
@@ -105,7 +87,6 @@ int main()
 		//Debug--------------
 		
 
-		alSourcef(source, AL_PITCH, pitch);
 	
 		//------------------
 		uTime += deltaTime;
@@ -115,25 +96,15 @@ int main()
 		//BindTextures
 		textures["tex"].Bind(0);
 		textures["grabTex"].Bind(1);
-		//Update dynamic object position
-		//yspd -=  deltaTime;
 
 		camera.Update();
 		tmt.Update();
-	/*	pl.Update();*/
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
 
-
-	/*	for (auto& it : drawOrder) {
-			(it.second.first)->Draw(it.second.second);
-		}*/
-
 		scene0.Draw();
 		tmt.Draw();
-
-		//ground->Draw(0);
 
 		//Update Scripts
 
