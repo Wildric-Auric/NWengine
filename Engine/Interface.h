@@ -70,7 +70,7 @@ inline void HierarchyGui() {
 		ImGui::OpenPopupOnItemClick("create", ImGuiPopupFlags_MouseButtonRight);
 		if (ImGui::BeginPopupContextWindow("create")) {
 			if (ImGui::Selectable("new GameObjectClone")) {
-				Scene::currentScene->sceneObjs.push_back(GameObjectClone(&objects["wallTile0"]));
+				Scene::currentScene->AddObject(GameObjectClone(&objects["wallTile0"]));
 			}
 			ImGui::EndPopup();
 		}
@@ -121,8 +121,10 @@ inline void InspectorGui() {
 			Script* scriptComponent = Scene::currentScene->sceneObjs[selected].GetComponent<Script>();
 			std::string scriptName = "None";
 			if (scriptComponent != nullptr) {
-				scriptName = scriptComponent->script->name(); //DevNote: Typeid is compiler dependent so pay attention
+				scriptName = scriptComponent->script->name();
 			}
+			ImGui::Text("Script: ");
+			ImGui::SameLine();
 			ImGui::Button(scriptName.c_str());
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
@@ -150,6 +152,9 @@ inline void InspectorGui() {
 				ImGui::EndDragDropTarget();
 			}
 
+
+			//Layering order
+			ImGui::DragInt("Layering order", &Scene::currentScene->sceneObjs[selected].sortingLayer);
 			ImGui::NewLine();
 			ImGui::NewLine();
 			ImGui::Text(Scene::currentScene->sceneObjs[selected].originalGameObject->name.c_str(), "");

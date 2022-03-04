@@ -16,16 +16,39 @@ Scene::Scene(const char* name) {
 	this->name = _strdup(name);
 };
 
+void Scene::SortScene() {
+	//Insertion sort ; It won't be called everyframe 
+	for (int i = 1; i < drawList.size(); i++) {
+		GameObjectClone* temp = drawList[i];
+		int j = i - 1;
+		while (j>=0 && drawList[j]->sortingLayer > temp->sortingLayer) {
+				GameObjectClone* temp = drawList[i];
+				drawList[j+1] = drawList[j];
+				j--;
+		}
+		drawList[j + 1] = temp;
+	}
+}
+
+void Scene::AddObject(GameObjectClone goc) {
+	sceneObjs.push_back(goc);
+	drawList.clear();
+	for (int i = 0; i < sceneObjs.size(); ++i) {
+		drawList.push_back(&sceneObjs[i]);
+	}
+}
+
 void Scene::Draw() {
-	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); ++it) {
-		(*it).Draw(0);
+
+	SortScene();
+
+	for (auto it = drawList.begin(); it != drawList.end(); ++it) {
+		(*it)->Draw(0);
 	}
 }
 void Scene::LoadScene() {
 	sceneObjs.clear(); 
 	std::ifstream file("Scenes/" + (std::string)name + std::string(".txt"));
-
-
 
 	if (file) {
 		std::vector<std::string> state;
@@ -58,8 +81,7 @@ void Scene::LoadScene() {
 					state.push_back(key);
 
 					if (key.find('"') != -1 && state[state.size() - 2] == "GameObjectClones") {
-						sceneObjs.push_back(GameObjectClone());
-						hasCollider = false;
+						AddObject(GameObjectClone());
 					}
 
 					if (key == "Collider")
@@ -88,8 +110,14 @@ void Scene::LoadScene() {
 						if (currentChar == ',' || currentChar =='}') {
 							if (state[state.size() - 1] == "OriginalGameObject")
 								sceneObjs[sceneObjs.size() - 1] = GameObjectClone(&objects[arg], state[state.size() - 2].substr(1, state[state.size() - 2].size()-2).c_str());
-							if (hasCollider) sceneObjs[sceneObjs.size() - 1].AddComponent<Collider>();
-							if (hasScript) sceneObjs[sceneObjs.size() - 1].AddComponent<Script>();
+							if (hasCollider) {
+								sceneObjs[sceneObjs.size() - 1].AddComponent<Collider>();
+								hasCollider = false;
+							};
+							if (hasScript) {
+								sceneObjs[sceneObjs.size() - 1].AddComponent<Script>();
+								hasScript = false;
+							}
 
 							if (state[state.size() - 2].find('"') != -1) {
 
@@ -128,8 +156,6 @@ void Scene::LoadScene() {
 			}
 		}
 	}
-
-
 
 	currentScene = this;
 }

@@ -1,11 +1,15 @@
 #pragma once
 #include "GameObject.h"
 #include<vector>
+#include<deque>
 
 class Scene {
 public:
 	const char* name;
-	std::vector<GameObjectClone> sceneObjs;
+	std::deque<GameObjectClone> sceneObjs;
+	std::vector<GameObjectClone*> drawList;
+	void AddObject(GameObjectClone goc);
+	void SortScene();
 	Scene(const char* name);
 	~Scene();
 	void LoadScene();
