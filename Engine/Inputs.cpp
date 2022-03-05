@@ -4,7 +4,7 @@
 
 bool input_left, input_right, input_up, input_down, input_d,
 input_1, input_2, input_3, input_0, input_4, input_left_click,
-input_space, usingJoyStick
+input_space, usingJoyStick, input_f2, input_enter
 = 0;
 double mousePosX;
 double mousePosY;
@@ -40,5 +40,8 @@ void processInput(GLFWwindow* window)
 	input_3 = glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS;
 	input_4 = glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS;
 	input_space = ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoyStick&& GLFW_PRESS == buttons[1] ); 
+	input_f2 = (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
+	input_enter = (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
+
 
 };
