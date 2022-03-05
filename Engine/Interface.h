@@ -11,6 +11,7 @@
 #include "Texture.h"
 #include "ScriptManager.h"
 #include <tuple>
+#include <Inputs.h>
 
 
 extern double fps;
@@ -21,6 +22,8 @@ static bool sceneViewActive = true;
 static bool hierarchyActive = true;
 static bool inspectorActive = true;
 static bool solutionExplorerActive = true;
+static bool environmentEditorActive = false;
+
 static int8 selected = -1; //for hiearchy
 
 inline void InitInterface(int window) {
@@ -29,14 +32,19 @@ inline void InitInterface(int window) {
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window, true);
 	ImGui_ImplOpenGL3_Init();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
+	static ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f);
 
 }
 
 
+inline void EnvironmentEditor(ImGuiStyle* ref = NULL) {
+	if (environmentEditorActive) {
+		ImGui::Begin("Environment", &environmentEditorActive);
+		ImGui::End();
+	};
+}
 
 inline void SceneViewGui() {
 	if (sceneViewActive) {
@@ -63,12 +71,13 @@ inline void SceneViewGui() {
 }
 
 inline void HierarchyGui() {
+	static int renaming = -1;
+	static char str0[128] = "new";
 	if (hierarchyActive) {
-
 		ImGui::Begin("Hierarchy", &hierarchyActive, ImGuiWindowFlags_MenuBar);
-
 		ImGui::OpenPopupOnItemClick("create", ImGuiPopupFlags_MouseButtonRight);
 		if (ImGui::BeginPopupContextWindow("create")) {
+
 			if (ImGui::Selectable("new GameObjectClone")) {
 				Scene::currentScene->AddObject(GameObjectClone(&objects["wallTile0"]));
 			}
@@ -77,22 +86,42 @@ inline void HierarchyGui() {
 
 		int8 i = 0;
 		for (auto it = Scene::currentScene->sceneObjs.begin(); it < Scene::currentScene->sceneObjs.end(); it++) {
-			if (ImGui::Selectable(it->name, selected == i))
+			if (renaming == i) {
+				
+				ImGui::InputText("input name", str0, IM_ARRAYSIZE(str0));
+				if (input_enter) {
+					it->name = std::string(str0);
+					renaming = -1;
+				}
+			}
+			else if (ImGui::Selectable(it->name.c_str(), selected == i)) {
 				selected = i;
+				renaming = -1;
+			}
 			i++;
 		}
-
+		//Renaming
+		if (selected != -1) {
+			if (input_f2) {
+				renaming = selected;
+				//memcpy(str0, &Scene::currentScene->sceneObjs[renaming].name, Scene::currentScene->sceneObjs[renaming].name.size());
+			}
+		}
+		if (!ImGui::IsWindowFocused()) renaming = -1;
 
 		ImGui::End();
 	}
-	else selected = -1;
+	else {
+		selected = -1;
+		renaming = -1;
+	}
 }
 
 inline void InspectorGui() {
 	if (inspectorActive) {
 		ImGui::Begin("Inspector", &inspectorActive, ImGuiWindowFlags_MenuBar);
 		if (selected >= 0 && selected < Scene::currentScene->sceneObjs.size()) {
-			ImGui::Text(Scene::currentScene->sceneObjs[selected].name,"test");
+			ImGui::Text(Scene::currentScene->sceneObjs[selected].name.c_str(),"test");
 			ImGui::DragInt2("position", &Scene::currentScene->sceneObjs[selected].position.x);
 			ImGui::DragFloat2("Scale", &Scene::currentScene->sceneObjs[selected].scale.x);
 
@@ -296,6 +325,8 @@ inline void UpdateInferface() {
 	/*ImGui::SliderFloat("pitch", &pitch, 0.0f, 2.0f);
 	ImGui::DragFloat("jump height", &jumpHeight);
 	*/
+	ImGui::Separator();
+
 	ImGui::DragFloat("Post processing cells", &uniformTest);
 	ImGui::ShowDemoWindow(); 
 	static ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -311,6 +342,7 @@ inline void UpdateInferface() {
 			if (ImGui::MenuItem("Hierarchy"))			hierarchyActive = true;
 			if (ImGui::MenuItem("Inspector"))			inspectorActive = true;
 			if (ImGui::MenuItem("Solution Explorer"))   solutionExplorerActive = true;
+			if (ImGui::MenuItem("Environment"))         environmentEditorActive = true;
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -328,6 +360,7 @@ inline void UpdateInferface() {
 	HierarchyGui();
 	InspectorGui();
 	SolutionExplorerGui();
+	EnvironmentEditor();
 	//TODO::Find compromise for intern-extern gui
 
 }
