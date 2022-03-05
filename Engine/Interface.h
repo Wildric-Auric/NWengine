@@ -92,7 +92,7 @@ inline void InspectorGui() {
 	if (inspectorActive) {
 		ImGui::Begin("Inspector", &inspectorActive, ImGuiWindowFlags_MenuBar);
 		if (selected >= 0 && selected < Scene::currentScene->sceneObjs.size()) {
-			ImGui::Text(Scene::currentScene->sceneObjs[selected].name,"test");
+			ImGui::Text(Scene::currentScene->sceneObjs[selected].name, "test");
 			ImGui::DragInt2("position", &Scene::currentScene->sceneObjs[selected].position.x);
 			ImGui::DragFloat2("Scale", &Scene::currentScene->sceneObjs[selected].scale.x);
 
@@ -124,28 +124,28 @@ inline void InspectorGui() {
 				scriptName = scriptComponent->script->name();
 			}
 
-				ImGui::Text("Script: ");
-				ImGui::SameLine();
-				ImGui::Button(scriptName.c_str());
-				if (ImGui::BeginDragDropTarget()) {
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
-						std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
-						scriptName = "";
-						for (char c : resPath) {
-							if (c == '/') {
-								scriptName = "";
-								continue;
-							}
-							if (c == '.')
-								break;
-							scriptName += c;
+			ImGui::Text("Script: ");
+			ImGui::SameLine();
+			ImGui::Button(scriptName.c_str());
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
+					std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
+					scriptName = "";
+					for (char c : resPath) {
+						if (c == '/') {
+							scriptName = "";
+							continue;
+						}
+						if (c == '.')
+							break;
+						scriptName += c;
 
-						}
-						if (scriptComponent != nullptr) {
-							Scene::currentScene->sceneObjs[selected].GetComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
-						}
-						else {
-							Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+					}
+					if (scriptComponent != nullptr) {
+						Scene::currentScene->sceneObjs[selected].GetComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+					}
+					else {
+						Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
 
 						}
 
@@ -163,15 +163,7 @@ inline void InspectorGui() {
 			if (Scene::currentScene->sceneObjs[selected].GetComponent<Collider>() != nullptr) {
 				ImGui::Text("Collider: ");
 
-				ImGui::Text("X: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->x);
-				ImGui::Text("Y: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->y);
-				ImGui::DragInt("OffsetX: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
-				ImGui::DragInt("OffsetY: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
-				if (ImGui::Button("Delete")) Scene::currentScene->sceneObjs[selected].DeleteComponent<Collider>();
 
-			}
-			ImGui::NewLine();
-			ImGui::NewLine();
 			//Layering order
 			ImGui::DragInt("Layering order", &Scene::currentScene->sceneObjs[selected].sortingLayer);
 			ImGui::NewLine();
@@ -186,10 +178,9 @@ inline void InspectorGui() {
 				}
 				ImGui::EndCombo();
 			}
+
+
 		}
-
-
-
 
 
 		ImGui::End();
@@ -231,7 +222,7 @@ inline static void func(int i, std::string currentPath) {
 	else {
 		ImGui::Selectable(std::get<0>(explorerData[i]).c_str());
 		if (ImGui::BeginDragDropSource()) {
-			ImGui::SetDragDropPayload("DAD ressource0", (currentPath + std::get<0>(explorerData[i])).c_str(), sizeof(char)* (currentPath + std::get<0>(explorerData[i])).length());
+			ImGui::SetDragDropPayload("DAD ressource0", (currentPath + std::get<0>(explorerData[i])).c_str(), sizeof(char) * (currentPath + std::get<0>(explorerData[i])).length());
 			ImGui::Text(std::get<0>(explorerData[i]).c_str());
 			ImGui::EndDragDropSource();
 		}
@@ -297,7 +288,7 @@ inline void UpdateInferface() {
 	ImGui::DragFloat("jump height", &jumpHeight);
 	*/
 	ImGui::DragFloat("Post processing cells", &uniformTest);
-	ImGui::ShowDemoWindow(); 
+	ImGui::ShowDemoWindow();
 	static ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::End();
 

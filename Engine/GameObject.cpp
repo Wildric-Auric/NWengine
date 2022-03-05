@@ -31,7 +31,7 @@ void GameObject::BasicDraw(int8 textureSlot) {
 }
 int GameObject::numberOfGameObjects = 0;
 
-GameObject::GameObject(Texture* texture, Vector2<int> position, Vector2<float> scale, std::string ref, Shader* shader, bool usingImageSize, Vector2<int> size) 
+GameObject::GameObject(Texture* texture, Vector2<int> position, Vector2<float> scale, std::string ref, Shader* shader, bool usingImageSize, Vector2<int> size)
 {
 
 	this->position = position;
@@ -71,15 +71,13 @@ void Collider::Resize(Vector2<int> newSize) {
 	size = &manualSize;
 };
 Vector2<int> Collider::GetPosition() {
-	if (this != nullptr)
-		return (*position) + offset;
-	return Vector2<int>(0, 0);
+	return (*position) + offset;
 };
 
 GameObjectClone::GameObjectClone(GameObject* gameObject, const char* name) {
 	this->name = _strdup(name);
-	this->originalGameObject =  gameObject;
-	this->position = originalGameObject->position; 
+	this->originalGameObject = gameObject;
+	this->position = originalGameObject->position;
 }
 
 void GameObjectClone::Draw(int8 slot) {
@@ -112,5 +110,3 @@ void GameObjectClone::BasicDraw(int8 slot) {
 Script::Script(GameObjectClone* attachedObj) {
 	this->attachedObj = attachedObj;
 }
-
-
