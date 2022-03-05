@@ -3,6 +3,8 @@ GameObjectClones:
 OriginalGameObject:{background}
   Position:{159,81}
   Scale:{1,1}
+  Collider:
+  end
   Script:{test}
 end
 "Warrior":
