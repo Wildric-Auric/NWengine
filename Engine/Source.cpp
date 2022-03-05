@@ -60,16 +60,17 @@ int main()
 
 	lastTime = glfwGetTime();
 	
-	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
-	tmt.tileObjects[0] = &objects["groundTile0"];
-	tmt.tileObjects[1] = &objects["groundTile1"];
-	tmt.tileObjects[2] = &objects["groundTile2"];
-	tmt.tileObjects[3] = &objects["wallTile0"];
+	//abandoning tilemap for now
+	//TileMap tmt = TileMap("T1",Vector2<int>(32,32));
+	//tmt.tileObjects[0] = &objects["groundTile0"];
+	//tmt.tileObjects[1] = &objects["groundTile1"];
+	//tmt.tileObjects[2] = &objects["groundTile2"];
+	//tmt.tileObjects[3] = &objects["wallTile0"];
 
-	for (int i = 0; i <15; i++)
-	{
-		groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]) );
-	}
+	//for (int i = 0; i <15; i++)
+	//{
+	//	groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]) );
+	//}
 	
 	//DEBUG ZONE----------------------
 
@@ -109,13 +110,13 @@ int main()
 		textures["grabTex"].Bind(1);
 
 		camera.Update();
-		tmt.Update();
+		//tmt.Update();
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
 		scene0.Draw();
 
-		tmt.Draw();
+		//tmt.Draw();
 
 		//Update Scripts
 
