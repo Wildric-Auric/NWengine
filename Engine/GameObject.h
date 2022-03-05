@@ -44,7 +44,7 @@ public:
 class GameObjectClone : public Drawable {
 public:
 	int sortingLayer = 0; //TODO::Add component containing this; it's not saved for now
-	const char* name;
+	std::string name;
 	GameObject* originalGameObject; //ReadOnly
 	Vector2<float> scale = Vector2<float>(1.0f,1.0f);
 	Vector2<int> position = Vector2<int>(0,0);
