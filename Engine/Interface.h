@@ -123,36 +123,55 @@ inline void InspectorGui() {
 			if (scriptComponent != nullptr) {
 				scriptName = scriptComponent->script->name();
 			}
-			ImGui::Text("Script: ");
-			ImGui::SameLine();
-			ImGui::Button(scriptName.c_str());
-			if (ImGui::BeginDragDropTarget()) {
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
-					std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
-					scriptName = "";
-					for (char c : resPath) {
-						if (c == '/') {
-							scriptName = "";
-							continue;
+
+				ImGui::Text("Script: ");
+				ImGui::SameLine();
+				ImGui::Button(scriptName.c_str());
+				if (ImGui::BeginDragDropTarget()) {
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DAD ressource0")) {
+						std::string resPath = std::string((const char*)payload->Data).substr(0, payload->DataSize / sizeof(char));
+						scriptName = "";
+						for (char c : resPath) {
+							if (c == '/') {
+								scriptName = "";
+								continue;
+							}
+							if (c == '.')
+								break;
+							scriptName += c;
+
 						}
-						if (c == '.')
-							break;
-						scriptName+=c;
+						if (scriptComponent != nullptr) {
+							Scene::currentScene->sceneObjs[selected].GetComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+						}
+						else {
+							Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+
+						}
 
 					}
-					if (scriptComponent != nullptr) {
-						Scene::currentScene->sceneObjs[selected].GetComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
-					}
-					else {
-						Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
+					ImGui::EndDragDropTarget();
+				};
 
-					}
-					
+			if (ImGui::BeginCombo("AddComponent", "Chooose component")) {
+				if (Scene::currentScene->sceneObjs[selected].GetComponent<Collider>() == nullptr) {
+					if (ImGui::Selectable("Collider")) Scene::currentScene->sceneObjs[selected].AddComponent<Collider>();
 				}
-				ImGui::EndDragDropTarget();
+				ImGui::EndCombo();
 			}
+			ImGui::NewLine();
+			if (Scene::currentScene->sceneObjs[selected].GetComponent<Collider>() != nullptr) {
+				ImGui::Text("Collider: ");
 
+				ImGui::Text("X: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->x);
+				ImGui::Text("Y: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->y);
+				ImGui::DragInt("OffsetX: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
+				ImGui::DragInt("OffsetY: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
+				if (ImGui::Button("Delete")) Scene::currentScene->sceneObjs[selected].DeleteComponent<Collider>();
 
+			}
+			ImGui::NewLine();
+			ImGui::NewLine();
 			//Layering order
 			ImGui::DragInt("Layering order", &Scene::currentScene->sceneObjs[selected].sortingLayer);
 			ImGui::NewLine();
@@ -167,9 +186,10 @@ inline void InspectorGui() {
 				}
 				ImGui::EndCombo();
 			}
-
-
 		}
+
+
+
 
 
 		ImGui::End();

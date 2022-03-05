@@ -1,15 +1,13 @@
 GameObjectClones:
 "Background":
 OriginalGameObject:{background}
-  Position:{-117,81}
+  Position:{159,81}
   Scale:{1,1}
-  Collider:
-  end
   Script:{test}
 end
 "Warrior":
 OriginalGameObject:{warrior}
-  Position:{112,-10}
+  Position:{-160,-10}
   Scale:{1,1}
   Collider:
   end
