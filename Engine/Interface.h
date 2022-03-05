@@ -147,11 +147,11 @@ inline void InspectorGui() {
 					else {
 						Scene::currentScene->sceneObjs[selected].AddComponent<Script>()->script = CreateScript(scriptName, &Scene::currentScene->sceneObjs[selected]);
 
-					}
+						}
 
-				}
-				ImGui::EndDragDropTarget();
-			};
+					}
+					ImGui::EndDragDropTarget();
+				};
 
 			if (ImGui::BeginCombo("AddComponent", "Chooose component")) {
 				if (Scene::currentScene->sceneObjs[selected].GetComponent<Collider>() == nullptr) {
@@ -163,15 +163,7 @@ inline void InspectorGui() {
 			if (Scene::currentScene->sceneObjs[selected].GetComponent<Collider>() != nullptr) {
 				ImGui::Text("Collider: ");
 
-				ImGui::Text("X: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->x);
-				ImGui::Text("Y: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->y);
-				ImGui::DragInt("OffsetX: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
-				ImGui::DragInt("OffsetY: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
-				if (ImGui::Button("Delete")) Scene::currentScene->sceneObjs[selected].DeleteComponent<Collider>();
 
-			}
-			ImGui::NewLine();
-			ImGui::NewLine();
 			//Layering order
 			ImGui::DragInt("Layering order", &Scene::currentScene->sceneObjs[selected].sortingLayer);
 			ImGui::NewLine();
@@ -186,10 +178,9 @@ inline void InspectorGui() {
 				}
 				ImGui::EndCombo();
 			}
+
+
 		}
-
-
-
 
 
 		ImGui::End();

@@ -55,12 +55,13 @@ int main()
 
 
 	//Font font = Font("Ressources/fonts/rockstar.otf");
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	lastTime = glfwGetTime();
-
-	TileMap tmt = TileMap("T1", Vector2<int>(32, 32));
+	
+	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
 	tmt.tileObjects[0] = &objects["groundTile0"];
 	tmt.tileObjects[1] = &objects["groundTile1"];
 	tmt.tileObjects[2] = &objects["groundTile2"];
@@ -113,8 +114,8 @@ int main()
 
 		currentSprite += deltaTime * 5.0;
 		//Drawing shapes
-		scene0.Draw();
 
+		scene0.Draw();
 		tmt.Draw();
 
 		//Update Scripts
