@@ -8,34 +8,33 @@
 
 
 
-inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0, 0)) {
+inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
 	uint8_t overlap = 0;
-	if (collider1 == nullptr || collider2 == nullptr) return false;
-	int minX1 = collider1->GetPosition().x + offset1.x - collider1->size->x / 2;
-	int maxX1 = collider1->GetPosition().x + offset1.x + collider1->size->x / 2;
-	int minY1 = collider1->GetPosition().y + offset1.y - collider1->size->y / 2;
-	int maxY1 = collider1->GetPosition().y + offset1.y + collider1->size->y / 2;
+	int minX1 = collider1->GetPosition().x + offset1.x -  collider1->size->x / 2;
+	int maxX1 = collider1->GetPosition().x + offset1.x +  collider1->size->x/2;
+	int minY1 = collider1->GetPosition().y + offset1.y -  collider1->size->y/2;
+	int maxY1 = collider1->GetPosition().y + offset1.y +  collider1->size->y/2;
 
 	int minX2 = collider2->GetPosition().x - collider2->size->x / 2;
 	int maxX2 = collider2->GetPosition().x + collider2->size->x / 2;
 	int minY2 = collider2->GetPosition().y - collider2->size->y / 2;
 	int maxY2 = collider2->GetPosition().y + collider2->size->y / 2;
 
-	overlap += (
-		((minX1 < minX2) && (minX2 < maxX1)) ||
-		((minX2 < minX1) && (minX1 < maxX2))
-		)
-		+
-		(
-			((minY1 < minY2) && (minY2 < maxY1)) ||
-			((minY2 < minY1) && (minY1 < maxY2))
-			)
+	overlap += (  
+					( (minX1 < minX2) && (minX2 < maxX1) ) ||  
+					( (minX2 < minX1) && (minX1 < maxX2) ) 
+			   )
+			+ 
+			   ( 
+					 ( (minY1 < minY2) && (minY2 < maxY1) ) ||
+					 ( (minY2 < minY1) && (minY1 < maxY2) )
+			   )
 		;
 	return overlap == 2;
 }
 
 
-template<typename T>
+template<typename T> 
 void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 	for (auto c : b) {
 		a->push_back(c);
@@ -95,7 +94,7 @@ inline std::vector<std::string> GetDirFiles(const std::string& directory)
 	bool first = 0; //first file found is always ".." and I don't know why so i'm not adding it to the list
 	while (FindNextFileA(hFind, &findData) != 0)
 	{
-		if (first) dirList.push_back(std::string(findData.cFileName));
+		if  (first) dirList.push_back(std::string(findData.cFileName));
 		first = 1;
 	}
 
@@ -103,7 +102,7 @@ inline std::vector<std::string> GetDirFiles(const std::string& directory)
 	return dirList;
 }
 
-inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
+inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
@@ -155,7 +154,7 @@ inline std::string GetCurrentDir() {
 
 inline std::string GetExePath() {
 	char path[MAX_PATH];
-	GetModuleFileName(NULL, path, MAX_PATH);
+	GetModuleFileName(NULL,path, MAX_PATH);
 	return std::string(path);
 }
 
