@@ -1,20 +1,20 @@
 #include "player.h"
 #include "NWengine.h"
 #include "Utilities.h"
+extern Collider groundCollider[20];
 
 void player::Update() {
 	isGrounded = 0;
-	for (auto it = Collider::componentList.begin(); it!= Collider::componentList.end(); it++) {
+	for (auto it = Collider::componentList.begin(); it != Collider::componentList.end(); it++) {
 		if (it->first != goc) {
 			while (IsColliding(goc->GetComponent<Collider>(), &it->second)) {
 				goc->position.y += 1;
 				//DevNote::By setting up the collider offset I understood finally what Shaun Spalding used to do with placemeeting...
 
-			};
-			if (IsColliding(goc->GetComponent<Collider>(), &it->second, Vector2<int>(0, -1))) {
-				isGrounded = 1;
-				break;
-			}
+		};
+		if (IsColliding(goc->GetComponent<Collider>(), &groundCollider[i], Vector2<int>(0, -1))) {
+			isGrounded = 1;
+			break;
 		}
 	}
 	static float maxJump = 0.0f;

@@ -15,10 +15,10 @@ float pitch = 1.0f;
 float uniformTest = 1;
 Collider groundCollider[20];
 void EnableWireframe(bool status) {
-	if (status){
+	if (status) {
 		glDisable(GL_BLEND);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	}
 	else {
 		glEnable(GL_BLEND);
@@ -29,12 +29,12 @@ void EnableWireframe(bool status) {
 
 int main()
 {
-    //Init GLFW context 
-    GLFWwindow* window = InitContext(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
+	//Init GLFW context 
+	GLFWwindow* window = InitContext(ORIGINAL_WIDTH, ORIGINAL_HEIGHT);
 	if (window == nullptr) return -1;
 
 	//init imgui
-    InitInterface((int)window);
+	InitInterface((int)window);
 	//init OpenAL
 	if (InitOpenAL() == 0) return -1;
 
@@ -55,6 +55,7 @@ int main()
 
 
 	//Font font = Font("Ressources/fonts/rockstar.otf");
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -66,11 +67,11 @@ int main()
 	tmt.tileObjects[2] = &objects["groundTile2"];
 	tmt.tileObjects[3] = &objects["wallTile0"];
 
-	for (int i = 0; i <15; i++)
+	for (int i = 0; i < 15; i++)
 	{
-		groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]) );
+		groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]));
 	}
-	
+
 	//DEBUG ZONE----------------------
 
 	//END ZONE
@@ -83,12 +84,12 @@ int main()
 
 	scene0.LoadScene();
 
-	
+
 	double currentSprite = 0.0;
 	bool isActive = true;
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
 	float yspd = 0;
-	while (!glfwWindowShouldClose(window)){
+	while (!glfwWindowShouldClose(window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -96,9 +97,9 @@ int main()
 
 		UpdateInferface();
 		//Debug--------------
-		
 
-	
+
+
 		//------------------
 		uTime += deltaTime;
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0); // 0.6f, .8f, .8f, 1.0f
@@ -111,10 +112,10 @@ int main()
 		camera.Update();
 		tmt.Update();
 
-		currentSprite += deltaTime *5.0;
+		currentSprite += deltaTime * 5.0;
 		//Drawing shapes
-		scene0.Draw();
 
+		scene0.Draw();
 		tmt.Draw();
 
 		//Update Scripts
@@ -142,10 +143,10 @@ int main()
 		postProcessing.originalGameObject->shader->SetUniform1f("uCells", uniformTest);
 		postProcessing.BasicDraw(1);
 		fbo.Unbind();
-	
-	
 
-		
+
+
+
 
 
 
