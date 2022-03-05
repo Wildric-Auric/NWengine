@@ -4,7 +4,7 @@
 
 void player::Update() {
 	isGrounded = 0;
-	for (auto it = Collider::componentList.begin(); it!= Collider::componentList.end(); it++) {
+	for (auto it = Collider::componentList.begin(); it != Collider::componentList.end(); it++) {
 		if (it->first != goc) {
 			while (IsColliding(goc->GetComponent<Collider>(), &it->second)) {
 				goc->position.y += 1;
