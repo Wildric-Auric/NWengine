@@ -71,7 +71,9 @@ void Collider::Resize(Vector2<int> newSize) {
 	size = &manualSize;
 };
 Vector2<int> Collider::GetPosition() {
-	return (*position) + offset;
+	if (this != nullptr)
+		return (*position) + offset;
+	return Vector2<int>(0, 0);
 };
 
 GameObjectClone::GameObjectClone(GameObject* gameObject, const char* name) {
