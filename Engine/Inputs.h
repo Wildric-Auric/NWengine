@@ -21,6 +21,8 @@ input_1,
 input_2,
 input_3,
 input_4,
+input_enter,
+input_f2,
 input_space,
 
 usingJoystick
