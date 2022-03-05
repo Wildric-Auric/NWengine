@@ -14,19 +14,6 @@ Camera camera = Camera(-(float)ORIGINAL_WIDTH / 2.0f, (float)ORIGINAL_WIDTH / 2.
 float pitch = 1.0f;
 float uniformTest = 1;
 Collider groundCollider[20];
-void EnableWireframe(bool status) {
-	if (status){
-		glDisable(GL_BLEND);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
-		
-	}
-	else {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-}
-
 int main()
 {
     //Init GLFW context 
@@ -55,11 +42,13 @@ int main()
 
 
 	//Font font = Font("Ressources/fonts/rockstar.otf");
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	lastTime = glfwGetTime();
 	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //NANI!?
 	TileMap tmt = TileMap("T1",Vector2<int>(32,32));
 	tmt.tileObjects[0] = &objects["groundTile0"];
 	tmt.tileObjects[1] = &objects["groundTile1"];
@@ -113,8 +102,8 @@ int main()
 
 		currentSprite += deltaTime *5.0;
 		//Drawing shapes
-		scene0.Draw();
 
+		scene0.Draw();
 		tmt.Draw();
 
 		//Update Scripts
