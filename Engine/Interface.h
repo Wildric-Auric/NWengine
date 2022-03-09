@@ -194,8 +194,14 @@ inline void InspectorGui() {
 
 				ImGui::Text("X: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->x);
 				ImGui::Text("Y: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->position->y);
+
 				ImGui::DragInt("OffsetX: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
 				ImGui::DragInt("OffsetY: ", &Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->offset.x);
+
+
+				ImGui::Text("SizeX: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->GetSize().x);
+				ImGui::Text("SizeY: %i", Scene::currentScene->sceneObjs[selected].GetComponent<Collider>()->GetSize().y);
+
 				if (ImGui::Button("Delete")) Scene::currentScene->sceneObjs[selected].DeleteComponent<Collider>();
 
 			}
