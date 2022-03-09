@@ -103,11 +103,12 @@ private:
 public:
 	Collider() {};
 	Collider(GameObjectClone* attachedObj, Vector2<int> offset = Vector2<int>(0, 0), Vector2<int>* newSize = nullptr);
-	GameObject* attachedObj;  //TODO:: Make this GameObjectClone it's a mistake
+	GameObjectClone* attachedObj;  //TODO:: Make this GameObjectClone it's a mistake
 	Vector2<int>* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
 	Vector2<int>* size; //ReadOnly
 	Vector2<int> offset;
 	Vector2<int> GetPosition();
+	Vector2<int> GetSize();
 	void Resize(Vector2<int> newSize);
 
 	static std::map<GameObjectClone*, Collider> componentList;

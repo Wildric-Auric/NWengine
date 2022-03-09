@@ -57,6 +57,7 @@ GameObject::GameObject(Texture* texture, Vector2<int> position, Vector2<float> s
 
 Collider::Collider(GameObjectClone* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
 	this->offset = offset;
+	this->attachedObj = attachedObj;
 	if (newSize != nullptr) size = newSize;
 	else size = &attachedObj->originalGameObject->size;
 	position = &attachedObj->position;
@@ -75,6 +76,15 @@ Vector2<int> Collider::GetPosition() {
 		return (*position) + offset;
 	return Vector2<int>(0, 0);
 };
+Vector2<int> Collider::GetSize() {
+	if (this != nullptr) {
+		fVec2 a =  attachedObj->scale;
+		iVec2 b = attachedObj->originalGameObject->size;   //GameObject.scale is deprecated, GameObject is depracated TODO::change it to gamecomponent sprite
+		return iVec2(abs(a.x*b.x), abs(a.y*b.y));
+	}
+	return iVec2(0, 0);
+}
+
 
 GameObjectClone::GameObjectClone(GameObject* gameObject, const char* name) {
 	this->name = _strdup(name);
