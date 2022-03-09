@@ -1,15 +1,12 @@
 GameObjectClones:
 "Background0":
 OriginalGameObject:{background}
-  Position:{171,55}
+  Position:{-111,50}
   Scale:{1,1}
-  Collider:
-  end
-  Script:{test}
 end
 "Warrior":
 OriginalGameObject:{warrior}
-  Position:{-148,-13}
+  Position:{-160,-12}
   Scale:{1,1}
   Collider:
   end
@@ -17,22 +14,18 @@ OriginalGameObject:{warrior}
 end
 "Background":
 OriginalGameObject:{background}
-  Position:{0,55}
+  Position:{-32,56}
   Scale:{1,1}
 end
 "Tile1":
 OriginalGameObject:{groundTile0}
   Position:{-277,-51}
   Scale:{1,1}
-  Collider:
-  end
 end
 "Tile2":
 OriginalGameObject:{groundTile1}
   Position:{-245,-51}
   Scale:{1,1}
-  Collider:
-  end
 end
 "Tile3":
 OriginalGameObject:{groundTile1}
@@ -58,6 +51,13 @@ end
 "Tile6":
 OriginalGameObject:{groundTile2}
   Position:{-118,-51}
+  Scale:{1,1}
+  Collider:
+  end
+end
+"new":
+OriginalGameObject:{wallTile0}
+  Position:{-258,-18}
   Scale:{1,1}
   Collider:
   end
