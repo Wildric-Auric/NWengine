@@ -85,10 +85,16 @@ int main()
 	scene0.LoadScene();
 
 	
-	double currentSprite = 0.0;
-	bool isActive = true;
+
 	const ImVec2 guiImageSize = ImVec2(50.0F, 50.0F);
-	float yspd = 0;
+	std::vector<Square> debugSquares;
+	std::vector<GameObjectClone*> a;
+	
+	for (auto it = Collider::componentList.begin(); it != Collider::componentList.end(); it++) {
+		debugSquares.push_back(Square(it->second.GetPosition(), it->second.GetSize(), fVec3(0.0, 1.0, 0.0)));
+		a.push_back(it->first);
+	}
+
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -111,8 +117,7 @@ int main()
 
 		camera.Update();
 		//tmt.Update();
-
-		currentSprite += deltaTime *5.0;
+		// 
 		//Drawing shapes
 		scene0.Draw();
 
@@ -124,6 +129,11 @@ int main()
 			it->second.script->Update();
 		}
 
+		for (int i = 0; i < debugSquares.size(); i++) {
+			debugSquares[i].position = a[i]->position;
+			//debugSquares[i].Draw();
+			
+		}
 
 		glReadPixels(-camera.position.x, -camera.position.y, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, behindPixels);
 		textures["grabTex"].UpdateTexture(ORIGINAL_WIDTH, ORIGINAL_HEIGHT, behindPixels, 1);
