@@ -98,12 +98,12 @@ void Line::Draw() {
 }
 
 
-Square::Square(Vector2<int> position, int size, Vector3<float> color, float alpha) {
+Square::Square(Vector2<int> position, Vector2<int> size, Vector3<float> color, float alpha) {
 	this->alpha = alpha;
 	this->position = position;
 	this->size = size;
 	this->color = color;
-	quad = Quad(position, size, size);
+	quad = Quad(position, size.x, size.y);
 
 };
 
