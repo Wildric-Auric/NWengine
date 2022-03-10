@@ -96,9 +96,9 @@ int main()
 	}
 
 	Properties p = Properties();
-	p.goc = GameObjectClone(&objects["wallTile0"]);
-	p.emissionTime = .8f;
-	p.lifeTime = 3.0f;
+	p.goc = GameObjectClone(&objects["warrior"]);
+	p.emissionTime = .1f;
+	p.lifeTime = .5f;
 	ParticleSystem ps = ParticleSystem(p);
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
@@ -122,11 +122,15 @@ int main()
 
 		camera.Update();
 		//tmt.Update();
-		// 
+		for (int i = 0; i < scene0.sceneObjs.size(); i++)
+		{
+			if (scene0.sceneObjs[i].name == "Warrior")
+				ps.properties.position = scene0.sceneObjs[i].position;
+		}
 		ps.Update();
 		//Drawing shapes
-		scene0.Draw();
 		ps.Draw();
+		scene0.Draw();
 		//tmt.Draw();
 
 		//Update Scripts

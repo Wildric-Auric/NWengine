@@ -14,7 +14,6 @@ void ParticleSystem::Update() {
 void ParticleSystem::Emit(int emissionNum) {
 	for (int i = 0; i < emissionNum; i++) {
 		Particle::pool[currentIndex].Activate(this);
-		properties.position.x += 5 * currentIndex;
 		currentIndex += 1;
 		if (currentIndex > MAX_PARTICLES - 1) currentIndex = 0;
 	}

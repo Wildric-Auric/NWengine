@@ -29,7 +29,7 @@ out vec4 FragColor;
 void main() {
     vec2 center = vec2(0.5, 0.5);
     vec4 col = texture(uTex0, uv);
-    col.w *= uA/3.0;
+    col.w *= uA/.5;
     // Output to screen
     FragColor = col;
 }

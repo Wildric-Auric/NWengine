@@ -175,6 +175,7 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
+    <ClCompile Include="Engine\Particles.cpp" />
     <ClCompile Include="Engine\Physics.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Game.cpp">
@@ -885,6 +886,7 @@
     <ClInclude Include="Engine\FrameBuffer.h" />
     <ClInclude Include="Engine\Interface.h" />
     <ClInclude Include="Engine\NWengine.h" />
+    <ClInclude Include="Engine\Particles.h" />
     <ClInclude Include="Engine\Physics.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Game.h" />
@@ -1642,6 +1644,7 @@
     <None Include="Shaders\GrabPass.shader" />
     <None Include="Shaders\LightSurface.shader" />
     <None Include="Shaders\Line.shader" />
+    <None Include="Shaders\Particle.shader" />
     <None Include="Shaders\PostProcessing.shader" />
     <None Include="Shaders\Text.shader" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
