@@ -1,7 +1,6 @@
 #include "NWengine.h"
 #include "FrameBuffer.h"
-//Include game scripts
-//#include "Scripts/player.h"
+#include "Particles.h"
 
 //Variables
 double fps = 60;
@@ -26,6 +25,7 @@ void EnableWireframe(bool status) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }
+
 
 int main()
 {
@@ -95,6 +95,11 @@ int main()
 		a.push_back(it->first);
 	}
 
+	Properties p = Properties();
+	p.goc = GameObjectClone(&objects["wallTile0"]);
+	p.emissionTime = .8f;
+	p.lifeTime = 3.0f;
+	ParticleSystem ps = ParticleSystem(p);
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -118,9 +123,10 @@ int main()
 		camera.Update();
 		//tmt.Update();
 		// 
+		ps.Update();
 		//Drawing shapes
 		scene0.Draw();
-
+		ps.Draw();
 		//tmt.Draw();
 
 		//Update Scripts

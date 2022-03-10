@@ -42,6 +42,7 @@ Shaders:
 	"shader_simple1":{Shaders/Line.shader}
 	"shader_text":{Shaders/Text.shader}
 	"shader_bg":{Shaders/Background.shader}
+	"shader_particle":{Shaders/Particle.shader}
 end
 
 GameObjects:
