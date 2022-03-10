@@ -35,7 +35,7 @@ void player::Update() {
 		//maxJump = -jumpTime / 2 * (jumpTime / 2 - jumpTime);
 		
 		//temp jump code
-		yspd = 5;
+		yspd = 12;
 		isGrounded = 0;
 	}
 	yspd -= deltaTime*30;
