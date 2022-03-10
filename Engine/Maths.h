@@ -195,6 +195,12 @@ Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent
 	return Vector2<T>(  lerp(source.x, target.x, percent.x), lerp(source.y, target.y, percent.y)  );
 };
 
+template<typename T, typename T1>
+Vector3<T> lerpVector3(Vector3<T> source, Vector3<T> target, Vector3<T1> percent) {
+	return Vector3<T>(lerp(source.x, target.x, percent.x), lerp(source.y, target.y, percent.y));
+};
+
+
 
 template<uint8_t n, uint8_t m, typename T>
 class Matrix {
