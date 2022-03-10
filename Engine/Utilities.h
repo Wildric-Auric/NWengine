@@ -32,27 +32,6 @@ inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> o
 			   )
 		;
 
-	//overlap += (((minX1 < maxX2) && (minX1 > minX2)) ||
-	//	((maxX1 < maxX2) && (maxX1 > minX2))
-
-	//	)
-	//	+
-	//	(
-	//		((minY1 < maxY2) && (minY1 > minY2)) ||
-	//		((maxY1 < maxY2) && (maxY1 > minY2))
-
-	//		)
-	//	;
-
-	//overlap1 += (((minX2 < maxX1) && (minX2 > minX1)) ||
-	//	((maxX2 < maxX1) && (maxX2 > minX1))
-	//	) +
-	//	(
-	//		((minY2 < maxY1) && (minY2 > minY1)) ||
-	//		((maxY2 < maxY1) && (maxY2 > minY1))
-	//		);
-
-
 	return overlap == 2;
 }
 
