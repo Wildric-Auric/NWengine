@@ -110,7 +110,6 @@ void GameObjectClone::Draw(int8 slot) {
 
 void GameObjectClone::BasicDraw(int8 slot) {
 	originalGameObject->container.position = position;
-	glUseProgram(originalGameObject->shader->shaderProgram);
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));   //Flip image if should flip  
 	originalGameObject->shader->SetMat4x4("uMvp", &(projectionMatrix * viewMatrix * model)[0][0]);
