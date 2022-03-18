@@ -6,7 +6,7 @@ OriginalGameObject:{background}
 end
 "Warrior":
 OriginalGameObject:{warrior}
-  Position:{-209,-12}
+  Position:{-69,-2112}
   Scale:{1,1}
   Collider:
   end
