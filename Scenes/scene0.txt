@@ -6,7 +6,7 @@ OriginalGameObject:{background}
 end
 "Warrior":
 OriginalGameObject:{warrior}
-  Position:{-69,-2112}
+  Position:{-192,-12}
   Scale:{1,1}
   Collider:
   end
@@ -31,8 +31,6 @@ end
 OriginalGameObject:{groundTile1}
   Position:{-213,-51}
   Scale:{1,1}
-  Collider:
-  end
 end
 "Tile4":
 OriginalGameObject:{groundTile1}
@@ -55,9 +53,9 @@ OriginalGameObject:{groundTile2}
   Collider:
   end
 end
-"new":
+"Wall":
 OriginalGameObject:{wallTile0}
-  Position:{-258,-18}
+  Position:{-307,-18}
   Scale:{1,1}
   Collider:
   end
