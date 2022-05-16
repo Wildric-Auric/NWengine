@@ -38,13 +38,11 @@ int main()
 	//init OpenAL
 	if (InitOpenAL() == 0) return -1;
 
-	ALuint snd = LoadSound("Ressources/Sounds/Mystery.wav");
-	ALuint source;
-	alGenSources(1, &source);
-	alSourcei(source, AL_BUFFER, snd);
-	alSourcef(source, AL_GAIN, 0.0);
-	alSourcei(source, AL_LOOPING, 1);
-	alSourcePlay(source);
+	Sound snd = Sound("Ressources/Sounds/Mystery.wav");
+	//snd.SetVolume(0.01f);
+	//snd.Play();
+
+	
 
 
 	//init frame buffer
@@ -59,18 +57,6 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	lastTime = glfwGetTime();
-	
-	//abandoning tilemap for now
-	//TileMap tmt = TileMap("T1",Vector2<int>(32,32));
-	//tmt.tileObjects[0] = &objects["groundTile0"];
-	//tmt.tileObjects[1] = &objects["groundTile1"];
-	//tmt.tileObjects[2] = &objects["groundTile2"];
-	//tmt.tileObjects[3] = &objects["wallTile0"];
-
-	//for (int i = 0; i <15; i++)
-	//{
-	//	groundCollider[i] = Collider(&(tmt.currentTileMap->tiles[i]) );
-	//}
 	
 	//DEBUG ZONE----------------------
 
@@ -100,6 +86,7 @@ int main()
 	p.emissionTime = .1f;
 	p.lifeTime = .5f;
 	ParticleSystem ps = ParticleSystem(p);
+
 	while (!glfwWindowShouldClose(window)){
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();

@@ -16,6 +16,10 @@ bool InitOpenAL(){
 	return true;
 }
 
+
+
+
+
 ALuint LoadSound(const char* path) {
 	SF_INFO info;
 	SNDFILE* data = sf_open(path, SFM_READ, &info);  //hold on, does not support mp3? TODO::Write your own sound loading solution
@@ -37,3 +41,39 @@ ALuint LoadSound(const char* path) {
 	//TODO::error checking
 	return buffer;
 }
+
+
+
+
+
+Sound::Sound(std::string path) {
+	this->snd = LoadSound(path.c_str());
+	alGenSources(1, &source);
+	alSourcei(source, AL_BUFFER, snd);
+}
+
+void Sound::Play() {
+	alSourcePlay(source);
+}
+
+void Sound::Stop() {
+	alSourceStop(source);
+}
+
+void Sound::SetVolume(float volume) {
+	this->volume = volume;
+	alSourcef(source, AL_GAIN, this->volume);
+}
+
+void Sound::SetFrequency(float frequency) {
+	this->frequency = frequency;
+	alSourcef(source, AL_FREQUENCY, frequency);
+}
+
+void Sound::SetLoop(bool loop) {
+	this->isLooping = loop;
+	alSourcei(source, AL_LOOPING, this->isLooping);
+}
+
+
+
