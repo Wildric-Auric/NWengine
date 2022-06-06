@@ -175,6 +175,7 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
+    <ClCompile Include="Engine\Collision.cpp" />
     <ClCompile Include="Engine\Particles.cpp" />
     <ClCompile Include="Engine\Physics.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -883,6 +884,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio.h" />
+    <ClInclude Include="Engine\Collision.h" />
     <ClInclude Include="Engine\FrameBuffer.h" />
     <ClInclude Include="Engine\Interface.h" />
     <ClInclude Include="Engine\NWengine.h" />
