@@ -15,6 +15,8 @@ public:
 	float magnitude();
 	Vector2 operator + (Vector2 const& vec1);
 	Vector2 operator + (T const& num);
+	Vector2 operator - (Vector2 const& vec1);
+	Vector2 operator - (T const& num);
 	template<typename T1>
 	Vector2 operator * (T1 const& num);
 	Vector2 operator * (Vector2 const& vec1);
@@ -50,6 +52,14 @@ Vector2<T> Vector2<T>::operator + (Vector2 const& vec1) {
 	sum.y = y + vec1.y;
 	return sum;
 }
+template<typename T>
+Vector2<T> Vector2<T>::operator - (Vector2 const& vec1) {
+	Vector2 sub;
+	sub.x = x - vec1.x;
+	sub.y = y - vec1.y;
+	return sub;
+}
+
 template<class T>
 Vector2<T> Vector2<T>::operator * (Vector2 const& vec1) {
 	Vector2 newVec;
@@ -62,6 +72,13 @@ Vector2<T> Vector2<T>::operator + (T const& num) {
 	Vector2 newVec;
 	newVec.x = x + num;
 	newVec.y = y + num;
+	return newVec;
+}
+template<typename T>
+Vector2<T> Vector2<T>::operator - (T const& num) {
+	Vector2 newVec;
+	newVec.x = x - num;
+	newVec.y = y - num;
 	return newVec;
 }
 
@@ -297,4 +314,20 @@ Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
 	}
 	return result;
 }
+
+
+
+
+
+
+//Functions
+
+template<typename T>
+T Det2(Vector2<T> a, Vector2<T> b) {
+	return a.x * b.y - a.y * b.x;
+}
+
+
+
+
 
