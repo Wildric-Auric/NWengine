@@ -15,12 +15,14 @@ template<int s>
 template<typename T>
 void pArray<s>::Pop(int index) {
 	if (index == -1) {
+		topPtr -= 1;
 		index = this->topPtr;
 		delete (T*)ptrArray[topPtr];
 		ptrArray[topPtr] = 0;
 	}
 
 	else {
+		topPtr -= 1;
 		delete (T*)ptrArray[index];
 		ptrArray[index] = 0;
 		//TODO::Do it without a loop, it's slow maybe
