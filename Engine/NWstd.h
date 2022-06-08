@@ -5,7 +5,7 @@ class pArray {
 private:
 	int topPtr = 0;
 public:
-	long ptrArray[s+1] = {0};  //array of pointers
+	void* ptrArray[s+1] = {0};  //array of pointers
 	int size;
 	pArray() { size = s; };
 	~pArray();
