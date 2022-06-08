@@ -4,9 +4,9 @@
 template<int s>
 template<typename T>
 void pArray<s>::Add(T element) {
-	T* elmentPtr = new T;
+	T* elementPtr = new T;
 	*elementPtr = element;
-	arr[topPtr] = (long) elementPtr;
+	ptrArray[topPtr] = (void*) elementPtr;
 	topPtr += 1;
 };
 
@@ -45,13 +45,14 @@ T pArray<s>::Get(int index) {
 }
 
 
-template<int size>
+template<int s>
 template<typename T>
-T* pArray<size>::GetPtr(int index) {
+T* pArray<s>::GetPtr(int index) {
 	return (T*)ptrArray[index];
 }
 
 template<int s>
 pArray<s>::~pArray() {
-	//Find how to delete data of all addresses
+	for (void* p : this->ptrArray)
+		delete p;
 };
