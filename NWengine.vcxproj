@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Ressources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -174,28 +174,34 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Engine\Audio.cpp" />
-    <ClCompile Include="Engine\Collision.cpp" />
+    <ClCompile Include="Engine\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Components\Collision.cpp" />
+    <ClCompile Include="Engine\Components\Script.cpp" />
+    <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\NWstd.cpp" />
-    <ClCompile Include="Engine\Particles.cpp" />
-    <ClCompile Include="Engine\Physics.cpp" />
-    <ClCompile Include="Engine\Camera.cpp" />
-    <ClCompile Include="Engine\Game.cpp">
+    <ClCompile Include="Engine\Parser.cpp" />
+    <ClCompile Include="Engine\Components\Particles.cpp" />
+    <ClCompile Include="Engine\Components\Physics.cpp" />
+    <ClCompile Include="Engine\Rendering\Camera.cpp" />
+    <ClCompile Include="Engine\Context\Game.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Engine\Components\GameObject.cpp" />
     <ClCompile Include="Engine\Globals.cpp" />
     <ClCompile Include="Engine\Inputs.cpp" />
-    <ClCompile Include="Engine\Primitives.cpp" />
+    <ClCompile Include="Engine\Context\Primitives.cpp" />
+    <ClCompile Include="Engine\NWengine.cpp" />
     <ClCompile Include="Engine\RessourcesLoader.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
-    <ClCompile Include="Engine\ShaderManager.cpp" />
+    <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Source.cpp" />
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
     <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Ressources\Scripts\test.cpp" />
+    <ClCompile Include="Engine\Components\Sprite.cpp" />
+    <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -884,24 +890,33 @@
     <ClInclude Include="dependencies\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
-    <ClInclude Include="Engine\Audio.h" />
-    <ClInclude Include="Engine\Collision.h" />
-    <ClInclude Include="Engine\FrameBuffer.h" />
-    <ClInclude Include="Engine\Interface.h" />
+    <ClInclude Include="Engine\Audio\Audio.h" />
+    <ClInclude Include="Engine\Components\Collision.h" />
+    <ClInclude Include="Engine\Components\Components.h" />
+    <ClInclude Include="Engine\Components\Script.h" />
+    <ClInclude Include="Engine\Components\Transform.h" />
+    <ClInclude Include="Engine\Gui\DebugGui.h" />
+    <ClInclude Include="Engine\Gui\HierarchyGui.h" />
+    <ClInclude Include="Engine\Gui\InspectorGui.h" />
+    <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
+    <ClInclude Include="Engine\Gui\SceneViewGui.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
+    <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\NWstd.h" />
     <ClInclude Include="Engine\NWengine.h" />
-    <ClInclude Include="Engine\Particles.h" />
-    <ClInclude Include="Engine\Physics.h" />
-    <ClInclude Include="Engine\Camera.h" />
-    <ClInclude Include="Engine\Game.h" />
-    <ClInclude Include="Engine\GameObject.h" />
+    <ClInclude Include="Engine\Parser.h" />
+    <ClInclude Include="Engine\Components\Particles.h" />
+    <ClInclude Include="Engine\Components\Physics.h" />
+    <ClInclude Include="Engine\Rendering\Camera.h" />
+    <ClInclude Include="Engine\Context\Game.h" />
+    <ClInclude Include="Engine\Components\GameObject.h" />
     <ClInclude Include="Engine\Inputs.h" />
-    <ClInclude Include="Engine\Maths.h" />
-    <ClInclude Include="Engine\Primitives.h" />
+    <ClInclude Include="Engine\Maths\Maths.h" />
+    <ClInclude Include="Engine\Context\Primitives.h" />
     <ClInclude Include="Engine\RessourcesLoader.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\ScriptManager.h" />
-    <ClInclude Include="Engine\ShaderManager.h" />
+    <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Globals.h" />
@@ -909,6 +924,7 @@
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Ressources\Scripts\player.h" />
     <ClInclude Include="Ressources\Scripts\test.h" />
+    <ClInclude Include="Engine\Components\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

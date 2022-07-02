@@ -17,7 +17,7 @@ public:
 	float yspd = 0.0f;
 	virtual void Start() {};
 	virtual void Update();
-	test(GameObjectClone* goc) {
+	test(GameObject* goc) {
 		this->goc = goc;
 		goc->AddComponent<Collider>();
 	};

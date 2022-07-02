@@ -3,10 +3,11 @@
 #include "Scripts/test.h"
 //Should write a program doing all of this
 
-inline Scriptable* CreateScript(std::string name, GameObjectClone* goc) {
+inline Scriptable* CreateScript(std::string name, GameObject* goc) {
+
 	if (name == "player") return new player(goc);
-	else if (name == "test")   return new test(goc);
-	else return nullptr;
+    if (name == "test")   return new test(goc);
+	return nullptr;
 
 }
 

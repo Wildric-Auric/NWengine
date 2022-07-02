@@ -135,6 +135,7 @@ inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directo
 
 inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) {
 	int count = 0;
+	std::cout <<"a  "<< a->size() << "  " << index << '\n';
 	int children = (*a)[index];
 	count += children;
 	int last = 1;
@@ -143,6 +144,7 @@ inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int inde
 		last += temp + 1;
 		count += temp;
 	}
+
 	(*b)[index] = count;
 
 	return count;

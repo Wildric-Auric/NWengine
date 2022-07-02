@@ -1,5 +1,5 @@
 #include "NWstd.h"
-
+#include <iostream>
 
 template<int s>
 template<typename T>
@@ -56,3 +56,13 @@ pArray<s>::~pArray() {
 	for (void* p : this->ptrArray)
 		delete p;
 };
+
+
+template<typename T, int n>
+GeneralTreeNode<T,n>* GeneralTreeNode<T, n>::operator[] (int const& index) {
+	if (index < 0 || index >= nextNum ) {
+		std::cout << "WARNING::Trying to access inexisting node at: " << this << std::endl; //LOG
+		return nullptr;
+	}
+	return arr[index];
+}

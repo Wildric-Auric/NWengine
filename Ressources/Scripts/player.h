@@ -5,7 +5,7 @@
 
 class player : public Scriptable {
 public:
-	std::string name() { return"player"; };
+	std::string name() { return "player"; };
 
 	float isRunning = 0.0f;
 	int isJumping = 0;
@@ -17,7 +17,7 @@ public:
 	float yspd = 0.0f;
 	virtual void Start() {};
 	virtual void Update();
-	player(GameObjectClone* goc) {
+	player(GameObject* goc) {
 		this->goc = goc;
 		goc->AddComponent<Collider>();
 	};

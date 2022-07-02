@@ -1,36 +1,12 @@
 Images:
 	"IMAGE_APPLE":{Ressources/Images/img2.png,1}
 	"IMAGE_WARRIOR_IDLE_1":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png,1}
-	"IMAGE_WARRIOR_IDLE_2":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_2.png,1}
-	"IMAGE_WARRIOR_IDLE_3":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_3.png,1}
-	"IMAGE_WARRIOR_IDLE_4":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_4.png,1}
-	"IMAGE_WARRIOR_IDLE_5":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_5.png,1}
-	"IMAGE_WARRIOR_IDLE_6":{Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_6.png,1}
-	"IMAGE_BACKGROUND":{Ressources/Images/Forrest_Tileset/BG/NonParallax.png,1}
-	"IMAGE_TREE1":{Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0021_Layer-22.png,1}
-	"IMAGE_TREE2":{Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0022_Layer-23.png,1}
-	"IMAGE_BUSH1":{Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0000_Layer-1.png",1}
-	"IMAGE_BUSH2":{Ressources/Images/Forrest_Tileset/Objects/Sliced/obj_0001_Layer-2.png",1}
-	"IMAGE_GROUND":{Ressources/Images/ground.png,1}
-	"IMAGE_TILE1":{Ressources/Images/Interior Wall.png,1}
-	"IMAGE_GROUND_TILE0":{Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_0.png,1}
-	"IMAGE_GROUND_TILE1":{Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_6.png,1}
-	"IMAGE_GROUND_TILE2":{Ressources/Images/Forrest_Tileset/Tiles/cute/sprite_12.png,1}
+
 end
 
 Textures:
 	"tex":{IMAGE_APPLE,1,0}
 	"warriorTex":{IMAGE_WARRIOR_IDLE_1,1,0}
-	"backgroundTex":{IMAGE_BACKGROUND,1,1}
-	"bush1Tex":{IMAGE_BUSH1,1,0}
-	"bush2Tex":{IMAGE_BUSH2,1,0}
-	"tree1Tex":{IMAGE_TREE1,1,0}
-	"tree2Tex":{IMAGE_TREE2,1,0}
-	"groundTex":{IMAGE_GROUND,1,0}
-	"tile1Tex":{IMAGE_TILE1,1,0}
-	"texture_groundTile0":{IMAGE_GROUND_TILE0,1,0}
-	"texture_groundTile1":{IMAGE_GROUND_TILE1,1,0}
-	"texture_groundTile2":{IMAGE_GROUND_TILE2,1,0}
 end	
 
 Shaders:
@@ -45,14 +21,3 @@ Shaders:
 	"shader_particle":{Shaders/Particle.shader}
 end
 
-GameObjects:
-	"grabPass":{grabTex,shader_grabPass}
-	"lightSurface":{grabTex,shader_lightSurface}
-	"warrior":{warriorTex,shader_default}
-	"background":{backgroundTex,shader_default}
-	"ground":{groundTex,shader_default}
-	"wallTile0":{tile1Tex,shader_default}
-	"groundTile0":{texture_groundTile0,shader_default}
-	"groundTile1":{texture_groundTile1,shader_default}
-	"groundTile2":{texture_groundTile2,shader_default}
-end

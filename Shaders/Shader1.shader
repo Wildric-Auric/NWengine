@@ -30,12 +30,8 @@ in vec4 screenPos;
 
 out vec4 FragColor;
 
-
-#define pi 3.14159
 void main(){ 
-    vec2 center = vec2(0.5, 0.5);
     vec4 col = texture(uTex0, uv);
-    // Output to screen
     FragColor = col;
 }
 

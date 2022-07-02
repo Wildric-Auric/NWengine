@@ -1,0 +1,10 @@
+#pragma once
+#include "GL/glew.h"
+#include "glfw3.h"
+
+GLFWwindow* InitContext(int scrWidth, int scrHeight);
+void sizeCallBack(GLFWwindow* window, int width, int height);
+
+void EnableBlend(bool status = 1);
+
+void EnableWireframe(bool status = 1);

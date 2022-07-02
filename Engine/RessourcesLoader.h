@@ -1,25 +1,33 @@
 #pragma once
-#include "ShaderManager.h"
+#include "Shader.h"
 #include "GameObject.h"
 #include <map>
 #include <string>
 
 class Image {
+private:
+	int channels;
 public:
-	Image(const char* path = "Ressources/Images/test.png", bool alpha = 1);
-	unsigned char* tex;
+	Image(std::string path = "Ressources/Images/test.png", bool alpha = 1);
+	uint8* tex;
 	int width;
 	int height;
-	int channels;
 	bool alpha;
+	void Clear();
+	static std::map<std::string, Image> resList;
+	
 };
-extern unsigned char* behindPixels;
 
-extern std::map<int, GameObject*> allObjects;
-extern std::map<std::string, GameObject> objects;
-extern std::map<std::string, Texture> textures;
-extern std::map<std::string, Image> images;
-extern std::map<std::string, Shader> shaders;
 
-void FreeBuffer(unsigned char* buffer);
-void LoadRessources();
+class RessourcesLoader {
+public:
+	//It seems like a namespace
+	static void LoadDefaultRessources();
+	static Shader* LoadShader(std::string path);
+	static Texture* LoadTexture(std::string path, bool alpha  = 1, bool repeat = 1);
+	static void ClearUnusedTextures();
+	static void ClearAllTextures();
+};
+
+void FreeBuffer(uint8* buffer);
+//void LoadRessources();

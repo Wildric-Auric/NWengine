@@ -2,22 +2,22 @@
 #include "Globals.h"
 #include<iostream>
 
-bool input_left, input_right, input_up, input_down, input_d,
-input_1, input_2, input_3, input_0, input_4, input_left_click,
-input_space, usingJoyStick, input_f2, input_enter
-= 0;
-double mousePosX;
-double mousePosY;
+ bool Inputs::input_left, Inputs::input_right, Inputs::input_up, Inputs::input_down, Inputs::input_d,
+ Inputs::input_1, Inputs::input_2, Inputs::input_3, Inputs::input_0, Inputs::input_4, Inputs::input_left_click,
+ Inputs::input_space, Inputs::usingJoystick, Inputs::input_f2, Inputs::input_enter
+ = 0;
+double Inputs::mousePosX;
+double Inputs::mousePosY;
 
-float joystickAxis[6];
+float Inputs::joystickAxis[6] = {0.0f};
 
-void processInput(GLFWwindow* window)
+void Inputs::Process(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
-	mousePosY = WINDOW_HEIGHT - mousePosY;   //Down left as origin
-	usingJoyStick = glfwJoystickPresent(GLFW_JOYSTICK_1);
+	mousePosY = Globals::WINDOW_HEIGHT - mousePosY;   //Down left as origin
+	usingJoystick = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	const unsigned char* buttons = 0;
-	if (usingJoyStick) {
+	if (usingJoystick) {
 		int count;
 		const float* local = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
 		int buttonCount;
@@ -39,7 +39,7 @@ void processInput(GLFWwindow* window)
 	input_2 = glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS;
 	input_3 = glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS;
 	input_4 = glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS;
-	input_space = ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoyStick&& GLFW_PRESS == buttons[1] ); 
+	input_space = ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoystick&& GLFW_PRESS == buttons[1] ); 
 	input_f2 = (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
 	input_enter = (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
 

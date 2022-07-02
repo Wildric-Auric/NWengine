@@ -6,16 +6,18 @@ extern Collider groundCollider[20];
 void test::Update() {
 	isGrounded = 0;
 	static float maxJump = 0.0f;
+	iVec2 position = goc->GetComponent<Transform>()->position; //Called everyframe should fix this by calling it only during start()
+	fVec2 scale = goc->GetComponent<Transform>()->scale;
 	//yspd *= 1-isGrounded;
-	if (isGrounded && input_space) {
+	if (isGrounded && Inputs::input_space) {
 		isJumping = 1;
-		jumpingStartPosition = goc->position.y;
-		goc->position.y += 1;
+		jumpingStartPosition = position.y;
+		position.y += 1;
 		maxJump = -jumpTime / 2 * (jumpTime / 2 - jumpTime);
 	}
 
 	if (isJumping) {
-		timer += deltaTime;
+		timer += Globals::deltaTime;
 
 		yspd = -(jumpHeight / maxJump) * timer * (timer - jumpTime);
 		if (timer > jumpTime) {
@@ -23,12 +25,12 @@ void test::Update() {
 			isJumping = false;
 			timer = 0.0f;
 		}
-		goc->position.y = jumpingStartPosition + yspd;
+		position.y = jumpingStartPosition + yspd;
 	}
-	goc->position.x -= isRunning * 200 * deltaTime;
-	goc->scale.x = sign(isRunning);
+	position.x -= isRunning * 200 * Globals::deltaTime;
+	scale.x = sign(isRunning);
 
 
-	float a = joystickAxis[0];
-	isRunning = Clamp((float)(input_right - input_left) + a, -1.0f, 1.0f);
+	float a = Inputs::joystickAxis[0];
+	isRunning = Clamp((float)(Inputs::input_right - Inputs::input_left) + a, -1.0f, 1.0f);
 }

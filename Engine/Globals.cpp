@@ -1,19 +1,14 @@
 #include "Globals.h"
 #include <windows.h>
-double deltaTime = 0.016;        //Read only in everyfile except mainloops
-iVec2 grav = iVec2(0.0, 10);
-//Consts
-int ORIGINAL_WIDTH = 850;			 //GetSystemMetrics(SM_CXSCREEN); //850
-int ORIGINAL_HEIGHT = 640;           //GetSystemMetrics(SM_CYSCREEN); //640
-const float SCREENRATIO = ((float)ORIGINAL_WIDTH) / ((float)ORIGINAL_HEIGHT);
-int	RENDERING_WIDTH  = ORIGINAL_WIDTH;
-int RENDERING_HEIGHT = ORIGINAL_HEIGHT;
-int WINDOW_WIDTH	 = ORIGINAL_WIDTH;
-int WINDOW_HEIGHT    = ORIGINAL_HEIGHT;
-bool const DEBUG_MODE = true;
-bool isMouseOnGui = false;
 
+double Globals::fps = 60.0;
+double Globals::deltaTime = 0.016;        //Read only in everyfile except mainloop
+//Consts
+int Globals::NATIVE_WIDTH = 850;			 
+int Globals::NATIVE_HEIGHT = 640;          
+const float Globals::SCREENRATIO = ((float)NATIVE_WIDTH) / ((float)NATIVE_HEIGHT);
+int Globals::WINDOW_WIDTH	 = GetSystemMetrics(SM_CXSCREEN); //850;
+int Globals::WINDOW_HEIGHT    = GetSystemMetrics(SM_CYSCREEN); //640
+bool const Globals::DEBUG_MODE = true;
 //Uniforms
-float uTime = 0;
-glm::mat4 projectionMatrix;
-glm::mat4 viewMatrix(1.0);
+float Globals::uTime = 0;

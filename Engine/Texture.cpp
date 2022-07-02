@@ -3,7 +3,10 @@
 #include "GL/glew.h"
 #include "glfw3.h"
 
-Texture::Texture(int width, int height, unsigned char* texRes, bool alpha, bool repeat) {
+
+std::map<std::string, Texture> Texture::resList;
+
+Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat) {
 	size = Vector2<int>(width, height);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -31,7 +34,7 @@ void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
-void Texture::UpdateTexture(int width, int height, unsigned char* texRes, unsigned int slot, bool alpha) {
+void Texture::UpdateTexture(int width, int height, uint8* texRes, unsigned int slot, bool alpha) {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	if (alpha)

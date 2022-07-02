@@ -1,0 +1,37 @@
+GameObject:
+	Name:
+		"Warrior"
+		end
+	Transform:
+		Position:
+			-63
+			71
+			end
+		Scale:
+			1.000000
+			1.000000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			0
+			end
+		Texture:
+			"Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png"
+			1
+			1
+			end
+		Shader:
+			"Shaders/Shader1.shader"
+			end
+		end
+	Camera:
+		Position:
+			0
+			0
+			end
+		Rotation:
+			0.000000
+			end
+		end
+	end

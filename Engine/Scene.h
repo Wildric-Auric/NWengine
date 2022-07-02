@@ -6,9 +6,9 @@
 class Scene {
 public:
 	const char* name;
-	std::deque<GameObjectClone> sceneObjs;
-	std::vector<GameObjectClone*> drawList;
-	void AddObject(GameObjectClone goc);
+	std::deque<GameObject> sceneObjs;
+	std::vector<GameObject*> drawList;
+	void AddObject(GameObject goc);
 	void SortScene();
 	Scene(const char* name);
 	~Scene();
