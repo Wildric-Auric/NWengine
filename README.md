@@ -1,1 +1,1 @@
-![no border trans fixed](https://user-images.githubusercontent.com/70033490/177016024-c6a60b68-4270-4e9c-a7cd-9c304b6eda54.png)
+![Asset 5@4x](https://user-images.githubusercontent.com/70033490/177016472-518a0bb6-1c2f-495f-bf76-293835046b52.png)
