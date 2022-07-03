@@ -2,7 +2,8 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "HierarchyGui.h"
-
+#include "ScriptManager.h"
+#include "Utilities.h"
 class InspectorGui {
 public:
 	static bool isActive;
@@ -40,12 +41,38 @@ public:
 				if (ImGui::CollapsingHeader("Sprite")) {
 					ImGui::DragScalar("Layering Order", ImGuiDataType_S16, &sprite->sortingLayer);
 					ImGui::NewLine();
+					ImGui::NewLine();
+					ImGui::Text("Texture");
+					ImGui::SameLine();
+					if (ImGui::Button(sprite->texture->name.c_str())) {
+						std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
+						if (path != "") sprite->SetTexture(path);
+					}
+
+					ImGui::NewLine();
+					ImGui::NewLine();
+
+				    if (ImGui::Button(sprite->shader->name.c_str())) {
+						std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
+						if (path != "") sprite->SetShader(path);
+					}
+					ImGui::NewLine();
 					if (ImGui::Button("Delete##2")) go->DeleteComponent<Sprite>();
 				}
 			}
 
 			if (script != nullptr) {
+
 				if (ImGui::CollapsingHeader("Script")) {
+					std::string text = "None";
+					if (script->script != nullptr) text = script->script->name();
+					ImGui::Text("Script: ");
+					ImGui::SameLine();
+
+					if (ImGui::Button(text.c_str())) {
+						std::string path = GetFile("Text Files\0*.h\0*.*\0");
+						if (path != "") script->script = CreateScript(GetFileName(path), go); //TODO::Get if file is valid
+					}
 					if (ImGui::Button("Delete##3")) go->DeleteComponent<Script>();
 				}
 			}
