@@ -183,7 +183,7 @@
     <ClCompile Include="Engine\Components\Particles.cpp" />
     <ClCompile Include="Engine\Components\Physics.cpp" />
     <ClCompile Include="Engine\Rendering\Camera.cpp" />
-    <ClCompile Include="Engine\Context\Game.cpp">
+    <ClCompile Include="Engine\Context\Context.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Engine\Components\GameObject.cpp" />
@@ -908,7 +908,7 @@
     <ClInclude Include="Engine\Components\Particles.h" />
     <ClInclude Include="Engine\Components\Physics.h" />
     <ClInclude Include="Engine\Rendering\Camera.h" />
-    <ClInclude Include="Engine\Context\Game.h" />
+    <ClInclude Include="Engine\Context\Context.h" />
     <ClInclude Include="Engine\Components\GameObject.h" />
     <ClInclude Include="Engine\Inputs.h" />
     <ClInclude Include="Engine\Maths\Maths.h" />
