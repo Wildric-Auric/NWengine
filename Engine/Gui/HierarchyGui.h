@@ -34,7 +34,7 @@ public:
 			if (renaming == i) {
 					
 				ImGui::InputText("input name", str0, IM_ARRAYSIZE(str0));
-				if (Inputs::input_enter) {
+				if (Inputs::enter) {
 					it->Rename(std::string(str0));
 					renaming = -1;
 				}
@@ -47,7 +47,7 @@ public:
 		}
 		//Renaming
 		if (selected != -1) {
-			if (Inputs::input_f2) {
+			if (Inputs::f2) {
 				renaming = selected;
 			}
 		}
