@@ -3,9 +3,12 @@
 #include <string>
 #include <vector>
 #include <windows.h>
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 
 #define WIN 
-
 
 
 inline bool IsColliding(Collider* collider1, Collider* collider2, Vector2<int> offset1 = Vector2<int>(0,0)) {
@@ -160,6 +163,54 @@ inline std::string GetExePath() {
 	char path[MAX_PATH];
 	GetModuleFileName(NULL,path, MAX_PATH);
 	return std::string(path);
+}
+
+inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
+	//Thank you Duthomhas
+	char filename[MAX_PATH];
+	OPENFILENAME ofn;
+	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;  // If you have a window to center over, put its HANDLE here
+	/*std::string temp0 = std::string("Text Files\0") + type + std::string("\0*.*\0");
+	const char* temp = temp0.c_str();*/
+
+	ofn.lpstrFilter = type;
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = "Select a File";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+
+	if (GetOpenFileNameA(&ofn))
+	{
+		return filename;
+	}
+	else
+	{
+		// All this stuff below is to tell you exactly how you messed up above. 
+		// Once you've got that fixed, you can often (not always!) reduce it to a 'user cancelled' assumption.
+		switch (CommDlgExtendedError())
+		{
+		case CDERR_DIALOGFAILURE: std::cout << "CDERR_DIALOGFAILURE\n";   break;
+		case CDERR_FINDRESFAILURE: std::cout << "CDERR_FINDRESFAILURE\n";  break;
+		case CDERR_INITIALIZATION: std::cout << "CDERR_INITIALIZATION\n";  break;
+		case CDERR_LOADRESFAILURE: std::cout << "CDERR_LOADRESFAILURE\n";  break;
+		case CDERR_LOADSTRFAILURE: std::cout << "CDERR_LOADSTRFAILURE\n";  break;
+		case CDERR_LOCKRESFAILURE: std::cout << "CDERR_LOCKRESFAILURE\n";  break;
+		case CDERR_MEMALLOCFAILURE: std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
+		case CDERR_MEMLOCKFAILURE: std::cout << "CDERR_MEMLOCKFAILURE\n";  break;
+		case CDERR_NOHINSTANCE: std::cout << "CDERR_NOHINSTANCE\n";     break;
+		case CDERR_NOHOOK: std::cout << "CDERR_NOHOOK\n";          break;
+		case CDERR_NOTEMPLATE: std::cout << "CDERR_NOTEMPLATE\n";      break;
+		case CDERR_STRUCTSIZE: std::cout << "CDERR_STRUCTSIZE\n";      break;
+		case FNERR_BUFFERTOOSMALL: std::cout << "FNERR_BUFFERTOOSMALL\n";  break;
+		case FNERR_INVALIDFILENAME: std::cout << "FNERR_INVALIDFILENAME\n"; break;
+		case FNERR_SUBCLASSFAILURE: std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
+		default: return "You cancelled.\n";
+		}
+	}
+	return "";
 }
 
 #endif
