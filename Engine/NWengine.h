@@ -31,7 +31,7 @@
 #include "Primitives.h"
 #include "Inputs.h"
 #include "Maths.h"
-#include "Game.h"
+#include "Context.h"
 #include "Texture.h"
 #include "Text.h"
 #include "RessourcesLoader.h"

@@ -6,7 +6,7 @@
 void player::Update() {
 	isGrounded = 0;
 	int vCol = 0;
-	int direction = (Inputs::input_right - Inputs::input_left);
+	int direction = (Inputs::right - Inputs::left);
 	goc->GetComponent<Transform>()->position.x += isRunning * 200 * Globals::deltaTime;
 	goc->GetComponent<Transform>()->scale.x = sign(isRunning);
 

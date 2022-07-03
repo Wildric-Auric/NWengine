@@ -9,7 +9,7 @@ void test::Update() {
 	iVec2 position = goc->GetComponent<Transform>()->position; //Called everyframe should fix this by calling it only during start()
 	fVec2 scale = goc->GetComponent<Transform>()->scale;
 	//yspd *= 1-isGrounded;
-	if (isGrounded && Inputs::input_space) {
+	if (isGrounded && Inputs::space) {
 		isJumping = 1;
 		jumpingStartPosition = position.y;
 		position.y += 1;
@@ -32,5 +32,5 @@ void test::Update() {
 
 
 	float a = Inputs::joystickAxis[0];
-	isRunning = Clamp((float)(Inputs::input_right - Inputs::input_left) + a, -1.0f, 1.0f);
+	isRunning = Clamp((float)(Inputs::right - Inputs::left) + a, -1.0f, 1.0f);
 }

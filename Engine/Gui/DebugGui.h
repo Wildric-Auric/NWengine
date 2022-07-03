@@ -10,8 +10,8 @@ public:
 		if (!isActive) return;
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 		ImGui::Text("fps = %f", Globals::fps);
-		ImGui::DragInt("inxdu", &SceneEditorGui::cam.position.x);
-		ImGui::DragFloat("zoomu", &SceneEditorGui::cam.zoom, 0.1, -10.0, 10.0);
+		ImGui::DragInt2("cam pos", &SceneEditorGui::cam.position.x);
+		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, -0.0, 10.0);
 
 		ImGui::Separator();
 		ImGui::ShowDemoWindow();
