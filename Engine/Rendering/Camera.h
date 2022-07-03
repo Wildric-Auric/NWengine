@@ -10,10 +10,12 @@ public:
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
 
+	iVec2 size;
+
 	Camera() {};
 	Camera(GameObject* go);
 
-	void Capture();
+	void Capture(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
 	void Update();
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
 	void MoveTo(Vector2<int> target, float interpolationTime);

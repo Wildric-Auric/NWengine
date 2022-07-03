@@ -1,25 +1,23 @@
 #include "Camera.h"
 #include "Scene.h"
+#include "Context.h"
+void Camera::Capture(float r, float g, float b, float a) {	/// Captures  current scene (see currentScene variable in Scene class)
 
-void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
 
 	this->fbo.Bind();
-	glClearColor(0.1, 0.0, 0.4, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);  //TODO::API wrapper here, make oop for context too
-
-	Camera* temp = ActiveCamera;
-
-	ActiveCamera = this;
-	Scene::currentScene->Draw();
-
-	ActiveCamera = temp;
-
+		Context::Clear(r,g,b,a);
+		Camera* temp = ActiveCamera;
+		ActiveCamera = this;
+		Scene::currentScene->Draw();
+		ActiveCamera = temp;
 	this->fbo.Unbind();
+
 }
 
 
 
 Camera::Camera(GameObject* go) {
+	size = iVec2(Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
 	projectionMatrix = glm::ortho(-(float)Globals::NATIVE_WIDTH / 2.0f, (float)Globals::NATIVE_WIDTH / 2.0f, 
 								  -(float)Globals::NATIVE_HEIGHT / 2.0f, (float)Globals::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
