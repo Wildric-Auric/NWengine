@@ -9,7 +9,7 @@ int8 NWengine::Run() {
 		double deltaTimeSum = 0;
 
 
-		GLFWwindow* window = InitContext(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+		GLFWwindow* window = Context::InitContext(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
 
 		//init imgui
@@ -21,7 +21,7 @@ int8 NWengine::Run() {
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
 
-		EnableBlend(1);
+		Context::EnableBlend(1);
 
 
 		lastTime = glfwGetTime();
@@ -30,20 +30,18 @@ int8 NWengine::Run() {
 		Scene scene0 = Scene("scene0");
 		scene0.LoadScene();
 
-		glClearColor(0.0f, 0.0f, 0.01f, 1.0);
 		while (!glfwWindowShouldClose(window)) {
 			// ImGui
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 			//Clearing for the UI
-			glClear(GL_COLOR_BUFFER_BIT);
+			Context::Clear();
 
 			Inputs::Process(window);
 			Gui::Update();
 
 			Globals::uTime += Globals::deltaTime;
-
 
 			//Drawing shapes
 			Camera::ActiveCamera->Capture();
