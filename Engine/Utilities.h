@@ -180,9 +180,9 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.lpstrTitle = "Select a File";
-	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-	if (GetOpenFileNameA(&ofn))
+	if (GetOpenFileName(&ofn))
 	{
 		return filename;
 	}
@@ -207,10 +207,23 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 		case FNERR_BUFFERTOOSMALL: std::cout << "FNERR_BUFFERTOOSMALL\n";  break;
 		case FNERR_INVALIDFILENAME: std::cout << "FNERR_INVALIDFILENAME\n"; break;
 		case FNERR_SUBCLASSFAILURE: std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
-		default: return "You cancelled.\n";
+		default: return "";
 		}
 	}
 	return "";
+}
+
+inline std::string GetFileName(std::string path) {
+	bool add = 0;
+	std::string name = "";
+	for (int i = path.size() - 1; i > -1; i--) {
+		char c = path[i];
+		if (c == '\\') break;
+		if (add) name = c + name;
+		if (c == '.') add = 1;
+
+	};
+	return name;
 }
 
 #endif
