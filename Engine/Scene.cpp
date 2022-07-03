@@ -3,14 +3,13 @@
 #include<fstream>
 #include"GameObject.h"
 #include"RessourcesLoader.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
 #include <vector>
 #include <iostream>
 #include "ScriptManager.h"
 #include <Parser.h>
 #include <Components.h>
 #include <NWstd.h>
+
 static std::string subKeys[] = {
 	"SortingLayer", "Texture", "Shader",  "Position", "Scale",
 	"Position", "Rotation", "Transform", "Offset", "Name"
@@ -296,7 +295,9 @@ void Scene::Save() {
 
 		if (script != nullptr) {
 			add("Script:", 1);
+
 				add("Name:", 1);
+				//std::cout <<  << std::endl;
 				add(script->script->name(), 0, 1, 1);
 				add("end", -1);
 
@@ -322,6 +323,8 @@ void Scene::Save() {
 
 		add("end", -1);
 	}
+
+
 	data.close();
 }
 
