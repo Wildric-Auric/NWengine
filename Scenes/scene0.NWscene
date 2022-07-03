@@ -4,8 +4,8 @@ GameObject:
 		end
 	Transform:
 		Position:
-			-63
-			71
+			23
+			0
 			end
 		Scale:
 			1.000000
@@ -17,12 +17,17 @@ GameObject:
 			0
 			end
 		Texture:
-			"Ressources/Images/Warrior/Individual Sprite/idle/Warrior_Idle_1.png"
+			"C:\Users\HP\Desktop\NWengine\Ressources\Images\Warrior\Individual Sprite\idle\Warrior_Idle_1.png"
 			1
-			1
+			0
 			end
 		Shader:
 			"Shaders/Shader1.shader"
+			end
+		end
+	Script:
+		Name:
+			"player"
 			end
 		end
 	Camera:
@@ -32,6 +37,67 @@ GameObject:
 			end
 		Rotation:
 			0.000000
+			end
+		end
+	end
+GameObject:
+	Name:
+		"new GameObject"
+		end
+	Transform:
+		Position:
+			0
+			0
+			end
+		Scale:
+			1.000000
+			1.000000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			-16
+			end
+		Texture:
+			"Ressources/Images/img2.png"
+			1
+			1
+			end
+		Shader:
+			"Shaders/Shader1.shader"
+			end
+		end
+	end
+GameObject:
+	Name:
+		"new GameObject1"
+		end
+	Transform:
+		Position:
+			23
+			0
+			end
+		Scale:
+			1.000000
+			1.000000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			0
+			end
+		Texture:
+			"C:\Users\HP\Desktop\Desk\DS4Windows\assets\sPlayer.png"
+			1
+			0
+			end
+		Shader:
+			"Shaders/Shader1.shader"
+			end
+		end
+	Script:
+		Name:
+			"player"
 			end
 		end
 	end
