@@ -25,7 +25,7 @@ public:
 		ImGuiIO& io = ImGui::GetIO();
 
 	    iVec2 mousePosition = iVec2(io.MousePos.x - ImGui::GetCursorScreenPos().x, cam.size.y - io.MousePos.y + ImGui::GetCursorScreenPos().y);
-		bool hover = mousePosition.x < cam.size.x && mousePosition.x > 0 && mousePosition.y < cam.size.y&& mousePosition.y > 0;
+		bool hover = ImGui::IsWindowFocused(); //* (mousePosition.x < cam.size.x&& mousePosition.x > 0 && mousePosition.y < cam.size.y&& mousePosition.y > 0);
 		static bool onpress = 0;
 		static iVec2 pos0 = 0;
 		static iVec2 camPos;
