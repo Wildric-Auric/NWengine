@@ -10,7 +10,7 @@
 
 class Console {
 public:
-	static std::map<std::string, uint16> stack;
+	static std::vector<std::pair<std::string, uint16>> stack;
 	static std::vector<uint8> flags;
 	static void Write(const char* str, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
 };
