@@ -3,7 +3,7 @@
 #include "HierarchyGui.h"
 #include "InspectorGui.h"
 #include "SceneEditorGui.h"
-
+#include "ConsoleGui.h"
 
 
 
@@ -12,7 +12,7 @@ bool DebugGui::isActive				= 1;
 bool HierarchyGui::isActive			= 0;
 bool InspectorGui::isActive			= 0;
 bool SceneEditorGui::isActive		= 0;
-
+bool ConsoleGui::isActive			= 0;
 
 
 int16 HierarchyGui::selected = -1;

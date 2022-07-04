@@ -10,6 +10,7 @@
 #include "HierarchyGui.h"
 #include "InspectorGui.h"
 #include "SceneEditorGui.h"
+#include "ConsoleGui.h"
 
 class Gui {
 public:
@@ -37,6 +38,8 @@ public:
 				if (ImGui::MenuItem("Hierarchy Window"))    HierarchyGui::isActive       = 1;
 				if (ImGui::MenuItem("Inspector Window"))    InspectorGui::isActive       = 1;
 				if (ImGui::MenuItem("Scene Editor"))        SceneEditorGui::isActive	 = 1;
+				if (ImGui::MenuItem("Console"))			    ConsoleGui::isActive		 = 1;
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
@@ -50,5 +53,6 @@ public:
 		HierarchyGui::Show();
 		InspectorGui::Show();
 		SceneEditorGui::Show();
+		ConsoleGui::Show();
 	}
 };

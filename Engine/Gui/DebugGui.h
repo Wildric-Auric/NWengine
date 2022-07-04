@@ -4,6 +4,7 @@
 #include "SceneEditorGui.h"
 #include "Scene.h"
 #include "Utilities.h"
+#include "Console.h"
 class DebugGui {
 public:
 	static bool isActive;
@@ -14,11 +15,14 @@ public:
 		ImGui::DragInt2("cam pos", &SceneEditorGui::cam.position.x);
 		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, -0.0, 10.0);
 		static bool b = 0;
+		static int a = 0;
 		if (ImGui::Button("fuck")) GetFile();
+		ImGui::DragInt("flag", &a, 0.2f, 0, 4);
 		ImGui::Checkbox("Save Scene", &b);
 		if (b) {
 			b = 0;
-			Scene::currentScene->Save();
+			Console::Write((std::string("Hello, this is a test") + std::to_string(a)).c_str(), a);
+
 		}
 		ImGui::Separator();
 		ImGui::ShowDemoWindow();
