@@ -13,6 +13,7 @@ void GameObject::Draw(int8 textureSlot) {
 
 	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
 	Transform* transform = GetComponent<Transform>();
+	if (transform == nullptr) transform = this->AddComponent<Transform>();
 	iVec2 position = transform->position;
 	fVec2 scale = transform->scale;
 	
