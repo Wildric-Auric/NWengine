@@ -44,7 +44,7 @@ public:
 					ImGui::NewLine();
 					ImGui::Text("Texture");
 					ImGui::SameLine();
-					if (ImGui::Button(sprite->texture->name.c_str())) {
+					if (ImGui::Button(sprite->texture->name.c_str(), ImVec2(150,0))) {
 						std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
 						if (path != "") sprite->SetTexture(path);
 					}
@@ -69,7 +69,7 @@ public:
 					ImGui::Text("Script: ");
 					ImGui::SameLine();
 
-					if (ImGui::Button(text.c_str())) {
+					if (ImGui::Button(text.c_str(), ImVec2(150, 0))) {
 						std::string path = GetFile("Text Files\0*.h\0*.*\0");
 						if (path != "") script->script = CreateScript(GetFileName(path), go); //TODO::Get if file is valid
 					}
