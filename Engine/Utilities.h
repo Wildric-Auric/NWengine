@@ -173,18 +173,30 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;  // If you have a window to center over, put its HANDLE here
-	/*std::string temp0 = std::string("Text Files\0") + type + std::string("\0*.*\0");
-	const char* temp = temp0.c_str();*/
-
 	ofn.lpstrFilter = type;
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.lpstrTitle = "Select a File";
 	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-	if (GetOpenFileName(&ofn))
-	{
-		return filename;
+	if (GetOpenFileName(&ofn)) {
+		const char* r = "NWengine\\";
+		std::string f = "";
+		int counter = 0;
+		bool add = 0;
+		for (char c : filename) {
+			if (c == r[counter]) counter++;
+			else counter = 0;
+			if (add) f += c;
+			if (counter > 8) {
+				add = 1;
+			} 
+		}
+		if (add == 0) {
+			std::cout << "ERROR::File not in NWengine directory" << std::endl; //Maybe try adding it to this directory LOG
+			return "";
+		}
+		return f;
 	}
 	else
 	{
