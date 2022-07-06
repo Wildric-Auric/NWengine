@@ -9,26 +9,23 @@ public:
 	static bool isActive;
 	static void Show() {
 		ImGui::Begin("Console", &isActive, ImGuiWindowFlags_MenuBar);
-		uint16 count = 0;
 		for (auto it = Console::stack.begin(); it != Console::stack.end(); it++) {
 
-			switch (Console::flags[count]) {
+			switch (it->flag) {
 				case CONSOLE_DEBUG_MESSAGE:
-					ImGui::Text((it->first + "   ").c_str());
+					ImGui::Text((it->str + "   ").c_str());
 					break;
 				case CONSOLE_WARNING_MESSAGE:
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0), ("WARNING: " + it->first + "   ").c_str());
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0), ("WARNING: " + it->str + "   ").c_str());
 					break;
 				case CONSOLE_ERROR_MESSAGE:
-					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.1f, 1.0), ("ERROR: " + it->first + "   ").c_str());
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.1f, 1.0), ("ERROR: " + it->str + "   ").c_str());
 					break;
 				
 			}
 			ImGui::SameLine();
-			ImGui::Text(std::to_string(it->second).c_str());
+			ImGui::Text(std::to_string(it->number).c_str());
 			ImGui::Separator();
-
-			count += 1;
 		}
 		ImGui::End();
 	};
