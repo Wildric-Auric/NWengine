@@ -34,7 +34,7 @@ std::map<GameObject*, Camera> Camera::componentList;
 void Camera::Update() {
 		//TODO::Optimize this update
 		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)position.x, -(float)position.y, 0.0f));
-		viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 0.0f));
+		viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 1.0f));
 		viewMatrix = glm::rotate(viewMatrix, DegToRad(rotation), glm::vec3(0,0,1));
 }
 
