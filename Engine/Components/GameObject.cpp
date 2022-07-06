@@ -14,6 +14,7 @@ void GameObject::Draw(int8 textureSlot) {
 	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
+
 	iVec2 position = transform->position;
 	fVec2 scale = transform->scale;
 	
@@ -33,10 +34,15 @@ void GameObject::Draw(int8 textureSlot) {
 };
 
 void GameObject::BasicDraw(int8 textureSlot) {
+
+	Sprite* sprite = GetComponent<Sprite>();
+
+	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
 	Transform* transform = GetComponent<Transform>();
+	if (transform == nullptr) transform = this->AddComponent<Transform>();
+
 	iVec2 position = transform->position;
 	fVec2 scale = transform->scale;
-	Sprite* sprite = GetComponent<Sprite>();
 
 	sprite->container.position = position;
 	sprite->shader->SetVector2("uResolution", (float) Globals::NATIVE_WIDTH, (float) Globals::NATIVE_HEIGHT);
