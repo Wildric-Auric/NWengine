@@ -48,5 +48,6 @@
 class NWengine {
 public:
 	static int8 Run();
+	static void MainLoop();
 	static void Shutdown();
 };
