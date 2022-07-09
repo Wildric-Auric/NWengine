@@ -62,7 +62,7 @@ void NWengine::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Camera::ActiveCamera->Capture(1.0, 0.0,0.0);
+		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
 		//Update Scripts
 		for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
 			if (it->second.script != nullptr) it->second.script->Update();
