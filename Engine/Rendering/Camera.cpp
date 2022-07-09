@@ -19,13 +19,13 @@ void Camera::Capture(float r, float g, float b, float a) {	/// Captures  current
 
 void Camera::CaptureWithPostProcessing(void* pp, float r, float g, float b, float a) {
 	PostProcessing* pp2 = (PostProcessing*)pp;
-	this->fbo.Bind();
+	pp2->fbo.Bind();
 		Context::Clear(r, g, b, a);
 		Camera* temp = ActiveCamera;
 		ActiveCamera = this;
 		pp2->renderQuad.Draw();
 		ActiveCamera = temp;
-	this->fbo.Unbind();
+	pp2->fbo.Unbind();
 };
 
 Camera::Camera(GameObject* go) {
@@ -33,7 +33,7 @@ Camera::Camera(GameObject* go) {
 	projectionMatrix = glm::ortho(-(float)Globals::NATIVE_WIDTH / 2.0f, (float)Globals::NATIVE_WIDTH / 2.0f, 
 								  -(float)Globals::NATIVE_HEIGHT / 2.0f, (float)Globals::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
-	fbo = FrameBuffer(&Texture::resList["Camera " + std::to_string(go->id)]);
+	fbo = FrameBuffer();
 
 	attachedObj = go;
 };

@@ -13,7 +13,6 @@ public:
 		if (!isActive) return;
 		if (!f) {
 			GameObject go = GameObject();
-			go.id = 123; //TODO::implement fucking id
 			cam = Camera(&go);
 			f = 1;
 		};
@@ -39,8 +38,8 @@ public:
 		if (onpress) cam.position = camPos - mousePosition + pos0;
 
 		ImGui::Image((void*)(intptr_t)
-			cam.fbo.RenderedImage->texture,
-			ImVec2(cam.fbo.RenderedImage->size.x, cam.fbo.RenderedImage->size.y),
+			cam.fbo.RenderedImage.texture,
+			ImVec2(cam.fbo.RenderedImage.size.x, cam.fbo.RenderedImage.size.y),
 			ImVec2(0, 1), ImVec2(1, 0));
 
 
