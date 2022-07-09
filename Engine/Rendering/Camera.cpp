@@ -1,6 +1,9 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Context.h"
+#include "PostProcessing.h"
+#include "Console.h"
+
 void Camera::Capture(float r, float g, float b, float a) {	/// Captures  current scene (see currentScene variable in Scene class)
 
 
@@ -14,7 +17,16 @@ void Camera::Capture(float r, float g, float b, float a) {	/// Captures  current
 
 }
 
-
+void Camera::CaptureWithPostProcessing(void* pp, float r, float g, float b, float a) {
+	PostProcessing* pp2 = (PostProcessing*)pp;
+	this->fbo.Bind();
+		Context::Clear(r, g, b, a);
+		Camera* temp = ActiveCamera;
+		ActiveCamera = this;
+		pp2->renderQuad.Draw();
+		ActiveCamera = temp;
+	this->fbo.Unbind();
+};
 
 Camera::Camera(GameObject* go) {
 	size = iVec2(Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
@@ -22,6 +34,8 @@ Camera::Camera(GameObject* go) {
 								  -(float)Globals::NATIVE_HEIGHT / 2.0f, (float)Globals::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
 	fbo = FrameBuffer(&Texture::resList["Camera " + std::to_string(go->id)]);
+
+	attachedObj = go;
 };
 
 void Camera::ChangeOrtho(float minX, float maxX, float minY, float maxY) {
@@ -30,12 +44,16 @@ void Camera::ChangeOrtho(float minX, float maxX, float minY, float maxY) {
 
 Camera* Camera::ActiveCamera = nullptr;
 std::map<GameObject*, Camera> Camera::componentList;
-
+#include "Sprite.h"
 void Camera::Update() {
 		//TODO::Optimize this update
 		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)position.x, -(float)position.y, 0.0f));
 		viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 1.0f));
 		viewMatrix = glm::rotate(viewMatrix, DegToRad(rotation), glm::vec3(0,0,1));
+
+		PostProcessing* pp = attachedObj->GetComponent<PostProcessing>();
+		if (pp == nullptr) return;
+		CaptureWithPostProcessing(pp);
 }
 
 void Camera::MoveTo(Vector2<int> target, float targetTime) {
