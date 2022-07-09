@@ -2,6 +2,7 @@
 #include<map>
 #include<vector>
 #include"GameObject.h"
+#include"FrameBuffer.h"
 
 
 #define POST_PROCESSING_CELLS 0
@@ -12,6 +13,8 @@ public:
 	PostProcessing() {};
 	PostProcessing(GameObject* attachedObj);
 	GameObject* attachedObj = nullptr;
+
+	FrameBuffer fbo;
 
 	void SetUp(iVec2 size);
 	void AddFlag(uint16);
