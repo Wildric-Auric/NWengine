@@ -3,14 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include "Shader.h"
-
+#include "Globals.h"
+#include "Console.h"
 
 std::map<std::string, Shader> Shader::resList;
 
 std::pair<const char*, const char*> parseShader(const char* path)
 {
 	std::string frag, vert = "";    //TODO:: Make it directly in the heap
-	unsigned int current = 0;
+	uint8 current = 0;
 	std::ifstream file(path);
 	for (std::string line; std::getline(file, line);)
 	{
@@ -38,7 +39,8 @@ Shader::Shader(std::string path) {
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, log);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION FAILED\n" << log << std::endl;
+		Console::Write((std::string("SHADER::VERTEX::COMPILATION FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
+		Console::Write(log, CONSOLE_ERROR_MESSAGE);
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &(shaderSrc.second), NULL);
@@ -46,7 +48,7 @@ Shader::Shader(std::string path) {
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION FAILED\n" << log << std::endl;
+		Console::Write((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
 	}
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -56,12 +58,17 @@ Shader::Shader(std::string path) {
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, log);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING FAILED\n" << log << std::endl;
+		Console::Write((std::string("SHADER::SHADER::PROGRAM::LINKING FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
+		Console::Write(log, CONSOLE_ERROR_MESSAGE);
 	}
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 };
+
+void Shader::Use() {
+	glUseProgram(shaderProgram);
+}
 
 void Shader::SetMat4x4(const char* name, const float* value) {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, name), 1, GL_FALSE, value);
