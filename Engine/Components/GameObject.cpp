@@ -20,7 +20,7 @@ void GameObject::Draw(int8 textureSlot) {
 	
 
 	sprite->container.position = position;
-	glUseProgram(sprite->shader->shaderProgram);
+	sprite->shader->Use();
 	sprite->shader->SetUniform1f("uTime", Globals::uTime);
 	sprite->shader->SetVector2("uMouse", (float)Inputs::mousePosX, (float)(Inputs::mousePosY));
 	sprite->shader->SetUniform1i("uTex0", textureSlot);
