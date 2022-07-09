@@ -40,11 +40,11 @@ void NWengine::MainLoop() {
 
 	//TESTING----------------
 
-	GameObject pp = GameObject();
-	Sprite* ppspr = pp.AddComponent<Sprite>();
-	ppspr->SetShader("Shaders/Test.shader");
-	ppspr->container = Quad(iVec2(0, 0), Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
-	ppspr->texture = Camera::ActiveCamera->fbo.RenderedImage;
+	//GameObject pp = GameObject();
+	//Sprite* ppspr = pp.AddComponent<Sprite>();
+	//ppspr->SetShader("Shaders/Test.shader");
+	//ppspr->container = Quad(iVec2(0, 0), Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+	//ppspr->texture = Camera::ActiveCamera->fbo.RenderedImage;
 
 	//-------------------------
 
@@ -62,11 +62,12 @@ void NWengine::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Camera::ActiveCamera->Capture();
+		Camera::ActiveCamera->Capture(1.0, 0.0,0.0);
 		//Update Scripts
 		for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
 			if (it->second.script != nullptr) it->second.script->Update();
 		}
+
 		Camera::ActiveCamera->Update();
 
 		//Render Im::Gui
