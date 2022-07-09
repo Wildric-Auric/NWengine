@@ -1,7 +1,7 @@
 //vertex shader
 #version 330 core
 
-layout (location = 0) in vec3 attribPos;
+layout(location = 0) in vec3 attribPos;
 layout(location = 1) in vec2 texCoord;
 
 uniform mat4 uMvp = mat4(1.0);
@@ -30,10 +30,9 @@ in vec4 screenPos;
 
 out vec4 FragColor;
 
-void main(){ 
-    vec4 col = texture(uTex0, uv);
-    //if (col.x > 1.5) col = vec4(0.0, 0.0, 1.0, 1.0);
-    FragColor = vec4(1.0, 1.0, 1.0,1.0);
+void main() {
+    vec4 col = vec4(1.6,1.0,1.0, 1.0);
+    FragColor = col;
 }
 
 
