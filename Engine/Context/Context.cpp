@@ -39,24 +39,36 @@ GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
 }
 
 void Context::EnableBlend(bool status) {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	if (status) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		return;
+	}
+
+	glDisable(GL_BLEND);
+	
+}
+
+void Context::EnableDepthTest(bool status) {
+	if (status) {
+		glEnable(GL_DEPTH_TEST);
+		return;
+	}
+	glDisable(GL_DEPTH_TEST);
 }
 
 void Context::EnableWireframe(bool status) {
 	if (status) {
 		glDisable(GL_BLEND);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+		return;
 	}
-	else {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Context::Clear(float r, float g, float b, float a) { ///RGBA
 	glClearColor(r,g,b,a);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT); //GL_DEPTH_BUFFER_BIT
 }

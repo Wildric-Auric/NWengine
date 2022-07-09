@@ -9,6 +9,7 @@ public:
 	static GLFWwindow* InitContext(int scrWidth, int scrHeight);
 	static void EnableBlend(bool status = 1);
 	static void EnableWireframe(bool status = 1);
+	static void EnableDepthTest(bool status = 1);
 	static void Clear(float r = .0f, float g = .0f, float b = 0.0f, float a = 1.0f);
 };
 
