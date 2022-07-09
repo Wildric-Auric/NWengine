@@ -176,8 +176,10 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Components\Collision.cpp" />
+    <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
+    <ClCompile Include="Engine\Console.cpp" />
     <ClCompile Include="Engine\NWstd.cpp" />
     <ClCompile Include="Engine\Parser.cpp" />
     <ClCompile Include="Engine\Components\Particles.cpp" />
@@ -893,8 +895,11 @@
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\Components\Collision.h" />
     <ClInclude Include="Engine\Components\Components.h" />
+    <ClInclude Include="Engine\Components\PostProcessing.h" />
     <ClInclude Include="Engine\Components\Script.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
+    <ClInclude Include="Engine\Console.h" />
+    <ClInclude Include="Engine\Gui\ConsoleGui.h" />
     <ClInclude Include="Engine\Gui\DebugGui.h" />
     <ClInclude Include="Engine\Gui\HierarchyGui.h" />
     <ClInclude Include="Engine\Gui\InspectorGui.h" />
@@ -1662,6 +1667,7 @@
     <None Include="dependencies\vendor\glm\gtx\wrap.inl" />
     <None Include="Shaders\Background.shader" />
     <None Include="Shaders\GrabPass.shader" />
+    <None Include="Shaders\gradient.shader" />
     <None Include="Shaders\LightSurface.shader" />
     <None Include="Shaders\Line.shader" />
     <None Include="Shaders\Particle.shader" />
