@@ -49,6 +49,7 @@ Shader::Shader(std::string path) {
 	if (!successInfo) {
 		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
 		Console::Write((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
+		Console::Write(log, CONSOLE_ERROR_MESSAGE);
 	}
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
