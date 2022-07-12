@@ -1,14 +1,15 @@
 #pragma once
 #include "GameObject.h"
-#include<vector>
-#include<deque>
+#include<list>
 
 class Scene {
 public:
 	const char* name;
-	std::deque<GameObject> sceneObjs;
-	std::vector<GameObject*> drawList;
+	std::list<GameObject> sceneObjs;
+	std::list<GameObject*> drawList;
 	void AddObject(GameObject goc);
+	void DeleteObject(uint32 index);
+	void DeleteObject(std::string name);
 	void SortScene();
 	Scene(const char* name);
 	~Scene();

@@ -20,17 +20,20 @@ public:
 		}
 
 		ImGui::Begin("Hierarchy", &isActive, ImGuiWindowFlags_MenuBar);
-		ImGui::OpenPopupOnItemClick("create", ImGuiPopupFlags_MouseButtonRight);
-		if (ImGui::BeginPopupContextWindow("create")) {
+		ImGui::OpenPopupOnItemClick("createordelete", ImGuiPopupFlags_MouseButtonRight);
+		if (ImGui::BeginPopupContextWindow("createordelete")) {
 	
 			if (ImGui::Selectable("new GameObject")) {
 				Scene::currentScene->AddObject(GameObject());
+			}
+			if (selected != -1 && ImGui::Selectable("Delete GameObject")) {
+				Scene::currentScene->DeleteObject(selected);
 			}
 			ImGui::EndPopup();
 		}
 	
 		int8 i = 0;
-		for (auto it = Scene::currentScene->sceneObjs.begin(); it < Scene::currentScene->sceneObjs.end(); it++) {
+		for (auto it = Scene::currentScene->sceneObjs.begin(); it != Scene::currentScene->sceneObjs.end(); it++) {
 			if (renaming == i) {
 					
 				ImGui::InputText("input name", str0, IM_ARRAYSIZE(str0));

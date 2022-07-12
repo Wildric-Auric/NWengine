@@ -22,37 +22,75 @@ Scene::Scene(const char* name) {
 
 void Scene::SortScene() {
 	//Insertion sort ; It won't be called everyframe 
+	auto it = drawList.begin();
 	for (uint16 i = 1; i < drawList.size(); i++) {
-		GameObject* temp = drawList[i];
+		std::advance(it, 1);
+		GameObject* temp = *it;
 		int j = i - 1;
 		int16 layer0 = -2000;
 		int16 layer  =  -2000;
 		Sprite* sprite0 = temp->GetComponent<Sprite>();
-		Sprite* sprite  = drawList[j]->GetComponent<Sprite>();
+		auto it0 = drawList.begin();
+		std::advance(it0, j);
+		Sprite* sprite  = (*it0)->GetComponent<Sprite>();
 		if (sprite0 != nullptr) layer0 = sprite0->sortingLayer;
 		
 		if (sprite != nullptr) layer = sprite->sortingLayer;
 		
 		while (j>=0 && layer > layer0) {
-				GameObject* temp = drawList[i];
-				drawList[j+1] = drawList[j];
+				GameObject* j0 = *it0;
+				std::advance(it0, 1);
+				auto j1 = it0;
+				*j1 = j0;
 				j--;
+				if (j == -1) continue;
+				std::advance(it0, -2);
 		}
-		drawList[j + 1] = temp;
+		std::advance(it0, 1);
+		if (j == -1) std::advance(it0,-2);
+		*it0 = temp;
+
 	}
 }
 
 void Scene::AddObject(GameObject goc) {
 	sceneObjs.push_back(goc);
-	drawList.clear(); /*	Clearing drawList and filling it again is done because of the contiguous
-							nature of vectors which makes reallocation change initial adresses
-							TODO::Optimize this by using deque instead of Vector
-					  */
-	for (uint16 i = 0; i < sceneObjs.size(); ++i) {
-		drawList.push_back(&sceneObjs[i]);
-	} 
+	drawList.push_back(&sceneObjs.back());
 }
 
+void Scene::DeleteObject(uint32 index) {
+	auto it1 = sceneObjs.begin();
+	std::advance(it1, index);
+	GameObject* ptr = &(*it1);
+	uint32 count = 0;
+
+
+
+	ptr->DeleteComponent<Camera>();
+	ptr->DeleteComponent<Sprite>();
+	ptr->DeleteComponent<Transform>();
+	ptr->DeleteComponent<Collider2>();
+	ptr->DeleteComponent<Script>();
+
+	//That should be very slow; TODO:: Add polymorphism to Components and delete them easily then
+
+
+	for (auto it = drawList.begin(); it != drawList.end(); it++) {
+		GameObject* ptr1 = *it;
+		if (ptr1 == ptr) {
+			auto it = drawList.begin();
+			std::advance(it, count);
+			drawList.erase(it);
+			break;
+		}
+		count++;
+	}
+	sceneObjs.erase(it1);
+};
+
+void Scene::DeleteObject(std::string name) {
+	return;
+}
 void Scene::Draw() {
 
 	SortScene();
@@ -74,7 +112,6 @@ void Scene::LoadScene() {
 	Collider2* collider    =    nullptr;
 	Script* script         =    nullptr;
 	Camera* cam            =	nullptr;
-
 
 	parser.Parse("Scenes/" + (std::string)name + std::string(".NWscene"));
 

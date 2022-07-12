@@ -21,7 +21,9 @@ public:
 		Camera* cam = nullptr;
 
 		if (HierarchyGui::selected > -1 && HierarchyGui::selected < Scene::currentScene->sceneObjs.size()) {
-			go = &Scene::currentScene->sceneObjs[HierarchyGui::selected];
+			auto it = Scene::currentScene->sceneObjs.begin();
+			std::advance(it, HierarchyGui::selected);
+			go = &(*it);
 			//TODO::Check performance of getting all components each frame
 			sprite = go->GetComponent<Sprite>();
 			transform = go->GetComponent<Transform>();
