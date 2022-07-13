@@ -8,7 +8,7 @@
 #define POST_PROCESSING_CELLS 0
 #define POST_PROCESSING_BLOOM 1
 
-class PostProcessing {
+class PostProcessing : public GameComponent {
 public:
 	PostProcessing() {};
 	PostProcessing(GameObject* attachedObj);

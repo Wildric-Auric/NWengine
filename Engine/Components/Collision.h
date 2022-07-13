@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include <vector>
-class Collider2 {
+class Collider2 : public GameComponent {
 	//Base Collider class
 private:
 	Vector2<int> manualSize;

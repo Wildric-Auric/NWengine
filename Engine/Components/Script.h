@@ -1,7 +1,7 @@
 #pragma once
 #include <GameObject.h>
 
-class Script {
+class Script : public GameComponent {
 public:
 	Script() {};
 	Script(GameObject* attachedObj);

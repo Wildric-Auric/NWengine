@@ -5,7 +5,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "FrameBuffer.h"
 
-class Camera {
+class Camera : public GameComponent {
 public:
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);

@@ -4,7 +4,7 @@
 #include "RessourcesLoader.h"
 
 
-class Sprite {
+class Sprite : public GameComponent {
 private:
 public:
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
