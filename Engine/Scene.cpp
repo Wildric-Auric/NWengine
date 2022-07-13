@@ -64,16 +64,9 @@ void Scene::DeleteObject(uint32 index) {
 	GameObject* ptr = &(*it1);
 	uint32 count = 0;
 
-
-
-	ptr->DeleteComponent<Camera>();
-	ptr->DeleteComponent<Sprite>();
-	ptr->DeleteComponent<Transform>();
-	ptr->DeleteComponent<Collider2>();
-	ptr->DeleteComponent<Script>();
-
-	//That should be very slow; TODO:: Add polymorphism to Components and delete them easily then
-
+	for (void* component : ptr->components) {
+		((GameComponent*)component)->componentList.erase(ptr);
+	}
 
 	for (auto it = drawList.begin(); it != drawList.end(); it++) {
 		GameObject* ptr1 = *it;
