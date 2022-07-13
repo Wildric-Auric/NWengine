@@ -6,7 +6,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Shader.h"
-#include "map"
+#include <map>
+#include <vector>
 
 //Virtual
 class Drawable {
@@ -18,12 +19,14 @@ class Updatable {
 public:
 	virtual void Update() {};
 };
-//-----------------
 
+
+//-----------------
 class GameObject : public Drawable {
 private:
 	static int numberOfGameObjects;
 public:
+	std::vector<void*> components;
 	//int id;  //ReadOnly
 	std::string name  = "new GameObject"; //Read only see Rename function;
 	//identifier
@@ -48,11 +51,19 @@ public:
 	template<typename T>
 	T* AddComponent() {
 		T::componentList[this] = T(this);
-		return &(T::componentList[this]);
+		T* ptr = &(T::componentList[this]);
+		components.push_back(ptr);
+		return ptr;
 	};
 
 	template<typename T>
 	void DeleteComponent() {
+		if (T::componentList.find(this) == T::componentList.end()) return;
+		for (int i = 0; i < components.size(); i++) {
+			if (components[i] == &(T::componentList[this]))
+				components.erase(components.begin() + i);
+		}
+		;
 		T::componentList.erase(this);
 	}
 };
@@ -95,5 +106,10 @@ public:
 };
 
 
+
+class GameComponent {
+public:
+	static std::map<GameObject*, GameComponent> componentList;
+};
 
 //------------------------------------

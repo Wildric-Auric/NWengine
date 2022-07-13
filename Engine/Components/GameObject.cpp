@@ -36,7 +36,6 @@ void GameObject::Draw(int8 textureSlot) {
 void GameObject::BasicDraw(int8 textureSlot) {
 
 	Sprite* sprite = GetComponent<Sprite>();
-
 	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
@@ -78,6 +77,9 @@ GameObject::GameObject()
 	numberOfGameObjects += 1;
 	Rename("new GameObject");
 };
+
+
+std::map< GameObject*, GameComponent > GameComponent::componentList;
 
 Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
 	this->offset = offset;
