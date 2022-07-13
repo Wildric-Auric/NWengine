@@ -28,6 +28,7 @@ public:
 			}
 			if (selected != -1 && ImGui::Selectable("Delete GameObject")) {
 				Scene::currentScene->DeleteObject(selected);
+				selected = -1;
 			}
 			ImGui::EndPopup();
 		}
