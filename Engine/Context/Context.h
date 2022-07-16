@@ -11,5 +11,6 @@ public:
 	static void EnableWireframe(bool status = 1);
 	static void EnableDepthTest(bool status = 1);
 	static void Clear(float r = .0f, float g = .0f, float b = 0.0f, float a = 1.0f);
+	static void SetViewPort(int x, int y, int sizeX, int sizeY);
 };
 

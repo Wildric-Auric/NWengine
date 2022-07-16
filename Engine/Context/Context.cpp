@@ -8,9 +8,11 @@ void sizeCallBack(GLFWwindow* window, int width, int height)
 {
 		Globals::WINDOW_WIDTH = width;
 		Globals::WINDOW_HEIGHT = height;
-		//RENDERING_WIDTH = (int)(height * SCREENRATIO);
-		//RENDERING_HEIGHT = height;
-	    glViewport(0, 0, Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+		glViewport(0, 0, Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+}
+
+void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
+	glViewport(x, y, sizeX, sizeY);
 }
 
 GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
