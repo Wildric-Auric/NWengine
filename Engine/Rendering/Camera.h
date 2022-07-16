@@ -11,6 +11,7 @@ public:
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
 
 	iVec2 size;
+	iVec2 viewPortSize;
 
 	Camera() {};
 	Camera(GameObject* go);
@@ -21,6 +22,7 @@ public:
 
 	void Update();
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
+	void ChangeOrtho(float sizeX, float sizeY);
 	void MoveTo(Vector2<int> target, float interpolationTime);
 	Vector2<int> position;
 	float rotation = 0.0f;
