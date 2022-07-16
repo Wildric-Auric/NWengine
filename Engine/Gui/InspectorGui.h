@@ -85,14 +85,42 @@ public:
 				}
 			}
 
+			using namespace std::string_literals;
 			if (cam != nullptr) {
 				if (ImGui::CollapsingHeader("Camera")) {
+					//TODO::Handle no camera in the scene
+				
+					static std::string array = (cam->ActiveCamera->attachedObj->name + "\0"s);
+					static int arraySize = 1;
+					static int camIndex = 0;
+
+					array = "";
+					uint16 count = 0;
+					arraySize = cam->componentList.size();
+					for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
+						array += it->first->name + "\0"s;
+						if (count == camIndex) cam->ActiveCamera = &it->second;
+						count += 1;
+					}
+
+					if (ImGui::Combo("Active Camera", &camIndex, array.c_str(), arraySize)) {
+						//TODO::Only update array if user interacts with combo
+					};
+
+					ImGui::DragInt2("Camera Position", &(cam->position.x));
+					if (ImGui::DragInt2("Camera Size", &(cam->size.x))) {
+						cam->ChangeOrtho(cam->size.x, cam->size.y);
+					}
+
+					if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
+						cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
+					};
+
+
 					if (ImGui::Button("Delete##5")) go->DeleteComponent<Camera>(); //TODO::ACTIVE CAMERA ERROR!!
 				}
 			}
-
-		
-			ImGui::Separator();
+			
 			ImGui::NewLine();
 			ImGui::NewLine();
 
