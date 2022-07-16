@@ -9,11 +9,11 @@ private:
 	uint32 framebuffer;
 public: 
 	Texture RenderedImage;
-    FrameBuffer() {
+    FrameBuffer(uint16 sizeX = Globals::NATIVE_WIDTH, uint16 sizeY = Globals::NATIVE_HEIGHT) {
 		if (Context::window == nullptr) return;
 		glGenFramebuffers(1, &framebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	    RenderedImage = Texture(Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT, nullptr, 1,0);
+	    RenderedImage = Texture(sizeX, sizeY, nullptr, 1,0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, RenderedImage.texture, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
