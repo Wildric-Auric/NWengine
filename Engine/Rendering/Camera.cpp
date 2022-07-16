@@ -6,7 +6,7 @@
 
 void Camera::Capture(float r, float g, float b, float a) {	/// Captures  current scene (see currentScene variable in Scene class)
 
-
+	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
 		Context::Clear(r,g,b,a);
 		Camera* temp = ActiveCamera;
@@ -30,6 +30,7 @@ void Camera::CaptureWithPostProcessing(void* pp, float r, float g, float b, floa
 
 Camera::Camera(GameObject* go) {
 	size = iVec2(Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+	viewPortSize = size;
 	projectionMatrix = glm::ortho(-(float)Globals::NATIVE_WIDTH / 2.0f, (float)Globals::NATIVE_WIDTH / 2.0f, 
 								  -(float)Globals::NATIVE_HEIGHT / 2.0f, (float)Globals::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
@@ -40,6 +41,10 @@ Camera::Camera(GameObject* go) {
 
 void Camera::ChangeOrtho(float minX, float maxX, float minY, float maxY) {
 	projectionMatrix = glm::ortho(minX, maxX, minY, maxY);
+}
+
+void Camera::ChangeOrtho(float sizeX, float sizeY) {
+	projectionMatrix = glm::ortho(-sizeX / 2.0, sizeX / 2.0, -sizeY / 2.0, sizeY / 2.0);
 }
 
 Camera* Camera::ActiveCamera = nullptr;
