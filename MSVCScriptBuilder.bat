@@ -1,5 +1,10 @@
 @echo off
-cl /D_USRDLL /D_WINDLL -I C:\Users\HP\Desktop\NWengine^
+call vcvars32
+
+echo Set cl
+
+cl /D_USRDLL /D_WINDLL^
+ -I C:\Users\HP\Desktop\NWengine^
  -I C:\Users\HP\Desktop\NWengine\dependencies\GLEW\include^
  -I C:\Users\HP\Desktop\NWengine\dependencies\GLFW\include^
  -I C:\Users\HP\Desktop\NWengine\dependencies\vendor^
@@ -14,6 +19,8 @@ cl /D_USRDLL /D_WINDLL -I C:\Users\HP\Desktop\NWengine^
  -I C:\Users\HP\Desktop\NWengine\Engine\Gui^
  -I C:\Users\HP\Desktop\NWengine\Engine\Maths^
  -I C:\Users\HP\Desktop\NWengine\Engine\Rendering^
- dllTest.cpp^
- /link /DLL /OUT:dllTest.dll
-del *.o
+  Ressources\Scripts\dllTest.cpp^
+ /link /DLL /OUT:ScriptDlls\dllTest.dll
+
+del *.obj
+del ScriptDlls\dllTest.lib

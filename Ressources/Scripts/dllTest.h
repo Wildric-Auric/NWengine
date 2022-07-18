@@ -8,6 +8,7 @@
 
  class dllTest : public Scriptable {
 public:
+	bool boolean = 1;
 	 void Update();
 	dllTest(GameObject* goc);
 	~dllTest() { delete this; };

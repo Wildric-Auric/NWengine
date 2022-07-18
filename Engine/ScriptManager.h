@@ -27,7 +27,7 @@ inline Scriptable* CreateScript(std::string name, GameObject* go) {
 
 	if (name == "player") return new player(go);
 	if (name == "test")   return new test(go);
-	if (name == "dllTest") return GetScriptFromDLL("C:/Users/HP/Desktop/NWengine/Ressources/Scripts/dllTest", go);
+	if (name == "dllTest") return GetScriptFromDLL("C:\\Users\\HP\\Desktop\\NWengine\\ScriptDlls\\dllTest", go);
 	return nullptr;
 
 };

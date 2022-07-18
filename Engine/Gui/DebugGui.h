@@ -15,7 +15,7 @@ public:
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 		ImGui::Text("fps = %f", Globals::fps);
 		ImGui::DragInt2("cam pos", &SceneEditorGui::cam.position.x);
-		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, -0.0, 10.0);
+		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
