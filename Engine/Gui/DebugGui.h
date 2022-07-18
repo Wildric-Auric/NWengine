@@ -6,6 +6,7 @@
 #include "Utilities.h"
 #include "PostProcessing.h"
 #include "Console.h"
+#include "ScriptManager.h"
 class DebugGui {
 public:
 	static bool isActive;
@@ -17,9 +18,16 @@ public:
 		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, -0.0, 10.0);
 		static bool b = 0;
 		static int a = 0;
+		static bool c = 0;
+		static Script* ee = nullptr;
+		static GameObject obj = GameObject();
 		ImGui::DragInt("flag", &a, 0.2f, 0, 4);
 		ImGui::Checkbox("Save Scene", &b);
+		ImGui::Checkbox("SCRIPT TEXT", &c);
 		GameObject* go = nullptr;
+		//------------------------
+
+		//PostProcessing test
 		if (b) {
 			b = 0;
 			for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
@@ -30,6 +38,19 @@ public:
 				}
 			}
 		}
+
+		//Script load test
+		if (c) {
+			c = 0;
+			ee = obj.AddComponent<Script>();
+			ee->script = CreateScript("dllTest", &obj);
+		}
+		
+		if (ee != nullptr) {
+			ee->script->Update();
+		}
+
+		//-------------------------
 
 		ImGui::Separator();
 		ImGui::ShowDemoWindow();

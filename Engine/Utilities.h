@@ -54,6 +54,16 @@ void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 * like this and think it won't affect too much engine performance.
 */
 
+struct DllHandle
+{
+	DllHandle(const char* const filename) : h(LoadLibrary(filename)) {}
+	~DllHandle() { }//if (h) FreeLibrary(h); }
+	const HINSTANCE Get() const { return h; }
+
+private:
+	HINSTANCE h;
+};
+
 inline std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -237,5 +247,7 @@ inline std::string GetFileName(std::string path) {
 	};
 	return name;
 }
+
+
 
 #endif
