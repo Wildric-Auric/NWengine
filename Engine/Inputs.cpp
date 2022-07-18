@@ -1,6 +1,7 @@
 #include "Inputs.h"
 #include "Globals.h"
 #include<iostream>
+#include <cstring>
 
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,

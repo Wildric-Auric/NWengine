@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Globals.h"
 #include "Console.h"
+#include <string.h>
 
 std::map<std::string, Shader> Shader::resList;
 
