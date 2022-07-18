@@ -6,7 +6,6 @@
 class player : public Scriptable {
 public:
 	std::string name() { return "player"; };
-
 	float isRunning = 0.0f;
 	int isJumping = 0;
 	int isGrounded = 1;

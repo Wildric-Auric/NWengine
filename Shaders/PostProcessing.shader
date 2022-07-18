@@ -20,8 +20,8 @@ void main() {
 //fragment shader
 #version 330 core
 
-float strength = 0.5;
-float depth = 0.5;
+float strength = 0.0;
+float depth = 0.9;
 
 uniform float uTime;
 uniform sampler2D uTex0;
