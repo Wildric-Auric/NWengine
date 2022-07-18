@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 
 
-#define PI 3.14159265359 //I feel fan-tas-tique ahay-ahay
+
+#define PI 3.14159265359
 #define ONEDIV180 0.00555555555
 
 template<typename T>
