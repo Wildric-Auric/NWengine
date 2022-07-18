@@ -3,11 +3,6 @@
 #include<string>
 #include "Globals.h"
 
-static enum Keys {
-	GAME_OBJECT,
-	COMPONENT,
-	CAMERA
-};
 
 class Parser {
 private:
