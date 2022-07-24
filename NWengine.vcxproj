@@ -175,6 +175,7 @@
     <ClCompile Include="Engine\Components\Script.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\Console.cpp" />
+    <ClCompile Include="Engine\NWscripting.cpp" />
     <ClCompile Include="Engine\NWstd.cpp" />
     <ClCompile Include="Engine\Parser.cpp" />
     <ClCompile Include="Engine\Components\Particles.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="Engine\NWengine.cpp" />
     <ClCompile Include="Engine\RessourcesLoader.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
+    <ClCompile Include="Engine\ScriptManager.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Source.cpp" />
     <ClCompile Include="Engine\Text.cpp" />
@@ -873,6 +875,7 @@
     <ClInclude Include="Engine\Gui\InspectorGui.h" />
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
+    <ClInclude Include="Engine\NWscripting.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\NWstd.h" />

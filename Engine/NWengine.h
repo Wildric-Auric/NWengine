@@ -41,7 +41,7 @@
 #include "Scene.h"
 #include "Audio.h"
 #include "Components.h"
-
+#include "NWscripting.h"
 
 
 

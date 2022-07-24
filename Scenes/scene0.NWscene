@@ -4,7 +4,7 @@ GameObject:
 		end
 	Transform:
 		Position:
-			633
+			204
 			55
 			end
 		Scale:
@@ -14,7 +14,7 @@ GameObject:
 		end
 	Sprite:
 		SortingLayer:
-			30
+			9
 			end
 		Texture:
 			"Ressources\Images\Warrior\Individual Sprite\idle\Warrior_Idle_1.png"
