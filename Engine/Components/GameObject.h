@@ -98,11 +98,12 @@ public:
 
 class Scriptable {
 public:
-	Scriptable(GameObject* goc = nullptr) {}
-	virtual ~Scriptable() {}; // <= important!
+	Scriptable(GameObject* goc = nullptr, void* nws = nullptr) {}
+	virtual ~Scriptable() {};
 	virtual void Start() {};
 	virtual void Update() {};
 	virtual std::string name() { return "None"; };
+	void* nws = nullptr;
 	GameObject* goc = nullptr;
 };
 
