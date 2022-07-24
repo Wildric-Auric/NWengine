@@ -7,6 +7,7 @@
 #include "PostProcessing.h"
 #include "Console.h"
 #include "ScriptManager.h"
+
 class DebugGui {
 public:
 	static bool isActive;
@@ -44,10 +45,6 @@ public:
 			c = 0;
 			ee = obj.AddComponent<Script>();
 			ee->script = CreateScript("dllTest", &obj);
-		}
-		
-		if (ee != nullptr) {
-			ee->script->Update();
 		}
 
 		//-------------------------
