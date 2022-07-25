@@ -19,6 +19,11 @@ void NW::ConsoleWrite(std::string log) {
 	consoleStack.push_front(log);
 }
 
+void NW::Start() {
+	//componentsLists["Transform"] = &Transform::componentList;
+}
+
+
 void NW::Update() {
 	//Setting inputs
 	keys["up"] = Inputs::up;

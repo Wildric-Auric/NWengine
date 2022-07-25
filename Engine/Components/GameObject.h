@@ -111,7 +111,7 @@ public:
 
 class GameComponent {
 public:
+	virtual std::string GetType() { return "GameComponent"; }
 	static std::map<GameObject*, GameComponent> componentList;
 };
-
 //------------------------------------

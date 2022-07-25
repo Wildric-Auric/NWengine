@@ -44,7 +44,7 @@ public:
 		if (c) {
 			c = 0;
 			ee = obj.AddComponent<Script>();
-			ee->script = CreateScript("dllTest", &obj);
+			ee->script = ScriptManager::CreateScript("dllTest", &obj);
 		}
 
 		//-------------------------

@@ -3,7 +3,7 @@
 #include <Map>
 #include <string>
 #include <deque>
-
+#include "Transform.h"
 
 class NW {
 private:
@@ -16,9 +16,11 @@ private:
 	std::deque<std::string> consoleStack;
 
 public:
+	std::map<std::string, std::map<GameObject*, GameComponent>*> componentsLists;
 	static NW* ptr;
 	void ConsoleWrite(std::string log);
 	bool GetPressedKey(std::string key);
 
+	void Start();
 	void Update();
 };

@@ -233,7 +233,7 @@ void Scene::LoadScene() {
 		if (stack[stack.size() - 2] == "Script") {
 
 			if (stack.back() == "Name") {
-				script->script = CreateScript(value, go);
+				script->script = ScriptManager::CreateScript(value, go);
 				continue;
 			}
 		}

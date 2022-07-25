@@ -18,7 +18,7 @@ cl /MD /D_USRDLL /D_WINDLL^
  -I C:\Users\HP\Desktop\NWengine\Engine\Gui^
  -I C:\Users\HP\Desktop\NWengine\Engine\Maths^
  -I C:\Users\HP\Desktop\NWengine\Engine\Rendering^
- Ressources\Scripts\dllTest.cpp^
+ Ressources\Scripts\player.cpp^
  Release\Inputs.obj^
  Release\Transform.obj^
  Release\Globals.obj^
@@ -49,7 +49,7 @@ cl /MD /D_USRDLL /D_WINDLL^
  uuid.lib^
  odbc32.lib^
  odbccp32.lib^
- /DLL /OUT:ScriptDlls\dllTest.dll
+ /DLL /OUT:ScriptDlls\player.dll
 
 del *.obj
-del ScriptDlls\dllTest.lib
+del ScriptDlls\player.lib

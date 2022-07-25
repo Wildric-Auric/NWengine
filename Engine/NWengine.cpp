@@ -16,6 +16,7 @@ int8 NWengine::Run() {
 		//Init scripting (native)
 		NW::ptr = new NW;
 		*NW::ptr = NW();
+		NW::ptr->Start();
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
 

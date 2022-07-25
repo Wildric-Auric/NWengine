@@ -1,16 +1,17 @@
 #include "player.h"
-#include "NWengine.h"
-#include "Utilities.h"
 
+player::player(GameObject* goc, NW* nws) {
+	this->goc = goc;
+	this->nws = nws;
+}
 
 void player::Update() {
-	isGrounded = 0;
-	int vCol = 0;
-	int direction = (Inputs::right - Inputs::left);
-	goc->GetComponent<Transform>()->position.x += isRunning * 200 * Globals::deltaTime;
-	goc->GetComponent<Transform>()->scale.x = sign(isRunning);
-
-	float a = 0;
-	if (direction == vCol) direction = 0;
-	isRunning = Clamp((float)direction + a, -1.0f, 1.0f);
+	float s = (nws->GetPressedKey("right") - nws->GetPressedKey("left"))*0.1;
+	goc->AddComponent<Transform>();
+	goc->GetComponent<Transform>()->position.x += s;
 }
+
+
+Scriptable* GetScript(GameObject* goc, NW* nws) {
+	return new player(goc, nws);
+};

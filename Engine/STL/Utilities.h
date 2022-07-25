@@ -236,16 +236,25 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 }
 
 inline std::string GetFileName(std::string path) {
-	bool add = 0;
-	std::string name = "";
-	for (int i = path.size() - 1; i > -1; i--) {
-		char c = path[i];
-		if (c == '\\') break;
-		if (add) name = c + name;
-		if (c == '.') add = 1;
+	std::string filename = "";
+	std::string extension = "";
+	bool state = 0;
+	for (auto chr : path) {
+		if (chr == '.') {
+			filename += extension;
+			extension = "";
+			state = 1;
+		}
+		if ((int)chr == (int)'\\') {
+			filename = "";
+			extension = "";
+			continue;
+		}
+		if (!state) filename += chr;
+		else extension += chr;
 
-	};
-	return name;
+	}
+	return filename;
 }
 
 

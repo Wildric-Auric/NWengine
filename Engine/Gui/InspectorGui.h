@@ -73,7 +73,7 @@ public:
 
 					if (ImGui::Button(text.c_str(), ImVec2(150, 0))) {
 						std::string path = GetFile("Text Files\0*.h\0*.*\0");
-						if (path != "") script->script = CreateScript(GetFileName(path), go); //TODO::Get if file is valid
+						if (path != "") script->script = ScriptManager::CreateScript(GetFileName(path), go); //TODO::Get if file is valid
 					}
 					if (ImGui::Button("Delete##3")) go->DeleteComponent<Script>();
 				}
