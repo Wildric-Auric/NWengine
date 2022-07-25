@@ -3,16 +3,18 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "Inputs.h"
+#include "GameObject.h"
 
 class SceneEditorGui {
 public:
 	static bool isActive;
 	static Camera cam;
+	static GameObject go;
 	static bool f;  
 	static void Show() {
 		if (!isActive) return;
 		if (!f) {
-			GameObject go = GameObject();
+			go = GameObject();
 			cam = Camera(&go);
 			f = 1;
 		};

@@ -48,7 +48,7 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 }
 
 Camera* Camera::ActiveCamera = nullptr;
-std::map<GameObject*, Camera> Camera::componentList;
+
 #include "Sprite.h"
 void Camera::Update() {
 		//TODO::Optimize this update

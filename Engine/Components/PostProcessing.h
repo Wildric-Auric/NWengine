@@ -10,6 +10,7 @@
 
 class PostProcessing : public GameComponent {
 public:
+	static std::string GetType() { return "PostProcessing"; };
 	PostProcessing() {};
 	PostProcessing(GameObject* attachedObj);
 	GameObject* attachedObj = nullptr;

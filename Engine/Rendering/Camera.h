@@ -31,6 +31,5 @@ public:
 	FrameBuffer fbo;
 
 	static Camera* ActiveCamera;
-	static std::map<GameObject*, Camera> componentList;
 
 };

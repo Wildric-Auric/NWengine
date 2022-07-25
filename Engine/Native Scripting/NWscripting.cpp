@@ -20,7 +20,7 @@ void NW::ConsoleWrite(std::string log) {
 }
 
 void NW::Start() {
-	//componentsLists["Transform"] = &Transform::componentList;
+
 }
 
 

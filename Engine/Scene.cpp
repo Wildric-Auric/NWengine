@@ -55,30 +55,31 @@ void Scene::SortScene() {
 
 void Scene::AddObject(GameObject goc) {
 	sceneObjs.push_back(goc);
+	sceneObjs.back().Rename("new GameObject");
 	drawList.push_back(&sceneObjs.back());
 }
 
 void Scene::DeleteObject(uint32 index) {
-	auto it1 = sceneObjs.begin();
-	std::advance(it1, index);
-	GameObject* ptr = &(*it1);
-	uint32 count = 0;
+	//auto it1 = sceneObjs.begin();
+	//std::advance(it1, index);
+	//GameObject* ptr = &(*it1);
+	//uint32 count = 0;
 
-	for (void* component : ptr->components) {
-		((GameComponent*)component)->componentList.erase(ptr);
-	}
+	//for (void* component : ptr->components) {
+	//	((GameComponent*)component)->componentList.erase(ptr);
+	//}
 
-	for (auto it = drawList.begin(); it != drawList.end(); it++) {
-		GameObject* ptr1 = *it;
-		if (ptr1 == ptr) {
-			auto it = drawList.begin();
-			std::advance(it, count);
-			drawList.erase(it);
-			break;
-		}
-		count++;
-	}
-	sceneObjs.erase(it1);
+	//for (auto it = drawList.begin(); it != drawList.end(); it++) {
+	//	GameObject* ptr1 = *it;
+	//	if (ptr1 == ptr) {
+	//		auto it = drawList.begin();
+	//		std::advance(it, count);
+	//		drawList.erase(it);
+	//		break;
+	//	}
+	//	count++;
+	//}
+	//sceneObjs.erase(it1);
 };
 
 void Scene::DeleteObject(std::string name) {
@@ -252,7 +253,7 @@ void Scene::LoadScene() {
 		}
 
 	}
-}
+};
 
 static std::ofstream data;
 static uint16 ind = 0; //Indentation
@@ -360,7 +361,11 @@ void Scene::Save() {
 
 
 void Scene::Update() {
-
+	for (GameObject obj : sceneObjs) {
+		Script* scr = obj.GetComponent<Script>();
+		if (scr == nullptr) continue;
+		scr->script->Update();
+	}
 };
 
 bool Scene::GuiActive = false;

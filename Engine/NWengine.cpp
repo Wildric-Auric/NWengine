@@ -69,11 +69,12 @@ void NWengine::MainLoop() {
 		//Update scripting interface
 		NW::ptr->Update();
 		//Update Scripts
-		for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
-			if (it->second.script != nullptr) it->second.script->Update();
-		}
+		//for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
+		//	if (it->second.script != nullptr) it->second.script->Update();
+		//}
 
 		Camera::ActiveCamera->Update();
+		Scene::currentScene->Update();
 
 		//Render Im::Gui
 		ImGui::Render();

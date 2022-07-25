@@ -4,8 +4,8 @@ GameObject:
 		end
 	Transform:
 		Position:
-			204
-			55
+			104
+			0
 			end
 		Scale:
 			1.000000
@@ -22,9 +22,11 @@ GameObject:
 			0
 			end
 		Shader:
-			"Shaders/Shader1.shader"
+			"Shaders\Shader1.shader"
 			end
 		end
+	Collider:
+	end
 	Script:
 		Name:
 			"player"
@@ -32,7 +34,7 @@ GameObject:
 		end
 	Camera:
 		Position:
-			380
+			0
 			0
 			end
 		Rotation:
@@ -59,12 +61,12 @@ GameObject:
 			9
 			end
 		Texture:
-			"Ressources/Images/img2.png"
+			"Ressources\Images\img2.png"
 			1
 			1
 			end
 		Shader:
-			"Shaders/Shader1.shader"
+			"Shaders\Shader1.shader"
 			end
 		end
 	end
@@ -87,7 +89,7 @@ GameObject:
 			0
 			end
 		Texture:
-			"Ressources/Images/img2.png"
+			"Ressources\Images\img2.png"
 			1
 			1
 			end
@@ -110,10 +112,12 @@ GameObject:
 			1.000000
 			end
 		end
+	Collider:
+	end
 	Camera:
 		Position:
-			210
-			33
+			0
+			0
 			end
 		Rotation:
 			0.000000
@@ -124,10 +128,12 @@ GameObject:
 	Name:
 		"new GameObject2"
 		end
+	Collider:
+	end
 	Camera:
 		Position:
-			0
-			0
+			15
+			153794144
 			end
 		Rotation:
 			0.000000

@@ -3,7 +3,6 @@
 #include "Camera.h"
 #include "SceneEditorGui.h"
 
-std::map<GameObject*, PostProcessing> PostProcessing::componentList;
 
 static std::map<uint16, std::string> uniformMap = {
 	{POST_PROCESSING_CELLS, "uCells"},

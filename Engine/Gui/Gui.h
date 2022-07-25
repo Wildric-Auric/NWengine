@@ -47,7 +47,6 @@ public:
 
 		//Capture mouse
 		//isMouseOnGui = io.WantCaptureMouse;
-
 		SceneViewGui::Show();
 		DebugGui::Show();
 		HierarchyGui::Show();

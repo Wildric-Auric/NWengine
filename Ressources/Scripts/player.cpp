@@ -6,8 +6,7 @@ player::player(GameObject* goc, NW* nws) {
 }
 
 void player::Update() {
-	float s = (nws->GetPressedKey("right") - nws->GetPressedKey("left"))*0.1;
-	goc->AddComponent<Transform>();
+	float s = nws->GetPressedKey("right") - nws->GetPressedKey("left");
 	goc->GetComponent<Transform>()->position.x += s;
 }
 

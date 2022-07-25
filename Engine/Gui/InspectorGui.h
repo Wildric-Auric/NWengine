@@ -96,12 +96,12 @@ public:
 
 					array = "";
 					uint16 count = 0;
-					arraySize = cam->componentList.size();
-					for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
-						array += it->first->name + "\0"s;
-						if (count == camIndex) cam->ActiveCamera = &it->second;
-						count += 1;
-					}
+					//arraySize = cam->componentList.size();
+					//for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
+					//	array += it->first->name + "\0"s;
+					//	if (count == camIndex) cam->ActiveCamera = &it->second;
+					//	count += 1;
+					//}
 
 					if (ImGui::Combo("Active Camera", &camIndex, array.c_str(), arraySize)) {
 						//TODO::Only update array if user interacts with combo

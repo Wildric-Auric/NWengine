@@ -72,14 +72,11 @@ void GameObject::Rename(std::string newName) {
 
 }
 
-GameObject::GameObject() 
-{
+GameObject::GameObject() {
 	numberOfGameObjects += 1;
-	Rename("new GameObject");
 };
 
-
-std::map< GameObject*, GameComponent > GameComponent::componentList;
+//std::map< GameObject*, GameComponent > GameComponent::componentList;
 
 Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
 	this->offset = offset;
@@ -88,8 +85,6 @@ Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* n
 	Transform* transform = attachedObj->GetComponent<Transform>();
 	position = &transform->position;
 };
-
-std::map<GameObject*, Collider> Collider::componentList;
 
 void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize; 

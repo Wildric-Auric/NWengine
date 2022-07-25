@@ -7,6 +7,7 @@
 class Sprite : public GameComponent {
 private:
 public:
+	static std::string GetType() { return "Sprite"; };
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
 	Sprite() {};
 	Sprite(GameObject* go);

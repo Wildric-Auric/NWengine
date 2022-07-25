@@ -3,7 +3,7 @@
 #include"Globals.h"
 #include<map>
 
-#define TEXTURE_DEFAULT "Ressources/Images/img2.png"
+#define TEXTURE_DEFAULT "Ressources\\Images\\img2.png"
 
 
 class Texture {

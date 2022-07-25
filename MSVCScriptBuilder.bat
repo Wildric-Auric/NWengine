@@ -18,6 +18,8 @@ cl /MD /D_USRDLL /D_WINDLL^
  -I C:\Users\HP\Desktop\NWengine\Engine\Gui^
  -I C:\Users\HP\Desktop\NWengine\Engine\Maths^
  -I C:\Users\HP\Desktop\NWengine\Engine\Rendering^
+ -I C:\Users\HP\Desktop\NWengine\Engine\STL^
+ -I "C:\Users\HP\Desktop\NWengine\Engine\Native Scripting"^
  Ressources\Scripts\player.cpp^
  Release\Inputs.obj^
  Release\Transform.obj^
