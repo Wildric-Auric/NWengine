@@ -25,11 +25,11 @@ public:
 			std::advance(it, HierarchyGui::selected);
 			go = &(*it);
 			//TODO::Check performance of getting all components each frame
-			sprite = go->GetComponent<Sprite>();
+			sprite    = go->GetComponent<Sprite>();
 			transform = go->GetComponent<Transform>();
-			collider = go->GetComponent<Collider2>();
-			script = go->GetComponent<Script>();
-			cam = go->GetComponent<Camera>();
+			collider  = go->GetComponent<Collider2>();
+			script    = go->GetComponent<Script>();
+			cam       = go->GetComponent<Camera>();
 
 			if (transform != nullptr) {
 				if (ImGui::CollapsingHeader("Transform")) {
@@ -110,11 +110,14 @@ public:
 					ImGui::DragInt2("Camera Position", &(cam->position.x));
 					if (ImGui::DragInt2("Camera Size", &(cam->size.x))) {
 						cam->ChangeOrtho(cam->size.x, cam->size.y);
+						cam->fbo = FrameBuffer(cam->size.x, cam->size.y); //TODO:: NOT DO THIS HERE; just testing
+						cam->viewPortSize.x = cam->size.x;
+						cam->viewPortSize.y = cam->size.y;
 					}
 
-					if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
-						cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
-					};
+					//if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
+					//	cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
+					//};
 
 
 					if (ImGui::Button("Delete##5")) go->DeleteComponent<Camera>(); //TODO::ACTIVE CAMERA ERROR!!
