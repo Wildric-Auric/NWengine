@@ -7,6 +7,8 @@
 
 class Camera : public GameComponent {
 public:
+	static std::string GetType() { return "Camera"; };
+
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
 

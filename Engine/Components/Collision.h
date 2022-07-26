@@ -8,6 +8,7 @@ private:
 	int outerCircleEdge = 0;
 	std::vector<Vector2<int>> edges; //Trigonometric orientation
 public:
+	static std::string GetType() { return "Collider"; };
 	GameObject* attachedObj;
 	iVec2* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
 	iVec2* scale; //ReadOnly
