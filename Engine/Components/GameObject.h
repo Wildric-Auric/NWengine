@@ -60,13 +60,9 @@ public:
 
 	template<typename T>
 	void DeleteComponent() {
-		//if (T::componentList.find(this) == T::componentList.end()) return;
-		//for (int i = 0; i < components.size(); i++) {
-		//	if (components[i] == &(T::componentList[this]))
-		//		components.erase(components.begin() + i);
-		//}
-		//;
-		//T::componentList.erase(this);
+		if (components.find(T::GetType()) == components.end()) return;
+		delete components[T::GetType()];
+		components.erase(T::GetType());
 	}
 };
 
