@@ -42,6 +42,7 @@ void NWengine::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
+
 	//TESTING----------------
 
 	//GameObject pp = GameObject();
@@ -65,6 +66,8 @@ void NWengine::MainLoop() {
 	
 	//-------------------------
 
+
+
 	while (!glfwWindowShouldClose(Context::window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -82,20 +85,13 @@ void NWengine::MainLoop() {
 		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
 		//Update scripting interface
 		NW::ptr->Update();
-	    
+
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();
 
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		//----------------------------------
-
-		//Context::Clear(0.3f,0.0f,1.0f);
-		//pp.Draw();
-
-		//----------------------------------
 
 		//Update screen
 		glfwSwapBuffers(Context::window);
