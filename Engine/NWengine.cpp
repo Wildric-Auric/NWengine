@@ -41,16 +41,6 @@ void NWengine::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
-	//TESTING----------------
-
-	//GameObject pp = GameObject();
-	//Sprite* ppspr = pp.AddComponent<Sprite>();
-	//ppspr->SetShader("Shaders/Test.shader");
-	//ppspr->container = Quad(iVec2(0, 0), Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
-	//ppspr->texture = Camera::ActiveCamera->fbo.RenderedImage;
-
-	//-------------------------
-
 	while (!glfwWindowShouldClose(Context::window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -68,10 +58,6 @@ void NWengine::MainLoop() {
 		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
 		//Update scripting interface
 		NW::ptr->Update();
-		//Update Scripts
-		//for (auto it = Script::componentList.begin(); it != Script::componentList.end(); it++) {
-		//	if (it->second.script != nullptr) it->second.script->Update();
-		//}
 
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();
@@ -79,13 +65,6 @@ void NWengine::MainLoop() {
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		//----------------------------------
-
-		//Context::Clear(0.3f,0.0f,1.0f);
-		//pp.Draw();
-
-		//----------------------------------
 
 		//Update screen
 		glfwSwapBuffers(Context::window);
