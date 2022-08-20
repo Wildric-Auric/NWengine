@@ -10,6 +10,7 @@ public:
 	void AddObject(GameObject goc);
 	void DeleteObject(uint32 index);
 	void DeleteObject(std::string name);
+	GameObject* GetGameObject(std::string name);
 	void SortScene();
 	Scene(const char* name);
 	~Scene();

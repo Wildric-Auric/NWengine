@@ -34,7 +34,7 @@ void FreeBuffer(uint8* buffer) {
 
 Shader* RessourcesLoader::LoadShader(std::string path) {
 	if (Shader::resList.find(path) != Shader::resList.end()) {
-		std::cout << "WARNING::Trying to load already shader texture: " << path << std::endl;   //LOG 
+		//std::cout << "WARNING::Trying to load already shader texture: " << path << std::endl;   //LOG 
 		return &Shader::resList[path];
 	}
 	Shader::resList[path] = Shader(path); //Name set in shader constructor, not like texture where no path is passed
@@ -45,7 +45,7 @@ Shader* RessourcesLoader::LoadShader(std::string path) {
 Texture* RessourcesLoader::LoadTexture(std::string path, bool alpha, bool repeat) {
 	Image temp = Image(path, alpha);
 	if (Texture::resList.find(path) != Texture::resList.end()) {
-		std::cout << "WARNING::Trying to load already loaded texture: " << path << std::endl;   //LOG 
+		//std::cout << "WARNING::Trying to load already loaded texture: " << path << std::endl;   //LOG 
 		return &Texture::resList[path];
 	}
 	Texture::resList[path] = Texture(temp.width, temp.height, temp.tex, alpha, repeat);
