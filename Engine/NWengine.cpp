@@ -42,32 +42,6 @@ void NWengine::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
-
-	//TESTING----------------
-
-	//GameObject pp = GameObject();
-	//Sprite* ppspr = pp.AddComponent<Sprite>();
-	//ppspr->SetShader("Shaders/Test.shader");
-	//ppspr->container = Quad(iVec2(0, 0), Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
-	//ppspr->texture = Camera::ActiveCamera->fbo.RenderedImage;
-	//Animation test
-	//Animation anima = Animation();
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_1.png"));
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_2.png"));
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_3.png"));
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_4.png"));
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_5.png"));
-	//anima.frames.push_back(RessourcesLoader::LoadTexture("Ressources\\Images\\Warrior\\Individual Sprite\\idle\\Warrior_Idle_6.png"));
-
-	//for (int i = 0; i < 6; i++)
-	//	anima.durations.push_back(0.16);
-	//GameObject* obj = Scene::currentScene->GetGameObject("Warrior");
-	//obj->AddComponent<Animator>()->animation = anima;
-	
-	//-------------------------
-
-
-
 	while (!glfwWindowShouldClose(Context::window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
