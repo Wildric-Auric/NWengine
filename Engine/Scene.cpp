@@ -9,6 +9,7 @@
 #include <Parser.h>
 #include <Components.h>
 #include <NWstd.h>
+#include "Animator.h"
 
 static std::string subKeys[] = {
 	"SortingLayer", "Texture", "Shader",  "Position", "Scale",
@@ -86,6 +87,14 @@ void Scene::DeleteObject(uint32 index) {
 void Scene::DeleteObject(std::string name) {
 	return;
 }
+
+GameObject* Scene::GetGameObject(std::string name) {
+	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); ++it) {
+		if (it->name == name) return &(*it);
+	}
+	return nullptr;
+}
+
 void Scene::Draw() {
 
 	SortScene();
@@ -256,6 +265,10 @@ void Scene::LoadScene() {
 	}
 };
 
+
+
+
+
 static std::ofstream data;
 static uint16 ind = 0; //Indentation
 
@@ -364,9 +377,16 @@ void Scene::Save() {
 void Scene::Update() {
 	for (GameObject obj : sceneObjs) {
 		Script* scr = obj.GetComponent<Script>();
-		if (scr == nullptr) continue;
-		if (scr->script == nullptr) continue;
+		Animator* animator = obj.GetComponent<Animator>();
+		if (scr == nullptr) goto n0;
+		if (scr->script == nullptr) goto n0;
 		scr->script->Update();
+	n0:
+		if (animator == nullptr) goto n1;
+		animator->Animate(obj.GetComponent<Sprite>());
+
+	n1:
+		continue;
 	}
 };
 
