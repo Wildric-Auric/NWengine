@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Components\Animator.cpp" />
     <ClCompile Include="Engine\Components\Collision.cpp" />
     <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
@@ -212,6 +214,7 @@
     <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftconfig.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftheader.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftmodule.h" />
@@ -863,6 +866,7 @@
     <ClInclude Include="dependencies\vendor\stb\stb_image.h" />
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
+    <ClInclude Include="Engine\Components\Animator.h" />
     <ClInclude Include="Engine\Components\Collision.h" />
     <ClInclude Include="Engine\Components\Components.h" />
     <ClInclude Include="Engine\Components\PostProcessing.h" />

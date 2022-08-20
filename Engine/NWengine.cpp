@@ -1,5 +1,6 @@
 #include "NWengine.h"
-
+#include "Animation.h"
+#include "Animator.h"
 
 
 int8 NWengine::Run() {
@@ -23,7 +24,7 @@ int8 NWengine::Run() {
 		Context::EnableBlend();
 
 		////Initialization finished
-
+		//TODO::UI for scene load ans serialization
 		Scene scene0 = Scene("scene0");
 		scene0.LoadScene();
 		
@@ -31,8 +32,8 @@ int8 NWengine::Run() {
 
 		Shutdown();
 }
-	
 
+//------------------
 void NWengine::MainLoop() {
 
 	int frameCount = 0;
@@ -65,6 +66,7 @@ void NWengine::MainLoop() {
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		//Update screen
 		glfwSwapBuffers(Context::window);
 		glfwPollEvents();
