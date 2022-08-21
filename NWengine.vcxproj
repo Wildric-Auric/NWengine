@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
@@ -213,6 +214,7 @@
     <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftconfig.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftheader.h" />
     <ClInclude Include="dependecies\freetype\include\freetype\config\ftmodule.h" />
