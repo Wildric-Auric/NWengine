@@ -21,3 +21,11 @@ void Sprite::SetShader(std::string path) {
 	RessourcesLoader::LoadShader(path);
 	shader = &Shader::resList[path];
 }
+
+void Sprite::SetSortingLayer(uint32 order) {
+	sortingLayer = order;
+	if (sortingLayer != lastSortingLayer) {
+		zbuffer = 1.0 / ((double)(sortingLayer + 1));
+		lastSortingLayer = sortingLayer;
+	}
+}

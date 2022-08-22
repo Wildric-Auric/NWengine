@@ -4,7 +4,7 @@ GameObject:
 		end
 	Transform:
 		Position:
-			108
+			72
 			0
 			end
 		Scale:
@@ -44,11 +44,11 @@ GameObject:
 	end
 GameObject:
 	Name:
-		"new GameObject"
+		"Primordial Apple"
 		end
 	Transform:
 		Position:
-			289
+			255
 			0
 			end
 		Scale:
@@ -58,7 +58,7 @@ GameObject:
 		end
 	Sprite:
 		SortingLayer:
-			4
+			0
 			end
 		Texture:
 			"Ressources\Images\img2.png"
@@ -86,7 +86,7 @@ GameObject:
 		end
 	Sprite:
 		SortingLayer:
-			5
+			3
 			end
 		Texture:
 			"Ressources\Images\img2.png"
@@ -100,16 +100,29 @@ GameObject:
 	end
 GameObject:
 	Name:
-		"new GameObject1"
+		"new GameObject2"
 		end
 	Transform:
 		Position:
-			0
+			-40
 			0
 			end
 		Scale:
 			1.000000
 			1.000000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			4
+			end
+		Texture:
+			"Ressources\Images\img2.png"
+			1
+			1
+			end
+		Shader:
+			"Shaders\Shader1.shader"
 			end
 		end
 	end
