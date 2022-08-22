@@ -23,6 +23,8 @@ int8 NWengine::Run() {
 
 		Context::EnableBlend();
 
+		Context::EnableDepthTest();
+
 		////Initialization finished
 		//TODO::UI for scene load ans serialization
 		Scene scene0 = Scene("scene0");
@@ -62,7 +64,6 @@ void NWengine::MainLoop() {
 
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();
-
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
