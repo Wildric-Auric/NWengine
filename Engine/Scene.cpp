@@ -22,6 +22,8 @@ Scene::Scene(const char* name) {
 };
 
 void Scene::SortScene() {
+	//DEPRECATED:: The ordering layer is used to calcutlate value for depth buffer, 
+	//				fragment are saved from draw, no need to sort, which is useful for future batch implementation (soon), however alpha blending cannot work 
 	//Insertion sort ; It won't be called everyframe 
 	auto it = drawList.begin();
 	for (uint16 i = 1; i < drawList.size(); i++) {
@@ -50,7 +52,6 @@ void Scene::SortScene() {
 		std::advance(it0, 1);
 		if (j == -1) std::advance(it0,-2);
 		*it0 = temp;
-
 	}
 }
 
@@ -97,12 +98,13 @@ GameObject* Scene::GetGameObject(std::string name) {
 
 void Scene::Draw() {
 
-	SortScene();
+	//SortScene();
 
 	for (auto it = drawList.begin(); it != drawList.end(); ++it) {
 		(*it)->Draw(0);
 	}
 }
+
 void Scene::LoadScene() {
 
 	currentScene = this;
@@ -200,7 +202,8 @@ void Scene::LoadScene() {
 		if (stack[stack.size() - 2] == "Sprite") {
 
 			if (stack.back() == "SortingLayer") {
-				sprite->sortingLayer = std::stoi(value);
+				uint32 temp = std::stoi(value);
+				sprite->SetSortingLayer(temp);
 				continue;
 			}
 

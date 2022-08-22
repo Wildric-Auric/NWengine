@@ -41,7 +41,8 @@ public:
 
 			if (sprite != nullptr) {
 				if (ImGui::CollapsingHeader("Sprite")) {
-					ImGui::DragScalar("Layering Order", ImGuiDataType_S16, &sprite->sortingLayer);
+					if (ImGui::DragScalar("Layering Order", ImGuiDataType_U32, &sprite->sortingLayer)) 
+						sprite->SetSortingLayer(sprite->sortingLayer);
 					ImGui::NewLine();
 					ImGui::NewLine();
 					ImGui::Text("Texture");
