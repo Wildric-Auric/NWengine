@@ -32,6 +32,7 @@ out vec4 FragColor;
 
 void main(){ 
     vec4 col = texture(uTex0, uv);
+    if (col.a < 0.1) discard;
     FragColor = col;
 }
 
