@@ -24,6 +24,11 @@ public:
 	Vector2 operator * (T1 const& num);
 	Vector2 operator * (Vector2 const& vec1);
 	bool operator == (Vector2 const& vec1);
+	bool operator != (Vector2 const& vec1);
+	
+	operator Vector2<int>() const { return Vector2<int>(x,y); }
+	operator Vector2<float>() const { return Vector2<float>(x, y); }
+
 	T* operator [] (int index);
 };
 
@@ -99,6 +104,11 @@ bool Vector2<T>::operator == (Vector2 const& vec1) {
 	return (x == vec1.x) && (y == vec1.y);
 }
 
+template<typename T>
+bool Vector2<T>::operator != (Vector2 const& vec1) {
+	return (x != vec1.x) && (y != vec1.y);
+}
+
 template<typename T> 
 T* Vector2<T>::operator [] (int index) {
 	return  index == 0 ? &x : &y;
@@ -145,6 +155,7 @@ public:
 	Vector3 operator * (T const& num);
 	Vector3 operator * (Vector3 const& vec1);
 	bool operator == (Vector3 const& vec1);
+	bool operator != (Vector3 const& vec1);
 };
 
 template<typename T>
@@ -200,6 +211,11 @@ Vector3<T> Vector3<T>::operator * (T const& num) {
 template<typename T>
 bool Vector3<T>::operator == (Vector3 const& vec1) {
 	return (x == vec1.x) && (y == vec1.y) && (z == vec1.z);
+}
+
+template<typename T>
+bool Vector3<T>::operator != (Vector3 const& vec1) {
+	return (x != vec1.x) && (y != vec1.y) && (z != vec1.z);
 }
 
 template<uint8_t n, uint8_t m, typename T>
@@ -307,6 +323,7 @@ Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
 
 template<typename T, typename T1>
 T lerp(T source, T target, T1 percent) {
+	percent = Clamp<T1>(percent, (T1)0.0, (T1)1.0);
 	return source + (target - source) * percent;
 }
 
