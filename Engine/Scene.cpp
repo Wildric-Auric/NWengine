@@ -101,6 +101,10 @@ void Scene::Draw() {
 	//SortScene();
 
 	for (auto it = drawList.begin(); it != drawList.end(); ++it) {
+		if (!(*it)->isRendered) {
+			drawList.erase(it);
+			continue;
+		}
 		(*it)->Draw(0);
 	}
 }
@@ -119,7 +123,7 @@ void Scene::LoadScene() {
 	Script* script         =    nullptr;
 	Camera* cam            =	nullptr;
 
-	parser.Parse("Scenes/" + (std::string)name + std::string(".NWscene"));
+	parser.Parse("Scenes\\" + (std::string)name + std::string(".NWscene"));
 
 	std::vector<std::string> stack;
 	for (std::string value : parser.rawData) {
@@ -342,14 +346,14 @@ void Scene::Save() {
 		};
 
 		if (script != nullptr) {
-			add("Script:", 1);
+			//add("Script:", 1);
 
-				add("Name:", 1);
-				//std::cout <<  << std::endl;
-				add(script->script->name(), 0, 1, 1);
-				add("end", -1);
+			//	add("Name:", 1);
+			//	//std::cout <<  << std::endl;
+			//	add(script->script->name(), 0, 1, 1);
+			//	add("end", -1);
 
-			add("end", -1);
+			//add("end", -1);
 
 		};
 
@@ -383,7 +387,7 @@ void Scene::Update() {
 		Animator* animator = obj.GetComponent<Animator>();
 		if (scr == nullptr) goto n0;
 		if (scr->script == nullptr) goto n0;
-		scr->script->Update();
+		//scr->script->Update();
 	n0:
 		if (animator == nullptr) goto n1;
 		animator->Animate(obj.GetComponent<Sprite>());
