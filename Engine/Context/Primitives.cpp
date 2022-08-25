@@ -30,7 +30,7 @@ void Triangle::Draw() {
 
 
 
-Quad::Quad(Vector2<int> position,float width, float height) : position(0, 0), width(10), height(10),
+Quad::Quad(Vector2<float> position,float width, float height) : position(0.0f, 0.0f), width(10), height(10),
 vertices{ 0.0f }
 {
 	float vertices[20] = {

@@ -33,7 +33,11 @@ public:
 
 			if (transform != nullptr) {
 				if (ImGui::CollapsingHeader("Transform")) {
-					ImGui::DragInt2("Position", &transform->position.x);
+					static iVec2 guiPosition;
+					guiPosition = transform->position;
+					if (ImGui::DragInt2("Position", &guiPosition.x)) {
+						transform->position = guiPosition;
+					};
 					ImGui::DragFloat2("Scale", &transform->scale.x, 0.01f);
 					if (ImGui::Button("Delete##1")) go->DeleteComponent<Transform>();
 				}

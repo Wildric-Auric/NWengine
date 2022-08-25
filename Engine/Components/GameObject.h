@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include <map>
 #include <vector>
+#include "NWstd.h"
 
 //Virtual
 class Drawable {
@@ -30,12 +31,14 @@ class GameObject : public Drawable {
 private:
 	static int numberOfGameObjects;
 public:
-	//std::vector<void*> components;
 	std::map<std::string, void*> components;
 	//int id;  //ReadOnly
 	std::string name  = "new GameObject"; //Read only see Rename function;
 	//identifier
 	uint32 id = 0;
+	bool isRendered = 1; //READONLY
+	void AddToRender();
+	void StopRendering();
 	void Draw(int8 textureSlot = 0);
 	void BasicDraw(int8 textureSlot = 0);
 	void Rename(std::string newName);
@@ -74,14 +77,14 @@ public:
 //WARNING::Collider is deprecated see Collider2
 
 class Collider {
-private: 
+private:
 	Vector2<int> manualSize;
 public:
 	static std::string GetType() { return "Collider"; };
 	Collider() {};
 	Collider(GameObject* attachedObj, Vector2<int> offset = Vector2<int>(0, 0), Vector2<int>* newSize = nullptr);
 	GameObject* attachedObj;  //TODO:: Make this GameObjectClone it's a mistake
-	iVec2* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
+	fVec2* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
 	iVec2* size; //ReadOnly
 	iVec2 offset;
 	iVec2 GetPosition();

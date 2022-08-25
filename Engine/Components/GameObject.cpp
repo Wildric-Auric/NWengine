@@ -15,7 +15,7 @@ void GameObject::Draw(int8 textureSlot) {
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
 
-	iVec2 position = transform->position;
+	fVec2 position = transform->position;
 	fVec2 scale = transform->scale;
 	
 
@@ -40,7 +40,7 @@ void GameObject::BasicDraw(int8 textureSlot) {
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
 
-	iVec2 position = transform->position;
+	fVec2 position = transform->position;
 	fVec2 scale = transform->scale;
 
 	sprite->container.position = position;
@@ -70,6 +70,15 @@ void GameObject::Rename(std::string newName) {
 	if (n == 0) name = newName;
 	else name = newName + std::to_string(n);
 
+}
+
+void GameObject::AddToRender() {
+	isRendered = 1;
+	Scene::currentScene->drawList.push_back(this);
+}
+
+void GameObject::StopRendering() {
+	isRendered = 0;
 }
 
 GameObject::GameObject() {
@@ -104,8 +113,4 @@ Vector2<int> Collider::GetSize() {
 	}
 	return iVec2(0, 0);
 }
-
-
-
-
 
