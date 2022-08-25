@@ -4,8 +4,8 @@ GameObject:
 		end
 	Transform:
 		Position:
-			72
-			0
+			72.000000
+			0.000000
 			end
 		Scale:
 			1.000000
@@ -27,14 +27,9 @@ GameObject:
 		end
 	Collider:
 	end
-	Script:
-		Name:
-			"player"
-			end
-		end
 	Camera:
 		Position:
-			236
+			173
 			31
 			end
 		Rotation:
@@ -48,12 +43,12 @@ GameObject:
 		end
 	Transform:
 		Position:
-			255
-			0
+			-245.000000
+			0.000000
 			end
 		Scale:
-			1.000000
-			1.000000
+			0.500000
+			0.500000
 			end
 		end
 	Sprite:
@@ -76,8 +71,8 @@ GameObject:
 		end
 	Transform:
 		Position:
-			207
-			49
+			207.000000
+			49.000000
 			end
 		Scale:
 			1.000000
@@ -100,29 +95,16 @@ GameObject:
 	end
 GameObject:
 	Name:
-		"new GameObject2"
+		"particles"
 		end
 	Transform:
 		Position:
-			-40
-			0
+			0.000000
+			0.000000
 			end
 		Scale:
 			1.000000
 			1.000000
-			end
-		end
-	Sprite:
-		SortingLayer:
-			4
-			end
-		Texture:
-			"Ressources\Images\img2.png"
-			1
-			1
-			end
-		Shader:
-			"Shaders\Shader1.shader"
 			end
 		end
 	end
