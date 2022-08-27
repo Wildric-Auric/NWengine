@@ -6,13 +6,12 @@ ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 
 void ParticleSystem::Update() {
-	int index0 = -1;
 	clock += Globals::deltaTime;
 	if (clock >= emissionFrequency) Emit();
-	for (int index : enabled) {
-		index0 += 1;
+	auto it = enabled.begin();
+	while (it != enabled.end()) {
+		int index = *it;
 		Particle* particle = &pool[index];
-
 		if (particle->prop.speedVarDuration <= 0.0001)
 			particle->currentSpeed = particle->prop.sSpeed;
 		else {
@@ -28,7 +27,7 @@ void ParticleSystem::Update() {
 			double temp = particle->clock / particle->prop.scaleVarDuration;
 			if (abs(temp) < 0.995)
 				particle->currentScale = lerpVector2<float, double>(particle->prop.sScale, particle->prop.eScale,
-					temp);
+											Vector2<double>(temp, temp));
 		}
 
 		if (particle->prop.directionVarDuration <= 0.0001)
@@ -36,7 +35,8 @@ void ParticleSystem::Update() {
 		else {
 			double temp = particle->clock / particle->prop.directionVarDuration;
 			if (abs(temp) < 0.995)
-				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eScale, temp);
+				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eScale, 
+												Vector2<double>(temp, temp));
 		}
 		
 
@@ -44,10 +44,11 @@ void ParticleSystem::Update() {
 		particle->distance = (particle->currentPosition - particle->prop.sPosition).magnitude();
 		particle->clock += Globals::deltaTime;
 		if ((particle->clock >= particle->prop.lifetime) || (particle->distance >= particle->prop.lifedistance)) {
-			enabled.erase(enabled.begin() + index0);
 			disabled.push_back(index);
+			it = enabled.erase(it);
 			particle->Disable();
 		}
+		else it++;
 		UpdateParticle(index);
 	}
 }
@@ -75,8 +76,8 @@ void ParticleSystem::InitParticle() {
 		int temp = disabled.back();
 		disabled.pop_back();
 		enabled.push_back(temp);
-		pool[temp].Enable();
 		pool[temp].prop = prop;
+		pool[temp].Enable();
 		pool[temp].sprite->SetShader(shader);
 }
 
@@ -88,8 +89,7 @@ void ParticleSystem::Init() {
 		pool.back().prop = prop;
 		disabled.push_back(pool.size() - 1);
 		pool.back().transform = pool.back().go.AddComponent<Transform>();
-		pool.back().sprite = pool.back().go.AddComponent<Sprite>();
-		
+		pool.back().sprite = pool.back().go.AddComponent<Sprite>();	
 	}
 }
 
@@ -102,10 +102,16 @@ void ParticleSystem::UpdateParticle(int index) {
 
 void Particle::Disable() {
 	isActive = 0;
+	clock = 0.0;
+	distance = 0.0;
 	go.StopRendering();
 }
 
 void Particle::Enable() {
+	currentPosition = prop.sPosition;
+	currentScale = prop.sScale;
+	currentSpeed = prop.sSpeed;
+	currentDirection = prop.sDirection;
 	isActive = 1;
 	go.AddToRender();
 }
