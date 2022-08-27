@@ -12,33 +12,27 @@ void ParticleSystem::Update() {
 	while (it != enabled.end()) {
 		int index = *it;
 		Particle* particle = &pool[index];
-		if (particle->prop.speedVarDuration <= 0.0001)
-			particle->currentSpeed = particle->prop.sSpeed;
-		else {
+		if (particle->prop.speedVarDuration >= 0.0000001) {
 			double temp = particle->clock / particle->prop.speedVarDuration;
-			if (abs(temp) < 0.995)
+			if (abs(temp) < 0.999995)
 				particle->currentSpeed = lerp<float, double>(particle->prop.sSpeed, particle->prop.eSpeed,
 															temp);
 		}
 
-		if (particle->prop.scaleVarDuration <= 0.0001)
-			particle->currentScale = particle->prop.sScale;
-		else {
+		if (particle->prop.scaleVarDuration >= 0.0000001) {
 			double temp = particle->clock / particle->prop.scaleVarDuration;
-			if (abs(temp) < 0.995)
+			if (abs(temp) < 0.9999995)
 				particle->currentScale = lerpVector2<float, double>(particle->prop.sScale, particle->prop.eScale,
 											Vector2<double>(temp, temp));
 		}
 
-		if (particle->prop.directionVarDuration <= 0.0001)
-			particle->currentDirection = particle->prop.sDirection;
-		else {
+		if (particle->prop.directionVarDuration >= 0.0000001) {
 			double temp = particle->clock / particle->prop.directionVarDuration;
-			if (abs(temp) < 0.995)
-				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eScale, 
+			if (abs(temp) < 0.999995)
+				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eDirection, 
 												Vector2<double>(temp, temp));
 		}
-		
+
 
 		particle->currentPosition = particle->currentPosition +  particle->currentDirection.normalize() * Globals::deltaTime * particle->currentSpeed;
 		particle->distance = (particle->currentPosition - particle->prop.sPosition).magnitude();
