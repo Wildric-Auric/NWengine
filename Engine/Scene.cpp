@@ -99,13 +99,14 @@ GameObject* Scene::GetGameObject(std::string name) {
 void Scene::Draw() {
 
 	//SortScene();
-
-	for (auto it = drawList.begin(); it != drawList.end(); ++it) {
+	auto it = drawList.begin();
+	while (it != drawList.end()) {
 		if (!(*it)->isRendered) {
-			drawList.erase(it);
+			it = drawList.erase(it);
 			continue;
 		}
 		(*it)->Draw(0);
+		it++;
 	}
 }
 
