@@ -181,7 +181,7 @@
     <ClCompile Include="Engine\Native Scripting\NWscripting.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
-    <ClCompile Include="Engine\Components\Particles.cpp" />
+    <ClCompile Include="Engine\Components\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Components\Physics.cpp" />
     <ClCompile Include="Engine\Rendering\Camera.cpp" />
     <ClCompile Include="Engine\Context\Context.cpp">
@@ -886,7 +886,7 @@
     <ClInclude Include="Engine\STL\NWstd.h" />
     <ClInclude Include="Engine\NWengine.h" />
     <ClInclude Include="Engine\STL\Parser.h" />
-    <ClInclude Include="Engine\Components\Particles.h" />
+    <ClInclude Include="Engine\Components\ParticleSystem.h" />
     <ClInclude Include="Engine\Components\Physics.h" />
     <ClInclude Include="Engine\Rendering\Camera.h" />
     <ClInclude Include="Engine\Context\Context.h" />
