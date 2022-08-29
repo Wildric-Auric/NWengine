@@ -12,6 +12,7 @@ void Sprite::SetTexture(std::string path, bool alpha, bool repeat) {
 	//TODO:: what if you want to load same image with different values of alpha and repeat
 	//TODO::Add error handling
 	//Automatic load?
+	if (path == this->texture->name) return;
 	RessourcesLoader::LoadTexture(path, alpha, repeat);
 	texture = &Texture::resList[path];
 	container = Quad(iVec2(0, 0), texture->size.x, texture->size.y);
