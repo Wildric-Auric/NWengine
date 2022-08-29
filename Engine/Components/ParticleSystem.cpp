@@ -54,12 +54,24 @@ void ParticleSystem::Emit() {
 			InitParticle();
 			continue;
 		}
-		if (pool.size() > maxParticles) {
+		if (pool.size() >= maxParticles) {
 			//Often, oldest particles would be at begining of enabled
-			if (!recycle) return
-			disabled.push_back(enabled.front());
+			if (!recycle) return;
+			int temp = enabled.front();
 			enabled.pop_front();
-			InitParticle();
+			enabled.push_back(temp);
+			//Copying enable function without add to render function
+			pool[temp].clock = 0.0;
+			pool[temp].distance = 0.0;
+
+			pool[temp].currentPosition = prop.sPosition;
+			pool[temp].currentScale = prop.sScale;
+			pool[temp].currentSpeed = prop.sSpeed;
+			pool[temp].currentDirection = prop.sDirection;
+			pool[temp].isActive = 1;
+			//----
+			pool[temp].sprite->SetShader(shader);
+			pool[temp].sprite->SetTexture(texture);
 			continue;
 		}
 		Init();
@@ -73,6 +85,7 @@ void ParticleSystem::InitParticle() {
 		pool[temp].prop = prop;
 		pool[temp].Enable();
 		pool[temp].sprite->SetShader(shader);
+		pool[temp].sprite->SetTexture(texture);
 }
 
 void ParticleSystem::Init() {
@@ -96,12 +109,13 @@ void ParticleSystem::UpdateParticle(int index) {
 
 void Particle::Disable() {
 	isActive = 0;
-	clock = 0.0;
-	distance = 0.0;
 	go.StopRendering();
 }
 
 void Particle::Enable() {
+	clock = 0.0;
+	distance = 0.0;
+
 	currentPosition = prop.sPosition;
 	currentScale = prop.sScale;
 	currentSpeed = prop.sSpeed;

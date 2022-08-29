@@ -68,7 +68,8 @@ public:
 	int initNum = 5;
 	ParticleProperties prop;
 	bool recycle = 1;
-	std::string shader = "Shaders\\Particle.shader";
+	std::string shader = "Shaders\\Shader1.shader";
+	std::string texture = "Ressources\\Images\\Primitives\\Circle.png";
 
 	void Update();
 	void UpdateParticle(int index);
