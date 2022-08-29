@@ -7,6 +7,7 @@
 #include "PostProcessing.h"
 #include "Console.h"
 #include "ScriptManager.h"
+#include "ParticleSystem.h"
 
 class DebugGui {
 public:
@@ -17,6 +18,7 @@ public:
 		ImGui::Text("fps = %f", Globals::fps);
 		ImGui::DragInt2("cam pos", &SceneEditorGui::cam.position.x);
 		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
+		static ParticleSystem* ps = nullptr;
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
@@ -24,8 +26,36 @@ public:
 		static GameObject obj = GameObject();
 		ImGui::DragInt("flag", &a, 0.2f, 0, 4);
 		ImGui::Checkbox("Save Scene", &b);
-		ImGui::Checkbox("SCRIPT TEXT", &c);
+		if (ImGui::Checkbox("SCRIPT TEXT", &c)) {
+			if (c) {
+				c = 0;
+				ps = Scene::currentScene->sceneObjs.back().AddComponent<ParticleSystem>();
+				ps->prop.lifetime = 10.0f;	
+				ps->prop.sDirection = fVec2(0.0, 1.0);
+
+				ps->prop.sScale = fVec2(0.0, 0.0);
+				ps->prop.eScale = fVec2(0.3, 0.3);
+				ps->prop.scaleVarDuration = 3.0f;
+				ps->prop.sDirection = fVec2(-1.0f, 0.0f);
+				ps->prop.eDirection = fVec2(0.0f, 1.0f);
+				ps->prop.directionVarDuration = 3;
+				ps->emissionFrequency = 0.1;
+				ps->prop.lifetime = 1000;
+				ps->prop.lifedistance = 100;
+			}
+		};
+
+		if (ps != nullptr) {
+			ps->Update();
+			if (ps->enabled.size() > 0) {
+				ps->pool[ps->enabled[0]].sprite;
+				ps->pool[ps->enabled[0]].transform;
+			}
+			ImGui::SliderFloat("speed", &(ps->prop.sSpeed), 0.1f, 1000.0f);
+		}
+
 		GameObject* go = nullptr;
+
 		//------------------------
 
 		//PostProcessing test
@@ -39,13 +69,8 @@ public:
 				}
 			}
 		}
+		//testing isRendered
 
-		//Script load test
-		if (c) {
-			c = 0;
-			ee = obj.AddComponent<Script>();
-			ee->script = ScriptManager::CreateScript("dllTest", &obj);
-		}
 
 		//-------------------------
 
