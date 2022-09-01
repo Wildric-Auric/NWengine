@@ -177,8 +177,6 @@
     <ClCompile Include="Engine\Components\Script.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\Gui\Console.cpp" />
-    <ClCompile Include="Engine\Native Scripting\NWgameObject.cpp" />
-    <ClCompile Include="Engine\Native Scripting\NWscripting.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
     <ClCompile Include="Engine\Components\Particles.cpp" />
@@ -200,6 +198,7 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
+    <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Ressources\Scripts\test.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
@@ -879,8 +878,7 @@
     <ClInclude Include="Engine\Gui\InspectorGui.h" />
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
-    <ClInclude Include="Engine\Native Scripting\NWgameObject.h" />
-    <ClInclude Include="Engine\Native Scripting\NWscripting.h" />
+    <ClInclude Include="Engine\Native Scripting\Scripts.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\STL\NWstd.h" />

@@ -14,10 +14,6 @@ int8 NWengine::Run() {
 		//init OpenAL
 		if (!InitOpenAL()) return -1;
 
-		//Init scripting (native)
-		NW::ptr = new NW;
-		*NW::ptr = NW();
-		NW::ptr->Start();
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
 
@@ -57,8 +53,6 @@ void NWengine::MainLoop() {
 
 		//Drawing shapes
 		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
-		//Update scripting interface
-		NW::ptr->Update();
 
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();
