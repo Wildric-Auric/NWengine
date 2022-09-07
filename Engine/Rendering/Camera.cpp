@@ -29,10 +29,10 @@ void Camera::CaptureWithPostProcessing(void* pp, float r, float g, float b, floa
 };
 
 Camera::Camera(GameObject* go) {
-	size = iVec2(Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+	size = iVec2(Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
 	viewPortSize = size;
-	projectionMatrix = glm::ortho(-(float)Globals::NATIVE_WIDTH / 2.0f, (float)Globals::NATIVE_WIDTH / 2.0f, 
-								  -(float)Globals::NATIVE_HEIGHT / 2.0f, (float)Globals::NATIVE_HEIGHT / 2.0f);
+	projectionMatrix = glm::ortho(-(float)Context::NATIVE_WIDTH / 2.0f, (float)Context::NATIVE_WIDTH / 2.0f, 
+								  -(float)Context::NATIVE_HEIGHT / 2.0f, (float)Context::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
 	fbo = FrameBuffer();
 

@@ -5,7 +5,7 @@ player::player(GameObject* goc) {
 }
 
 void player::Update() {
-	printf("Test");
+
 }
 
 

@@ -6,7 +6,7 @@
 int8 NWengine::Run() {
 
 
-		GLFWwindow* window = Context::InitContext(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
 
 		//init imgui
@@ -52,7 +52,7 @@ void NWengine::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
+		Camera::ActiveCamera->Capture(0.0, 0.0,0.1);
 
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();

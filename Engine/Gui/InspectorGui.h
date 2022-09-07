@@ -111,8 +111,8 @@ public:
 					if (ImGui::DragInt2("Camera Size", &(cam->size.x))) {
 						cam->ChangeOrtho(cam->size.x, cam->size.y);
 						cam->fbo = FrameBuffer(cam->size.x, cam->size.y); //TODO:: NOT DO THIS HERE; just testing
-						cam->viewPortSize.x = cam->size.x;
-						cam->viewPortSize.y = cam->size.y;
+						//cam->viewPortSize.x = cam->size.x;
+						//cam->viewPortSize.y = cam->size.y;
 					}
 
 					//if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
