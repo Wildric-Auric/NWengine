@@ -5,17 +5,18 @@
 class Quad {
 private:
 	unsigned int VBO = 0, VAO = 0, EBO = 0;
-	int width = 0, height = 0;
 	float vertices[20];
 	unsigned int indices[6] = {
 		0,2,1,
 		1,2,3
 	};
 public: 
+	int width = 0, height = 0; //ReadOnly
 	Vector2<int> position;
 	Vector2<float> scale;
 	Quad(Vector2<int> position = Vector2<int>(0.0f,0.f),float width = 10.0f, float height = 10.0f);
 	void Draw();
+	~Quad();
 };
 
 class Triangle {

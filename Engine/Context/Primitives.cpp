@@ -40,6 +40,8 @@ vertices{ 0.0f }
 		-width / 2,  height / 2, 0.0f,    0.0f,1.0f,
 		 width / 2 , height / 2, 0.0f,    1.0f,1.0f,
 	};
+	this->width = width;
+	this->height = height;
 
 	this->position = position;
 	glGenBuffers(1, &EBO);
@@ -63,6 +65,11 @@ vertices{ 0.0f }
 };
 
 
+Quad::~Quad() {
+	//glDeleteBuffers(1, &VAO);
+	//glDeleteBuffers(1, &EBO);
+	//glDeleteBuffers(1, &VBO);
+}
 
 void Quad::Draw() {
 	glBindVertexArray(VAO);

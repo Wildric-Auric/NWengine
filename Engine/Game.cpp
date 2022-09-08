@@ -27,6 +27,7 @@ int8 Game::Run() {
 	//Initializing Game class
 	Game::FrameObject.AddComponent<Transform>();
 	RenderedTexture = Game::FrameObject.AddComponent<Sprite>();
+	RenderedTexture->container = Quad(iVec2(0, 0), 850, 640);
 	MainLoop();
 
 	Shutdown();
@@ -55,7 +56,9 @@ void Game::MainLoop() {
 		Scene::currentScene->Update();
 		//Final frame
 		RenderedTexture->texture = &Camera::ActiveCamera->fbo.RenderedImage;
-		RenderedTexture->container = Quad(iVec2(0,0), RenderedTexture->texture->size.x, RenderedTexture->texture->size.y);
+		
+		FrameObject.GetComponent<Transform>()->scale = fVec2(RenderedTexture->texture->size.x / RenderedTexture->container.width, 
+															 RenderedTexture->texture->size.y / RenderedTexture->container.height);
 		Context::SetViewPort(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
 		FrameObject.GetComponent<Transform>()->position = iVec2(Camera::ActiveCamera->position.x, Camera::ActiveCamera->position.y);
 		Context::SetViewPort((Context::WINDOW_WIDTH - RenderedTexture->texture->size.x) * 0.5,
