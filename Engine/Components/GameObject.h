@@ -96,13 +96,16 @@ public:
 
 class Scriptable {
 public:
-	Scriptable(GameObject* goc = nullptr, void* nws = nullptr) {}
+	GameObject* goc = nullptr;
+	Scriptable(GameObject* goc = nullptr, void* nws = nullptr) {
+		this->goc = goc;
+	};
+	std::string __nwname = "None"; //ReadOnly variables will have double underscore in the beginning
 	virtual ~Scriptable() {};
 	virtual void Start() {};
 	virtual void Update() {};
-	virtual std::string name() { return "None"; };
+	virtual std::string GetName() { return __nwname; };
 	void* nws = nullptr;
-	GameObject* goc = nullptr;
 };
 
 
