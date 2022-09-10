@@ -20,9 +20,12 @@ Scriptable* ScriptManager::GetScriptFromDLL(std::string name, GameObject* go) {
 };
 
 Scriptable* ScriptManager::GetScriptFromHeaderFile(std::string name, GameObject* go) {
-	ScriptManager::ScriptsMap[std::string("player")] = player::GetScript;
 	auto result = ScriptManager::ScriptsMap.find(name);
-	if (result == ScriptManager::ScriptsMap.end()) return nullptr;
+	if (result == ScriptManager::ScriptsMap.end()) {
+		Scriptable* nullReturn = new Scriptable(go);
+		nullReturn->__nwname = name;
+		return nullReturn;
+	}
 	return result->second(go);
 };
 
@@ -31,10 +34,8 @@ Scriptable* ScriptManager::CreateScript(std::string name, GameObject* go) {
 }
 
 
-//Every code added to this file by dev should be placed before this comment
-
-std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = 
-{
-
+//BEG_PPP
+std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {
 
 };
+//END_PPP

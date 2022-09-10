@@ -67,7 +67,7 @@ public:
 
 				if (ImGui::CollapsingHeader("Script")) {
 					std::string text = "None";
-					if (script->script != nullptr) text = script->script->name();
+					if (script->script != nullptr) text = script->script->GetName();
 					ImGui::Text("Script: ");
 					ImGui::SameLine();
 

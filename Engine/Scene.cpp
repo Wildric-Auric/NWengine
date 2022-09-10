@@ -343,7 +343,7 @@ void Scene::Save() {
 
 				add("Name:", 1);
 				//std::cout <<  << std::endl;
-				add(script->script->name(), 0, 1, 1);
+				add(script->script->GetName(), 0, 1, 1);
 				add("end", -1);
 
 			add("end", -1);
