@@ -6,8 +6,10 @@
 
 class player : public Scriptable {
 public:
+	//Don't edit this section-----------------------
 	GameObject* goc;
-	std::string name() { return "player"; };
+	std::string __nwname = "player";
+	std::string GetName() { return __nwname; };
 	static Scriptable* GetScript(GameObject* goc);
 	//Users variable here:
 	float isRunning = 0.0f;
