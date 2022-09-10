@@ -7,9 +7,9 @@
 
 #define UTILDIR "..\\Engine\\STL\\Utilities.h"
 #include UTILDIR
-
-static std::string ProjectDir = PROJECTDIR;
-static std::string IncludeDir[] = {
+#include "..\\Engine\\Maths\\Maths.h"
+std::string ProjectDir = PROJECTDIR;
+std::string IncludeDir[] = {
     "dependencies\\GLEW\\include",
     "dependencies\\GLFW\\include",
     "dependencies\\vendor",
@@ -29,7 +29,7 @@ static std::string IncludeDir[] = {
 
 };
 
-static std::string LibsDir[] = {
+std::string LibsDir[] = {
     "dependencies\\GLFW\\lib-vc2019"                                   ,
     "dependencies\\GLEW\\lib\\Release\\Win32"                          ,
     "dependencies\\freetype\\release static\\vs2015-2022\\win32"       ,
@@ -37,7 +37,7 @@ static std::string LibsDir[] = {
     "dependencies\\OPENAL\\win32"                                    
 };
 //Don't need absolute path in the future, it should be automatized
-static std::string staticLibs[] = {
+std::string staticLibs[] = {
      "opengl32.lib"                       ,
      "freetype.lib"                       ,
      "OpenAL32.lib"                       ,
@@ -59,7 +59,7 @@ static std::string staticLibs[] = {
 };
 
 
-static std::string objs[] = {
+std::string objs[] = {
     "dependencies\\vendor\\glm\\detail\\glm.cpp"                                                  ,
     "dependencies\\vendor\\imgui\\imgui.cpp"                                                      ,
     "dependencies\\vendor\\imgui\\imgui_demo.cpp"                                                 ,
@@ -116,7 +116,7 @@ std::string outputDir = "";
 std::string exeName = "BuildTest.exe";
 
 
-static void Compile() {
+void Compile() {
     //Creating objects out of scripts
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
@@ -174,7 +174,7 @@ static void Compile() {
     ofs.close();
 }
 
-static void Link() {
+void Link() {
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
     ofs << "call vcvars32\n";
@@ -195,11 +195,67 @@ static void Link() {
  
 }
 
+void InitScripts() {
+    //TODO::Wrapper of ifstream and ofstream with error handling
+    //Reading used scripts names and writing to scripts.h
+    std::ifstream ifs("..\\Ressources\\Scripts\\ScriptsList.NWlist");
+    if (!ifs) {
+        std::cout << "Can't open scripts file"<< std::endl;
+        ifs.close();
+        return; 
+    }
+    std::ofstream ofs("..\\Engine\\Native Scripting\\Scripts.h");
+    if (!ofs) {
+        std::cout << "Can't open Scripts.h file" << std::endl;
+        ofs.close();
+        return;
+    }
+    std::string scriptMap = "";
+    ofs << "#pragma once\n#include \"Script.h\"\n";
+    for (std::string line; std::getline(ifs, line); ofs << "#include \""<<"Scripts\\\\"<<line << ".h\"\n") {
+        scriptMap += "\n  {\"" + line + "\"," + line + "::GetScript" + "},";
+    };
+    if (scriptMap.size() > 0) scriptMap.pop_back();
+    ofs.close();
+    ifs.close();
+    //Building scriptManager map
+    Vector2<std::string> parts = Vector2<std::string>("", "");
+    Vector2<std::string> del = Vector2<std::string>("BEG_PPP","END_PPP");
+    std::ifstream ifs0("..\\Engine\\Native Scripting\\ScriptManager.cpp");
+    if (!ifs0) {
+        std::cout << "Can't open ScriptManager.cpp file" << std::endl;
+        ifs0.close();
+        return;
+    }
+    int j = 0;
+    for (std::string line; std::getline(ifs0, line);) {
+        if (line.find("BEG_PPP") != std::string::npos) {
+            parts.x += "//BEG_PPP\n";
+            j++;
+            continue;
+        }
+        if (line.find("END_PPP") != std::string::npos) {
+            parts.y += "//END_PPP\n";
+            j++;
+            continue;
+        }
+        if (j!=1) *parts[min(j, 1)] += line + "\n";
+    }
 
-static void Execute() {
+    ifs0.close();
+    std::ofstream ofs0("..\\Engine\\Native Scripting\\ScriptManager.cpp");
+    ofs0 << parts.x;
+    ofs0 << "std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {\n";
+    ofs0 << scriptMap <<"\n};\n" << parts.y;
+    ofs0.close();
+}
+
+void Execute() {
 
 }
-int main() {
+
+void Build() {
     //Compile();
-    Link();
+    //Link();
+    InitScripts();
 }
