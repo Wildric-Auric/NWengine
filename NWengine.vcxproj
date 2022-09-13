@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Build\Builder.cpp" />
     <ClCompile Include="Engine\Animation.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
+    <ClCompile Include="Engine\Game.cpp" />
     <ClCompile Include="Engine\Gui\Console.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
@@ -871,6 +873,7 @@
     <ClInclude Include="Engine\Components\PostProcessing.h" />
     <ClInclude Include="Engine\Components\Script.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
+    <ClInclude Include="Engine\Game.h" />
     <ClInclude Include="Engine\Gui\Console.h" />
     <ClInclude Include="Engine\Gui\ConsoleGui.h" />
     <ClInclude Include="Engine\Gui\DebugGui.h" />

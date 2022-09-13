@@ -108,8 +108,21 @@ GameObject:
 			0
 			end
 		Scale:
-			1.000000
-			1.000000
+			0.100000
+			0.100000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			0
+			end
+		Texture:
+			"Ressources\Images\img2.png"
+			1
+			1
+			end
+		Shader:
+			"Shaders\Shader1.shader"
 			end
 		end
 	end
