@@ -201,7 +201,6 @@
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
     <ClCompile Include="Ressources\Scripts\player.cpp" />
-    <ClCompile Include="Ressources\Scripts\test.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
   </ItemGroup>
@@ -904,7 +903,6 @@
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\TileMap.h" />
     <ClInclude Include="Engine\STL\Utilities.h" />
-    <ClInclude Include="Ressources\Scripts\test.h" />
     <ClInclude Include="Engine\Components\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
