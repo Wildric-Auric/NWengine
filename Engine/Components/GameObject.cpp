@@ -44,7 +44,6 @@ void GameObject::BasicDraw(int8 textureSlot) {
 	fVec2 scale = transform->scale;
 
 	sprite->container.position = position;
-	sprite->shader->SetVector2("uResolution", (float) Globals::NATIVE_WIDTH, (float) Globals::NATIVE_HEIGHT);
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
 	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
 	sprite->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);

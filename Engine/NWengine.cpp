@@ -6,7 +6,7 @@
 int8 NWengine::Run() {
 
 
-		GLFWwindow* window = Context::InitContext(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
 
 		//init imgui
@@ -14,10 +14,6 @@ int8 NWengine::Run() {
 		//init OpenAL
 		if (!InitOpenAL()) return -1;
 
-		//Init scripting (native)
-		NW::ptr = new NW;
-		*NW::ptr = NW();
-		NW::ptr->Start();
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
 
@@ -58,9 +54,7 @@ void NWengine::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Camera::ActiveCamera->Capture(0.0, 0.0,0.0);
-		//Update scripting interface
-		NW::ptr->Update();
+		Camera::ActiveCamera->Capture(0.0, 0.0,0.1);
 
 		Camera::ActiveCamera->Update();
 		Scene::currentScene->Update();

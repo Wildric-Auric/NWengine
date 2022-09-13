@@ -1,5 +1,4 @@
 #include "Inputs.h"
-#include "Globals.h"
 #include<iostream>
 #include <cstring>
 
@@ -15,7 +14,6 @@ float Inputs::joystickAxis[6] = {0.0f};
 void Inputs::Process(GLFWwindow* window)
 {
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
-	mousePosY = Globals::WINDOW_HEIGHT - mousePosY;   //Down left as origin
 	usingJoystick = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	const unsigned char* buttons = 0;
 	if (usingJoystick) {

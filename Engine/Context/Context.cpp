@@ -3,12 +3,17 @@
 #include <iostream>
 
 GLFWwindow* Context::window = nullptr;
+int Context::WINDOW_WIDTH =  850;
+int Context::WINDOW_HEIGHT = 640;
+
+int Context::NATIVE_WIDTH = 850;
+int Context::NATIVE_HEIGHT = 640;
+
 
 void sizeCallBack(GLFWwindow* window, int width, int height)
 {
-		Globals::WINDOW_WIDTH = width;
-		Globals::WINDOW_HEIGHT = height;
-		glViewport(0, 0, Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+		Context::WINDOW_WIDTH = width;
+		Context::WINDOW_HEIGHT = height;
 }
 
 void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
@@ -36,7 +41,7 @@ GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
 		std::cout << "Failed to init GLEW";
 		return nullptr;
 	}
-	glViewport(0, 0, Globals::NATIVE_WIDTH, Globals::NATIVE_HEIGHT);
+	glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
 	return window;
 }
 

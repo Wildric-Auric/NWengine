@@ -349,10 +349,10 @@ void Scene::Save() {
 		if (script != nullptr) {
 			//add("Script:", 1);
 
-			//	add("Name:", 1);
-			//	//std::cout <<  << std::endl;
-			//	add(script->script->name(), 0, 1, 1);
-			//	add("end", -1);
+				add("Name:", 1);
+				//std::cout <<  << std::endl;
+				add(script->script->GetName(), 0, 1, 1);
+				add("end", -1);
 
 			//add("end", -1);
 

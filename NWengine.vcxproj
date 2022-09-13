@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Build\Builder.cpp" />
     <ClCompile Include="Engine\Animation.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
@@ -176,9 +177,8 @@
     <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
+    <ClCompile Include="Engine\Game.cpp" />
     <ClCompile Include="Engine\Gui\Console.cpp" />
-    <ClCompile Include="Engine\Native Scripting\NWgameObject.cpp" />
-    <ClCompile Include="Engine\Native Scripting\NWscripting.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
     <ClCompile Include="Engine\Components\ParticleSystem.cpp" />
@@ -200,6 +200,7 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\TileMap.cpp" />
+    <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Ressources\Scripts\test.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
@@ -872,6 +873,7 @@
     <ClInclude Include="Engine\Components\PostProcessing.h" />
     <ClInclude Include="Engine\Components\Script.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
+    <ClInclude Include="Engine\Game.h" />
     <ClInclude Include="Engine\Gui\Console.h" />
     <ClInclude Include="Engine\Gui\ConsoleGui.h" />
     <ClInclude Include="Engine\Gui\DebugGui.h" />
@@ -879,8 +881,7 @@
     <ClInclude Include="Engine\Gui\InspectorGui.h" />
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
-    <ClInclude Include="Engine\Native Scripting\NWgameObject.h" />
-    <ClInclude Include="Engine\Native Scripting\NWscripting.h" />
+    <ClInclude Include="Engine\Native Scripting\Scripts.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\STL\NWstd.h" />

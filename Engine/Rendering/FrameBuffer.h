@@ -10,7 +10,7 @@ private:
 	uint32 renderbuffer;
 public: 
 	Texture RenderedImage;
-    FrameBuffer(uint16 sizeX = Globals::NATIVE_WIDTH, uint16 sizeY = Globals::NATIVE_HEIGHT) {
+    FrameBuffer(uint16 sizeX = Context::NATIVE_WIDTH, uint16 sizeY = Context::NATIVE_HEIGHT) {
 		if (Context::window == nullptr) return;
 		glGenFramebuffers(1, &framebuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
