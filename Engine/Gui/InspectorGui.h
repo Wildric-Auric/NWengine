@@ -1,6 +1,5 @@
 #pragma once
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "NWGui.h"
 #include "HierarchyGui.h"
 #include "ScriptManager.h"
 #include "Utilities.h"
@@ -35,29 +34,26 @@ public:
 				if (ImGui::CollapsingHeader("Transform")) {
 					static iVec2 guiPosition;
 					guiPosition = transform->position;
-					if (ImGui::DragInt2("Position", &guiPosition.x)) {
+					if (NWGui::DragValue<int>("Position", &guiPosition.x, ImGuiDataType_S32, 2)) {
 						transform->position = guiPosition;
 					};
-					ImGui::DragFloat2("Scale", &transform->scale.x, 0.01f);
+					ImGui::Separator();
+					NWGui::DragValue<float>("Scale", &transform->scale.x, ImGuiDataType_Float, 2, 0.01f);
+					ImGui::Separator();
 					if (ImGui::Button("Delete##1")) go->DeleteComponent<Transform>();
 				}
 			}
 
 			if (sprite != nullptr) {
 				if (ImGui::CollapsingHeader("Sprite")) {
-					if (ImGui::DragScalar("Layering Order", ImGuiDataType_U32, &sprite->sortingLayer)) 
+					if (NWGui::DragValue<uint32>("Layering Order", &sprite->sortingLayer, ImGuiDataType_U32, 1))
 						sprite->SetSortingLayer(sprite->sortingLayer);
-					ImGui::NewLine();
-					ImGui::NewLine();
-					ImGui::Text("Texture");
-					ImGui::SameLine();
-					if (ImGui::Button(sprite->texture->name.c_str(), ImVec2(150,0))) {
+					ImGui::Separator();
+					if (NWGui::FileHolder("Texture", sprite->texture->name)) {
 						std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
 						if (path != "") sprite->SetTexture(path);
 					}
-
-					ImGui::NewLine();
-					ImGui::NewLine();
+					ImGui::Separator();
 
 				    if (ImGui::Button(sprite->shader->name.c_str())) {
 						std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
@@ -112,8 +108,8 @@ public:
 						//TODO::Only update array if user interacts with combo
 					};
 
-					ImGui::DragInt2("Camera Position", &(cam->position.x));
-					if (ImGui::DragInt2("Camera Size", &(cam->size.x))) {
+					NWGui::DragValue<int>("Camera Position", &(cam->position.x), ImGuiDataType_S32, 2);
+					if (NWGui::DragValue<int>("Camera Size", &(cam->size.x), ImGuiDataType_S32, 2)) {
 						cam->ChangeOrtho(cam->size.x, cam->size.y);
 						cam->fbo = FrameBuffer(cam->size.x, cam->size.y); //TODO:: NOT DO THIS HERE; just testing
 						//cam->viewPortSize.x = cam->size.x;

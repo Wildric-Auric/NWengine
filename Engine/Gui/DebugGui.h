@@ -1,6 +1,5 @@
 #pragma once
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "NWGui.h"
 #include "SceneEditorGui.h"
 #include "Scene.h"
 #include "Utilities.h"
@@ -16,15 +15,16 @@ public:
 		if (!isActive) return;
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 		ImGui::Text("fps = %f", Globals::fps);
-		ImGui::DragInt2("cam pos", &SceneEditorGui::cam.position.x);
-		ImGui::DragFloat("zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
+		NWGui::DragValue<int>("Cam pos", &SceneEditorGui::cam.position.x, ImGuiDataType_S32, 2);
+		NWGui::DragValue<float>("Zoom", &SceneEditorGui::cam.zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
+		//DragFloat("Zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
 		static ParticleSystem* ps = nullptr;
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
 		static Script* ee = nullptr;
 		static GameObject obj = GameObject();
-		ImGui::DragInt("flag", &a, 0.2f, 0, 4);
+		NWGui::DragValue<int>("Flag", &a, ImGuiDataType_S32, 1, 0.2f, 0, 4);
 		ImGui::Checkbox("Save Scene", &b);
 		if (ImGui::Checkbox("SCRIPT TEXT", &c)) {
 			if (c) {
@@ -41,7 +41,7 @@ public:
 				ps->prop.directionVarDuration = 3;
 				ps->emissionFrequency = 0.1;
 				ps->prop.lifetime = 1000;
-				ps->prop.lifedistance = 100;
+				ps->prop.lifedistance = 2000;
 			}
 		};
 
