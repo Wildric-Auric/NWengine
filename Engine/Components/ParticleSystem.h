@@ -8,6 +8,8 @@
 
 
 struct ParticleProperties {
+	fVec2 absoluteStartPosition = fVec2(0.0f, 0.0f); //Read only; buffer of position  used to pass beginning absolute position to particle
+
 	float lifetime = 1.0f;
 	int lifedistance = 1000; //in pixels
 	//s stands for start and e for end; notice that position is relative to particle system position

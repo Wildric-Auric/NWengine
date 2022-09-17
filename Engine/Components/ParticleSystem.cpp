@@ -7,6 +7,7 @@ std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 
 void ParticleSystem::Update() {
 	clock += Globals::deltaTime;
+	prop.absoluteStartPosition = attachedObj->GetComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
 	if (clock >= emissionFrequency) Emit();
 	auto it = enabled.begin();
 	while (it != enabled.end()) {
@@ -64,6 +65,7 @@ void ParticleSystem::Emit() {
 			pool[temp].clock = 0.0;
 			pool[temp].distance = 0.0;
 
+			pool[temp].prop = prop;
 			pool[temp].currentPosition = prop.sPosition;
 			pool[temp].currentScale = prop.sScale;
 			pool[temp].currentSpeed = prop.sSpeed;
@@ -103,7 +105,7 @@ void ParticleSystem::Init() {
 void ParticleSystem::UpdateParticle(int index) {
 	Transform* transform = attachedObj->GetComponent<Transform>();
 	if (transform == nullptr) transform = attachedObj->AddComponent<Transform>();
-	pool[index].transform->position = pool[index].currentPosition + transform->position;
+	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
 }
 
