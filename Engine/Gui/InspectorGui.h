@@ -18,6 +18,7 @@ public:
 		Collider2* collider = nullptr;
 		Script* script = nullptr;
 		Camera* cam = nullptr;
+		ParticleSystem* ps = nullptr;
 
 		if (HierarchyGui::selected > -1 && HierarchyGui::selected < Scene::currentScene->sceneObjs.size()) {
 			auto it = Scene::currentScene->sceneObjs.begin();
@@ -29,7 +30,7 @@ public:
 			collider  = go->GetComponent<Collider2>();
 			script    = go->GetComponent<Script>();
 			cam       = go->GetComponent<Camera>();
-
+			ps  = go->GetComponent<ParticleSystem>();
 			if (transform != nullptr) {
 				if (ImGui::CollapsingHeader("Transform")) {
 					static iVec2 guiPosition;
@@ -54,25 +55,20 @@ public:
 						if (path != "") sprite->SetTexture(path);
 					}
 					ImGui::Separator();
-
-				    if (ImGui::Button(sprite->shader->name.c_str())) {
+					if (NWGui::FileHolder("Shader", sprite->shader->name.c_str())) {
 						std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
 						if (path != "") sprite->SetShader(path);
 					}
-					ImGui::NewLine();
+					ImGui::Separator();
 					if (ImGui::Button("Delete##2")) go->DeleteComponent<Sprite>();
 				}
 			}
 
 			if (script != nullptr) {
-
 				if (ImGui::CollapsingHeader("Script")) {
 					std::string text = "None";
 					if (script->script != nullptr) text = script->script->GetName();
-					ImGui::Text("Script: ");
-					ImGui::SameLine();
-
-					if (ImGui::Button(text.c_str(), ImVec2(150, 0))) {
+					if (NWGui::FileHolder("Script", text.c_str())) {
 						std::string path = GetFile("Text Files\0*.h\0*.*\0");
 						if (path != "") script->script = ScriptManager::CreateScript(GetFileName(path), go); //TODO::Get if file is valid
 					}
@@ -123,6 +119,48 @@ public:
 
 					if (ImGui::Button("Delete##5")) go->DeleteComponent<Camera>(); //TODO::ACTIVE CAMERA ERROR!!
 				}
+			}
+
+			if (ps != nullptr && ImGui::CollapsingHeader("Particle System")) {
+				if (ImGui::TreeNode("Particles properties")) {
+					NWGui::DragValue<float>("Lifetime", &ps->prop.lifetime, ImGuiDataType_Float);
+					GUI_SEP;
+					NWGui::DragValue<int>("Lifedistance", &ps->prop.lifedistance, ImGuiDataType_S32);
+					GUI_SEP;
+					NWGui::DragValue<float>("Relative start position", &ps->prop.sPosition, ImGuiDataType_Float, 2);
+					GUI_SEP;
+					NWGui::DragValue<float>("Starting direction", &ps->prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+					GUI_SEP;
+					NWGui::DragValue<float>("End direction", &ps->prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+					GUI_SEP;
+					NWGui::DragValue<float>("Direction variation duration", &ps->prop.directionVarDuration, ImGuiDataType_Float);
+					GUI_SEP;
+
+					NWGui::DragValue<float>("Starting scale", &ps->prop.sScale.x, ImGuiDataType_Float, 2);
+					GUI_SEP;
+					NWGui::DragValue<float>("End scale", &ps->prop.eScale.x, ImGuiDataType_Float, 2);
+					GUI_SEP;
+					NWGui::DragValue<float>("Scale variation duration", &ps->prop.scaleVarDuration, ImGuiDataType_Float);
+					GUI_SEP;
+
+					NWGui::DragValue<float>("Starting speed", &ps->prop.sSpeed, ImGuiDataType_Float);
+					GUI_SEP;
+					NWGui::DragValue<float>("End speed", &ps->prop.eSpeed, ImGuiDataType_Float);
+					GUI_SEP;
+					NWGui::DragValue<float>("speed variation duration", &ps->prop.speedVarDuration, ImGuiDataType_Float);
+					GUI_SEP; GUI_NEWLINE;
+					ImGui::TreePop();
+				}
+				if (ImGui::TreeNode("Emission properties")) {
+					NWGui::DragValue<double>("Emission frequency", &ps->emissionFrequency, ImGuiDataType_Double);
+					GUI_SEP;
+					NWGui::DragValue<uint16>("Emission quantity", &ps->emissionQuantity, ImGuiDataType_U16);
+					GUI_SEP;
+					NWGui::CheckBox("Recycle particles", &ps->recycle);
+					GUI_SEP;
+					NWGui::DragValue<int>("Max particles(experimental)", &ps->maxParticles, ImGuiDataType_S32);
+					ImGui::TreePop();
+				}	
 			}
 			
 			ImGui::NewLine();

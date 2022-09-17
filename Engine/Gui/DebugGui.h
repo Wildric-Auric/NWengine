@@ -36,7 +36,7 @@ public:
 				ps->prop.sScale = fVec2(0.0, 0.0);
 				ps->prop.eScale = fVec2(0.3, 0.3);
 				ps->prop.scaleVarDuration = 3.0f;
-				ps->prop.sDirection = fVec2(-1.0f, 0.0f);
+				ps->prop.sDirection = fVec2(1.0f, 0.0f);
 				ps->prop.eDirection = fVec2(0.0f, 1.0f);
 				ps->prop.directionVarDuration = 3;
 				ps->emissionFrequency = 0.1;
@@ -47,11 +47,6 @@ public:
 
 		if (ps != nullptr) {
 			ps->Update();
-			if (ps->enabled.size() > 0) {
-				ps->pool[ps->enabled[0]].sprite;
-				ps->pool[ps->enabled[0]].transform;
-			}
-			ImGui::SliderFloat("speed", &(ps->prop.sSpeed), 0.1f, 1000.0f);
 		}
 
 		GameObject* go = nullptr;
