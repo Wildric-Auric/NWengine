@@ -84,6 +84,7 @@ void NWengine::MainLoop() {
 
 void NWengine::Shutdown() {
 		ImGui_ImplOpenGL3_Shutdown();
+		ImPlot::DestroyContext();
 		ImGui::DestroyContext();
 		glfwTerminate();
 }

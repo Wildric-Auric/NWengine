@@ -19,6 +19,7 @@ public:
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window, true);
 		ImGui_ImplOpenGL3_Init();
+		ImPlot::CreateContext();
 		static ImGuiIO& io = ImGui::GetIO(); 
 		//*(void)io;
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;

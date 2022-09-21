@@ -7,7 +7,7 @@
 #include "Console.h"
 #include "ScriptManager.h"
 #include "ParticleSystem.h"
-
+#include "imgui\\implot\\implot.h"
 class DebugGui {
 public:
 	static bool isActive;
@@ -71,6 +71,13 @@ public:
 
 		ImGui::Separator();
 		ImGui::ShowDemoWindow();
+		ImPlot::ShowDemoWindow();
+		static double x = 0;
+		static double y = 0;
+		if (ImPlot::BeginPlot("Hello World")) {
+			ImPlot::DragPoint(1504, &x, &y, ImVec4(1.0f,0.0f,0.0f, 1.0f));
+			ImPlot::EndPlot();
+		}
 		static ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGui::End();
 	}

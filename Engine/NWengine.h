@@ -26,6 +26,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/implot/implot.h"
 #include "Gui.h"
 #include "Globals.h"
 #include "Primitives.h"
