@@ -3,6 +3,9 @@
 #include "HierarchyGui.h"
 #include "ScriptManager.h"
 #include "Utilities.h"
+#include "Animation.h"
+#include "Animator.h"
+
 class InspectorGui {
 public:
 	static bool isActive;
@@ -19,17 +22,23 @@ public:
 		Script* script = nullptr;
 		Camera* cam = nullptr;
 		ParticleSystem* ps = nullptr;
+		Animator* animator = nullptr;
+		
 
 		if (HierarchyGui::selected > -1 && HierarchyGui::selected < Scene::currentScene->sceneObjs.size()) {
 			auto it = Scene::currentScene->sceneObjs.begin();
 			std::advance(it, HierarchyGui::selected);
 			go = &(*it);
 			//TODO::Check performance of getting all components each frame
+
 			sprite    = go->GetComponent<Sprite>();
 			transform = go->GetComponent<Transform>();
 			collider  = go->GetComponent<Collider2>();
 			script    = go->GetComponent<Script>();
 			cam       = go->GetComponent<Camera>();
+			animator =  go->GetComponent<Animator>();
+			
+
 			ps  = go->GetComponent<ParticleSystem>();
 			if (transform != nullptr) {
 				if (ImGui::CollapsingHeader("Transform")) {
@@ -163,6 +172,10 @@ public:
 				}	
 			}
 			
+			if (animator != nullptr && ImGui::CollapsingHeader("Animator")) {
+				if (ImGui::TreeNode("animation")) {};
+			}
+
 			ImGui::NewLine();
 			ImGui::NewLine();
 
@@ -176,8 +189,8 @@ public:
 				if (ImGui::Selectable("Script") && script == nullptr)			go->AddComponent<Script>();
 				if (ImGui::Selectable("Collider") && collider == nullptr)		go->AddComponent<Collider2>();
 				if (ImGui::Selectable("Camera") && cam == nullptr)				go->AddComponent<Camera>();
-
-				ImGui::EndPopup();
+				if (ImGui::Selectable("Particle system") && ps == nullptr)      go->AddComponent<ParticleSystem>();
+ 				ImGui::EndPopup();
 			}
 		}
 		ImGui::End();
