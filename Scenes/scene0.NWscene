@@ -71,12 +71,12 @@ GameObject:
 		end
 	Transform:
 		Position:
-			100.000000
-			-66.000000
+			-64.000000
+			-39.000000
 			end
 		Scale:
-			0.200000
-			0.200000
+			0.050000
+			0.050000
 			end
 		end
 	Sprite:
