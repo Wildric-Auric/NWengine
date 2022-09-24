@@ -386,14 +386,17 @@ void Scene::Update() {
 	for (GameObject obj : sceneObjs) {
 		Script* scr = obj.GetComponent<Script>();
 		Animator* animator = obj.GetComponent<Animator>();
+		ParticleSystem* ps = obj.GetComponent<ParticleSystem>();
+
 		if (scr == nullptr) goto n0;
 		if (scr->script == nullptr) goto n0;
 		//scr->script->Update();
 	n0:
 		if (animator == nullptr) goto n1;
-		animator->Animate(obj.GetComponent<Sprite>());
+		animator->Update();
 
 	n1:
+		if (ps != nullptr) ps->Update();
 		continue;
 	}
 };

@@ -15,5 +15,5 @@ public:
 	bool isActive = 1;
 
 	Animation animation;
-	void Animate(Sprite* buffer);
+	void Update();
 };

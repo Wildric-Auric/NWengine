@@ -4,9 +4,11 @@ Animator::Animator(GameObject* go) {
 	attachedObj = go;
 }
 
-void Animator::Animate(Sprite* buffer) {
+void Animator::Update() {
 	//TODO::Set first time the frame with 0 index
 	if (!isActive) return;
+	Sprite* buffer = attachedObj->GetComponent<Sprite>();
+	if (buffer == nullptr ) return;
 	cycle += Globals::deltaTime;
 	double duration = animation.durations[currentFrame];
 	if (cycle >= duration) {
