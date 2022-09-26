@@ -337,7 +337,57 @@ Vector3<T> lerpVector3(Vector3<T> source, Vector3<T> target, Vector3<T1> percent
 	return Vector3<T>(lerp(source.x, target.x, percent.x), lerp(source.y, target.y, percent.y), 
 					  lerp(source.z, target.z, percent.z));
 };
+//Quadratic Bezier
+template<typename T, typename T1>
+T Qbezier(T source, T target, T point, T1 percent) {
+	percent = Clamp<T1>(percent, (T1)0.0, (T1)1.0);
+	T1 t2 = percent * percent;
+	T1 x = 1 - percent;
+	T1 x2 = x * x;
 
+	return x2 * source + 2 * x * percent * point + t2 * target;
+}
+
+template<typename T, typename T1>
+Vector2<T> QbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point, Vector2<T1> percent) {
+	return Vector2<T>(Qbezier(source.x, target.x, point.x, percent.x),
+					  Qbezier(source.y, target.y, point.y, percent.y));
+	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
+}
+
+template<typename T, typename T1>
+Vector3<T> QbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
+	return Vector3<T>(Qbezier(source.x, target.x, point.x, percent.x),
+					  Qbezier(source.y, target.y, point.y, percent.y)
+					  Qbezier(source.z, target.z, point.z, percent.z));
+}
+
+//Cubic bezier
+template<typename T, typename T1> 
+T Cbezier(T source, T target, T point1, T point2, T1 percent) {
+	percent = Clamp<T1>(percent, (T1)0.0, (T1)1.0);
+	T1 t2 = percent * percent;
+	T1 t3 = percent * t2;
+	T1 x = 1 - percent;
+	T1 x2 = x * x;
+	T1 x3 = x2 * x;
+
+	return  x3 * source + 3 * percent * x2 * point1 + 3 * t2 * x * point2 + x3 * point2;
+}
+
+template<typename T, typename T1>
+Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point, Vector2<T1> percent) {
+	return Vector2<T>(Cbezier(source.x, target.x, point.x, percent.x),
+				      Cbezier(source.y, target.y, point.y, percent.y));
+	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
+}
+
+template<typename T, typename T1>
+Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
+	return Vector3<T>(Cbezier(source.x, target.x, point.x, percent.x),
+					  Cbezier(source.y, target.y, point.y, percent.y)
+					  Cbezier(source.z, target.z, point.z, percent.z));
+}
 
 template<typename T>
 T Det2(Vector2<T> a, Vector2<T> b) {
