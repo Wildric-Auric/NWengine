@@ -358,7 +358,7 @@ Vector2<T> QbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point
 template<typename T, typename T1>
 Vector3<T> QbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
 	return Vector3<T>(Qbezier(source.x, target.x, point.x, percent.x),
-					  Qbezier(source.y, target.y, point.y, percent.y)
+					  Qbezier(source.y, target.y, point.y, percent.y),
 					  Qbezier(source.z, target.z, point.z, percent.z));
 }
 
@@ -385,7 +385,7 @@ Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point
 template<typename T, typename T1>
 Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
 	return Vector3<T>(Cbezier(source.x, target.x, point.x, percent.x),
-					  Cbezier(source.y, target.y, point.y, percent.y)
+					  Cbezier(source.y, target.y, point.y, percent.y),
 					  Cbezier(source.z, target.z, point.z, percent.z));
 }
 
