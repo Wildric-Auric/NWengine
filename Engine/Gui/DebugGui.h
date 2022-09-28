@@ -72,10 +72,17 @@ public:
 		ImGui::Separator();
 		ImGui::ShowDemoWindow();
 		ImPlot::ShowDemoWindow();
-		static double x = 0;
-		static double y = 0;
+		static dVec2 point = dVec2(0.0, 0.0);
+		static double xx[1000];
+		static double yy[1000];
+		for (int i = 1; i < 1001; i++) {
+			fVec2 temp = QbezierVector2(Vector2<double>(0.0f, 0.0f), Vector2<double>(1.0f,1.0f), point, fVec2(((float)i)/1000.0f, ((float)i)/1000.0f));
+			xx[i-1] = temp.x;
+			yy[i-1] = temp.y;
+		}
 		if (ImPlot::BeginPlot("Hello World")) {
-			ImPlot::DragPoint(1504, &x, &y, ImVec4(1.0f,0.0f,0.0f, 1.0f));
+			ImPlot::DragPoint(1504, &point.x, &point.y, ImVec4(1.0f,0.0f,0.0f, 1.0f));
+			ImPlot::PlotLine("bezier", xx, yy, 1000, ImPlotLineFlags_Segments);
 			ImPlot::EndPlot();
 		}
 		static ImGuiIO& io = ImGui::GetIO(); (void)io;
