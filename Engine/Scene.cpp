@@ -48,7 +48,7 @@ void Scene::SortScene() {
 				j--;
 				if (j == -1) continue;
 				std::advance(it0, -2);
-		}
+		};
 		std::advance(it0, 1);
 		if (j == -1) std::advance(it0,-2);
 		*it0 = temp;
@@ -390,7 +390,9 @@ void Scene::Update() {
 
 		if (scr == nullptr) goto n0;
 		if (scr->script == nullptr) goto n0;
-		//scr->script->Update();
+		#ifdef NW_GAME_BUILD
+		scr->script->Update();
+		#endif
 	n0:
 		if (animator == nullptr) goto n1;
 		animator->Update();
