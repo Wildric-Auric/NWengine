@@ -30,26 +30,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -161,17 +161,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Build\Builder.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\implot\implot.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\implot\implot_demo.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\implot\implot_items.cpp" />
     <ClCompile Include="Engine\Animation.cpp" />
     <ClCompile Include="dependencies\vendor\glm\detail\glm.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
@@ -218,6 +218,28 @@
     <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Build\Builder.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\al.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\alc.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\alext.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\efx-creative.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\efx-presets.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\EFX-Util.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\efx.h" />
+    <ClInclude Include="dependencies\OPENAL\include\AL\xram.h" />
+    <ClInclude Include="dependencies\SND\include\sndfile.h" />
+    <ClInclude Include="dependencies\SND\include\sndfile.hh" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx10.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_opengl2.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_osx.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_sdl.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_sdlrenderer.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_vulkan.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_wgpu.h" />
+    <ClInclude Include="dependencies\vendor\imgui\imgui_impl_win32.h" />
     <ClInclude Include="dependencies\vendor\imgui\implot\implot.h" />
     <ClInclude Include="dependencies\vendor\imgui\implot\implot_internal.h" />
     <ClInclude Include="Engine\Animation.h" />
@@ -860,8 +882,6 @@
     <ClInclude Include="dependencies\vendor\glm\vec3.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vec4.hpp" />
     <ClInclude Include="dependencies\vendor\glm\vector_relational.hpp" />
-    <ClInclude Include="dependencies\vendor\imgui\imconfig.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imgui.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_opengl3_loader.h" />
@@ -1076,6 +1096,8 @@
     <None Include="dependecies\vendor\glm\gtx\vector_angle.inl" />
     <None Include="dependecies\vendor\glm\gtx\vector_query.inl" />
     <None Include="dependecies\vendor\glm\gtx\wrap.inl" />
+    <None Include="dependencies\OPENAL\win32\OpenAL32.def" />
+    <None Include="dependencies\SND\lib\libsndfile-1.def" />
     <None Include="dependencies\vendor\glm\detail\func_common.inl" />
     <None Include="dependencies\vendor\glm\detail\func_common_simd.inl" />
     <None Include="dependencies\vendor\glm\detail\func_exponential.inl" />
@@ -1232,8 +1254,6 @@
     <None Include="x64\Debug\TopDownShooter0.0.pdb" />
     <None Include="x64\Debug\vc142.idb" />
     <None Include="x64\Debug\vc142.pdb" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <Font Include="fonts\rockstar.otf" />

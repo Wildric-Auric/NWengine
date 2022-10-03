@@ -1,10 +1,11 @@
-//This files fills GNUbuild.bat and executes it
+#include "Builder.h"
+
+
 #define PROJECTDIR "C:\\Users\\HP\\Desktop\\NWengine\\"
 
 #include <fstream>
 #include <vector>
 #include <string>
-
 #define UTILDIR "..\\Engine\\STL\\Utilities.h"
 #include UTILDIR
 #include "..\\Engine\\Maths\\Maths.h"
@@ -116,7 +117,7 @@ std::string outputDir = "";
 std::string exeName = "BuildTest.exe";
 
 
-void Compile() {
+void Builder::Compile() {
     //Creating objects out of scripts
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
@@ -174,7 +175,7 @@ void Compile() {
     ofs.close();
 }
 
-void Link() {
+void Builder::Link() {
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
     ofs << "call vcvars32\n";
@@ -195,7 +196,7 @@ void Link() {
  
 }
 
-void InitScripts() {
+void Builder::InitScripts() {
     //TODO::Wrapper of ifstream and ofstream with error handling
     //Reading used scripts names and writing to scripts.h
     std::ifstream ifs("..\\Ressources\\Scripts\\ScriptsList.NWlist");
@@ -250,11 +251,8 @@ void InitScripts() {
     ofs0.close();
 }
 
-void Execute() {
 
-}
-
-void Build() {
+void Builder::Build() {
     //Compile();
     //Link();
     InitScripts();
