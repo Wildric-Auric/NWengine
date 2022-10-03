@@ -372,21 +372,21 @@ T Cbezier(T source, T target, T point1, T point2, T1 percent) {
 	T1 x2 = x * x;
 	T1 x3 = x2 * x;
 
-	return  x3 * source + 3 * percent * x2 * point1 + 3 * t2 * x * point2 + x3 * point2;
+	return  x3 * source + 3 * percent * x2 * point1 + 3 * t2 * x * point2 + x3 * target;
 }
 
 template<typename T, typename T1>
-Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point, Vector2<T1> percent) {
-	return Vector2<T>(Cbezier(source.x, target.x, point.x, percent.x),
-				      Cbezier(source.y, target.y, point.y, percent.y));
+Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point1, Vector2<T> point2, Vector2<T1> percent) {
+	return Vector2<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
+				      Cbezier(source.y, target.y, point1.y, point2.y, percent.y));
 	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
 }
 
 template<typename T, typename T1>
-Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
-	return Vector3<T>(Cbezier(source.x, target.x, point.x, percent.x),
-					  Cbezier(source.y, target.y, point.y, percent.y),
-					  Cbezier(source.z, target.z, point.z, percent.z));
+Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector2<T> point1, Vector2<T> point2, Vector3<T1> percent) {
+	return Vector3<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
+					  Cbezier(source.y, target.y, point1.y, point2.y, percent.y),
+					  Cbezier(source.z, target.z, point1.z, point2.z, percent.z));
 }
 
 template<typename T>
