@@ -7,7 +7,6 @@
 int main(int argc, const char* argv[]) {
 	if (argc <= 1) return 0;
 	std::string cur = "";
-	std::cout << argv[1] << std::endl;
 	for (int i = 1; i < argc; i++) {
 		cur = argv[i];
 		if (cur == "/C") Builder::Compile();

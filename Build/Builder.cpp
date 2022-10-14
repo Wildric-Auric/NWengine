@@ -1,41 +1,43 @@
 #include "Builder.h"
 
 
-#define PROJECTDIR "C:\\Users\\HP\\Desktop\\NWengine\\"
-
+#define PROJECTDIR "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\"
+#define SCRIPT_MANAGER_PATH "Data\\Engine\\Native Scripting\\ScriptManager.cpp"
 #include <fstream>
 #include <vector>
 #include <string>
-#define UTILDIR "..\\Engine\\STL\\Utilities.h"
-#include UTILDIR
-#include "..\\Engine\\Maths\\Maths.h"
+#include "Data\\Engine\\Utilities.h"
+#include "Data\\Engine\\Maths.h"
 std::string ProjectDir = PROJECTDIR;
+std::string outputDir  = ProjectDir + "Data\\Compiled\\";
+std::string exeLoc     = ProjectDir + "Data\\";
+std::string exeName    = "BuildTest.exe";
 std::string IncludeDir[] = {
-    "dependencies\\GLEW\\include",
-    "dependencies\\GLFW\\include",
-    "dependencies\\vendor",
-    "dependencies\\freetype\\include",
-    "dependencies\\OPENAL\\include",
-    "Engine",
-    "dependencies\\SND\\include",
-    "Engine\\Components",
-    "Engine\\Audio",
-    "Ressources",
-    "Engine\\Context",
-    "Engine\\Gui",
-    "Engine\\Maths",
-    "Engine\\Rendering",
-    "Engine\\Native Scripting",
-    "Engine\\STL"
+    "Data\\dependencies\\GLEW\\include",
+    "Data\\dependencies\\GLFW\\include",
+    "Data\\dependencies\\vendor",
+    "Data\\dependencies\\freetype\\include",
+    "Data\\dependencies\\OPENAL\\include",
+    "Data\\Engine",
+    "Data\\dependencies\\SND\\include",
+    "Data\\Engine\\Components",
+    "Data\\Engine\\Audio",
+    "Data\\Ressources",
+    "Data\\Engine\\Context",
+    "Data\\Engine\\Gui",
+    "Data\\Engine\\Maths",
+    "Data\\Engine\\Rendering",
+    "Data\\Engine\\Native Scripting",
+    "Data\\Engine\\STL"
 
 };
 
 std::string LibsDir[] = {
-    "dependencies\\GLFW\\lib-vc2019"                                   ,
-    "dependencies\\GLEW\\lib\\Release\\Win32"                          ,
-    "dependencies\\freetype\\release static\\vs2015-2022\\win32"       ,
-    "dependencies\\SND\\lib"                                           ,
-    "dependencies\\OPENAL\\win32"                                    
+    "Data\\dependencies\\GLFW\\lib-vc2019"                                   ,
+    "Data\\dependencies\\GLEW\\lib\\Release\\Win32"                          ,
+    "Data\\dependencies\\freetype\\release static\\vs2015-2022\\win32"       ,
+    "Data\\dependencies\\SND\\lib"                                           ,
+    "Data\\dependencies\\OPENAL\\win32"                                    
 };
 //Don't need absolute path in the future, it should be automatized
 std::string staticLibs[] = {
@@ -61,46 +63,50 @@ std::string staticLibs[] = {
 
 
 std::string objs[] = {
-    "dependencies\\vendor\\glm\\detail\\glm.cpp"                                                  ,
-    "dependencies\\vendor\\imgui\\imgui.cpp"                                                      ,
-    "dependencies\\vendor\\imgui\\imgui_demo.cpp"                                                 ,
-    "dependencies\\vendor\\imgui\\imgui_draw.cpp"                                                 ,
-    "dependencies\\vendor\\imgui\\imgui_impl_glfw.cpp"                                            ,
-    "dependencies\\vendor\\imgui\\imgui_impl_opengl3.cpp"                                         ,
-    "dependencies\\vendor\\imgui\\imgui_tables.cpp"                                               ,
-    "dependencies\\vendor\\imgui\\imgui_widgets.cpp"                                              ,
-    "Engine\\Audio\\Audio.cpp"                                                                    ,
-    "Engine\\Components\\Collision.cpp"                                                           ,
-    "Engine\\Components\\PostProcessing.cpp"                                                      ,
-    "Engine\\Components\\Script.cpp"                                                              ,
-    "Engine\\Components\\Transform.cpp"                                                           ,
-    "Engine\\Gui\\Console.cpp"                                                                    ,
-    "Engine\\STL\\NWstd.cpp"                                                                      ,
-    "Engine\\STL\\Parser.cpp"                                                                     ,
-    "Engine\\Components\\Particles.cpp"                                                           ,
-    "Engine\\Components\\Physics.cpp"                                                             ,
-    "Engine\\Rendering\\Camera.cpp"                                                               ,
-    "Engine\\Context\\Context.cpp"                                                                ,
-    "Engine\\Components\\GameObject.cpp"                                                          ,
-    "Engine\\Globals.cpp"                                                                         ,
-    "Engine\\Context\\Inputs.cpp"                                                                 ,
-    "Engine\\Context\\Primitives.cpp"                                                             ,
-    "Engine\\NWengine.cpp"                                                                        ,
-    "Engine\\Context\\RessourcesLoader.cpp"                                                       ,
-    "Engine\\Scene.cpp"                                                                           ,
-    "Engine\\Shader.cpp"                                                                          ,
-    "Engine\\Source.cpp"                                                                          ,
-    "Engine\\Text.cpp"                                                                            ,
-    "Engine\\Context\\Texture.cpp"                                                                ,
-    "Engine\\TileMap.cpp"                                                                         ,
-    "Ressources\\Scripts\\player.cpp"                                                             ,
-    "Engine\\Components\\Sprite.cpp"                                                              ,
-    "Engine\\Gui\\StaticGuiVariable.cpp"                                                          ,
-    "Engine\\Animation.cpp"                                                                       ,
-    "Engine\\Native Scripting\\ScriptManager.cpp"                                                 ,
-    "Engine\\Components\\Animator.cpp"                                                          
-};
-
+    "Data\\dependencies\\vendor\\glm\\detail\\glm.cpp"                                                  ,
+    "Data\\dependencies\\vendor\\imgui\\imgui.cpp"                                                      ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_demo.cpp"                                                 ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_draw.cpp"                                                 ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_impl_glfw.cpp"                                            ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_impl_opengl3.cpp"                                         ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_tables.cpp"                                               ,
+    "Data\\dependencies\\vendor\\imgui\\imgui_widgets.cpp"                                              ,
+    "Data\\dependencies\\vendor\\imgui\\implot\\implot.cpp"                                             ,
+    "Data\\dependencies\\vendor\\imgui\\implot\\implot_items.cpp"                                       ,
+    "Data\\dependencies\\vendor\\imgui\\implot\\implot_demo.cpp"                                       ,
+    "Data\\Engine\\Animation.cpp"                                                                                     ,                                                                                                                 
+    "Data\\Engine\\Animator.cpp"                                                                                      ,
+    "Data\\Engine\\Audio.cpp"                                                                                         ,
+    "Data\\Engine\\Camera.cpp"                                                                                        ,
+    "Data\\Engine\\Collision.cpp"                                                                                     ,
+    "Data\\Engine\\Console.cpp"                                                                                       ,
+    "Data\\Engine\\Context.cpp"                                                                                       ,
+    "Data\\Engine\\Game.cpp"                                                                                          ,
+    "Data\\Engine\\GameObject.cpp"                                                                                    ,
+    "Data\\Engine\\Globals.cpp"                                                                                       ,
+    "Data\\Engine\\Inputs.cpp"                                                                                        ,
+    "Data\\Engine\\NWengine.cpp"                                                                                      ,
+    "Data\\Engine\\NWGui.cpp"                                                                                         ,
+    "Data\\Engine\\NWstd.cpp"                                                                                         ,
+    "Data\\Engine\\Parser.cpp"                                                                                        ,
+    "Data\\Engine\\ParticleSystem.cpp"                                                                                ,
+    "Data\\Engine\\Physics.cpp"                                                                                       ,
+    "Data\\Engine\\PostProcessing.cpp"                                                                                ,
+    "Data\\Engine\\Primitives.cpp"                                                                                    ,
+    "Data\\Engine\\RessourcesLoader.cpp"                                                                              ,
+    "Data\\Engine\\Scene.cpp"                                                                                         ,
+    "Data\\Engine\\Script.cpp"                                                                                        ,
+    "Data\\Engine\\ScriptManager.cpp"                                                                                 ,
+    "Data\\Engine\\Shader.cpp"                                                                                        ,
+    "Data\\Engine\\Source.cpp"                                                                                        ,
+    "Data\\Engine\\Sprite.cpp"                                                                                        ,
+    "Data\\Engine\\StaticGuiVariable.cpp"                                                                             ,
+    "Data\\Engine\\Text.cpp"                                                                                          ,
+    "Data\\Engine\\Texture.cpp"                                                                                       ,
+    "Data\\Engine\\TileMap.cpp"                                                                                       ,
+    "Data\\Engine\\Transform.cpp"                                                                                     ,
+};                                                                                                      
+                                                                                                       
 
 std::vector<std::string> o;
 
@@ -108,13 +114,14 @@ std::vector<std::string> o;
 std::string PreprocessorMacros[] = {
     "GLEW_STATIC",
     "WIN32",
+    "WIN_32",
     "_CRT_SECURE_NO_WARNINGS",
     "_CONSOLE",
     "_MBCS"
 };
 
-std::string outputDir = "";
-std::string exeName = "BuildTest.exe";
+
+
 
 
 void Builder::Compile() {
@@ -127,7 +134,6 @@ void Builder::Compile() {
         ofs << "/D" << MAC << " ";
     }
     ofs << "\"\n";
-        outputDir = ProjectDir + "Build\\Engine Build\\Data\\";
     for (std::string scr : objs) {
 
         //Getting it's name
@@ -150,6 +156,7 @@ void Builder::Compile() {
 
         }
         ofs << "cl ";
+        ofs << "/MDd ";  //Runtime library
         ofs << "/c ";
         bool b = 0;
         for (std::string dir : IncludeDir) {
@@ -180,7 +187,7 @@ void Builder::Link() {
     ofs << "@echo off\n";
     ofs << "call vcvars32\n";
     ofs << "LINK ";
-    std::string objectLoc = "Engine Build\\Data\\";
+    std::string objectLoc = outputDir;
     for (std::string obj : GetDirFiles(objectLoc)) {
         ofs << "\"" << objectLoc << obj << "\"" << "^\n ";
     }
@@ -190,7 +197,7 @@ void Builder::Link() {
     for (std::string lib : staticLibs) {
         ofs << lib << "^\n ";
     }
-    ofs << "/OUT:NWengine-MSVC.exe";
+    ofs << "/OUT:" << exeLoc << exeName;
     ofs << "\necho exe generated";
     ofs.close();
  
@@ -222,7 +229,7 @@ void Builder::InitScripts() {
     //Building scriptManager map
     Vector2<std::string> parts = Vector2<std::string>("", "");
     Vector2<std::string> del = Vector2<std::string>("BEG_PPP","END_PPP");
-    std::ifstream ifs0("..\\Engine\\Native Scripting\\ScriptManager.cpp");
+    std::ifstream ifs0(SCRIPT_MANAGER_PATH);
     if (!ifs0) {
         std::cout << "Can't open ScriptManager.cpp file" << std::endl;
         ifs0.close();
@@ -244,7 +251,7 @@ void Builder::InitScripts() {
     }
 
     ifs0.close();
-    std::ofstream ofs0("..\\Engine\\Native Scripting\\ScriptManager.cpp");
+    std::ofstream ofs0(SCRIPT_MANAGER_PATH);
     ofs0 << parts.x;
     ofs0 << "std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {\n";
     ofs0 << scriptMap <<"\n};\n" << parts.y;
