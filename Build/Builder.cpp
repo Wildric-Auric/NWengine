@@ -2,7 +2,11 @@
 
 
 #define PROJECTDIR "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\"
-#define SCRIPT_MANAGER_PATH "Data\\Engine\\Native Scripting\\ScriptManager.cpp"
+//Users script
+#define SCRIPTS_PATH "Data\\Ressources\\Scripts\\" 
+//Engine source code (a part of it should be precompiled later) 
+#define SOURCE_PATH  "Data\\Engine\\"
+
 #include <fstream>
 #include <vector>
 #include <string>
@@ -13,6 +17,7 @@ std::string outputDir  = ProjectDir + "Data\\Compiled\\";
 std::string exeLoc     = ProjectDir + "Data\\";
 std::string exeName    = "BuildTest.exe";
 std::string IncludeDir[] = {
+    "Data\\ressources\\Scripts",
     "Data\\dependencies\\GLEW\\include",
     "Data\\dependencies\\GLFW\\include",
     "Data\\dependencies\\vendor",
@@ -28,8 +33,7 @@ std::string IncludeDir[] = {
     "Data\\Engine\\Maths",
     "Data\\Engine\\Rendering",
     "Data\\Engine\\Native Scripting",
-    "Data\\Engine\\STL"
-
+    "Data\\Engine\\STL",
 };
 
 std::string LibsDir[] = {
@@ -62,7 +66,7 @@ std::string staticLibs[] = {
 };
 
 
-std::string objs[] = {
+std::vector<std::string> objs = {
     "Data\\dependencies\\vendor\\glm\\detail\\glm.cpp"                                                  ,
     "Data\\dependencies\\vendor\\imgui\\imgui.cpp"                                                      ,
     "Data\\dependencies\\vendor\\imgui\\imgui_demo.cpp"                                                 ,
@@ -111,7 +115,7 @@ std::string objs[] = {
 std::vector<std::string> o;
 
 
-std::string PreprocessorMacros[] = {
+std::vector<std::string> Builder::PreprocessorMacros = {
     "GLEW_STATIC",
     "WIN32",
     "WIN_32",
@@ -206,13 +210,13 @@ void Builder::Link() {
 void Builder::InitScripts() {
     //TODO::Wrapper of ifstream and ofstream with error handling
     //Reading used scripts names and writing to scripts.h
-    std::ifstream ifs("..\\Ressources\\Scripts\\ScriptsList.NWlist");
+    std::ifstream ifs(std::string(SCRIPTS_PATH) + std::string("ScriptsList.NWlist"));
     if (!ifs) {
         std::cout << "Can't open scripts file"<< std::endl;
         ifs.close();
         return; 
     }
-    std::ofstream ofs("..\\Engine\\Native Scripting\\Scripts.h");
+    std::ofstream ofs(std::string(SOURCE_PATH)  + std::string("Scripts.h"));
     if (!ofs) {
         std::cout << "Can't open Scripts.h file" << std::endl;
         ofs.close();
@@ -220,8 +224,10 @@ void Builder::InitScripts() {
     }
     std::string scriptMap = "";
     ofs << "#pragma once\n#include \"Script.h\"\n";
-    for (std::string line; std::getline(ifs, line); ofs << "#include \""<<"Scripts\\\\"<<line << ".h\"\n") {
+    //Iterating over lines in scripts' NWlist
+    for (std::string line; std::getline(ifs, line); ofs << "#include \"" <<line << ".h\"\n") {
         scriptMap += "\n  {\"" + line + "\"," + line + "::GetScript" + "},";
+        objs.push_back(std::string(SCRIPTS_PATH) + line + ".cpp"); //Add user's script to files that should be compiled
     };
     if (scriptMap.size() > 0) scriptMap.pop_back();
     ofs.close();
@@ -229,7 +235,7 @@ void Builder::InitScripts() {
     //Building scriptManager map
     Vector2<std::string> parts = Vector2<std::string>("", "");
     Vector2<std::string> del = Vector2<std::string>("BEG_PPP","END_PPP");
-    std::ifstream ifs0(SCRIPT_MANAGER_PATH);
+    std::ifstream ifs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
     if (!ifs0) {
         std::cout << "Can't open ScriptManager.cpp file" << std::endl;
         ifs0.close();
@@ -251,7 +257,7 @@ void Builder::InitScripts() {
     }
 
     ifs0.close();
-    std::ofstream ofs0(SCRIPT_MANAGER_PATH);
+    std::ofstream ofs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
     ofs0 << parts.x;
     ofs0 << "std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {\n";
     ofs0 << scriptMap <<"\n};\n" << parts.y;
