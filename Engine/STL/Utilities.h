@@ -88,7 +88,7 @@ inline std::vector<std::string> GetDirFiles(const std::string& directory)
 	return dirList;
 }
 
-inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory){
+std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
@@ -96,25 +96,30 @@ inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directo
 	std::vector<std::string> dirList;
 
 	hFind = FindFirstFileA(path.c_str(), &findData);
+
+	if (hFind == INVALID_HANDLE_VALUE) {
+		std::cout << "ERROR::Can't find path: " << path << std::endl;
+		return dirList;
+	}
+
 	bool first = 0;
 	while (FindNextFileA(hFind, &findData) != 0)
 	{
-		if (first) {
-			std::string fileName = std::string(findData.cFileName);
-			dirList.push_back(fileName);
-			if (fileName.find(".") == -1) {
-				ExtendVector(&dirList, GetRecusivelyDirFiles(directory + "/" + fileName));
-			}
+		if (!first) {
+			first = 1;
+			continue;
 		}
-		first = 1;
+
+		std::string fileName = std::string(findData.cFileName);
+
+		if (findData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) //Is directory
+			ExtendVector(&dirList, GetRecusivelyDirFiles(directory + "\\" + fileName));
+		else
+			dirList.push_back(directory + "\\" + fileName);
 	}
 
 	FindClose(hFind);
 	return dirList;
-
-	if (hFind == INVALID_HANDLE_VALUE)
-		throw std::runtime_error("Invalid handle value! Please check your path...");
-
 }
 
 inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index = 0) {
