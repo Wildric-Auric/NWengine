@@ -13,6 +13,8 @@ int main(int argc, const char* argv[]) {
 		else if (cur == "/B") Builder::Link();
 		else if (cur == "/IS") Builder::InitScripts();
 		else if (cur == "/Help") std::cout << HELP_LOG << std::endl;
+		else if ((cur.length() > 2) && (cur[0] == '/') && (cur[1] == 'M'))
+			Builder::PreprocessorMacros.push_back(cur.substr(2, cur.length() - 2));
 		else std::cout << cur << ": " << UNK_LOG << std::endl;
 	}
 	return 0;
