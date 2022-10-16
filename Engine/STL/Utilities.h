@@ -88,7 +88,7 @@ inline std::vector<std::string> GetDirFiles(const std::string& directory)
 	return dirList;
 }
 
-std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
+inline std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 
