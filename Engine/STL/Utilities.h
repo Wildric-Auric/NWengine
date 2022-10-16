@@ -211,9 +211,10 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 	return "";
 }
 
-inline std::string GetFileName(std::string path) {
-	std::string filename = "";
+inline std::string GetFileName(std::string path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr) {
+	std::string filename  = "";
 	std::string extension = "";
+	std::string root	  = "";
 	bool state = 0;
 	for (auto chr : path) {
 		if (chr == '.') {
@@ -221,18 +222,24 @@ inline std::string GetFileName(std::string path) {
 			extension = "";
 			state = 1;
 		}
-		if ((int)chr == (int)'\\') {
+		if ((int)chr == (int)'\\') { //Or == "//" ??
+			root += filename + "\\";
 			filename = "";
 			extension = "";
 			continue;
 		}
 		if (!state) filename += chr;
 		else extension += chr;
-
 	}
-	return filename;
+	if (bFilename  != nullptr) *bFilename  = filename;
+	if (bExtension != nullptr) *bExtension = extension;
+	if (bRoot      != nullptr) *bRoot      = root;
+	return filename + extension;
 }
 
 
+inline bool FileCopy(std::string dest, std::string src, bool failIfExists = 0) {
+	return CopyFile(src.c_str(), dest.c_str(), failIfExists);
+}
 
 #endif
