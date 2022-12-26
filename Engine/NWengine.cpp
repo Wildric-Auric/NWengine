@@ -20,7 +20,7 @@ int8 NWengine::Run() {
 		Context::EnableBlend();
 
 		Context::EnableDepthTest();
-
+		
 		////Initialization finished
 		//TODO::UI for scene load ans serialization
 		Scene scene0 = Scene("scene0");
@@ -63,6 +63,7 @@ void NWengine::MainLoop() {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//Update screen
+		glfwSwapInterval(1);
 		glfwSwapBuffers(Context::window);
 		glfwPollEvents();
 		//Calculate fps

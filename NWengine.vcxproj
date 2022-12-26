@@ -90,6 +90,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
