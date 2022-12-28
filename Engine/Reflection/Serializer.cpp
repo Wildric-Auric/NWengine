@@ -3,7 +3,7 @@
 
 #include<fstream>
 #include<vector>
-
+#include "Utilities.h"
 
 //TODO::Check if script is inheriting from Reflected class
 void Serializer::GenerateMeta(std::string src, std::string dest) {
@@ -16,6 +16,8 @@ void Serializer::GenerateMeta(std::string src, std::string dest) {
 	if (!out) return;
 
 	std::string word = "";
+	std::string scriptName = "";
+	GetFileName(src, &scriptName);
 	uint8 state = 0;
 	std::vector<std::string> memberStack;
 	std::vector<std::tuple<std::string, std::string, std::string>> attribs; //type, name, value
@@ -36,8 +38,8 @@ void Serializer::GenerateMeta(std::string src, std::string dest) {
 					out << "this->reflectionData.insert(std::make_pair( "
 						SEP name SEP "," << "std::make_tuple("
 						<< "sizeof(this->" << name << ")" << ","
-						<< "offsetof(" << "this->" << name << ")" << ","
-						SEP type SEP "," << "(void*)" << "this->" << name
+						<< "offsetof(" << scriptName <<"," << name << ")" << ","
+						SEP type SEP "," << "(void*)&" << "this->" << name
 						<< ")"
 						<< "));\n";
 				}
