@@ -14,7 +14,7 @@ public:
 	//Users variable here:
 	SERIALIZED_ATTR float isRunning = 0.0f;
 	SERIALIZED_ATTR int isJumping = 0;
-	SERIALIZED_ATTR			int isGrounded;
+	SERIALIZED_ATTR			int isGrounded = 0;
 	float jumpingStartPosition = 0.0f;
 	float jumpTime = 0.8f;
 	SERIALIZED_ATTR float timer = 0.0f;

@@ -25,21 +25,28 @@ void Serializer::GenerateMeta(std::string src, std::string dest) {
 				state = 1;
 				word  = "";
 				continue;
-			}
-			
+			}	
+#define SEP << "\"" << 
 			if (word == "NW_SERIAL_DATA") {
-				for (std::tuple<std::string, std::string, std::string> attrib : attribs)
-					out << "this.reflectionData.insert(std::make_pair("
-					    <<  "\"" << std::get<1>(attrib) << "\"" 
-					    <<",std::make_tuple(0, 0, "
-					    << "\"" <<std::get<0>(attrib) << "\"" <<  "," 
-						<< "\"" << std::get<2>(attrib) << "\"" << ")); \n";
+				for (std::tuple<std::string, std::string, std::string> attrib : attribs) {
+					std::string type = std::get<0>(attrib);
+					std::string name = std::get<1>(attrib);
+					std::string value = std::get<2>(attrib); //Won't need it maybe, I will just keep it for potential future use
+
+					out << "this->reflectionData.insert(std::make_pair( "
+						SEP name SEP "," << "std::make_tuple("
+						<< "sizeof(this->" << name << ")" << ","
+						<< "offsetof(" << "this->" << name << ")" << ","
+						SEP type SEP "," << "(void*)" << "this->" << name
+						<< ")"
+						<< "));\n";
+				}
 
 				state = 0;
 				word = "";
 				continue;
 			}
-
+#undef SEP
 			if ((state == 1) && (word != "=") && word.size() > 0)
 				memberStack.push_back(word);
 
