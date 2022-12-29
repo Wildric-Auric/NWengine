@@ -64,7 +64,7 @@ public:
 						if (path != "") sprite->SetTexture(path);
 					}
 					ImGui::Separator();
-					if (NWGui::FileHolder("Shader", sprite->shader->name.c_str())) {
+					if (NWGui::FileHolder("Shader", sprite->shader->name)) {
 						std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
 						if (path != "") sprite->SetShader(path);
 					}
