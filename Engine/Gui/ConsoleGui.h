@@ -15,6 +15,8 @@ public:
 				ImGui::TableNextColumn();
 				switch (it->flag) {
 				case CONSOLE_DEBUG_MESSAGE:
+					ImGui::Text("LOG:");
+					ImGui::TableNextColumn();
 					ImGui::Text((it->str + "   ").c_str());
 					break;
 				case CONSOLE_WARNING_MESSAGE:
@@ -23,7 +25,7 @@ public:
 					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0), (it->str + "   ").c_str());
 					break;
 				case CONSOLE_ERROR_MESSAGE:
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0), "ERROR:");
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.1f, 1.0), "ERROR:");
 					ImGui::TableNextColumn();
 					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.1f, 1.0), (it->str + "   ").c_str());
 					break;
