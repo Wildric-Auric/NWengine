@@ -1,6 +1,8 @@
 #include<sndfile.h>
 #include<vector>
 #include "Audio.h"
+
+
 bool InitOpenAL(){
 	ALCdevice * device = alcOpenDevice(0);
 	if (!device)
@@ -17,7 +19,13 @@ bool InitOpenAL(){
 }
 
 
-
+void DestroyOpenAL() {
+	ALCcontext* ctx			= alcGetCurrentContext();
+	ALCdevice*  device		= alcGetContextsDevice(ctx);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(ctx);
+	alcCloseDevice(device);
+}
 
 
 ALuint LoadSound(const char* path) {

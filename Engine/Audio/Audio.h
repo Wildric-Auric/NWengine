@@ -7,6 +7,7 @@ bool InitOpenAL();
 
 ALuint LoadSound(const char* path);
 
+void DestroyOpenAL();
 
 class Sound {
 private:
