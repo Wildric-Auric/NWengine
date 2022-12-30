@@ -18,7 +18,6 @@
 #include "RessourcesLoader.h"
 #include "Camera.h"
 #include "Utilities.h"
-#include "TileMap.h"
 #include "Scene.h"
 #include "Audio.h"
 #include "Components.h"

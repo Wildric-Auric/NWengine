@@ -1,6 +1,8 @@
 #include<sndfile.h>
 #include<vector>
 #include "Audio.h"
+
+
 bool InitOpenAL(){
 	ALCdevice * device = alcOpenDevice(0);
 	if (!device)
@@ -17,12 +19,19 @@ bool InitOpenAL(){
 }
 
 
-
+void DestroyOpenAL() {
+	ALCcontext* ctx			= alcGetCurrentContext();
+	ALCdevice*  device		= alcGetContextsDevice(ctx);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(ctx);
+	alcCloseDevice(device);
+}
 
 
 ALuint LoadSound(const char* path) {
 	SF_INFO info;
 	SNDFILE* data = sf_open(path, SFM_READ, &info);  //hold on, does not support mp3? TODO::Write your own sound loading solution
+	if (!data) { printf("ERROR::Could not open sound file at : %s", path); return 0; }
 	ALsizei sampleNumber = static_cast<ALsizei>(info.channels * info.frames);
 	ALsizei sampleRate = static_cast<ALsizei>(info.samplerate);
 	std::vector<ALshort> samples(sampleNumber);
@@ -38,7 +47,9 @@ ALuint LoadSound(const char* path) {
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer, format, &samples[0], sampleNumber * sizeof(ALushort), sampleRate);
-	//TODO::error checking
+	if (alGetError() != AL_NO_ERROR) {
+		return 0;
+	}
 	return buffer;
 }
 
@@ -48,29 +59,47 @@ ALuint LoadSound(const char* path) {
 
 Sound::Sound(std::string path) {
 	this->snd = LoadSound(path.c_str());
-	alGenSources(1, &source);
-	alSourcei(source, AL_BUFFER, snd);
+	if (!this->snd) { printf("OpenAL error"); return; }
+	alGenSources(1, &this->source);
+	alSourcei(source, AL_BUFFER, this->snd);
+}
+
+Sound::~Sound() {
+	//alDeleteBuffers(1, &snd);
+	//alDeleteSources(1, &source);
 }
 
 void Sound::Play() {
 	alSourcePlay(source);
+	this->isPlaying		= 1;
 }
 
 void Sound::Stop() {
+	if (!this->isPlaying) return;
 	alSourceStop(source);
+	this->isPlaying = 0;
 }
 
 void Sound::SetVolume(float volume) {
+	if (volume == this->volume) return;
 	this->volume = volume;
 	alSourcef(source, AL_GAIN, this->volume);
 }
 
+bool Sound::HasFinished() {
+	int state = 0;
+	alGetSourcei(this->source, AL_SOURCE_STATE, &state);
+	return (state != AL_PLAYING);
+}
+
 void Sound::SetFrequency(float frequency) {
+	if (frequency == this->frequency) return;
 	this->frequency = frequency;
 	alSourcef(source, AL_FREQUENCY, frequency);
 }
 
 void Sound::SetLoop(bool loop) {
+	if (loop == this->isLooping) return;
 	this->isLooping = loop;
 	alSourcei(source, AL_LOOPING, this->isLooping);
 }

@@ -89,7 +89,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;$(SolutionDir)Engine\Reflection</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,6 +177,8 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Components\Animator.cpp" />
+    <ClCompile Include="Engine\Components\AudioEmitter.cpp" />
+    <ClCompile Include="Engine\Components\AudioListener.cpp" />
     <ClCompile Include="Engine\Components\Collision.cpp" />
     <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
@@ -201,9 +204,9 @@
     <ClCompile Include="Engine\Native Scripting\ScriptManager.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Source.cpp" />
+    <ClCompile Include="Engine\Reflection\Serializer.cpp" />
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
-    <ClCompile Include="Engine\TileMap.cpp" />
     <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
@@ -212,7 +215,7 @@
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
     <Text Include="Debug\TopDownShooter0.0.log" />
     <Text Include="Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
-    <Text Include="Shaders\Shader1.shader" />
+    <Text Include="Shaders\Textured.shader" />
     <Text Include="x64\Debug\TopDownShooter0.0.Build.CppClean.log" />
     <Text Include="x64\Debug\TopDownShooter0.0.log" />
     <Text Include="x64\Debug\TopDownShooter0.0.vcxproj.FileListAbsolute.txt" />
@@ -893,6 +896,8 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\Components\Animator.h" />
+    <ClInclude Include="Engine\Components\AudioEmitter.h" />
+    <ClInclude Include="Engine\Components\AudioListener.h" />
     <ClInclude Include="Engine\Components\Collision.h" />
     <ClInclude Include="Engine\Components\Components.h" />
     <ClInclude Include="Engine\Components\PostProcessing.h" />
@@ -908,6 +913,8 @@
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
     <ClInclude Include="Engine\Native Scripting\Scripts.h" />
+    <ClInclude Include="Engine\Reflection\NWReflection.h" />
+    <ClInclude Include="Engine\Reflection\Serializer.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\STL\NWstd.h" />
@@ -928,7 +935,6 @@
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Context\Texture.h" />
     <ClInclude Include="Engine\Globals.h" />
-    <ClInclude Include="Engine\TileMap.h" />
     <ClInclude Include="Engine\STL\Utilities.h" />
     <ClInclude Include="Engine\Components\Sprite.h" />
   </ItemGroup>
@@ -1245,7 +1251,7 @@
     <None Include="Shaders\Line.shader" />
     <None Include="Shaders\Particle.shader" />
     <None Include="Shaders\PostProcessing.shader" />
-    <None Include="Shaders\Text.shader" />
+    <None Include="Shaders\SemiTranscapentTexture.shader" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />

@@ -1,9 +1,5 @@
 #include "player.h"
 
-player::player(GameObject* goc) {
-	this->goc = goc;
-}
-
 void player::Update() {
 
 }
