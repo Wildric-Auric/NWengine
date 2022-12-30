@@ -8,6 +8,11 @@
 #Dependencies
 dependencies/
 GNUBuild/
+Build/Data
+Build/Data/Builder.exe
+Build/Data/build.exe
+Build/Data/Builder.bat
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
