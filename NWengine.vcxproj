@@ -177,6 +177,8 @@
     <ClCompile Include="dependencies\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Components\Animator.cpp" />
+    <ClCompile Include="Engine\Components\AudioEmitter.cpp" />
+    <ClCompile Include="Engine\Components\AudioListener.cpp" />
     <ClCompile Include="Engine\Components\Collision.cpp" />
     <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
@@ -894,6 +896,8 @@
     <ClInclude Include="dependencies\vendor\stb\stb_write_image.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="Engine\Components\Animator.h" />
+    <ClInclude Include="Engine\Components\AudioEmitter.h" />
+    <ClInclude Include="Engine\Components\AudioListener.h" />
     <ClInclude Include="Engine\Components\Collision.h" />
     <ClInclude Include="Engine\Components\Components.h" />
     <ClInclude Include="Engine\Components\PostProcessing.h" />
