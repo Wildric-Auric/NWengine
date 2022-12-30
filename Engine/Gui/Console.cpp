@@ -16,7 +16,7 @@ void Console::Write(const char* str, uint8 FLAG) {
 		count += 1;
 	};
 
-
+	
 	if (condition) {
 		ConsoleText ct = ConsoleText();
 		ct.flag = FLAG;

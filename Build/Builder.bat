@@ -63,4 +63,6 @@ LINK "Engine Build\Data\Animation.obj"^
  odbccp32.lib^
  MSVCRT.LIB^
  /OUT:NWengine-MSVC.exe
+ /DLL^
+ /OUT:C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\BuildDLLTest.dll
 echo exe generated

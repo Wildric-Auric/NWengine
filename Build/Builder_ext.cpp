@@ -1,7 +1,7 @@
 #include "Builder.h"
 #include <iostream>
 
-#define HELP_LOG "/C : Compile engine and scripts, will generate Object files\n/B : Link existing objs, generates an exe\n/IS: Include users scripts in the code"
+#define HELP_LOG "/C : Compile engine and scripts, will generate Object files\n/B : Link existing objs, generates an exe\n/IS: Include users scripts in the code\n/M[Your preprocessor macro]"
 #define UNK_LOG "Unknown command, try /Help"
 
 int main(int argc, const char* argv[]) {
