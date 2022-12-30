@@ -1,48 +1,53 @@
 @echo off
 call vcvars32
-LINK "Engine Build\Data\Animation.obj"^
- "Engine Build\Data\Animator.obj"^
- "Engine Build\Data\Audio.obj"^
- "Engine Build\Data\Camera.obj"^
- "Engine Build\Data\Collision.obj"^
- "Engine Build\Data\Console.obj"^
- "Engine Build\Data\Context.obj"^
- "Engine Build\Data\GameObject.obj"^
- "Engine Build\Data\glm.obj"^
- "Engine Build\Data\Globals.obj"^
- "Engine Build\Data\imgui.obj"^
- "Engine Build\Data\imgui_demo.obj"^
- "Engine Build\Data\imgui_draw.obj"^
- "Engine Build\Data\imgui_impl_glfw.obj"^
- "Engine Build\Data\imgui_impl_opengl3.obj"^
- "Engine Build\Data\imgui_tables.obj"^
- "Engine Build\Data\imgui_widgets.obj"^
- "Engine Build\Data\Inputs.obj"^
- "Engine Build\Data\NWengine.obj"^
- "Engine Build\Data\NWstd.obj"^
- "Engine Build\Data\Parser.obj"^
- "Engine Build\Data\Particles.obj"^
- "Engine Build\Data\Physics.obj"^
- "Engine Build\Data\player.obj"^
- "Engine Build\Data\PostProcessing.obj"^
- "Engine Build\Data\Primitives.obj"^
- "Engine Build\Data\RessourcesLoader.obj"^
- "Engine Build\Data\Scene.obj"^
- "Engine Build\Data\Script.obj"^
- "Engine Build\Data\ScriptManager.obj"^
- "Engine Build\Data\Shader.obj"^
- "Engine Build\Data\Source.obj"^
- "Engine Build\Data\Sprite.obj"^
- "Engine Build\Data\StaticGuiVariable.obj"^
- "Engine Build\Data\Text.obj"^
- "Engine Build\Data\Texture.obj"^
- "Engine Build\Data\TileMap.obj"^
- "Engine Build\Data\Transform.obj"^
- /LIBPATH:"C:\Users\HP\Desktop\NWengine\dependencies\GLFW\lib-vc2019"^
- /LIBPATH:"C:\Users\HP\Desktop\NWengine\dependencies\GLEW\lib\Release\Win32"^
- /LIBPATH:"C:\Users\HP\Desktop\NWengine\dependencies\freetype\release static\vs2015-2022\win32"^
- /LIBPATH:"C:\Users\HP\Desktop\NWengine\dependencies\SND\lib"^
- /LIBPATH:"C:\Users\HP\Desktop\NWengine\dependencies\OPENAL\win32"^
+LINK "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Animation.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Animator.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Audio.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Camera.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Collision.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Console.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Context.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Game.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\GameObject.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\glm.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Globals.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_demo.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_draw.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_impl_glfw.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_impl_opengl3.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_tables.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\imgui_widgets.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\implot.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\implot_demo.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\implot_items.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Inputs.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\NWengine.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\NWGui.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\NWstd.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Parser.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\ParticleSystem.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Physics.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\player.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\PostProcessing.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Primitives.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\RessourcesLoader.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Scene.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Script.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\ScriptManager.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Shader.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Source.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Sprite.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\StaticGuiVariable.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Text.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Texture.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\TileMap.obj"^
+ "C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\Compiled\Transform.obj"^
+ /LIBPATH:"C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\dependencies\GLFW\lib-vc2019"^
+ /LIBPATH:"C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\dependencies\GLEW\lib\Release\Win32"^
+ /LIBPATH:"C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\dependencies\freetype\release static\vs2015-2022\win32"^
+ /LIBPATH:"C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\dependencies\SND\lib"^
+ /LIBPATH:"C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\dependencies\OPENAL\win32"^
  opengl32.lib^
  freetype.lib^
  OpenAL32.lib^
@@ -61,6 +66,5 @@ LINK "Engine Build\Data\Animation.obj"^
  uuid.lib^
  odbc32.lib^
  odbccp32.lib^
- MSVCRT.LIB^
- /OUT:NWengine-MSVC.exe
+ /OUT:C:\Users\HP\source\repos\Wildric-Auric\NWengine\Build\Data\BuildTest.exe
 echo exe generated

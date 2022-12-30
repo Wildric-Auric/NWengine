@@ -8,6 +8,12 @@
 #include "ScriptManager.h"
 #include "ParticleSystem.h"
 #include "imgui\\implot\\implot.h"
+
+#include "Serializer.h"
+
+#include "AudioListener.h"
+#include "AudioEmitter.h"
+
 class DebugGui {
 public:
 	static bool isActive;
@@ -17,18 +23,40 @@ public:
 		ImGui::Text("fps = %f", Globals::fps);
 		NWGui::DragValue<int>("Cam pos", &SceneEditorGui::cam.position.x, ImGuiDataType_S32, 2);
 		NWGui::DragValue<float>("Zoom", &SceneEditorGui::cam.zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
+		
+
 		//DragFloat("Zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
 		static ParticleSystem* ps = nullptr;
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
 		static Script* ee = nullptr;
+		static AudioEmitter* ae = nullptr;
+		static AudioListener* al = nullptr;
 		static GameObject obj = GameObject();
 		NWGui::DragValue<int>("Flag", &a, ImGuiDataType_S32, 1, 0.2f, 0, 4);
 		ImGui::Checkbox("Save Scene", &b);
-		if (ImGui::Checkbox("SCRIPT TEXT", &c)) {
+		if (al) {
+			al->Update();
+		}
+		if (ImGui::Checkbox("Init", &c)) {
 			if (c) {
 				c = 0;
+				
+				if (ae == nullptr) {
+					ae = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioEmitter>();
+					ae->sound = Sound("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Sounds\\Mystery.wav");
+					ae->isLooping = 1;
+				}
+				if (al == nullptr)
+					al = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioListener>();
+
+				ae->sound.Play();
+				Console::Write(std::to_string(ae->sound.isPlaying).c_str()); //TODO::Write accepting other types
+				
+				// Serializer s = Serializer();
+				//s.GenerateMeta("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.h", "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.hpp");
+				/*c = 0;
 				ps = Scene::currentScene->sceneObjs.back().AddComponent<ParticleSystem>();
 				ps->prop.lifetime = 10.0f;	
 				ps->prop.sDirection = fVec2(0.0, 1.0);
@@ -41,7 +69,7 @@ public:
 				ps->prop.directionVarDuration = 3;
 				ps->emissionFrequency = 0.1;
 				ps->prop.lifetime = 1000;
-				ps->prop.lifedistance = 2000;
+				ps->prop.lifedistance = 2000;*/
 			}
 		};
 
@@ -56,13 +84,18 @@ public:
 		//PostProcessing test
 		if (b) {
 			b = 0;
-			for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
+			if (ae != nullptr) {
+				Console::Write(std::to_string(ae->sound.isPlaying).c_str());
+				ae->sound.Stop();
+				Console::Write(std::to_string(ae->sound.isPlaying).c_str());
+			}
+			/*for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
 				if ( go->name == std::string("Warrior")) {
 					PostProcessing* pp = go->AddComponent<PostProcessing>();
 					pp->SetUp(go->GetComponent<Camera>()->size);
 					break;
 				}
-			}
+			}*/
 		}
 		//testing isRendered
 

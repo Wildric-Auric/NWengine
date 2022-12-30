@@ -213,13 +213,11 @@ void Builder::InitScripts() {
     std::ifstream ifs(std::string(SCRIPTS_PATH) + std::string("ScriptsList.NWlist"));
     if (!ifs) {
         std::cout << "Can't open scripts file"<< std::endl;
-        ifs.close();
         return; 
     }
     std::ofstream ofs(std::string(SOURCE_PATH)  + std::string("Scripts.h"));
     if (!ofs) {
         std::cout << "Can't open Scripts.h file" << std::endl;
-        ofs.close();
         return;
     }
     std::string scriptMap = "";
@@ -238,7 +236,6 @@ void Builder::InitScripts() {
     std::ifstream ifs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
     if (!ifs0) {
         std::cout << "Can't open ScriptManager.cpp file" << std::endl;
-        ifs0.close();
         return;
     }
     int j = 0;

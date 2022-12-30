@@ -4,7 +4,7 @@
 #include <map>
 #include <iostream>
 
-#define SHADER_DEFAULT "Shaders\\Shader1.shader"
+#define SHADER_DEFAULT "Shaders\\Textured.shader"
 #define SHADER_POST_PROCESSING "Shaders\\PostProcessing.shader"
 
 class Shader {
