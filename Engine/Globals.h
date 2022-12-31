@@ -3,6 +3,12 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#define NW_DLL_ENGINE       //comment this line if you want either dll or independent exe as output
+#define NW_KEEP_DLL_RUNNING  1
+#define NW_RELOAD_DLL        2
+#define NW_SHUTDOWN_DLL      0
+
+
 typedef int8_t   int8;
 typedef int32_t  int32;
 typedef int16_t  int16;
