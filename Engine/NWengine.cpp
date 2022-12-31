@@ -2,10 +2,76 @@
 #include "Animation.h"
 #include "Animator.h"
 
+#ifdef _WINDLL
+extern "C"
+{
 
-int8 NWengine::Run() {
+	int DllLoop() {
+		int frameCount = 0;
+		double currentTime;
+		double lastTime;
+		double deltaTimeSum = 0;
+		lastTime = glfwGetTime();
 
+		Context::dllFlag = NW_KEEP_DLL_RUNNING;
+		while (Context::dllFlag == NW_KEEP_DLL_RUNNING) {
 
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			Context::Clear();
+			Inputs::Process(Context::window);
+			Gui::Update();
+			Globals::uTime += Globals::deltaTime;
+			Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
+			Camera::ActiveCamera->Update();
+			Scene::currentScene->Update();
+
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			glfwSwapInterval(1);
+			glfwSwapBuffers(Context::window);
+			glfwPollEvents();
+
+			//Updating dll flag
+			if (glfwWindowShouldClose(Context::window)) Context::dllFlag = NW_RELOAD_DLL;
+
+			if (Globals::DEBUG_MODE) {
+				frameCount += 1;
+				deltaTimeSum += Globals::deltaTime;
+				if (frameCount == 60) {
+					Globals::fps = 60.0 / deltaTimeSum;
+					deltaTimeSum = 0;
+					frameCount = 0;
+				}
+			}
+			currentTime = glfwGetTime();
+			Globals::deltaTime = currentTime - lastTime;
+			lastTime = currentTime;
+		}
+		return Context::dllFlag;
+	}
+
+	__declspec(dllexport)  int DllRun() {
+		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
+		Gui::Init((int)window);
+		if (!InitOpenAL()) return -1;
+		RessourcesLoader::LoadDefaultRessources();
+		Context::EnableBlend();
+		Context::EnableDepthTest();
+		Scene scene0 = Scene("scene0");
+		scene0.LoadScene();
+	    DllLoop();
+		NWengine::Shutdown();
+		return Context::dllFlag;
+	}
+}
+
+#endif
+
+#ifndef NW_DLL_ENGINE
+int NWengine::Run() {
 		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
 
@@ -26,10 +92,12 @@ int8 NWengine::Run() {
 		Scene scene0 = Scene("scene0");
 		scene0.LoadScene();
 		
-		MainLoop();
+		NWengine::MainLoop();
 
-		Shutdown();
+		NWengine::Shutdown();
+		return 0;
 }
+
 
 //------------------
 void NWengine::MainLoop() {
@@ -91,3 +159,4 @@ void NWengine::Shutdown() {
 		glfwTerminate();
 }
 
+#endif

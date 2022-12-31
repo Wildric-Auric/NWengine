@@ -18,6 +18,10 @@
 
 																														*/
 
+#include "Globals.h"
+#include"Utilities.h"
+
+#ifndef NW_DLL_ENGINE
 
 #include <GL/glew.h>
 #include <glfw3.h>
@@ -28,7 +32,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/implot/implot.h"
 #include "Gui.h"
-#include "Globals.h"
+
 #include "Primitives.h"
 #include "Inputs.h"
 #include "Maths.h"
@@ -42,10 +46,17 @@
 #include "Audio.h"
 #include "Components.h"
 
+namespace NWengine {
+	int Run();
+	void MainLoop();
+	void Shutdown();
 
-class NWengine {
-public:
-	static int8 Run();
-	static void MainLoop();
-	static void Shutdown();
-};
+}
+
+#endif
+
+#ifdef _WINDLL
+	extern "C" {
+		__declspec(dllexport) int DllRun();
+	}
+#endif
