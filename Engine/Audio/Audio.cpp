@@ -65,8 +65,8 @@ Sound::Sound(std::string path) {
 }
 
 Sound::~Sound() {
-	//alDeleteBuffers(1, &snd);
-	//alDeleteSources(1, &source);
+	alDeleteBuffers(1, &snd);
+	alDeleteSources(1, &source);
 }
 
 void Sound::Play() {

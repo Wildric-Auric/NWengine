@@ -45,9 +45,6 @@ public:
 		}
 
 
-
-
-
 		if (al) {
 			al->Update();
 		}
@@ -57,14 +54,14 @@ public:
 				
 				if (ae == nullptr) {
 					ae = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioEmitter>();
-					ae->sound = Sound("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Sounds\\Mystery.wav");
+					ae->sound = new Sound("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Sounds\\Mystery.wav");
 					ae->isLooping = 1;
 				}
 				if (al == nullptr)
 					al = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioListener>();
 
-				ae->sound.Play();
-				Console::Write(std::to_string(ae->sound.isPlaying).c_str()); //TODO::Write accepting other types
+				ae->sound->Play();
+				Console::Write(std::to_string(ae->sound->isPlaying).c_str()); //TODO::Write accepting other types
 				
 				// Serializer s = Serializer();
 				//s.GenerateMeta("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.h", "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.hpp");
@@ -97,9 +94,9 @@ public:
 		if (b) {
 			b = 0;
 			if (ae != nullptr) {
-				Console::Write(std::to_string(ae->sound.isPlaying).c_str());
-				ae->sound.Stop();
-				Console::Write(std::to_string(ae->sound.isPlaying).c_str());
+				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
+				ae->sound->Stop();
+				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
 			}
 			/*for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
 				if ( go->name == std::string("Warrior")) {

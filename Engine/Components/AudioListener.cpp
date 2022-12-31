@@ -20,13 +20,13 @@ void AudioListener::Update() {
 		float volume    = (float)(audioEmitter->volume)/100.0f;
 		float freq      = audioEmitter->frequency;	
 
-		audioEmitter->sound.SetVolume(volume);
-		audioEmitter->sound.SetFrequency(freq);
-		audioEmitter->sound.SetLoop(audioEmitter->isLooping);
+		audioEmitter->sound->SetVolume(volume);
+		audioEmitter->sound->SetFrequency(freq);
+		audioEmitter->sound->SetLoop(audioEmitter->isLooping);
 
-		if (audioEmitter->sound.isPlaying) {
-			if (audioEmitter->sound.HasFinished()) {
-				audioEmitter->sound.Stop();
+		if (audioEmitter->sound->isPlaying) {
+			if (audioEmitter->sound->HasFinished()) {
+				audioEmitter->sound->Stop();
 			}
 		}
 	}
