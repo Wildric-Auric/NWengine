@@ -40,7 +40,7 @@ void Scene::SortScene() {
 		
 		if (sprite != nullptr) layer = sprite->sortingLayer;
 		
-		while (j>=0 && layer > layer0) {
+		while (j>=0 && layer < layer0) {
 				GameObject* j0 = *it0;
 				std::advance(it0, 1);
 				auto j1 = it0;
@@ -67,10 +67,10 @@ void Scene::DeleteObject(uint32 index) {
 	GameObject* ptr = &(*it1);
 	uint32 count = 0;
 
-	for (auto pair : ptr->components ) {
+
+	for (auto pair : ptr->components) {
 		delete pair.second;
-	} //Maybe should add delete gameobject by type name
-	ptr->components.clear();
+	}
 
 	for (auto it = drawList.begin(); it != drawList.end(); it++) {
 		GameObject* ptr1 = *it;
@@ -82,6 +82,7 @@ void Scene::DeleteObject(uint32 index) {
 		}
 		count++;
 	}
+
 	sceneObjs.erase(it1);
 };
 
@@ -98,7 +99,7 @@ GameObject* Scene::GetGameObject(std::string name) {
 
 void Scene::Draw() {
 
-	//SortScene();
+	SortScene();
 	auto it = drawList.begin();
 	while (it != drawList.end()) {
 		if (!(*it)->isRendered) {
@@ -269,8 +270,8 @@ void Scene::LoadScene() {
 				continue;
 			}
 		}
-
 	}
+
 };
 
 
@@ -282,6 +283,11 @@ static uint16 ind = 0; //Indentation
 
 Scene::~Scene() {
 	Save();
+	for (std::list<GameObject>::iterator it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
+		for (auto pair : it->components) {
+			delete pair.second;
+		}
+	}
 }
 
 
