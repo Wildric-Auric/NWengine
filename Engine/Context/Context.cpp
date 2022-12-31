@@ -9,6 +9,7 @@ int Context::WINDOW_HEIGHT = 640;
 int Context::NATIVE_WIDTH = 850;
 int Context::NATIVE_HEIGHT = 640;
 
+int Context::dllFlag = NW_KEEP_DLL_RUNNING;
 
 void sizeCallBack(GLFWwindow* window, int width, int height)
 {
@@ -30,7 +31,8 @@ GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
 	window = glfwCreateWindow(scrWidth, scrHeight, "NWengine", NULL, NULL);
 	if (window == NULL)
 	{
-		std::cout << "Failed to init glfw window";
+		const char* buffer = "";
+		std::cout << "Failed to init glfw window, ERROR: " <<glfwGetError(&buffer) << " " << buffer;
 		return nullptr;
 	}
 	glfwMakeContextCurrent(window);
