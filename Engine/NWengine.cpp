@@ -1,6 +1,4 @@
 #include "NWengine.h"
-#include "Animation.h"
-#include "Animator.h"
 
 #ifdef _WINDLL
 extern "C"
@@ -35,7 +33,7 @@ extern "C"
 			glfwPollEvents();
 
 			//Updating dll flag
-			if (glfwWindowShouldClose(Context::window)) Context::dllFlag = NW_RELOAD_DLL;
+			if (glfwWindowShouldClose(Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
 
 			if (Globals::DEBUG_MODE) {
 				frameCount += 1;
