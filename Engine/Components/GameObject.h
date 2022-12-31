@@ -43,7 +43,7 @@ public:
 	void BasicDraw(int8 textureSlot = 0);
 	void Rename(std::string newName);
     GameObject();
-
+	~GameObject();
 	template<typename T>
 	T* GetComponent() {
 		T* component = nullptr;

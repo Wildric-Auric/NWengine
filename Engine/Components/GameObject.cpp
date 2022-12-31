@@ -84,6 +84,7 @@ GameObject::GameObject() {
 	numberOfGameObjects += 1;
 };
 
+GameObject::~GameObject() {};
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 
 Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
