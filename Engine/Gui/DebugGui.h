@@ -30,16 +30,28 @@ public:
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
+		static bool d = 0;
 		static Script* ee = nullptr;
 		static AudioEmitter* ae = nullptr;
 		static AudioListener* al = nullptr;
 		static GameObject obj = GameObject();
 		NWGui::DragValue<int>("Flag", &a, ImGuiDataType_S32, 1, 0.2f, 0, 4);
-		ImGui::Checkbox("Save Scene", &b);
+		ImGui::Checkbox("Stop music", &b);
+		ImGui::Checkbox("Reload engine", &d);
+
+		if (d) {
+			Context::dllFlag = NW_RELOAD_DLL;
+			d = 0;
+		}
+
+
+
+
+
 		if (al) {
 			al->Update();
 		}
-		if (ImGui::Checkbox("Init", &c)) {
+		if (ImGui::Checkbox("Play music ", &c)) {
 			if (c) {
 				c = 0;
 				
