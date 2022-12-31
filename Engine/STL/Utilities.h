@@ -27,14 +27,22 @@ void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 
 struct DllHandle
 {
-	DllHandle(const char* const filename) : h(LoadLibrary(filename)) {}
-	~DllHandle() { }//if (h) FreeLibrary(h); }
+	DllHandle(const char* filename) {
+		h = LoadLibrary(filename);
+		if (!h || h == INVALID_HANDLE_VALUE)
+			printf("Cannot load DLL\n");
+	}
+	~DllHandle() {if (h) FreeLibrary(h);}
 	const HINSTANCE Get() const { return h; }
 
 private:
 	HINSTANCE h;
 };
 
+
+inline void* GetDllFunction(DllHandle* dll, const char* functionName) {
+	return GetProcAddress(dll->Get(), functionName);
+}
 inline std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
