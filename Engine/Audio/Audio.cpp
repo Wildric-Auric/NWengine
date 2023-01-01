@@ -64,9 +64,12 @@ Sound::Sound(std::string path) {
 	alSourcei(source, AL_BUFFER, this->snd);
 }
 
+#include<iostream>
+
 Sound::~Sound() {
-	alDeleteBuffers(1, &snd);
-	alDeleteSources(1, &source);
+	alSourcei(this->source, AL_BUFFER, 0);
+	alDeleteSources(1, &this->source);
+	alDeleteBuffers(1, &this->snd);
 }
 
 void Sound::Play() {
