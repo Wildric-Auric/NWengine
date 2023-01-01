@@ -17,6 +17,8 @@ void AudioListener::Update() {
 	for (std::map<GameObject*, AudioEmitter*>::iterator it = AudioEmitter::componentList.begin(); it != AudioEmitter::componentList.end(); it++) {
 		AudioEmitter* audioEmitter = it->second;
 		//TODO::All calculation for distance and direction for sound fading etc
+		if (!audioEmitter->sound)
+			continue;
 		float volume    = (float)(audioEmitter->volume)/100.0f;
 		float freq      = audioEmitter->frequency;	
 

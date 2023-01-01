@@ -10,6 +10,6 @@ AudioEmitter::AudioEmitter(GameObject* attachedObj) {
 
 AudioEmitter::~AudioEmitter() {
 	delete this->sound;
+	this->sound = nullptr;
 	AudioEmitter::componentList.erase(this->attachedObj);
-
 }
