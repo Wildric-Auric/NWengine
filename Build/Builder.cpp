@@ -77,38 +77,41 @@ std::vector<std::string> objs = {
     "Data\\dependencies\\vendor\\imgui\\imgui_widgets.cpp"                                              ,
     "Data\\dependencies\\vendor\\imgui\\implot\\implot.cpp"                                             ,
     "Data\\dependencies\\vendor\\imgui\\implot\\implot_items.cpp"                                       ,
-    "Data\\dependencies\\vendor\\imgui\\implot\\implot_demo.cpp"                                       ,
-    "Data\\Engine\\Animation.cpp"                                                                                     ,                                                                                                                 
-    "Data\\Engine\\Animator.cpp"                                                                                      ,
-    "Data\\Engine\\Audio.cpp"                                                                                         ,
-    "Data\\Engine\\Camera.cpp"                                                                                        ,
-    "Data\\Engine\\Collision.cpp"                                                                                     ,
-    "Data\\Engine\\Console.cpp"                                                                                       ,
-    "Data\\Engine\\Context.cpp"                                                                                       ,
-    "Data\\Engine\\Game.cpp"                                                                                          ,
-    "Data\\Engine\\GameObject.cpp"                                                                                    ,
-    "Data\\Engine\\Globals.cpp"                                                                                       ,
-    "Data\\Engine\\Inputs.cpp"                                                                                        ,
-    "Data\\Engine\\NWengine.cpp"                                                                                      ,
-    "Data\\Engine\\NWGui.cpp"                                                                                         ,
-    "Data\\Engine\\NWstd.cpp"                                                                                         ,
-    "Data\\Engine\\Parser.cpp"                                                                                        ,
-    "Data\\Engine\\ParticleSystem.cpp"                                                                                ,
-    "Data\\Engine\\Physics.cpp"                                                                                       ,
-    "Data\\Engine\\PostProcessing.cpp"                                                                                ,
-    "Data\\Engine\\Primitives.cpp"                                                                                    ,
-    "Data\\Engine\\RessourcesLoader.cpp"                                                                              ,
-    "Data\\Engine\\Scene.cpp"                                                                                         ,
-    "Data\\Engine\\Script.cpp"                                                                                        ,
-    "Data\\Engine\\ScriptManager.cpp"                                                                                 ,
-    "Data\\Engine\\Shader.cpp"                                                                                        ,
-    "Data\\Engine\\Source.cpp"                                                                                        ,
-    "Data\\Engine\\Sprite.cpp"                                                                                        ,
-    "Data\\Engine\\StaticGuiVariable.cpp"                                                                             ,
-    "Data\\Engine\\Text.cpp"                                                                                          ,
-    "Data\\Engine\\Texture.cpp"                                                                                       ,
-    "Data\\Engine\\TileMap.cpp"                                                                                       ,
-    "Data\\Engine\\Transform.cpp"                                                                                     ,
+    "Data\\dependencies\\vendor\\imgui\\implot\\implot_demo.cpp"                                       ,                                                                   
+    "Data\\Engine\\Animation.cpp"                   ,
+    "Data\\Engine\\Animator.cpp"                    ,
+    "Data\\Engine\\Audio.cpp"                       ,
+    "Data\\Engine\\AudioEmitter.cpp"                ,
+    "Data\\Engine\\AudioListener.cpp"               ,
+    "Data\\Engine\\Camera.cpp"                      ,
+    "Data\\Engine\\Collision.cpp"                   ,
+    "Data\\Engine\\Console.cpp"                     ,
+    "Data\\Engine\\Context.cpp"                     ,
+    "Data\\Engine\\Game.cpp"                        ,
+    "Data\\Engine\\GameObject.cpp"                  ,
+    "Data\\Engine\\Globals.cpp"                     ,
+    "Data\\Engine\\Inputs.cpp"                      ,
+    "Data\\Engine\\main.cpp"                        ,
+    "Data\\Engine\\NWengine.cpp"                    ,
+    "Data\\Engine\\NWGui.cpp"                       ,
+    "Data\\Engine\\NWstd.cpp"                       ,
+    "Data\\Engine\\Parser.cpp"                      ,
+    "Data\\Engine\\ParticleSystem.cpp"              ,
+    "Data\\Engine\\Physics.cpp"                     ,
+    "Data\\Engine\\PostProcessing.cpp"              ,
+    "Data\\Engine\\Primitives.cpp"                  ,
+    "Data\\Engine\\RessourcesLoader.cpp"            ,
+    "Data\\Engine\\Scene.cpp"                       ,
+    "Data\\Engine\\Script.cpp"                      ,
+    "Data\\Engine\\ScriptManager.cpp"               ,
+    "Data\\Engine\\Serializer.cpp"                  ,
+    "Data\\Engine\\Shader.cpp"                      ,
+    "Data\\Engine\\Source.cpp"                      ,
+    "Data\\Engine\\Sprite.cpp"                      ,
+    "Data\\Engine\\StaticGuiVariable.cpp"           ,
+    "Data\\Engine\\Text.cpp"                        ,
+    "Data\\Engine\\Texture.cpp"                     ,
+    "Data\\Engine\\Transform.cpp"                   ,
 };                                                                                                      
                                                                                                        
 
@@ -215,17 +218,15 @@ void Builder::InitScripts() {
         std::cout << "Can't open scripts file"<< std::endl;
         return; 
     }
-    std::ofstream ofs(std::string(SOURCE_PATH)  + std::string("Scripts.h"));
-    if (!ofs) {
-        std::cout << "Can't open Scripts.h file" << std::endl;
-        return;
-    }
+    std::ofstream ofs;
+
     std::string scriptMap = "";
-    ofs << "#pragma once\n#include \"Script.h\"\n";
+    std::string scripts   = "";
     //Iterating over lines in scripts' NWlist
-    for (std::string line; std::getline(ifs, line); ofs << "#include \"" <<line << ".h\"\n") {
+    for (std::string line; std::getline(ifs, line);) {
         scriptMap += "\n  {\"" + line + "\"," + line + "::GetScript" + "},";
         objs.push_back(std::string(SCRIPTS_PATH) + line + ".cpp"); //Add user's script to files that should be compiled
+        scripts +=  "#include \"Scripts\\\\" + line + ".h\n";
     };
     if (scriptMap.size() > 0) scriptMap.pop_back();
     ofs.close();
@@ -256,6 +257,7 @@ void Builder::InitScripts() {
     ifs0.close();
     std::ofstream ofs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
     ofs0 << parts.x;
+    ofs0 << scripts;
     ofs0 << "std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {\n";
     ofs0 << scriptMap <<"\n};\n" << parts.y;
     ofs0.close();
