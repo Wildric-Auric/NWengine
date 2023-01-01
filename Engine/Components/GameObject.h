@@ -24,6 +24,9 @@ public:
 class GameComponent {
 public:
 	static std::string GetType() { return "GameComponent"; }
+	virtual void Update() {};
+	virtual void Start() {};
+	virtual ~GameComponent() {};
 };
 //------------------------------------
 

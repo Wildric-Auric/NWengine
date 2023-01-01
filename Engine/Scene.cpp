@@ -69,7 +69,7 @@ void Scene::DeleteObject(uint32 index) {
 
 
 	for (auto pair : ptr->components) {
-		delete pair.second;
+		delete (GameComponent*)(pair.second);
 	}
 
 	for (auto it = drawList.begin(); it != drawList.end(); it++) {
@@ -284,9 +284,8 @@ static uint16 ind = 0; //Indentation
 Scene::~Scene() {
 	Save();
 	for (std::list<GameObject>::iterator it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
-		for (auto pair : it->components) {
-			delete pair.second;
-		}
+		for (auto pair : it->components) 
+			delete (GameComponent*)pair.second;
 	}
 }
 
@@ -356,8 +355,6 @@ void Scene::Save() {
 			add("Script:", 1);
 
 				add("Name:", 1);
-				add(script->script->GetName(), 0, 1, 1);
-				std::cout << script->script->GetName();
 				add("end", -1);
 
 			add("end", -1);
