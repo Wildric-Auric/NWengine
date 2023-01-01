@@ -3,9 +3,7 @@
 #include<map>
 #include "Utilities.h"
 #include "GameObject.h"
-//S
-#include "Scripts/player.h"
-//E
+
 
 class ScriptManager {
 public:

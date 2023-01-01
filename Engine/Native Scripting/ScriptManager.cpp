@@ -1,5 +1,4 @@
 #include "ScriptManager.h"
-#include "Scripts.h"
 
 Scriptable* ScriptManager::GetScriptFromDLL(std::string name, GameObject* go) {
 	//Deprecated, scripts are no longer dlls
