@@ -29,7 +29,6 @@ GameObject:
 	end
 	Script:
 		Name:
-			"player"
 			end
 		end
 	Camera:
@@ -92,6 +91,34 @@ GameObject:
 			"Ressources\Images\Primitives\Circle.png"
 			1
 			0
+			end
+		Shader:
+			"Shaders\Textured.shader"
+			end
+		end
+	end
+GameObject:
+	Name:
+		"new GameObject"
+		end
+	Transform:
+		Position:
+			-283.000000
+			156.000000
+			end
+		Scale:
+			1.000000
+			1.000000
+			end
+		end
+	Sprite:
+		SortingLayer:
+			0
+			end
+		Texture:
+			"Ressources\Images\img2.png"
+			1
+			1
 			end
 		Shader:
 			"Shaders\Textured.shader"
