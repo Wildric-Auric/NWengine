@@ -1,6 +1,4 @@
 #pragma once
-#include<map>
-#include<vector>
 #include"GameObject.h"
 #include"FrameBuffer.h"
 

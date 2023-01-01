@@ -1,1 +1,0 @@
-cl /I STL /I ..\\dependencies /I ..\\dependencies\\vendor /I Maths  Source.cpp Globals.cpp NWengine.cpp /link /OUT:a.exe

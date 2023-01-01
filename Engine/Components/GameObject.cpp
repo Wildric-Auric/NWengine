@@ -1,12 +1,17 @@
 #include <GL/glew.h>
 #include <glfw3.h>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include"GameObject.h"
 #include "Inputs.h"
-#include "Maths.h"
 #include "Camera.h"
 #include "RessourcesLoader.h"
 #include "Components.h"
 #include "Scene.h"
+#include "Shader.h"
+#include "Primitives.h"
+
 //Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
 void GameObject::Draw(int8 textureSlot) {
 	Sprite* sprite = GetComponent<Sprite>();

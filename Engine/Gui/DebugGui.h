@@ -13,7 +13,6 @@
 
 #include "AudioListener.h"
 #include "AudioEmitter.h"
-#include "Audio.h"
 
 class DebugGui {
 public:
@@ -97,6 +96,7 @@ public:
 			if (ae != nullptr) {
 				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
 				ae->sound->Stop();
+				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
 			}
 			/*for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
 				if ( go->name == std::string("Warrior")) {

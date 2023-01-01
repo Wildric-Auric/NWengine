@@ -1,15 +1,8 @@
 #pragma once
-#include "Texture.h"
-#include "Maths.h"
-#include "Primitives.h"
 #include "Globals.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "Shader.h"
 #include <map>
 #include <vector>
-#include "NWstd.h"
-
+#include <string>
 //Virtual
 class Drawable {
 public:

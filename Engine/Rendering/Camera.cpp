@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include "Scene.h"
-#include "Context.h"
 #include "PostProcessing.h"
 #include "Console.h"
 

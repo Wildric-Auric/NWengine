@@ -4,7 +4,6 @@
 #include "Transform.h"
 #include "Globals.h"
 #include <deque>
-#include <string>
 
 
 struct ParticleProperties {

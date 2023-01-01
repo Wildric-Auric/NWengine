@@ -1,8 +1,8 @@
 #pragma once
-#include <map>
 #include "GameObject.h"
 #include "RessourcesLoader.h"
 
+#include "Primitives.h"
 
 class Sprite : public GameComponent {
 private:

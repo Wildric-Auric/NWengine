@@ -2,7 +2,7 @@
 #include "Maths.h"
 #include "Globals.h"
 #include "GameObject.h"
-#include <map>
+
 class Transform : public GameComponent {
 public:
 	static std::string GetType() { return "Transform"; };

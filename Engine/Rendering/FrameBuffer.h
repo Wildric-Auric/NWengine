@@ -1,9 +1,7 @@
 #pragma once 
-#include "Texture.h"
-#include "RessourcesLoader.h"
-#include <GL/glew.h>
-#include <glfw3.h>
 #include "Context.h"
+#include "RessourcesLoader.h"
+
 class FrameBuffer {
 private:
 	uint32 framebuffer;
