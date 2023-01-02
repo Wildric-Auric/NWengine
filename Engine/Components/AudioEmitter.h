@@ -11,7 +11,7 @@ public:
 	static std::map <GameObject*, AudioEmitter*> componentList;
 
 	Sound* sound;
-	int			volume    = 100; //Should be clamped from 0.0 to 1.0 in order to be past to Sound.setvolume
+	int			volume    = 100; //Should be clamped from 0.0 to 1.0 in order to be passed to Sound.setvolume
 	float 		frequency = 1.0f;
 	bool        isLooping = 0;
 };
