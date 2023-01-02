@@ -1,8 +1,10 @@
 #pragma once
 #include "Globals.h"
+#include "GuiObject.h"
 #include <map>
 #include <vector>
 #include <string>
+
 //Virtual
 class Drawable {
 public:
@@ -14,7 +16,8 @@ public:
 	virtual void Update() {};
 };
 
-class GameComponent {
+class GameComponent: public GuiObject { //I've tried to do multiple inheritance on subclass of GameComponent 
+										//but casting from GameComponent* to GuiObject* messes up virtual functions, I will read more about it
 public:
 	static std::string GetType() { return "GameComponent"; }
 	virtual void Update() {};
@@ -27,7 +30,7 @@ class GameObject : public Drawable {
 private:
 	static int numberOfGameObjects;
 public:
-	std::map<std::string, void*> components;
+	std::map<std::string, GameComponent*> components;
 	//int id;  //ReadOnly
 	std::string name  = "new GameObject"; //Read only see Rename function;
 	//identifier
@@ -40,6 +43,8 @@ public:
 	void Rename(std::string newName);
     GameObject();
 	~GameObject();
+	void DeleteComponent(std::string typeName);
+
 	template<typename T>
 	T* GetComponent() {
 		T* component = nullptr;
@@ -53,7 +58,7 @@ public:
 	template<typename T>
 	T* AddComponent() {
 		T* ptr = new T(this);
-		components.insert(std::pair<std::string, void*>( T::GetType(), ptr ));
+		components.insert(std::pair<std::string, GameComponent*>( T::GetType(), ptr ));
 		return ptr;
 	};
 

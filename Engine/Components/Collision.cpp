@@ -6,6 +6,7 @@ Collider2::Collider2(GameObject* go) {
 	this->attachedObj = go;
 };
 
+
 std::map<GameObject*, Collider2> Collider2::componentList;
 
 void Collider2::SetEdges(std::vector<iVec2> newEdges) {
@@ -65,4 +66,10 @@ bool Collider2::isColliding(Collider2 other) {
 	return 0;
 
 
+}
+
+
+void Collider2::Gui() {
+	static int a = 3;
+	NWGui::DragValue<int>("Fuck_unity123", &a, ImGuiDataType_S32);
 }

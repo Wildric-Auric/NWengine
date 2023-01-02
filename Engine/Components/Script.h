@@ -8,6 +8,7 @@ public:
 	Script(GameObject* attachedObj);
 	GameObject* attachedObj = nullptr;
 	Scriptable* script = nullptr;
+	void Gui() override;
 	static std::map<GameObject*, Script> componentList;
 };
 

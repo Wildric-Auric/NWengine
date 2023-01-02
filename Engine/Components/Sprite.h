@@ -21,6 +21,6 @@ public:
 	void SetTexture(std::string path, bool alpha = 1, bool repeat = 0);
 	void SetShader(std::string path);
 	void SetSortingLayer(uint32 order);
-
+	void Gui() override;
 	static std::map<GameObject*, Sprite> componentList;
 };

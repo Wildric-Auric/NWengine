@@ -90,6 +90,12 @@ GameObject::GameObject() {
 };
 
 GameObject::~GameObject() {};
+
+void GameObject::DeleteComponent(std::string typeName) {
+	if (components.find(typeName) == components.end()) return;
+	delete components[typeName];
+	components.erase(typeName);
+}
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 
 Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {

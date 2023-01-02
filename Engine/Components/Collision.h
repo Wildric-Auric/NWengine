@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "GuiObject.h"
 
 class Collider2 : public GameComponent {
 	//Base Collider class
@@ -21,4 +22,6 @@ public:
 	Collider2(GameObject* attachedObj);
 	bool isColliding(Collider2 other);
 	static std::map<GameObject*, Collider2> componentList;
+
+	void Gui() override; //Should not exist in Game Build; TODO::Make it so
 };

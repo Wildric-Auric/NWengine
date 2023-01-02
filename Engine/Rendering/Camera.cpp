@@ -63,3 +63,35 @@ void Camera::Update() {
 void Camera::MoveTo(Vector2<int> target, float targetTime) {
 	position = target;   //No interpolation yet sincde no generator UPDATE 06/2022:: Generators??? Are you kiding
 }
+
+using namespace std::string_literals;
+void Camera::Gui() {
+	static std::string array = (ActiveCamera->attachedObj->name + "\0"s);
+	static int arraySize = 1;
+	static int camIndex = 0;
+
+	array = "";
+	uint16 count = 0;
+	//arraySize = cam->componentList.size();
+	//for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
+	//	array += it->first->name + "\0"s;
+	//	if (count == camIndex) cam->ActiveCamera = &it->second;
+	//	count += 1;
+	//}
+
+	if (ImGui::Combo("Active Camera", &camIndex, array.c_str(), arraySize)) {
+		//TODO::Only update array if user interacts with combo
+	};
+
+	NWGui::DragValue<int>("Camera Position", &(position.x), ImGuiDataType_S32, 2);
+	if (NWGui::DragValue<int>("Camera Size", &(size.x), ImGuiDataType_S32, 2)) {
+		ChangeOrtho(size.x, size.y);
+		fbo = FrameBuffer(size.x, size.y); //TODO:: GPU Memory leak
+		viewPortSize.x = size.x;
+		viewPortSize.y = size.y;
+	}
+
+	//if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
+	//	cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
+	//};
+}

@@ -12,5 +12,6 @@ public:
 	GameObject* attachedObj;
 	Transform() {};
 	Transform(GameObject* go);
+	void Gui() override;
 	static std::map<GameObject*, Transform> componentList;
 };

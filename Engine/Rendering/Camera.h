@@ -34,4 +34,6 @@ public:
 
 	static Camera* ActiveCamera;
 
+	void Gui() override;
+
 };

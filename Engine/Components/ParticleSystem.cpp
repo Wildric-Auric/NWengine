@@ -125,3 +125,45 @@ void Particle::Enable() {
 	isActive = 1;
 	go.AddToRender();
 }
+
+void ParticleSystem::Gui() {
+	if (ImGui::TreeNode("Particles properties")) {
+		NWGui::DragValue<float>("Lifetime", &prop.lifetime, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue<int>("Lifedistance", &prop.lifedistance, ImGuiDataType_S32);
+		GUI_SEP;
+		NWGui::DragValue<float>("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
+		GUI_SEP;
+		NWGui::DragValue<float>("Starting direction", &prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		GUI_SEP;
+		NWGui::DragValue<float>("End direction", &prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		GUI_SEP;
+		NWGui::DragValue<float>("Direction variation duration", &prop.directionVarDuration, ImGuiDataType_Float);
+		GUI_SEP;
+
+		NWGui::DragValue<float>("Starting scale", &prop.sScale.x, ImGuiDataType_Float, 2);
+		GUI_SEP;
+		NWGui::DragValue<float>("End scale", &prop.eScale.x, ImGuiDataType_Float, 2);
+		GUI_SEP;
+		NWGui::DragValue<float>("Scale variation duration", &prop.scaleVarDuration, ImGuiDataType_Float);
+		GUI_SEP;
+
+		NWGui::DragValue<float>("Starting speed", &prop.sSpeed, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue<float>("End speed", &prop.eSpeed, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue<float>("speed variation duration", &prop.speedVarDuration, ImGuiDataType_Float);
+		GUI_SEP; GUI_NEWLINE;
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Emission properties")) {
+		NWGui::DragValue<double>("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
+		GUI_SEP;
+		NWGui::DragValue<uint16>("Emission quantity", &emissionQuantity, ImGuiDataType_U16);
+		GUI_SEP;
+		NWGui::CheckBox("Recycle particles", &recycle);
+		GUI_SEP;
+		NWGui::DragValue<int>("Max particles(experimental)", &maxParticles, ImGuiDataType_S32);
+		ImGui::TreePop();
+	}
+}

@@ -48,7 +48,7 @@ public:
 };
 
 
-class ParticleSystem : GameComponent {
+class ParticleSystem : public GameComponent {
 private:
 	double clock = 0.0;
 public:
@@ -69,12 +69,14 @@ public:
 	int initNum = 5;
 	ParticleProperties prop;
 	bool recycle = 1;
-	std::string shader = "Shaders\\Shader1.shader";
-	std::string texture = "Ressources\\Images\\Primitives\\Circle.png";
+	std::string shader =	SHADER_DEFAULT;
+	std::string texture =   TEXTURE_DEFAULT;
 
 	void Update();
 	void UpdateParticle(int index);
 	void Emit();
 	void Init();
 	void InitParticle();
+
+	void Gui() override;
 };
