@@ -291,7 +291,7 @@ Scene::~Scene() {
 
 
 static void add(std::string str, int8 indIncrement = 0,bool endline = 1, bool isString = 0) {
-	data << stringMul("\t", ind) << stringMul("\"", isString) <<str <<stringMul("\"", isString) <<stringMul("\n", endline);
+	data << stringMul("\t", ind) << stringMul("\"", isString) << str.c_str() << stringMul("\"", isString) << stringMul("\n", endline);
 	ind += indIncrement;
 };
 
@@ -355,6 +355,7 @@ void Scene::Save() {
 			add("Script:", 1);
 
 				add("Name:", 1);
+					add(script->GetType());
 				add("end", -1);
 
 			add("end", -1);
