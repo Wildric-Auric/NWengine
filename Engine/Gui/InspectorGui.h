@@ -40,142 +40,17 @@ public:
 			
 
 			ps  = go->GetComponent<ParticleSystem>();
-			if (transform != nullptr) {
-				if (ImGui::CollapsingHeader("Transform")) {
-					static iVec2 guiPosition;
-					guiPosition = transform->position;
-					if (NWGui::DragValue<int>("Position", &guiPosition.x, ImGuiDataType_S32, 2)) {
-						transform->position = guiPosition;
-					};
-					ImGui::Separator();
-					NWGui::DragValue<float>("Scale", &transform->scale.x, ImGuiDataType_Float, 2, 0.01f);
-					ImGui::Separator();
-					if (ImGui::Button("Delete##1")) go->DeleteComponent<Transform>();
-				}
-			}
 
-			if (sprite != nullptr) {
-				if (ImGui::CollapsingHeader("Sprite")) {
-					if (NWGui::DragValue<uint32>("Layering Order", &sprite->sortingLayer, ImGuiDataType_U32, 1))
-						sprite->SetSortingLayer(sprite->sortingLayer);
-					ImGui::Separator();
-					if (NWGui::FileHolder("Texture", sprite->texture->name)) {
-						std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
-						if (path != "") sprite->SetTexture(path);
-					}
-					ImGui::Separator();
-					if (NWGui::FileHolder("Shader", sprite->shader->name)) {
-						std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
-						if (path != "") sprite->SetShader(path);
-					}
-					ImGui::Separator();
-					if (ImGui::Button("Delete##2")) go->DeleteComponent<Sprite>();
-				}
-			}
-
-			if (script != nullptr) {
-				if (ImGui::CollapsingHeader("Script")) {
-					std::string text = "None";
-					if (script->script != nullptr) text = script->script->GetName();
-					if (NWGui::FileHolder("Script", text.c_str())) {
-						std::string path = GetFile("Text Files\0*.h\0*.*\0");
-						std::string filename = "";
-						GetFileName(path, &filename);
-						if (path != "") script->script = ScriptManager::CreateScript(filename, go); //TODO::Get if file is valid
-					}
-					if (ImGui::Button("Delete##3")) go->DeleteComponent<Script>();
-				}
-			}
-
-			if (collider != nullptr) {
-				if (ImGui::CollapsingHeader("Collider")) {
-					if (ImGui::Button("Delete##4")) go->DeleteComponent<Collider2>();
-				}
-			}
-
-			using namespace std::string_literals;
-			if (cam != nullptr) {
-				if (ImGui::CollapsingHeader("Camera")) {
-					//TODO::Handle no camera in the scene
-				
-					static std::string array = (cam->ActiveCamera->attachedObj->name + "\0"s);
-					static int arraySize = 1;
-					static int camIndex = 0;
-
-					array = "";
-					uint16 count = 0;
-					//arraySize = cam->componentList.size();
-					//for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
-					//	array += it->first->name + "\0"s;
-					//	if (count == camIndex) cam->ActiveCamera = &it->second;
-					//	count += 1;
-					//}
-
-					if (ImGui::Combo("Active Camera", &camIndex, array.c_str(), arraySize)) {
-						//TODO::Only update array if user interacts with combo
-					};
-
-					NWGui::DragValue<int>("Camera Position", &(cam->position.x), ImGuiDataType_S32, 2);
-					if (NWGui::DragValue<int>("Camera Size", &(cam->size.x), ImGuiDataType_S32, 2)) {
-						cam->ChangeOrtho(cam->size.x, cam->size.y);
-						cam->fbo = FrameBuffer(cam->size.x, cam->size.y); //TODO:: GPU Memory leak
-						cam->viewPortSize.x = cam->size.x;
-						cam->viewPortSize.y = cam->size.y;
-					}
-
-					//if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
-					//	cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
-					//};
-
-
-					if (ImGui::Button("Delete##5")) go->DeleteComponent<Camera>(); //TODO::ACTIVE CAMERA ERROR!!
-				}
-			}
-
-			if (ps != nullptr && ImGui::CollapsingHeader("Particle System")) {
-				if (ImGui::TreeNode("Particles properties")) {
-					NWGui::DragValue<float>("Lifetime", &ps->prop.lifetime, ImGuiDataType_Float);
-					GUI_SEP;
-					NWGui::DragValue<int>("Lifedistance", &ps->prop.lifedistance, ImGuiDataType_S32);
-					GUI_SEP;
-					NWGui::DragValue<float>("Relative start position", &ps->prop.sPosition, ImGuiDataType_Float, 2);
-					GUI_SEP;
-					NWGui::DragValue<float>("Starting direction", &ps->prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
-					GUI_SEP;
-					NWGui::DragValue<float>("End direction", &ps->prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
-					GUI_SEP;
-					NWGui::DragValue<float>("Direction variation duration", &ps->prop.directionVarDuration, ImGuiDataType_Float);
-					GUI_SEP;
-
-					NWGui::DragValue<float>("Starting scale", &ps->prop.sScale.x, ImGuiDataType_Float, 2);
-					GUI_SEP;
-					NWGui::DragValue<float>("End scale", &ps->prop.eScale.x, ImGuiDataType_Float, 2);
-					GUI_SEP;
-					NWGui::DragValue<float>("Scale variation duration", &ps->prop.scaleVarDuration, ImGuiDataType_Float);
-					GUI_SEP;
-
-					NWGui::DragValue<float>("Starting speed", &ps->prop.sSpeed, ImGuiDataType_Float);
-					GUI_SEP;
-					NWGui::DragValue<float>("End speed", &ps->prop.eSpeed, ImGuiDataType_Float);
-					GUI_SEP;
-					NWGui::DragValue<float>("speed variation duration", &ps->prop.speedVarDuration, ImGuiDataType_Float);
-					GUI_SEP; GUI_NEWLINE;
-					ImGui::TreePop();
-				}
-				if (ImGui::TreeNode("Emission properties")) {
-					NWGui::DragValue<double>("Emission frequency", &ps->emissionFrequency, ImGuiDataType_Double);
-					GUI_SEP;
-					NWGui::DragValue<uint16>("Emission quantity", &ps->emissionQuantity, ImGuiDataType_U16);
-					GUI_SEP;
-					NWGui::CheckBox("Recycle particles", &ps->recycle);
-					GUI_SEP;
-					NWGui::DragValue<int>("Max particles(experimental)", &ps->maxParticles, ImGuiDataType_S32);
-					ImGui::TreePop();
-				}	
-			}
-			
-			if (animator != nullptr && ImGui::CollapsingHeader("Animator")) {
-				if (ImGui::TreeNode("animation")) {};
+			int n = 1;
+			for (std::map<std::string, GameComponent*>::iterator it = go->components.begin(); it != go->components.end();) {
+				std::string    key = it->first;
+				GameComponent* gc  = it->second;
+				it++;
+				if (!ImGui::CollapsingHeader(key.c_str())) continue;
+				gc->Gui();
+				if (!ImGui::Button((std::string("Delete##") + std::to_string(n)).c_str())) continue;
+				go->DeleteComponent(key);
+				n++;
 			}
 
 			ImGui::NewLine();
