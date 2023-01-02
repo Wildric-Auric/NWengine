@@ -58,8 +58,8 @@ extern "C"
 		RessourcesLoader::LoadDefaultRessources();
 		Context::EnableBlend();
 		Context::EnableDepthTest();
-		Scene scene0 = Scene("scene0");
-		scene0.LoadScene();
+		Scene scene0 = new Scene("scene0");
+		scene0->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
 		return Context::dllFlag;
@@ -87,8 +87,8 @@ int NWengine::Run() {
 		
 		////Initialization finished
 		//TODO::UI for scene load ans serialization
-		Scene scene0 = Scene("scene0");
-		scene0.LoadScene();
+		Scene* scene0 = new Scene("scene0");
+		scene0->LoadScene();
 		
 		NWengine::MainLoop();
 
@@ -150,6 +150,7 @@ void NWengine::MainLoop() {
 
 
 void NWengine::Shutdown() {
+		delete Scene::currentScene;
 		DestroyOpenAL();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImPlot::DestroyContext();
