@@ -16,7 +16,6 @@ public:
 	bool alpha;
 	void Clear();
 	static std::map<std::string, Image> resList;
-	
 };
 
 
@@ -24,8 +23,12 @@ class RessourcesLoader {
 public:
 	//It seems like a namespace
 	static void LoadDefaultRessources();
+
 	static Shader* LoadShader(std::string path);
+	static Shader* ReloadShader(std::string path);
+
 	static Texture* LoadTexture(std::string path, bool alpha  = 1, bool repeat = 1);
+
 	static void ClearUnusedTextures();
 	static void ClearAllTextures();
 };
