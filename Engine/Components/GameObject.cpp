@@ -98,30 +98,49 @@ void GameObject::DeleteComponent(std::string typeName) {
 }
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 
-Collider::Collider(GameObject* attachedObj, Vector2<int> offset, Vector2<int>* newSize) {
-	this->offset = offset;
-	this->attachedObj = attachedObj;
-	if (newSize != nullptr) size = newSize;
-	Transform* transform = attachedObj->GetComponent<Transform>();
-	position = &transform->position;
+GameComponent* GameObject::AddComponent(std::string type) {
+	ADD_COMPONENT(Transform, type);
+	ADD_COMPONENT(Sprite, type);
+	ADD_COMPONENT(ParticleSystem, type);
+	ADD_COMPONENT(AudioEmitter, type);
+	ADD_COMPONENT(AudioListener, type);
+	return nullptr;
 };
 
-void Collider::Resize(Vector2<int> newSize) {
-	manualSize = newSize; 
-	size = &manualSize;
-};
-Vector2<int> Collider::GetPosition() {
-	if (this != nullptr)
-		return (*position) + offset;
-	return Vector2<int>(0, 0);
-};
-Vector2<int> Collider::GetSize() {
-	if (this != nullptr) {
-		Transform* transform = attachedObj->GetComponent<Transform>();
-		fVec2 a =  transform->scale;
-		iVec2 b = attachedObj->GetComponent<Sprite>()->texture->size;
-		return iVec2(abs(a.x*b.x), abs(a.y*b.y));
-	}
-	return iVec2(0, 0);
+GameComponent* GameObject::GetComponent(std::string type) {
+	std::map<std::string, GameComponent*>::iterator pair = components.find(type);
+	if (pair == components.end()) return nullptr;
+	return pair->second;
 }
 
+int GameObject::Serialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	const char*	temp  = this->name.c_str();
+
+	WRITE_ON_BIN(data, temp , this->name.size(), sizeBuffer);
+
+	for (std::map<std::string, GameComponent*>::iterator iter = this->components.begin(); iter != this->components.end(); iter++) {
+		iter->second->Serialize(data, 0);
+	}
+	return 0;
+}
+int GameObject::Deserialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	while (!data->fail()) {
+
+		data->read((char*)&sizeBuffer, sizeof(int));
+		if (sizeBuffer < 1) return 0;
+		char* name = new char[sizeBuffer+1];
+		data->read(name, sizeBuffer);
+		name[sizeBuffer] = '\0';
+
+		GameComponent* gc = AddComponent(name);
+		delete[] name;
+		if (gc == nullptr) {
+			Scene::currentScene->AddObject(GameObject());
+			return 1;
+		}
+		gc->Deserialize(data, 0);
+	}
+	return 2;
+}

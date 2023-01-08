@@ -18,8 +18,6 @@ public:
 			PostProcessing* pp = Camera::ActiveCamera->attachedObj->GetComponent<PostProcessing>();
 
 			if (pp != nullptr) texture = pp->fbo.RenderedImage.texture;
-
-			ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
 			ImGui::Image((void*)(intptr_t)
 				texture,
 				ImVec2(Camera::ActiveCamera->fbo.RenderedImage.size.x, Camera::ActiveCamera->fbo.RenderedImage.size.y),
