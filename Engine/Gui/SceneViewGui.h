@@ -14,6 +14,8 @@ public:
 
 	static void Show() {
 		if (isActive) {
+			ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
+			if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
 			uint32 texture = Camera::ActiveCamera->fbo.RenderedImage.texture;
 			PostProcessing* pp = Camera::ActiveCamera->attachedObj->GetComponent<PostProcessing>();
 

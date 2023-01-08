@@ -120,9 +120,11 @@ void NWengine::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Camera::ActiveCamera->Capture(0.0, 0.0,0.1);
+		if (Camera::ActiveCamera != nullptr) {
 
-		Camera::ActiveCamera->Update();
+			Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
+			Camera::ActiveCamera->Update();
+		}
 		Scene::currentScene->Update();
 		//Render Im::Gui
 		ImGui::Render();
