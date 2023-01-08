@@ -111,174 +111,58 @@ void Scene::Draw() {
 	}
 }
 
+void Scene::Save() {
+	std::fstream data((std::string)"Scenes\\" + std::string(this->name) + ".NWscene",
+		std::ios::binary | std::ios::out | std::ios::trunc);
+	for (std::list<GameObject>::iterator iter = sceneObjs.begin(); iter != sceneObjs.end(); iter++) {
+		iter->Serialize(&data, 0);
+	}
+	int temp = 0;
+	data.write((const char*)&temp, 4);
+	data.close();
+}
+
 void Scene::LoadScene() {
 
 	currentScene = this;
 	sceneObjs.clear(); 
-	Parser parser = Parser();
-	uint8 index = 0;
+	std::fstream data(std::string("Scenes\\") + this->name + ".NWscene", std::ios::binary | std::ios::in);
 
-	GameObject* go         =    nullptr;
-	Sprite* sprite         =    nullptr;
-	Transform* transform   =    nullptr;
-	Collider2* collider    =    nullptr;
-	Script* script         =    nullptr;
-	Camera* cam            =	nullptr;
+	data.seekg(0, std::ios::end);
+	if (data.tellg() < 1) {
+		data.close();
+		return;
+	}
+	data.seekg(0, std::ios::beg);
 
-	parser.Parse("Scenes\\" + (std::string)name + std::string(".NWscene"));
+	int sizeBuffer = 0;
+		
+	data.read((char*)&sizeBuffer, sizeof(int));
+	if (sizeBuffer < 1) {
+		delete[] name;
+		data.close();
+		return;
+	}
+	char* name = new char[sizeBuffer+1];
+	data.read(name, sizeBuffer);
+	name[sizeBuffer] = '\0';
 
-	std::vector<std::string> stack;
-	for (std::string value : parser.rawData) {
-		//Poping from stack -------------------------------------------------------------------
+	this->AddObject(GameObject());
+	sceneObjs.back().Rename(name);
 
-		if (value == "end") {
-			stack.pop_back();
-			index = 0;
-			continue;
-		}
-
-		//Adding keys to stack -----------------------------------------------------------------
-	    if (value == "GameObject") {
-			this->AddObject(GameObject());
-			go = &sceneObjs.back();
-			stack.push_back(value);
-			continue;
-		}
-
-	    if (value == "Sprite") {
-			sprite = sceneObjs.back().AddComponent<Sprite>();
-			stack.push_back(value);
-			continue;
-		}
-
-		if (value == "Transform") {
-			transform = sceneObjs.back().AddComponent<Transform>();
-			stack.push_back(value);
-			continue;
-		}
-
-		if (value == "Collider") {
-			collider = sceneObjs.back().AddComponent<Collider2>();
-			stack.push_back(value);
-			continue;
-		}
-
-		if (value == "Script") {
-			script = sceneObjs.back().AddComponent<Script>();
-			stack.push_back(value);
-			continue;
-		}
-
-		if (value == "Camera") {
-			cam = sceneObjs.back().AddComponent<Camera>();
-			Camera::ActiveCamera = cam;
-			stack.push_back(value);
-			continue;
-		}
-		bool br = 0;
-		for (std::string temp : subKeys) {
-			if (value == temp) {
-				stack.push_back(value);
-				br = 1;
-				break;
-			}
-		}
-		if (br) continue;
-		//Changing values of components ------------------------------------------------------------------
-		if (stack[stack.size() - 2] == "GameObject" && stack.back() == "Name") {
-			go->name = value;
-			continue;
-		}
- 
-		if (stack[stack.size() - 2] == "Transform") {
-
-			if (stack.back() == "Position") {
-				*(&transform->position.x + index) = std::stoi(value);
-				index += 1;
-				continue;
-			}
-
-			if (stack.back() == "Scale") {
-				*(&transform->scale.x + index) = std::stof(value);
-				index += 1;
-				continue;
-			}
-		}
-
-		if (stack[stack.size() - 2] == "Sprite") {
-
-			if (stack.back() == "SortingLayer") {
-				uint32 temp = std::stoi(value);
-				sprite->SetSortingLayer(temp);
-				continue;
-			}
-
-			if (stack.back() == "Texture") {
-				static bool booAlpha = 0;
-				static std::string texPath = "";
-
-				if (index == 0) {
-					texPath = value;
-					index += 1;
-					continue;
-				};
-
-				if (index == 1) {
-					booAlpha = std::stoi(value);
-					index += 1;
-					continue;
-				}
-				if (index == 2) {
-					sprite->SetTexture(texPath, booAlpha, std::stoi(value));
-					index += 1;
-					continue;
-				}
-			}
-
-			if (stack.back() == "Shader") {
-				sprite->SetShader(value);
-				continue;
-			}
-		}
-
-		if (stack[stack.size() - 2] == "Collider") {
-
-			if (stack.back() == "Offset") {
-				*(&collider->offset.x + index) = std::stoi(value);
-				index += 1;
-				continue;
-			}
-		}
-
-		if (stack[stack.size() - 2] == "Script") {
-
-			if (stack.back() == "Name") {
-				script->script = ScriptManager::CreateScript(value, go);
-				continue;
-			}
-		}
-
-		if (stack[stack.size() - 2] == "Camera") {
-			if (stack.back() == "Position") {
-				*((&cam->position.x) + index) = std::stoi(value);
-				index += 1;
-				continue;
-			}
-
-			if (stack.back() == "Rotation") {
-				cam->rotation = std::stoi(value);
-				continue;
-			}
-		}
+	int flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
+	while (flag == 1) {
+		flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
+		if (flag == 0) break;
 	}
 
+	delete[] name;
+	data.close();
 };
 
 
 
 
-
-static std::ofstream data;
 static uint16 ind = 0; //Indentation
 
 Scene::~Scene() {
@@ -288,103 +172,6 @@ Scene::~Scene() {
 			delete (GameComponent*)pair.second;
 	}
 }
-
-
-static void add(std::string str, int8 indIncrement = 0,bool endline = 1, bool isString = 0) {
-	data << stringMul("\t", ind) << stringMul("\"", isString) << str.c_str() << stringMul("\"", isString) << stringMul("\n", endline);
-	ind += indIncrement;
-};
-
-void Scene::Save() {
-	data.open((std::string)"Scenes/" + std::string(this->name) + (std::string)".NWscene");
-	for (auto go = sceneObjs.begin(); go != sceneObjs.end(); go++)
-	{
-		Sprite* sprite			= go->GetComponent<Sprite>();
-		Transform* transform    = go->GetComponent<Transform>();
-		Collider2* collider	    = go->GetComponent<Collider2>();
-		Script* script          = go->GetComponent<Script>();
-		Camera* cam             = go->GetComponent<Camera>();
-		
-		add("GameObject:", 1);
-		add("Name:", 1);
-		add(go->name, 0, 1, 1);
-		add("end", -1);
-		if (transform != nullptr) {
-			add("Transform:", 1);
-				add("Position:",  1);
-					add(std::to_string(transform->position.x));
-					add(std::to_string(transform->position.y));
-				add("end", -1);
-
-				add("Scale:", 1);
-					add(std::to_string(transform->scale.x));
-					add(std::to_string(transform->scale.y));
-				add("end", -1);
-			add("end", -1);
-		};
-
-		if (sprite != nullptr) {
-			add("Sprite:", 1);
-
-				add("SortingLayer:", 1);
-				add(std::to_string(sprite->sortingLayer));
-				add("end", -1);
-
-				add("Texture:", 1);
-					add(sprite->texture->name, 0, 1, 1);
-					add(std::to_string(sprite->texture->alpha));
-					add(std::to_string(sprite->texture->repeat));
-				add("end", -1);
-
-				add("Shader:", 1);
-					add(sprite->shader->name, 0, 1, 1);
-				add("end", -1);
-
-			add("end", -1);
-
-		};
-
-		if (collider != nullptr) {
-			//TODO::Complete collider save
-			add("Collider:");
-
-			add("end");
-		};
-
-		if (script != nullptr) {
-			add("Script:", 1);
-
-				add("Name:", 1);
-					add(script->GetType());
-				add("end", -1);
-
-			add("end", -1);
-
-		};
-
-		if (cam != nullptr) {
-			add("Camera:", 1);
-
-				add("Position:", 1);
-				add(std::to_string(cam->position.x));
-				add(std::to_string(cam->position.y));
-				add("end", -1);
-
-				add("Rotation:", 1);
-				add(std::to_string(cam->rotation));
-				add("end", -1);
-
-
-			add("end", -1);
-		};
-
-		add("end", -1);
-	}
-
-
-	data.close();
-}
-
 
 void Scene::Update() {
 	for (GameObject obj : sceneObjs) {
