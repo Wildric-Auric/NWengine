@@ -104,6 +104,7 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(ParticleSystem, type);
 	ADD_COMPONENT(AudioEmitter, type);
 	ADD_COMPONENT(AudioListener, type);
+	ADD_COMPONENT(Camera, type);
 	return nullptr;
 };
 
@@ -135,11 +136,14 @@ int GameObject::Deserialize(std::fstream* data, int offset) {
 		name[sizeBuffer] = '\0';
 
 		GameComponent* gc = AddComponent(name);
-		delete[] name;
+		
 		if (gc == nullptr) {
 			Scene::currentScene->AddObject(GameObject());
+			Scene::currentScene->sceneObjs.back().Rename(name);
+			delete[] name;
 			return 1;
 		}
+		delete[] name;
 		gc->Deserialize(data, 0);
 	}
 	return 2;
