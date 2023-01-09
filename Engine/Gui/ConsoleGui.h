@@ -8,6 +8,7 @@ class ConsoleGui {
 public:
 	static bool isActive;
 	static void Show() {
+		if (!isActive) return;
 		ImGui::Begin("Console", &isActive, ImGuiWindowFlags_MenuBar);
 		if (ImGui::BeginTable("testTable0", 3, ImGuiTableFlags_Resizable)) {
 			for (auto it = Console::stack.begin(); it != Console::stack.end(); it++) {
