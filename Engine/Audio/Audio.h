@@ -14,6 +14,8 @@ private:
 	ALuint snd = 0;
 	ALuint source = 0;
 public:
+	std::string name = "";
+
 	float volume = 1.0f;
 	float frequency = 1.0f;
 	bool isLooping = 0;
