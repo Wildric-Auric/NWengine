@@ -23,6 +23,8 @@ public:
 		Camera* cam = nullptr;
 		ParticleSystem* ps = nullptr;
 		Animator* animator = nullptr;
+		AudioEmitter* ae = nullptr;
+		AudioListener* al = nullptr;
 		
 
 		if (HierarchyGui::selected > -1 && HierarchyGui::selected < Scene::currentScene->sceneObjs.size()) {
@@ -36,7 +38,9 @@ public:
 			collider  = go->GetComponent<Collider2>();
 			script    = go->GetComponent<Script>();
 			cam       = go->GetComponent<Camera>();
-			animator =  go->GetComponent<Animator>();
+			animator  =  go->GetComponent<Animator>();
+		    ae        = go->GetComponent<AudioEmitter>();
+			al		  = go->GetComponent<AudioListener>();
 			
 
 			ps  = go->GetComponent<ParticleSystem>();
@@ -67,6 +71,10 @@ public:
 				if (ImGui::Selectable("Collider") && collider == nullptr)		go->AddComponent<Collider2>();
 				if (ImGui::Selectable("Camera") && cam == nullptr)				go->AddComponent<Camera>();
 				if (ImGui::Selectable("Particle system") && ps == nullptr)      go->AddComponent<ParticleSystem>();
+				if (ImGui::Selectable("AudioEmitter") && ae == nullptr)         go->AddComponent<AudioEmitter>();
+				if (ImGui::Selectable("AudioListenner") && al == nullptr)       go->AddComponent<AudioListener>();
+
+
  				ImGui::EndPopup();
 			}
 		}
