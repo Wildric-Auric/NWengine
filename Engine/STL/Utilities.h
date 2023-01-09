@@ -174,47 +174,29 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 	if (GetOpenFileName(&ofn)) {
-		const char* r = "NWengine\\";
-		std::string f = "";
-		int counter = 0;
-		bool add = 0;
-		for (char c : filename) {
-			if (c == r[counter]) counter++;
-			else counter = 0;
-			if (add) f += c;
-			if (counter > 8) {
-				add = 1;
-			} 
-		}
-		if (add == 0) {
-			std::cout << "ERROR::File not in NWengine directory" << std::endl; //Maybe try adding it to this directory LOG
-			return "";
-		}
-		return f;
+		return std::string(filename);
 	}
-	else
+
+	// All this stuff below is to tell you exactly how you messed up above. 
+	// Once you've got that fixed, you can often (not always!) reduce it to a 'user cancelled' assumption.
+	switch (CommDlgExtendedError())
 	{
-		// All this stuff below is to tell you exactly how you messed up above. 
-		// Once you've got that fixed, you can often (not always!) reduce it to a 'user cancelled' assumption.
-		switch (CommDlgExtendedError())
-		{
-		case CDERR_DIALOGFAILURE: std::cout << "CDERR_DIALOGFAILURE\n";   break;
-		case CDERR_FINDRESFAILURE: std::cout << "CDERR_FINDRESFAILURE\n";  break;
-		case CDERR_INITIALIZATION: std::cout << "CDERR_INITIALIZATION\n";  break;
-		case CDERR_LOADRESFAILURE: std::cout << "CDERR_LOADRESFAILURE\n";  break;
-		case CDERR_LOADSTRFAILURE: std::cout << "CDERR_LOADSTRFAILURE\n";  break;
-		case CDERR_LOCKRESFAILURE: std::cout << "CDERR_LOCKRESFAILURE\n";  break;
-		case CDERR_MEMALLOCFAILURE: std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
-		case CDERR_MEMLOCKFAILURE: std::cout << "CDERR_MEMLOCKFAILURE\n";  break;
-		case CDERR_NOHINSTANCE: std::cout << "CDERR_NOHINSTANCE\n";     break;
-		case CDERR_NOHOOK: std::cout << "CDERR_NOHOOK\n";          break;
-		case CDERR_NOTEMPLATE: std::cout << "CDERR_NOTEMPLATE\n";      break;
-		case CDERR_STRUCTSIZE: std::cout << "CDERR_STRUCTSIZE\n";      break;
-		case FNERR_BUFFERTOOSMALL: std::cout << "FNERR_BUFFERTOOSMALL\n";  break;
-		case FNERR_INVALIDFILENAME: std::cout << "FNERR_INVALIDFILENAME\n"; break;
-		case FNERR_SUBCLASSFAILURE: std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
-		default: return "";
-		}
+	case CDERR_DIALOGFAILURE: std::cout << "CDERR_DIALOGFAILURE\n";   break;
+	case CDERR_FINDRESFAILURE: std::cout << "CDERR_FINDRESFAILURE\n";  break;
+	case CDERR_INITIALIZATION: std::cout << "CDERR_INITIALIZATION\n";  break;
+	case CDERR_LOADRESFAILURE: std::cout << "CDERR_LOADRESFAILURE\n";  break;
+	case CDERR_LOADSTRFAILURE: std::cout << "CDERR_LOADSTRFAILURE\n";  break;
+	case CDERR_LOCKRESFAILURE: std::cout << "CDERR_LOCKRESFAILURE\n";  break;
+	case CDERR_MEMALLOCFAILURE: std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
+	case CDERR_MEMLOCKFAILURE: std::cout << "CDERR_MEMLOCKFAILURE\n";  break;
+	case CDERR_NOHINSTANCE: std::cout << "CDERR_NOHINSTANCE\n";     break;
+	case CDERR_NOHOOK: std::cout << "CDERR_NOHOOK\n";          break;
+	case CDERR_NOTEMPLATE: std::cout << "CDERR_NOTEMPLATE\n";      break;
+	case CDERR_STRUCTSIZE: std::cout << "CDERR_STRUCTSIZE\n";      break;
+	case FNERR_BUFFERTOOSMALL: std::cout << "FNERR_BUFFERTOOSMALL\n";  break;
+	case FNERR_INVALIDFILENAME: std::cout << "FNERR_INVALIDFILENAME\n"; break;
+	case FNERR_SUBCLASSFAILURE: std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
+	default: return "";
 	}
 	return "";
 }
