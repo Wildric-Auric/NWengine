@@ -13,18 +13,17 @@ public:
 	static bool isActive;
 
 	static void Show() {
-		if (isActive) {
-			ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
-			if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
-			uint32 texture = Camera::ActiveCamera->fbo.RenderedImage.texture;
-			PostProcessing* pp = Camera::ActiveCamera->attachedObj->GetComponent<PostProcessing>();
+		if (!isActive) return;
+		ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
+		if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
+		uint32 texture = Camera::ActiveCamera->fbo.RenderedImage.texture;
+		PostProcessing* pp = Camera::ActiveCamera->attachedObj->GetComponent<PostProcessing>();
 
-			if (pp != nullptr) texture = pp->fbo.RenderedImage.texture;
-			ImGui::Image((void*)(intptr_t)
-				texture,
-				ImVec2(Camera::ActiveCamera->fbo.RenderedImage.size.x, Camera::ActiveCamera->fbo.RenderedImage.size.y),
-				ImVec2(0, 1), ImVec2(1, 0));
-			ImGui::End();
-		}
+		if (pp != nullptr) texture = pp->fbo.RenderedImage.texture;
+		ImGui::Image((void*)(intptr_t)
+			texture,
+			ImVec2(Camera::ActiveCamera->fbo.RenderedImage.size.x, Camera::ActiveCamera->fbo.RenderedImage.size.y),
+			ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::End();
 	}
 };
