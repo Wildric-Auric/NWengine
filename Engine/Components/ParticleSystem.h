@@ -79,4 +79,6 @@ public:
 	void InitParticle();
 
 	void Gui() override;
+	int  Serialize(std::fstream* data, int offset)   override; 
+	int  Deserialize(std::fstream* data, int offset) override;
 };

@@ -20,7 +20,7 @@ void Sprite::SetTexture(std::string path, bool alpha, bool repeat) {
 }
 
 void Sprite::SetShader(std::string path) {
-	RessourcesLoader::LoadShader(path);
+	RessourcesLoader::ReloadShader(path);
 	shader = &Shader::resList[path];
 }
 
@@ -43,8 +43,43 @@ void Sprite::Gui() {
 	ImGui::Separator();
 	if (NWGui::FileHolder("Shader", shader->name)) {
 		std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
-		printf(path.c_str());
 		if (path != "") SetShader(path);
 	}
 	ImGui::Separator();
 }
+
+int Sprite::Serialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	WRITE_ON_BIN(data, "Sprite", 6, sizeBuffer);
+
+	WRITE_ON_BIN(data, &sortingLayer, sizeof(sortingLayer), sizeBuffer);
+
+	const char* temp0 = texture->name.c_str();
+	WRITE_ON_BIN(data, temp0, texture->name.size(), sizeBuffer);
+
+	const char* temp = shader->name.c_str();
+	WRITE_ON_BIN(data, temp, shader->name.size(), sizeBuffer);
+
+	return 0;
+};
+
+int Sprite::Deserialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	//loads layer order
+	READ_FROM_BIN(data, &sortingLayer, sizeBuffer);
+	SetSortingLayer(sortingLayer);
+	//loads texture
+	char* buffer = new char[512]; //TODO::Macro
+	READ_FROM_BIN(data, buffer, sizeBuffer);
+	buffer[sizeBuffer] = '\0';
+	SetTexture(std::string(buffer));
+
+	//loads shader
+	buffer = new char[512];
+	READ_FROM_BIN(data, buffer, sizeBuffer);
+	buffer[sizeBuffer] = '\0';
+	SetShader(std::string(buffer));
+	delete[] buffer;
+
+	return 0;
+};

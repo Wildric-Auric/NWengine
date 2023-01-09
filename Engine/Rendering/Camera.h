@@ -14,6 +14,7 @@ public:
 
 	iVec2 size;
 	iVec2 viewPortSize;
+	bool isActive = 0;
 
 	Camera() {};
 	Camera(GameObject* go);
@@ -26,6 +27,7 @@ public:
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
 	void ChangeOrtho(float sizeX, float sizeY);
 	void MoveTo(Vector2<int> target, float interpolationTime);
+	void Use();
 	Vector2<int> position;
 	float rotation = 0.0f;
 	float zoom = 1.0;
@@ -35,5 +37,9 @@ public:
 	static Camera* ActiveCamera;
 
 	void Gui() override;
+
+	int Serialize(std::fstream* data, int offset)    override; 
+	int Deserialize(std::fstream* data, int offset)  override;
+
 
 };

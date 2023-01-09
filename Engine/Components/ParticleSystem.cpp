@@ -167,3 +167,67 @@ void ParticleSystem::Gui() {
 		ImGui::TreePop();
 	}
 }
+
+
+
+
+int ParticleSystem::Serialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+
+	WRITE_ON_BIN(data,"ParticleSystem", 14,sizeBuffer);
+	//serializes particles prop
+	WRITE_ON_BIN(data, &(prop.lifetime), sizeof(prop.lifetime), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.lifedistance), sizeof(prop.lifedistance), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sPosition.x), sizeof(prop.sPosition.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sPosition.y), sizeof(prop.sPosition.y), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sDirection.x), sizeof(prop.sPosition.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sDirection.y), sizeof(prop.sDirection.y), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.eDirection.x), sizeof(prop.eDirection.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.directionVarDuration), sizeof(prop.directionVarDuration), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sScale.x), sizeof(prop.sPosition.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sScale.y), sizeof(prop.sPosition.y), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.eScale.x), sizeof(prop.eScale.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.eScale.y), sizeof(prop.eScale.y), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.eScale.x), sizeof(prop.eScale.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.scaleVarDuration), sizeof(prop.scaleVarDuration), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sSpeed),	 sizeof(prop.sSpeed), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.eSpeed),	 sizeof(prop.eSpeed), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.speedVarDuration), sizeof(prop.speedVarDuration), sizeBuffer);
+	//emitter prop
+	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
+	WRITE_ON_BIN(data, &(emissionQuantity), sizeof(emissionQuantity), sizeBuffer);
+	WRITE_ON_BIN(data, &(recycle), sizeof(recycle), sizeBuffer);
+	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
+	WRITE_ON_BIN(data, &(maxParticles), sizeof(maxParticles), sizeBuffer);
+
+	return 0;
+}
+
+int ParticleSystem::Deserialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+
+	READ_FROM_BIN(data, &(prop.lifetime), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.lifedistance), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sPosition.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sPosition.y), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sDirection.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sDirection.y), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.eDirection.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.directionVarDuration), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sScale.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sScale.y), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.eScale.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.eScale.y), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.eScale.x), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.scaleVarDuration), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.sSpeed), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.eSpeed), sizeBuffer);
+	READ_FROM_BIN(data, &(prop.speedVarDuration), sizeBuffer);
+	
+	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
+	READ_FROM_BIN(data, &(emissionQuantity), sizeBuffer);
+	READ_FROM_BIN(data, &(recycle), sizeBuffer);
+	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
+	READ_FROM_BIN(data, &(maxParticles), sizeBuffer);
+	return 0;
+}

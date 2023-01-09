@@ -23,4 +23,7 @@ public:
 	void SetSortingLayer(uint32 order);
 	void Gui() override;
 	static std::map<GameObject*, Sprite> componentList;
+
+	int Serialize(std::fstream* data, int offset) override;
+	int Deserialize(std::fstream* data, int offset) override;
 };

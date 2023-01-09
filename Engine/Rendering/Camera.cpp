@@ -64,39 +64,47 @@ void Camera::MoveTo(Vector2<int> target, float targetTime) {
 	position = target;   //No interpolation yet sincde no generator UPDATE 06/2022:: Generators??? Are you kiding
 }
 
-using namespace std::string_literals;
+
+
+void Camera::Use() {
+	if (Camera::ActiveCamera != nullptr)
+		Camera::ActiveCamera->isActive = 0;
+	this->isActive = 1;
+	Camera::ActiveCamera = this;
+}
 void Camera::Gui() {
-	static bool c = 0;
-	c = ImGui::Checkbox("isActive", &c);
-	if (c) {
-		c = 0;
-	}
-	//static std::string array = (ActiveCamera->attachedObj->name + "\0"s);
-	//static int arraySize = 1;
-	//static int camIndex = 0;
 
-	//array = "";
-	//uint16 count = 0;
-	//arraySize = cam->componentList.size();
-	//for (auto it = cam->componentList.begin(); it != cam->componentList.end(); it++) {
-	//	array += it->first->name + "\0"s;
-	//	if (count == camIndex) cam->ActiveCamera = &it->second;
-	//	count += 1;
-	//}
+	if (NWGui::CheckBox("Activate", &isActive)) {
+		if (isActive) { Use(); }
+		else {
+			Camera::ActiveCamera = nullptr;
+			this->isActive = 0;
+		}
+	};
+		
+	NWGui::DragValue<int>("Camera Position", &position.x, ImGuiDataType_S32, 2);
+	NWGui::DragValue<float>("Camera Rotation", &rotation, ImGuiDataType_Float, 1);
+	NWGui::DragValue<float>("Camera Zoom", &zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 100.0f);
+}
 
-	//if (ImGui::Combo("Active Camera", &camIndex, array.c_str(), arraySize)) {
-	//	//TODO::Only update array if user interacts with combo
-	//};
+int Camera::Serialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	WRITE_ON_BIN(data, "Camera", 6, sizeBuffer);
+	WRITE_ON_BIN(data, &isActive, sizeof(isActive), sizeBuffer);
+	WRITE_ON_BIN(data, &position.x, sizeof(position.x), sizeBuffer);
+	WRITE_ON_BIN(data, &position.y, sizeof(position.y), sizeBuffer);
+	WRITE_ON_BIN(data, &rotation, sizeof(rotation), sizeBuffer);
+	WRITE_ON_BIN(data, &zoom, sizeof(zoom), sizeBuffer);
+	return 0;
+}
 
-	//NWGui::DragValue<int>("Camera Position", &(position.x), ImGuiDataType_S32, 2);
-	//if (NWGui::DragValue<int>("Camera Size", &(size.x), ImGuiDataType_S32, 2)) {
-	//	ChangeOrtho(size.x, size.y);
-	//	fbo = FrameBuffer(size.x, size.y); //TODO:: GPU Memory leak
-	//	viewPortSize.x = size.x;
-	//	viewPortSize.y = size.y;
-	//}
-
-	//if (ImGui::DragInt2("Viewport", &(cam->viewPortSize.x))) {
-	//	cam->fbo = FrameBuffer(cam->viewPortSize.x, cam->viewPortSize.y); //TODO:: NOT DO THIS HERE; just testing
-	//};
+int Camera::Deserialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	READ_FROM_BIN(data, &isActive, sizeBuffer);
+	if (isActive) Use();
+	READ_FROM_BIN(data, &position.x, sizeBuffer);
+	READ_FROM_BIN(data, &position.y, sizeBuffer);
+	READ_FROM_BIN(data, &rotation, sizeBuffer);
+	READ_FROM_BIN(data, &zoom, sizeBuffer);
+	return 0;
 }

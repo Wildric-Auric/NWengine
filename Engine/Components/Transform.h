@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "GameObject.h"
 
+#include "Console.h"
 class Transform : public GameComponent {
 public:
 	static std::string GetType() { return "Transform"; };
@@ -12,6 +13,10 @@ public:
 	GameObject* attachedObj;
 	Transform() {};
 	Transform(GameObject* go);
+
 	void Gui() override;
+	int Serialize(std::fstream* data, int offset) override;
+	int Deserialize(std::fstream* data, int offset) override;
+
 	static std::map<GameObject*, Transform> componentList;
 };
