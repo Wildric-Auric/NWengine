@@ -6,6 +6,8 @@
 #include "Animation.h"
 #include "Animator.h"
 
+
+#define ADD_COMPONENT_TO_INSPECTOR(type, go) if (ImGui::Selectable(#type)) go->AddComponent<type>();
 class InspectorGui {
 public:
 	static bool isActive;
@@ -18,7 +20,7 @@ public:
 		GameObject* go = nullptr;
 		Sprite* sprite = nullptr;
 		Transform* transform = nullptr;
-		Collider2* collider = nullptr;
+		Collider* collider = nullptr;
 		Script* script = nullptr;
 		Camera* cam = nullptr;
 		ParticleSystem* ps = nullptr;
@@ -31,19 +33,6 @@ public:
 			auto it = Scene::currentScene->sceneObjs.begin();
 			std::advance(it, HierarchyGui::selected);
 			go = &(*it);
-			//TODO::Check performance of getting all components each frame
-
-			sprite    = go->GetComponent<Sprite>();
-			transform = go->GetComponent<Transform>();
-			collider  = go->GetComponent<Collider2>();
-			script    = go->GetComponent<Script>();
-			cam       = go->GetComponent<Camera>();
-			animator  =  go->GetComponent<Animator>();
-		    ae        = go->GetComponent<AudioEmitter>();
-			al		  = go->GetComponent<AudioListener>();
-			
-
-			ps  = go->GetComponent<ParticleSystem>();
 
 			int n = 1;
 			for (std::map<std::string, GameComponent*>::iterator it = go->components.begin(); it != go->components.end();) {
@@ -65,15 +54,13 @@ public:
 			}
 
 			if (ImGui::BeginPopup("popup0")) {
-				if (ImGui::Selectable("Transform") && transform == nullptr)		go->AddComponent<Transform>();
-				if (ImGui::Selectable("Sprite") && sprite == nullptr)			go->AddComponent<Sprite>();
-				if (ImGui::Selectable("Script") && script == nullptr)			go->AddComponent<Script>();
-				if (ImGui::Selectable("Collider") && collider == nullptr)		go->AddComponent<Collider2>();
-				if (ImGui::Selectable("Camera") && cam == nullptr)				go->AddComponent<Camera>();
-				if (ImGui::Selectable("Particle system") && ps == nullptr)      go->AddComponent<ParticleSystem>();
-				if (ImGui::Selectable("AudioEmitter") && ae == nullptr)         go->AddComponent<AudioEmitter>();
-				if (ImGui::Selectable("AudioListenner") && al == nullptr)       go->AddComponent<AudioListener>();
-
+				ADD_COMPONENT_TO_INSPECTOR(Transform, go);
+				ADD_COMPONENT_TO_INSPECTOR(Sprite   , go);
+				ADD_COMPONENT_TO_INSPECTOR(Collider , go);
+				ADD_COMPONENT_TO_INSPECTOR(Camera   , go);
+				ADD_COMPONENT_TO_INSPECTOR(ParticleSystem, go);
+				ADD_COMPONENT_TO_INSPECTOR(AudioEmitter  , go);
+				ADD_COMPONENT_TO_INSPECTOR(AudioListener , go);
 
  				ImGui::EndPopup();
 			}
@@ -81,3 +68,5 @@ public:
 		ImGui::End();
 	}
 };
+
+#undef ADD_COMPONENT_TO_INSPECTOR

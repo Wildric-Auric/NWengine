@@ -112,7 +112,7 @@ void NWengine::MainLoop() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		//Clearing for the UI
-		Context::Clear();
+		Context::Clear();	
 
 		Inputs::Process(Context::window);
 		Gui::Update();
@@ -121,11 +121,11 @@ void NWengine::MainLoop() {
 
 		//Drawing shapes
 		if (Camera::ActiveCamera != nullptr) {
-
 			Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
-			Camera::ActiveCamera->Update();
 		}
-		Scene::currentScene->Update();
+
+		Scene::currentScene->Update(); //Leak
+
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
