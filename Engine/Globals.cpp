@@ -7,3 +7,5 @@ double Globals::deltaTime = 0.016;        //Read only in everyfile except mainlo
 bool const Globals::DEBUG_MODE = true;
 //Uniforms
 float Globals::uTime = 0;
+
+bool Globals::PLAY_MODE = 0;

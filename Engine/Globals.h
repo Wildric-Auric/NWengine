@@ -9,6 +9,9 @@
 #define NW_SHUTDOWN_DLL      0
 
 
+#define PROJECT_DIRECTORY "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\"
+
+
 typedef int8_t   int8;
 typedef int32_t  int32;
 typedef int16_t  int16;
@@ -47,7 +50,7 @@ public:
 	static int WINDOW_HEIGHT;
 	static const float SCREENRATIO;
 	static const bool DEBUG_MODE;
+	static bool PLAY_MODE;
 	//Uniforms
 	static float uTime;
-
 };
