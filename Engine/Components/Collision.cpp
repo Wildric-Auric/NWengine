@@ -2,14 +2,14 @@
 #include "Maths.h"
 #include "Components.h"
 
-Collider2::Collider2(GameObject* go) {
+Collider::Collider(GameObject* go) {
 	this->attachedObj = go;
 };
 
 
-std::map<GameObject*, Collider2> Collider2::componentList;
+std::map<GameObject*, Collider> Collider::componentList;
 
-void Collider2::SetEdges(std::vector<iVec2> newEdges) {
+void Collider::SetEdges(std::vector<iVec2> newEdges) {
 	edges.swap(newEdges);
 	for (int i = 0; i < edges.size(); i++) {
 		if (this->edges[i].magnitude() > this->edges[this->outerCircleEdge].magnitude()) this->outerCircleEdge = i;
@@ -17,17 +17,17 @@ void Collider2::SetEdges(std::vector<iVec2> newEdges) {
 }
 
 
-void Collider2::Resize(Vector2<int> newSize) {
+void Collider::Resize(Vector2<int> newSize) {
 	manualSize = newSize;
 	scale = &manualSize;
 };
 
-Vector2<int> Collider2::GetPosition() {
+Vector2<int> Collider::GetPosition() {
 	if (this != nullptr)
 		return (*position) + offset;
 	return Vector2<int>(0, 0);
 };
-Vector2<int> Collider2::GetSize() {
+Vector2<int> Collider::GetSize() {
 	if (this != nullptr) {
 		fVec2 a = attachedObj->GetComponent<Transform>()->scale;
 		iVec2 b = attachedObj->GetComponent<Sprite>()->texture->size;  
@@ -37,7 +37,7 @@ Vector2<int> Collider2::GetSize() {
 }
 
 
-bool Collider2::isColliding(Collider2 other) {
+bool Collider::isColliding(Collider other) {
 	float radius = this->edges[this->outerCircleEdge].magnitude() + other.edges[this->outerCircleEdge].magnitude();
 	if ( (*this->position  - *other.position).magnitude() > radius) return 0;
 
@@ -69,7 +69,7 @@ bool Collider2::isColliding(Collider2 other) {
 }
 
 
-void Collider2::Gui() {
+void Collider::Gui() {
 	static int a = 3;
 	NWGui::DragValue<int>("Fuck_unity123", &a, ImGuiDataType_S32);
 }

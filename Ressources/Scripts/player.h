@@ -4,7 +4,7 @@
 #include "NWReflection.h"
 #define DLL_FUNC extern "C" __declspec(dllexport) //Deprecated
 
-class player : public Scriptable, public Reflected {
+class player : public Scriptable {
 public:
 	//Don't edit this section-----------------------
 	GameObject* goc;
