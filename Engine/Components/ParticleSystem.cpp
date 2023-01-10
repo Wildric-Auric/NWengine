@@ -1,4 +1,7 @@
+//Memory leak?
 #include "ParticleSystem.h"
+#include "Scene.h"
+
 ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
 }
@@ -230,4 +233,19 @@ int ParticleSystem::Deserialize(std::fstream* data, int offset) {
 	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
 	READ_FROM_BIN(data, &(maxParticles), sizeBuffer);
 	return 0;
+}
+
+ParticleSystem::~ParticleSystem() {
+	//TODO::Better solution
+	for (int i = 0; i < pool.size(); i++) {
+		pool[i].Disable();
+	}
+	auto it = Scene::currentScene->drawList.begin();
+	while (it != Scene::currentScene->drawList.end()) {
+		if (((*it) == nullptr) || !(*it)->isRendered) {
+			it = Scene::currentScene->drawList.erase(it);
+			continue;
+		}
+		it++;
+	}
 }

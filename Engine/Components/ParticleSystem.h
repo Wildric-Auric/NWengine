@@ -56,6 +56,7 @@ public:
 
 	GameObject* attachedObj = nullptr;
 	ParticleSystem() {};
+	~ParticleSystem();
 	ParticleSystem(GameObject* attachedObj);
     static std::map<GameObject*, ParticleSystem> componentList;
 
