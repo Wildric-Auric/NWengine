@@ -17,6 +17,17 @@ void Script::Gui() {
 	}
 }
 
+void Script::Update() {
+#ifdef NW_GAME_BUILD
+	if (this->script == nullptr) return;
+	this->script.Update()
+#else
+	if (!Globals::PLAY_MODE) return;
+	if (this->script == nullptr) return;
+	this->script->Update();
+#endif
+}
+
 std::map<GameObject*, Script> Script::componentList;
 
 
