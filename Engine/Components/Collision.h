@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "GuiObject.h"
 
-class Collider2 : public GameComponent {
+class Collider : public GameComponent {
 	//Base Collider class
 private:
 	Vector2<int> manualSize;
@@ -18,10 +18,10 @@ public:
 	iVec2 GetSize();
 	void SetEdges(std::vector<iVec2> newEdges);
 	void Resize(Vector2<int> newSize);
-	Collider2() {};
-	Collider2(GameObject* attachedObj);
-	bool isColliding(Collider2 other);
-	static std::map<GameObject*, Collider2> componentList;
+	Collider() {};
+	Collider(GameObject* attachedObj);
+	bool isColliding(Collider other);
+	static std::map<GameObject*, Collider> componentList;
 
 	void Gui() override; //Should not exist in Game Build; TODO::Make it so
 };

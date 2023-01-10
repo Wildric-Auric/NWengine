@@ -8,11 +8,12 @@
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
 
 //Virtual
+//Deprecated
 class Drawable {
 public:
 	virtual void Draw(uint8_t slot = 0) {};
 };
-
+//Deprecated
 class Updatable {
 public:
 	virtual void Update() {};
@@ -64,6 +65,8 @@ public:
 	GameComponent* AddComponent(std::string type);
 	template<typename T>
 	T* AddComponent() {
+		std::map<std::string, GameComponent*>::iterator temp = components.find(T::GetType());
+		if (temp != components.end()) return (T*)(*&temp)->second;
 		T* ptr = new T(this);
 		components.insert(std::pair<std::string, GameComponent*>( T::GetType(), ptr ));
 		return ptr;
@@ -78,31 +81,6 @@ public:
 		components.erase(T::GetType());
 	}
 };
-
-
-
-
-
-
-//WARNING::Collider is deprecated see Collider2
-
-class Collider {
-private:
-	Vector2<int> manualSize;
-public:
-	static std::string GetType() { return "Collider"; };
-	Collider() {};
-	Collider(GameObject* attachedObj, Vector2<int> offset = Vector2<int>(0, 0), Vector2<int>* newSize = nullptr);
-	GameObject* attachedObj;  //TODO:: Make this GameObjectClone it's a mistake
-	fVec2* position; //ReadOnly   //TODO:: Make it impossible to overwrite readonly variables
-	iVec2* size; //ReadOnly
-	iVec2 offset;
-	iVec2 GetPosition();
-	iVec2 GetSize();
-	void Resize(Vector2<int> newSize);
-
-};
-
 
 
 
