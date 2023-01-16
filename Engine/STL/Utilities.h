@@ -201,6 +201,7 @@ inline std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0") {
 	return "";
 }
 
+//Returns filename + extension
 inline std::string GetFileName(std::string path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr) {
 	std::string filename  = "";
 	std::string extension = "";
@@ -212,7 +213,7 @@ inline std::string GetFileName(std::string path, std::string* bFilename = nullpt
 			extension = "";
 			state = 1;
 		}
-		if ((int)chr == (int)'\\') { //Or == "//" ??
+		if (chr == '\\') {
 			root += filename + "\\";
 			filename = "";
 			extension = "";
@@ -231,5 +232,22 @@ inline std::string GetFileName(std::string path, std::string* bFilename = nullpt
 inline bool FileCopy(std::string dest, std::string src, bool failIfExists = 0) {
 	return CopyFile(src.c_str(), dest.c_str(), failIfExists);
 }
+
+inline int Exec(std::string cmd ) {
+	STARTUPINFO			sInfo;
+	PROCESS_INFORMATION pInfo;
+	ZeroMemory(&sInfo, sizeof(sInfo));
+	ZeroMemory(&pInfo, sizeof(pInfo));
+
+	if (!CreateProcess(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0,
+					   NULL, NULL, &sInfo, &pInfo))
+		return 0;
+
+	WaitForSingleObject(pInfo.hProcess, INFINITE);
+	CloseHandle(pInfo.hProcess);
+	CloseHandle(pInfo.hThread);
+	return 1;
+}
+inline bool CopyDir() {}
 
 #endif
