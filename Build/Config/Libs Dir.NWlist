@@ -1,0 +1,5 @@
+dependencies\\GLFW\\lib-vc2019
+dependencies\\GLEW\\lib\\Release\\Win32
+dependencies\\freetype\\release static\\vs2015-2022\\win32
+dependencies\\SND\\lib
+dependencies\\OPENAL\\win32
