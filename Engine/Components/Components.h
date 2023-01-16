@@ -5,3 +5,6 @@
 #include "Transform.h"
 #include "Sprite.h"
 #include "Camera.h"
+#include "AudioEmitter.h"
+#include "AudioListener.h"
+#include "Animator.h"
