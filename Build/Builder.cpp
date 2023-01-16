@@ -1,122 +1,28 @@
 #include "Builder.h"
-
-
-#define PROJECTDIR "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\"
-//Users script
-#define SCRIPTS_PATH "Data\\Ressources\\Scripts\\" 
-//Engine source code (a part of it should be precompiled later) 
-#define SOURCE_PATH  "Data\\Engine\\"
-
 #include <fstream>
-#include <vector>
-#include <string>
-#include "Data\\Engine\\Utilities.h"
-#include "Data\\Engine\\Maths.h"
-std::string ProjectDir = PROJECTDIR;
-std::string outputDir  = ProjectDir + "Data\\Compiled\\";
-std::string exeLoc     = ProjectDir + "Data\\";
-std::string exeName    = "BuildTest.exe";
-std::string IncludeDir[] = {
-    "Data\\ressources\\Scripts",
-    "Data\\dependencies\\GLEW\\include",
-    "Data\\dependencies\\GLFW\\include",
-    "Data\\dependencies\\vendor",
-    "Data\\dependencies\\freetype\\include",
-    "Data\\dependencies\\OPENAL\\include",
-    "Data\\Engine",
-    "Data\\dependencies\\SND\\include",
-    "Data\\Engine\\Components",
-    "Data\\Engine\\Audio",
-    "Data\\Ressources",
-    "Data\\Engine\\Context",
-    "Data\\Engine\\Gui",
-    "Data\\Engine\\Maths",
-    "Data\\Engine\\Rendering",
-    "Data\\Engine\\Native Scripting",
-    "Data\\Engine\\STL",
-};
 
-std::string LibsDir[] = {
-    "Data\\dependencies\\GLFW\\lib-vc2019"                                   ,
-    "Data\\dependencies\\GLEW\\lib\\Release\\Win32"                          ,
-    "Data\\dependencies\\freetype\\release static\\vs2015-2022\\win32"       ,
-    "Data\\dependencies\\SND\\lib"                                           ,
-    "Data\\dependencies\\OPENAL\\win32"                                    
-};
-//Don't need absolute path in the future, it should be automatized
-std::string staticLibs[] = {
-     "opengl32.lib"                       ,
-     "freetype.lib"                       ,
-     "OpenAL32.lib"                       ,
-     "libsndfile-1.lib"                   ,
-     "glew32s.lib"                        ,
-     "glfw3.lib"                          ,
-     "kernel32.lib"                       ,
-     "user32.lib"                         ,
-     "gdi32.lib"                          ,
-     "winspool.lib"                       ,
-     "comdlg32.lib"                       ,
-     "advapi32.lib"                       ,
-     "shell32.lib"                        ,
-     "ole32.lib"                          ,
-     "oleaut32.lib"                       ,
-     "uuid.lib"                           ,
-     "odbc32.lib"                         ,
-     "odbccp32.lib"                       ,
+#include "..\\Engine\\STL\\Utilities.h"
+#include "..\\Engine\\Maths\\Maths.h"
+
+
+std::vector<std::string> Builder::IncludeDir = {
+
 };
 
 
-std::vector<std::string> objs = {
-    "Data\\dependencies\\vendor\\glm\\detail\\glm.cpp"                                                  ,
-    "Data\\dependencies\\vendor\\imgui\\imgui.cpp"                                                      ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_demo.cpp"                                                 ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_draw.cpp"                                                 ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_impl_glfw.cpp"                                            ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_impl_opengl3.cpp"                                         ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_tables.cpp"                                               ,
-    "Data\\dependencies\\vendor\\imgui\\imgui_widgets.cpp"                                              ,
-    "Data\\dependencies\\vendor\\imgui\\implot\\implot.cpp"                                             ,
-    "Data\\dependencies\\vendor\\imgui\\implot\\implot_items.cpp"                                       ,
-    "Data\\dependencies\\vendor\\imgui\\implot\\implot_demo.cpp"                                       ,                                                                   
-    "Data\\Engine\\Animation.cpp"                   ,
-    "Data\\Engine\\Animator.cpp"                    ,
-    "Data\\Engine\\Audio.cpp"                       ,
-    "Data\\Engine\\AudioEmitter.cpp"                ,
-    "Data\\Engine\\AudioListener.cpp"               ,
-    "Data\\Engine\\Camera.cpp"                      ,
-    "Data\\Engine\\Collision.cpp"                   ,
-    "Data\\Engine\\Console.cpp"                     ,
-    "Data\\Engine\\Context.cpp"                     ,
-    "Data\\Engine\\Game.cpp"                        ,
-    "Data\\Engine\\GameObject.cpp"                  ,
-    "Data\\Engine\\Globals.cpp"                     ,
-    "Data\\Engine\\Inputs.cpp"                      ,
-    "Data\\Engine\\main.cpp"                        ,
-    "Data\\Engine\\NWengine.cpp"                    ,
-    "Data\\Engine\\NWGui.cpp"                       ,
-    "Data\\Engine\\NWstd.cpp"                       ,
-    "Data\\Engine\\Parser.cpp"                      ,
-    "Data\\Engine\\ParticleSystem.cpp"              ,
-    "Data\\Engine\\Physics.cpp"                     ,
-    "Data\\Engine\\PostProcessing.cpp"              ,
-    "Data\\Engine\\Primitives.cpp"                  ,
-    "Data\\Engine\\RessourcesLoader.cpp"            ,
-    "Data\\Engine\\Scene.cpp"                       ,
-    "Data\\Engine\\Script.cpp"                      ,
-    "Data\\Engine\\ScriptManager.cpp"               ,
-    "Data\\Engine\\Serializer.cpp"                  ,
-    "Data\\Engine\\Shader.cpp"                      ,
-    "Data\\Engine\\Source.cpp"                      ,
-    "Data\\Engine\\Sprite.cpp"                      ,
-    "Data\\Engine\\StaticGuiVariable.cpp"           ,
-    "Data\\Engine\\Text.cpp"                        ,
-    "Data\\Engine\\Texture.cpp"                     ,
-    "Data\\Engine\\Transform.cpp"                   ,
+std::vector<std::string> Builder::LibsDir = {
+
+};
+
+std::vector<std::string> Builder::staticLibs = {
+
+};
+
+
+std::vector<std::string> Builder::objs = {
+
 };                                                                                                      
-                                                                                                       
-
-std::vector<std::string> o;
-
+                                                                                                      
 
 std::vector<std::string> Builder::PreprocessorMacros = {
     "GLEW_STATIC",
@@ -127,93 +33,102 @@ std::vector<std::string> Builder::PreprocessorMacros = {
     "_MBCS"
 };
 
+std::string Builder::runtimeLib = "/MDd";
 
 
-
-
-void Builder::Compile() {
-    //Creating objects out of scripts
-    std::ofstream ofs("Builder.bat");
-    ofs << "@echo off\n";
-    ofs << "call vcvars32\n";
-    ofs << "set \"macros=";
+void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
+    *ofs << "@echo off\n";
+    *ofs << "call vcvars32\n";
+    *ofs << "set \"macros=";
     for (std::string MAC : PreprocessorMacros) {
-        ofs << "/D" << MAC << " ";
+        *ofs << "/D" << MAC << " ";
     }
-    ofs << "\"\n";
-    for (std::string scr : objs) {
+    *ofs << "\"\n";
 
-        //Getting it's name
-        std::string filename = "";
-        std::string extension = "";
-        bool state = 0;
-        for (auto chr : scr) {
-            if (chr == '.') {
-                filename += extension;
-                extension = "";
-                state = 1;
-            }
-            if ((int)chr == (int)'\\') {
-                filename = "";
-                extension = "";
-                continue;
-            }
-            if (!state) filename += chr;
-            else extension += chr;
+    //Getting it's name
+    *ofs << "cl ";
+    *ofs << runtimeLib << " ";  //Runtime library
+    *ofs << "/c ";
+    *ofs << " /Fo\""<< outputDir << "\" ";
 
+    bool b = 0;
+    //Adding include dirs
+    for (std::string dir : IncludeDir) {
+        if (b) {
+            *ofs << "^\n ";
         }
-        ofs << "cl ";
-        ofs << "/MDd ";  //Runtime library
-        ofs << "/c ";
-        bool b = 0;
-        for (std::string dir : IncludeDir) {
-            if (b) {
-                ofs << "^\n ";
-            }
-            ofs << "/I " << "\"" << ProjectDir << dir << "\"";
-            b = 1;
-        };
+        *ofs << "/I " << "\"" << dir << "\"";
+        b = 1;
+    };
+    *ofs << " %macros% ";
+}
 
-        ofs << "^\n";
-        ofs << " %macros% ";
-        ofs << "/Fo"  <<"\""<< outputDir << filename << ".obj" << "\" ";
-        //Adding cpp file
-        ofs << "\""<<ProjectDir << scr << "\"";
-   
-        o.push_back(filename + ".obj");
-        ofs << "\n";
-        ofs << "echo " << filename << " object created\n";
-    }
-    ofs << "\n\n\n";
-    ofs << "echo Objects creation has ended.\n";
+//Output dir: only directory
+void Builder::GenerateCompilationData(std::ofstream* ofs, std::string file, std::string outputDir) {
+    std::string filename = "";
+    std::string extension = "";
+    GetFileName(file, &filename, &extension);
+    //Adding cpp file
+    *ofs << " \"" << file << "\"";
+    *ofs << "^\n";
+}
+
+//Compiles the file passed as first argument
+void Builder::CompileInd(std::string file, std::string outputDir) {
+    //preprocessor macros
+    std::ofstream ofs("Builder.bat");
+    if (!ofs) return;
+    InitCompilation(&ofs, outputDir);
+    GenerateCompilationData(&ofs, file, outputDir);
     ofs.close();
 }
 
-void Builder::Link() {
+//Compiles all files in objs vector
+void Builder::Compile(std::string outputDir) {
+    std::ofstream ofs("Builder.bat");
+    if (!ofs) return;
+    InitCompilation(&ofs, outputDir);
+    for (std::string file : objs)
+        GenerateCompilationData(&ofs, file, outputDir);
+    ofs << " > log.txt";
+    ofs.close();
+}
+
+//output is directory + name
+void Builder::Link(std::string output) {
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
     ofs << "call vcvars32\n";
     ofs << "LINK ";
-    std::string objectLoc = outputDir;
-    for (std::string obj : GetDirFiles(objectLoc)) {
-        ofs << "\"" << objectLoc << obj << "\"" << "^\n ";
+    for (std::string obj : objs) {
+        ofs << "\"" << obj << "\"" << "^\n ";
     }
     for (std::string dir : LibsDir) {
-        ofs << "/LIBPATH:" << "\""<< ProjectDir <<dir<< "\""<< "^\n ";
+        ofs << "/LIBPATH:" << "\"" <<dir<< "\""<< "^\n ";
     }
     for (std::string lib : staticLibs) {
         ofs << lib << "^\n ";
     }
-    ofs << "/OUT:" << exeLoc << exeName;
-    ofs << "\necho exe generated";
+    ofs << "/OUT:"  << output << " > log.txt";
     ofs.close();
- 
 }
 
-void Builder::InitScripts() {
+void Builder::GenLib(std::string output) {
+    std::ofstream ofs("Builder.bat");
+    ofs << "@echo off\n";
+    ofs << "call vcvars32\n";
+    ofs << "lib ";
+    for (std::string obj : objs) {
+        ofs <<"\n" << obj << "^\n";
+    }
+    ofs << " /OUT:" << output;
+}
+
+//Loc is directory where 
+void Builder::InitScripts(std::string scriptList, std::string scriptManager, std::string output) {
     //TODO::Wrapper of ifstream and ofstream with error handling
-    //Reading used scripts names and writing to scripts.h
-    std::ifstream ifs(std::string(SCRIPTS_PATH) + std::string("ScriptsList.NWlist"));
+    //Reading used scripts names and writing to ScriptManager.cpp
+    std::ifstream ifs(scriptList);
     if (!ifs) {
         std::cout << "Can't open scripts file"<< std::endl;
         return; 
@@ -225,8 +140,8 @@ void Builder::InitScripts() {
     //Iterating over lines in scripts' NWlist
     for (std::string line; std::getline(ifs, line);) {
         scriptMap += "\n  {\"" + line + "\"," + line + "::GetScript" + "},";
-        objs.push_back(std::string(SCRIPTS_PATH) + line + ".cpp"); //Add user's script to files that should be compiled
-        scripts +=  "#include \"Scripts\\\\" + line + ".h\n";
+        objs.push_back( line + ".cpp"); //Add user's script to files that should be compiled
+        scripts +=  "#include " + line + ".h\n";
     };
     if (scriptMap.size() > 0) scriptMap.pop_back();
     ofs.close();
@@ -234,7 +149,7 @@ void Builder::InitScripts() {
     //Building scriptManager map
     Vector2<std::string> parts = Vector2<std::string>("", "");
     Vector2<std::string> del = Vector2<std::string>("BEG_PPP","END_PPP");
-    std::ifstream ifs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
+    std::ifstream ifs0(scriptManager);
     if (!ifs0) {
         std::cout << "Can't open ScriptManager.cpp file" << std::endl;
         return;
@@ -255,7 +170,7 @@ void Builder::InitScripts() {
     }
 
     ifs0.close();
-    std::ofstream ofs0(std::string(SOURCE_PATH) + std::string("ScriptManager.cpp"));
+    std::ofstream ofs0(scriptManager);
     ofs0 << parts.x;
     ofs0 << scripts;
     ofs0 << "std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {\n";
@@ -263,9 +178,15 @@ void Builder::InitScripts() {
     ofs0.close();
 }
 
+//Returns a vector containing all paths in a NWlist file
+std::vector<std::string> Builder::GetDirs(std::string path) {
+    std::fstream stream(path); //TODO::ERROR checking
+    std::vector<std::string> vec;
+    for (std::string line = ""; std::getline(stream, line); vec.push_back(line));
+    return vec;
+};
+
 
 void Builder::Build() {
-    //Compile();
-    //Link();
-    InitScripts();
+    //InitScripts();
 }
