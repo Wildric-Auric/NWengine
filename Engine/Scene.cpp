@@ -11,11 +11,6 @@
 #include <NWstd.h>
 #include "Animator.h"
 
-static std::string subKeys[] = {
-	"SortingLayer", "Texture", "Shader",  "Position", "Scale",
-	"Position", "Rotation", "Transform", "Offset", "Name"
-
-};
 
 Scene::Scene(const char* name) {
 	this->name = _strdup(name);
