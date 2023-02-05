@@ -21,14 +21,26 @@ void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
 	glViewport(x, y, sizeX, sizeY);
 }
 
+void Context::SetFullscreen(bool state) {
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
+	if (!state) {
+		glfwSetWindowMonitor(window, nullptr, 100, 100, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT, vidmode->refreshRate);
+		sizeCallBack(window, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
+		return;
+	}
+	glfwSetWindowMonitor(window, monitor, 0, 0, vidmode->width, vidmode->height, vidmode->refreshRate);
+	sizeCallBack(window, vidmode->width, vidmode->height);
+}
+
 GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 	window = glfwCreateWindow(scrWidth, scrHeight, "NWengine", NULL, NULL);
+
 	if (window == NULL)
 	{
 		const char* buffer = "";
