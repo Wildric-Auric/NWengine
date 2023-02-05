@@ -1,5 +1,6 @@
 #include "AudioListener.h"
 #include "AudioEmitter.h"
+#include "Scene.h"
 
 std::map<GameObject*, AudioListener*>AudioListener::componentList;
 
@@ -13,12 +14,13 @@ AudioListener::~AudioListener() {
 }
 
 
+//TODO::All calculation for distance and direction for sound fading etc
 void AudioListener::Update() {
-	for (std::map<GameObject*, AudioEmitter*>::iterator it = AudioEmitter::componentList.begin(); it != AudioEmitter::componentList.end(); it++) {
-		AudioEmitter* audioEmitter = it->second;
-		//TODO::All calculation for distance and direction for sound fading etc
-		if (!audioEmitter->sound)
-			continue;
+	for (auto iter = Scene::currentScene->sceneObjs.begin(); iter != Scene::currentScene->sceneObjs.end(); iter++) {
+		GameObject* go = &(*iter);
+		AudioEmitter* audioEmitter = go->GetComponent<AudioEmitter>();
+		if (audioEmitter == nullptr) continue;
+		if (!audioEmitter->sound) continue;
 		float volume    = (float)(audioEmitter->volume)/100.0f;
 		float freq      = audioEmitter->frequency;	
 
