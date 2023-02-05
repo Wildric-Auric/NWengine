@@ -18,6 +18,10 @@ AudioEmitter::~AudioEmitter() {
 int AudioEmitter::Serialize(std::fstream* data, int offset)	{
 	int sizeBuffer = 0;
 	WRITE_ON_BIN(data, "AudioEmitter", 12, sizeBuffer);
+
+	if (this->sound == nullptr) { WRITE_ON_BIN(data, "", 0, sizeBuffer);}
+	else { WRITE_ON_BIN(data, this->sound->name.c_str(), this->sound->name.size(), sizeBuffer); }
+
 	WRITE_ON_BIN(data, &this->volume,    sizeof(this->volume)  , sizeBuffer);
 	WRITE_ON_BIN(data, &this->frequency, sizeof(this->frequency), sizeBuffer);
 	WRITE_ON_BIN(data, &this->isLooping, sizeof(this->isLooping), sizeBuffer);
@@ -25,7 +29,18 @@ int AudioEmitter::Serialize(std::fstream* data, int offset)	{
 };
 
 int AudioEmitter::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
+	int  sizeBuffer = 0;
+
+	//Deserializing sound
+	char* temp = new char[512];
+	READ_FROM_BIN(data, temp, sizeBuffer);
+	temp[sizeBuffer] = '\0';
+	if (strlen(temp) != 0) {
+		this->sound = new Sound(temp);
+	}
+	delete[] temp;
+
+	//Deserializing sound parameters
 	READ_FROM_BIN(data, &this->volume, sizeBuffer);
 	READ_FROM_BIN(data, &this->frequency, sizeBuffer);
 	READ_FROM_BIN(data, &this->isLooping, sizeBuffer);
@@ -41,7 +56,7 @@ void AudioEmitter::Gui() {
 		std::string path = GetFile("Sound Files\0*.wav\0*.ogg\0*.flac\0*.*\0");
 		if (path == "") return;
 
-		if (sound == nullptr) { sound = new Sound(path); sound->name = path; return; } //TODO::Add Sound function
+		if (sound == nullptr) { sound = new Sound(path); return; } //TODO::Add Sound function
 		if (sound->name == path) return;
 		delete sound;
 		sound = new Sound(path);
