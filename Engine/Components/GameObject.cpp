@@ -105,6 +105,7 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(AudioEmitter, type);
 	ADD_COMPONENT(AudioListener, type);
 	ADD_COMPONENT(Camera, type);
+	ADD_COMPONENT(Script, type);
 	return nullptr;
 };
 
