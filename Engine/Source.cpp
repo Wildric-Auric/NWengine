@@ -1,3 +1,4 @@
+
 #ifndef _WINDLL	
 
 	#ifdef NW_GAME_BUILD
@@ -5,7 +6,6 @@
 	#else
 		#include "NWengine.h"
 	#endif
-
 
 	int main()
 	{
@@ -18,13 +18,13 @@
 			//TODO::Find out how to create window in exe and process eveything in dll...
 			int response = NW_RELOAD_DLL;
 			while (response != NW_SHUTDOWN_DLL) {
+				FileMove("NWengine.dll", "NWengine_temp.dll");
 				DllHandle engine = DllHandle("NWengine.dll");
 				int(*DllRunFunc)() = (int(*)()) GetDllFunction(&engine, "DllRun");
 				response = (*DllRunFunc)();
 			}
 		#else
 			NWengine::Run();
-			
 		#endif
 	#endif
 	};
