@@ -37,7 +37,6 @@ template<typename T>
 Vector2<float> Vector2<T>::normalize() {
 	float magnitude = pow(x * x + y * y, 0.5);
 	if (magnitude == 0) {
-		printf("What the fuck?");
 		return Vector2<float>(0, 0);
 	}
 	return Vector2<float>(x / magnitude, y / magnitude);
