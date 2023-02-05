@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <fstream>
 #include <windows.h>
 #include <iostream>
 #ifndef NOMINMAX
@@ -17,6 +18,13 @@ void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 	}
 }
 
+
+inline std::vector<std::string> GetNWlist(std::string path) {
+	std::fstream stream(path); //TODO::ERROR checking
+	std::vector<std::string> vec;
+	for (std::string line = ""; std::getline(stream, line); vec.push_back(line));
+	return vec;
+}
 
 //Next functions use windows api; LATETODO:: Add their equivelent for mac, linux etc...
 #ifdef WIN
@@ -83,7 +91,7 @@ inline std::vector<std::string> GetDirFiles(const std::string& directory)
 	hFind = FindFirstFileA(path.c_str(), &findData);
 
 	if (hFind == INVALID_HANDLE_VALUE)
-		throw std::runtime_error("Invalid handle value! Please check your path...");
+		return {};
 
 	bool first = 0; //first file found is always ".." and I don't know why so i'm not adding it to the list
 	while (FindNextFileA(hFind, &findData) != 0)
@@ -207,18 +215,23 @@ inline std::string GetFileName(std::string path, std::string* bFilename = nullpt
 	std::string extension = "";
 	std::string root	  = "";
 	bool state = 0;
+	bool slash = 0;
 	for (auto chr : path) {
 		if (chr == '.') {
 			filename += extension;
 			extension = "";
 			state = 1;
+			slash = 0;
 		}
 		if (chr == '\\') {
-			root += filename + "\\";
-			filename = "";
+			if (slash) continue;
+			root += filename + "\\\\";
+			filename  = "";
 			extension = "";
+			slash	  = 1;
 			continue;
 		}
+		slash = 0;
 		if (!state) filename += chr;
 		else extension += chr;
 	}
@@ -233,7 +246,15 @@ inline bool FileCopy(std::string dest, std::string src, bool failIfExists = 0) {
 	return CopyFile(src.c_str(), dest.c_str(), failIfExists);
 }
 
-inline int Exec(std::string cmd ) {
+inline bool FileExists(std::string dir){
+	DWORD attrib = GetFileAttributes(dir.c_str());
+	if ((attrib != INVALID_FILE_ATTRIBUTES) && !(attrib & FILE_ATTRIBUTE_DIRECTORY))
+		return 1;
+	return 0;
+
+}
+
+inline bool Exec(std::string cmd ) {
 	STARTUPINFO			sInfo;
 	PROCESS_INFORMATION pInfo;
 	ZeroMemory(&sInfo, sizeof(sInfo));
@@ -248,6 +269,17 @@ inline int Exec(std::string cmd ) {
 	CloseHandle(pInfo.hThread);
 	return 1;
 }
-inline bool CopyDir() {}
+
+inline bool FileDelete(std::string name) {
+	return DeleteFile(name.c_str());
+};
+
+inline bool FileMove (std::string dest, std::string source, bool failIfExists = 0) {
+	if (!FileExists(source))
+		return 0;
+	if (!failIfExists)
+		FileDelete(dest);
+	return MoveFile(source.c_str(), dest.c_str());
+};
 
 #endif
