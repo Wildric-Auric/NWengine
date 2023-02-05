@@ -8,9 +8,7 @@
 #define NW_RELOAD_DLL        2
 #define NW_SHUTDOWN_DLL      0
 
-
-#define PROJECT_DIRECTORY "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\"
-
+#define PROJECT_DIRECTORY Globals::projectDir
 
 typedef int8_t   int8;
 typedef int32_t  int32;
@@ -44,13 +42,17 @@ public:
 	static double fps;
 	static double deltaTime;      //Read only in everyfile except mainloops
 	//Consts
-	static int NATIVE_WIDTH;
-	static int NATIVE_HEIGHT;
-	static int WINDOW_WIDTH;
-	static int WINDOW_HEIGHT;
 	static const float SCREENRATIO;
 	static const bool DEBUG_MODE;
 	static bool PLAY_MODE;
 	//Uniforms
 	static float uTime;
+	//Paths
+	static std::string scriptListPath;
+	static std::string scriptManagerPath;
+	static std::string projectDir;
+	static std::string dllDir;
+	static std::string compilationConfigDir;
+	static std::string compiledScriptDir;
+	static std::string engineLibDir;
 };
