@@ -18,16 +18,6 @@ public:
 		ImGui::Begin("Inspector", &isActive);
 
 		GameObject* go = nullptr;
-		Sprite* sprite = nullptr;
-		Transform* transform = nullptr;
-		Collider* collider = nullptr;
-		Script* script = nullptr;
-		Camera* cam = nullptr;
-		ParticleSystem* ps = nullptr;
-		Animator* animator = nullptr;
-		AudioEmitter* ae = nullptr;
-		AudioListener* al = nullptr;
-		
 
 		if (HierarchyGui::selected > -1 && HierarchyGui::selected < Scene::currentScene->sceneObjs.size()) {
 			auto it = Scene::currentScene->sceneObjs.begin();
@@ -54,14 +44,14 @@ public:
 			}
 
 			if (ImGui::BeginPopup("popup0")) {
-				ADD_COMPONENT_TO_INSPECTOR(Transform, go);
-				ADD_COMPONENT_TO_INSPECTOR(Sprite   , go);
-				ADD_COMPONENT_TO_INSPECTOR(Collider , go);
-				ADD_COMPONENT_TO_INSPECTOR(Camera   , go);
+				ADD_COMPONENT_TO_INSPECTOR(Transform,	   go);
+				ADD_COMPONENT_TO_INSPECTOR(Sprite   ,	   go);
+				ADD_COMPONENT_TO_INSPECTOR(Collider ,	   go);
+				ADD_COMPONENT_TO_INSPECTOR(Camera   ,	   go);
 				ADD_COMPONENT_TO_INSPECTOR(ParticleSystem, go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioEmitter  , go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioListener , go);
-
+				ADD_COMPONENT_TO_INSPECTOR(Script,         go)
  				ImGui::EndPopup();
 			}
 		}
