@@ -49,3 +49,5 @@ dependencies\\vendor\\imgui\\imgui_widgets.cpp
 dependencies\\vendor\\imgui\\implot\\implot.cpp
 dependencies\\vendor\\imgui\\implot\\implot_items.cpp
 dependencies\\vendor\\imgui\\implot\\implot_demo.cpp
+Build\\Builder.cpp
+Engine\\Native Scripting\\ScriptManager.cpp
