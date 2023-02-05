@@ -93,13 +93,13 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;$(SolutionDir)Engine\Reflection;$(SolutionDir)Build</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;$(SolutionDir)dependencies\SND\lib;$(SolutionDir)dependencies\OPENAL\win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;freetype.lib;OpenAL32.lib;libsndfile-1.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;OpenAL32.lib;libsndfile-1.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -216,6 +216,7 @@
     <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
+    <ClCompile Include="Ressources\Scripts\SoundPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -918,6 +919,7 @@
     <ClInclude Include="Engine\Gui\NWGui.h" />
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
+    <ClInclude Include="Engine\Gui\ScriptManagerGui.h" />
     <ClInclude Include="Engine\Reflection\NWReflection.h" />
     <ClInclude Include="Engine\Reflection\Serialized.h" />
     <ClInclude Include="Engine\Reflection\Serializer.h" />
