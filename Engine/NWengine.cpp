@@ -56,9 +56,10 @@ extern "C"
 		Gui::Init((int)window);
 		if (!InitOpenAL()) return -1;
 		RessourcesLoader::LoadDefaultRessources();
+		ScriptManager::LoadScriptList();
 		Context::EnableBlend();
 		Context::EnableDepthTest();
-		Scene scene0 = new Scene("scene0");
+		Scene* scene0 = new Scene("scene0");
 		scene0->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
@@ -80,6 +81,9 @@ int NWengine::Run() {
 
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
+		//Loading script list
+		ScriptManager::LoadScriptList();
+		//Context settings
 
 		Context::EnableBlend();
 
@@ -153,6 +157,7 @@ void NWengine::MainLoop() {
 
 void NWengine::Shutdown() {
 		delete Scene::currentScene;
+		ScriptManager::SaveScriptList();
 		DestroyOpenAL();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImPlot::DestroyContext();
