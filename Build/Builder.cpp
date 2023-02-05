@@ -1,28 +1,17 @@
-#include "Builder.h"
 #include <fstream>
-
-#include "..\\Engine\\STL\\Utilities.h"
-#include "..\\Engine\\Maths\\Maths.h"
-
-
-std::vector<std::string> Builder::IncludeDir = {
-
-};
+#include "Builder.h"
+#include "Utilities.h"
+#include "Maths.h"
 
 
-std::vector<std::string> Builder::LibsDir = {
+std::vector<std::string> Builder::IncludeDir = {};
 
-};
+std::vector<std::string> Builder::LibsDir = {};
 
-std::vector<std::string> Builder::staticLibs = {
+std::vector<std::string> Builder::staticLibs = {};
 
-};
-
-
-std::vector<std::string> Builder::objs = {
-
-};                                                                                                      
-                                                                                                      
+std::vector<std::string> Builder::objs = {};                                                                                                      
+                                   
 
 std::vector<std::string> Builder::PreprocessorMacros = {
     "GLEW_STATIC",
@@ -30,25 +19,24 @@ std::vector<std::string> Builder::PreprocessorMacros = {
     "WIN_32",
     "_CRT_SECURE_NO_WARNINGS",
     "_CONSOLE",
-    "_MBCS"
+    "_MBCS"   
+    //_USRDLL and _WINDLL for DLL
 };
 
 std::string Builder::runtimeLib = "/MDd";
 
-
 void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
     *ofs << "@echo off\n";
-    *ofs << "call vcvars32\n";
-    *ofs << "set \"macros=";
-    for (std::string MAC : PreprocessorMacros) {
-        *ofs << "/D" << MAC << " ";
-    }
-    *ofs << "\"\n";
+    *ofs << " if not defined DevEnvDir (call vcvars32)\n";
 
     //Getting it's name
-    *ofs << "cl ";
+    *ofs << "cl /EHsc ";
     *ofs << runtimeLib << " ";  //Runtime library
     *ofs << "/c ";
+
+    for (std::string MAC : PreprocessorMacros) 
+        *ofs << " /D" << MAC << " ";
+    *ofs << "^\n";
     *ofs << " /Fo\""<< outputDir << "\" ";
 
     bool b = 0;
@@ -60,7 +48,6 @@ void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
         *ofs << "/I " << "\"" << dir << "\"";
         b = 1;
     };
-    *ofs << " %macros% ";
 }
 
 //Output dir: only directory
@@ -80,6 +67,7 @@ void Builder::CompileInd(std::string file, std::string outputDir) {
     if (!ofs) return;
     InitCompilation(&ofs, outputDir);
     GenerateCompilationData(&ofs, file, outputDir);
+    ofs << " > log.txt";
     ofs.close();
 }
 
@@ -95,14 +83,16 @@ void Builder::Compile(std::string outputDir) {
 }
 
 //output is directory + name
-void Builder::Link(std::string output) {
+void Builder::Link(std::string output, bool isDll) {
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
-    ofs << "call vcvars32\n";
+    ofs << " if not defined DevEnvDir (call vcvars32)\n";
     ofs << "LINK ";
     for (std::string obj : objs) {
         ofs << "\"" << obj << "\"" << "^\n ";
     }
+    if (isDll)
+        ofs <<  "/DLL ";
     for (std::string dir : LibsDir) {
         ofs << "/LIBPATH:" << "\"" <<dir<< "\""<< "^\n ";
     }
@@ -116,7 +106,7 @@ void Builder::Link(std::string output) {
 void Builder::GenLib(std::string output) {
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
-    ofs << "call vcvars32\n";
+    ofs << " if not defined DevEnvDir (call vcvars32)\n";
     ofs << "lib ";
     for (std::string obj : objs) {
         ofs <<"\n" << obj << "^\n";
@@ -125,7 +115,7 @@ void Builder::GenLib(std::string output) {
 }
 
 //Loc is directory where 
-void Builder::InitScripts(std::string scriptList, std::string scriptManager, std::string output) {
+void Builder::InitScripts(std::string scriptList, std::string scriptManager) {
     //TODO::Wrapper of ifstream and ofstream with error handling
     //Reading used scripts names and writing to ScriptManager.cpp
     std::ifstream ifs(scriptList);
@@ -137,11 +127,14 @@ void Builder::InitScripts(std::string scriptList, std::string scriptManager, std
 
     std::string scriptMap = "";
     std::string scripts   = "";
+    std::string fileName  = "";
+    std::string root      = "";
     //Iterating over lines in scripts' NWlist
     for (std::string line; std::getline(ifs, line);) {
-        scriptMap += "\n  {\"" + line + "\"," + line + "::GetScript" + "},";
-        objs.push_back( line + ".cpp"); //Add user's script to files that should be compiled
-        scripts +=  "#include " + line + ".h\n";
+        GetFileName(line, &fileName, nullptr, &root);
+        scriptMap += "\n  {\"" + fileName + "\"," + fileName + "::GetScript" + "},";
+        objs.push_back(root + fileName + ".cpp"); //Add user's script to files that should be compiled
+        scripts +=  "#include \"" + root + fileName + ".h\"\n";
     };
     if (scriptMap.size() > 0) scriptMap.pop_back();
     ofs.close();
@@ -168,7 +161,6 @@ void Builder::InitScripts(std::string scriptList, std::string scriptManager, std
         }
         if (j!=1) *parts[min(j, 1)] += line + "\n";
     }
-
     ifs0.close();
     std::ofstream ofs0(scriptManager);
     ofs0 << parts.x;

@@ -7,12 +7,12 @@ private:
 	static void InitCompilation(std::ofstream* ofs, std::string outputDir);
 public:
 	static void Compile(std::string outputDir);
-	static void Link(std::string output); //Link all objs in a dir
-	static void InitScripts(std::string scriptList, std::string scriptManager, std::string output);
+	static void Link(std::string output, bool isDll = 0); //Link all objs in a dir
+	static void InitScripts(std::string scriptList, std::string scriptManager);
 	static void Build();
 	static void CompileInd(std::string file, std::string outputDir); //Compile the cpp file passed to .obj
 	static void GenLib(std::string output);
-	static std::vector<std::string> GetDirs(std::string path);
+	static std::vector<std::string> GetDirs(std::string path);       //Pass .NWlist file TODO::Move it elsewhere?
 
 	static std::string runtimeLib;
 	static std::vector<std::string> PreprocessorMacros;
