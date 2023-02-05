@@ -59,6 +59,7 @@ ALuint LoadSound(const char* path) {
 
 Sound::Sound(std::string path) {
 	this->snd = LoadSound(path.c_str());
+	name	  = path;
 	if (!this->snd) { printf("OpenAL error"); return; }
 	alGenSources(1, &this->source);
 	alSourcei(source, AL_BUFFER, this->snd);
@@ -73,6 +74,7 @@ Sound::~Sound() {
 }
 
 void Sound::Play() {
+	if (this->isPlaying) return;
 	alSourcePlay(source);
 	this->isPlaying		= 1;
 }
