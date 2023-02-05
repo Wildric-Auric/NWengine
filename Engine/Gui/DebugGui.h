@@ -14,6 +14,10 @@
 #include "AudioListener.h"
 #include "AudioEmitter.h"
 
+#include "Builder.h"
+
+#include "ScriptManagerGui.h"
+
 class DebugGui {
 public:
 	static bool isActive;
@@ -26,22 +30,41 @@ public:
 		
 
 		//DragFloat("Zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
+		static std::vector<std::string> vec;
+
 		static ParticleSystem* ps = nullptr;
 		static bool b = 0;
 		static int a = 0;
 		static bool c = 0;
 		static bool d = 0;
+		static bool e = 0;
 		static Script* ee = nullptr;
 		static AudioEmitter* ae = nullptr;
 		static AudioListener* al = nullptr;
 		static GameObject obj = GameObject();
+		static bool fs = 0;
 		NWGui::DragValue<int>("Flag", &a, ImGuiDataType_S32, 1, 0.2f, 0, 4);
 		ImGui::Checkbox("Stop music", &b);
-		ImGui::Checkbox("Reload engine", &d);
+		ImGui::Checkbox("CompileScripts", &d);
+		ImGui::Checkbox("Deser", &e);
+
+
+		if (ImGui::Checkbox("fullscreen", &fs)) {
+			Context::SetFullscreen(fs);
+		};
 
 		if (d) {
-			Context::dllFlag = NW_RELOAD_DLL;
+			ScriptManager::CompileScripts();
 			d = 0;
+		}
+
+		if (e) {
+			GameObject* go = &*Scene::currentScene->sceneObjs.begin();
+			std::fstream read = std::fstream("h.dat", std::ios::in | std::ios::binary);
+			go->GetComponent<Transform>()->Deserialize(&read, 0);
+			read.close();
+			Console::Write("Dese1");
+			e = 0;
 		}
 
 
@@ -90,7 +113,6 @@ public:
 
 		//------------------------
 
-		//PostProcessing test
 		if (b) {
 			b = 0;
 			if (ae != nullptr) {
