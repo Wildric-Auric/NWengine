@@ -27,7 +27,7 @@ int8 Game::Run() {
 	//Initializing Game class
 	Game::FrameObject.AddComponent<Transform>();
 	RenderedTexture = Game::FrameObject.AddComponent<Sprite>();
-	RenderedTexture->container = Quad(iVec2(0, 0), 850, 640);
+	RenderedTexture->container = Quad(iVec2(0, 0), Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	MainLoop();
 
 	Shutdown();
@@ -41,6 +41,9 @@ void Game::MainLoop() {
 	double lastTime;
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
+
+	static GameObject go = GameObject();
+	static Camera* cam    = go.AddComponent<Camera>();
 
 	while (!glfwWindowShouldClose(Context::window)) {
 		Context::Clear();
@@ -57,16 +60,28 @@ void Game::MainLoop() {
 		//Final frame
 		RenderedTexture->texture = &Camera::ActiveCamera->fbo.RenderedImage;
 		
-		FrameObject.GetComponent<Transform>()->scale = fVec2(RenderedTexture->texture->size.x / RenderedTexture->container.width, 
-															 RenderedTexture->texture->size.y / RenderedTexture->container.height);
-		Context::SetViewPort(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
-		FrameObject.GetComponent<Transform>()->position = iVec2(Camera::ActiveCamera->position.x, Camera::ActiveCamera->position.y);
-		Context::SetViewPort((Context::WINDOW_WIDTH - RenderedTexture->texture->size.x) * 0.5,
-							Context::WINDOW_HEIGHT * 0.5 - RenderedTexture->texture->size.y * 0.5,
-							RenderedTexture->texture->size.x, RenderedTexture->texture->size.y); //TEMP
+		//FrameObject.GetComponent<Transform>()->scale = fVec2(RenderedTexture->texture->size.x / RenderedTexture->container.width, 
+		//													 RenderedTexture->texture->size.y / RenderedTexture->container.height);
+		
+		Context::Clear(0.0, 0.0, 0.0, 1.0);
+		FrameObject.GetComponent<Transform>()->scale = fVec2(1.0, 1.0);
 
+		fVec2 scale = FrameObject.GetComponent<Transform>()->scale;
+		FrameObject.GetComponent<Transform>()->position = iVec2(0, 0);
+
+		cam->viewPortSize.x = Camera::ActiveCamera->fbo.RenderedImage.size.x * scale.x; 
+		cam->viewPortSize.y = Camera::ActiveCamera->fbo.RenderedImage.size.y * scale.y;
+		Context::SetViewPort(Max<int>(Context::WINDOW_WIDTH - cam->viewPortSize.x, 0)*0.5, Max<int>(Context::WINDOW_HEIGHT - cam->viewPortSize.y, 0)*0.5, cam->viewPortSize.x, cam->viewPortSize.y);
+		cam->ChangeOrtho(cam->viewPortSize.x, cam->viewPortSize.y);
+
+		//Context::SetViewPort(0, 0, , 800);
+		//Context::SetViewPort(0, 0);
+		Camera* temp = Camera::ActiveCamera;
+		cam->Use();
+		Camera::ActiveCamera->Update();
 		FrameObject.Draw();
-
+		temp->Use();
+		
 		//Update screenSetTexture
 		glfwSwapBuffers(Context::window);
 		glfwPollEvents();
