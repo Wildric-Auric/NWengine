@@ -3,7 +3,6 @@
 #ifdef _WINDLL
 extern "C"
 {
-
 	int DllLoop() {
 		int frameCount = 0;
 		double currentTime;
@@ -21,8 +20,9 @@ extern "C"
 			Inputs::Process(Context::window);
 			Gui::Update();
 			Globals::uTime += Globals::deltaTime;
-			Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
-			Camera::ActiveCamera->Update();
+			if (Camera::ActiveCamera != nullptr)
+				Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
+			
 			Scene::currentScene->Update();
 
 			ImGui::Render();
