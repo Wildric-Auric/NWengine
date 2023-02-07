@@ -18,6 +18,9 @@ void Script::Gui() {
 		script = ScriptManager::CreateScript(filename, attachedObj); //TODO::Get if file is valid
 		ScriptManager::scriptList.insert(std::make_pair(filename, root));
 	}
+
+	if (this->script != nullptr)
+		this->script->Gui();
 }
 
 void Script::Update() {
