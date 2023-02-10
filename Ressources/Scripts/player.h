@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "Script.h"
 
 class player : public Scriptable {
 public:
@@ -12,9 +12,13 @@ public:
 		this->goc = goc;
 	};
 	~player() { delete this; };
-	//Users variable here:
-
 	void Start() {};
 	void Update();
+	void Gui() override;
+	void ShaderCode(void* sprite) override;
+	//Users variable here:
 
+private:
+	float speed		 = 100.0f;
+	float uniformRed = 1.0f;
 };

@@ -1,5 +1,4 @@
 #pragma once
-#include "glfw3.h"
 #include "Maths.h"
 
 #define INPUT_LEFT_X 0
@@ -27,7 +26,7 @@ public:
 				space,
 				usingJoystick;
 
-	static void Process(GLFWwindow* window);
+	static void Process(void* window);
 	static float joystickAxis[6];
 
 };

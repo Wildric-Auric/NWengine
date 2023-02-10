@@ -1,8 +1,11 @@
 #include "Context.h"
 #include "Globals.h"
+#include "GL/glew.h"
+#include "glfw3.h"
 #include <iostream>
 
-GLFWwindow* Context::window = nullptr;
+void* Context::window = nullptr;
+
 int Context::WINDOW_WIDTH =  850;
 int Context::WINDOW_HEIGHT = 640;
 
@@ -25,15 +28,15 @@ void Context::SetFullscreen(bool state) {
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
 	if (!state) {
-		glfwSetWindowMonitor(window, nullptr, 100, 100, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT, vidmode->refreshRate);
-		sizeCallBack(window, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
+		glfwSetWindowMonitor((GLFWwindow*)window, nullptr, 100, 100, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT, vidmode->refreshRate);
+		sizeCallBack((GLFWwindow*)window, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
 		return;
 	}
-	glfwSetWindowMonitor(window, monitor, 0, 0, vidmode->width, vidmode->height, vidmode->refreshRate);
-	sizeCallBack(window, vidmode->width, vidmode->height);
+	glfwSetWindowMonitor((GLFWwindow*)window, monitor, 0, 0, vidmode->width, vidmode->height, vidmode->refreshRate);
+	sizeCallBack((GLFWwindow*)window, vidmode->width, vidmode->height);
 }
 
-GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
+void* Context::InitContext(int scrWidth, int scrHeight)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,8 +50,8 @@ GLFWwindow* Context::InitContext(int scrWidth, int scrHeight)
 		std::cout << "Failed to init glfw window, ERROR: " <<glfwGetError(&buffer) << " " << buffer;
 		return nullptr;
 	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, sizeCallBack);
+	glfwMakeContextCurrent((GLFWwindow*)window);
+	glfwSetFramebufferSizeCallback((GLFWwindow*)window, sizeCallBack);
 
 	if (glewInit() != GLEW_OK)
 	{

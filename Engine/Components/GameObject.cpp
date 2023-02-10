@@ -3,7 +3,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include"GameObject.h"
+#include "Script.h"
 #include "Inputs.h"
 #include "Camera.h"
 #include "RessourcesLoader.h"
@@ -12,7 +12,6 @@
 #include "Shader.h"
 #include "Primitives.h"
 
-//Notice that uniforms sent to shaders here are shared by all of them, I should find a way to make this better
 void GameObject::Draw(int8 textureSlot) {
 	Sprite* sprite = GetComponent<Sprite>();
 
@@ -20,39 +19,41 @@ void GameObject::Draw(int8 textureSlot) {
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
 
-	fVec2 position = transform->position;
-	fVec2 scale = transform->scale;
-	
+	Scriptable temp;
+	Scriptable*	scriptable;
+	Script* script = GetComponent<Script>();
+	bool shouldDel = 0;
+	if ((script == nullptr) || (script->script == nullptr)) {
+		temp = Scriptable();
+		scriptable = &temp;
+	}
+	else
+		scriptable = script->script;
 
-	sprite->container.position = position;
-	sprite->shader->Use();
-	sprite->shader->SetUniform1f("uTime", Globals::uTime);
-	sprite->shader->SetVector2("uMouse", (float)Inputs::mousePosX, (float)(Inputs::mousePosY));
-	sprite->shader->SetUniform1i("uTex0", textureSlot);
-	sprite->shader->SetVector2("uResolution", (float) Context::NATIVE_WIDTH, (float) Context::NATIVE_HEIGHT);
-	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)position.x, (double)position.y, sprite->zbuffer));
-	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
-	sprite->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
+	scriptable->goc = this;
+	scriptable->ShaderCode(sprite);
 
 	sprite->texture->Bind(textureSlot);
+	sprite->container.position = transform->position;
 	sprite->container.Draw();
 };
 
+//Deprecated
 void GameObject::BasicDraw(int8 textureSlot) {
 
-	Sprite* sprite = GetComponent<Sprite>();
-	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
-	Transform* transform = GetComponent<Transform>();
-	if (transform == nullptr) transform = this->AddComponent<Transform>();
+	//Sprite* sprite = GetComponent<Sprite>();
+	//if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
+	//Transform* transform = GetComponent<Transform>();
+	//if (transform == nullptr) transform = this->AddComponent<Transform>();
 
-	fVec2 position = transform->position;
-	fVec2 scale = transform->scale;
+	//fVec2 position = transform->position;
+	//fVec2 scale = transform->scale;
+	//glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
+	//model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
+	//sprite->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
 
-	sprite->container.position = position;
-	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
-	model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
-	sprite->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
-	sprite->container.Draw();
+	//sprite->container.position = position;
+	//sprite->container.Draw();
 }
 int GameObject::numberOfGameObjects = 0;
 
@@ -70,7 +71,7 @@ void GameObject::Rename(std::string newName) {
 		}
 		if (br) break;
 	}
-	
+
 	if (n == 0) name = newName;
 	else name = newName + std::to_string(n);
 
@@ -117,9 +118,9 @@ GameComponent* GameObject::GetComponent(std::string type) {
 
 int GameObject::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
-	const char*	temp  = this->name.c_str();
+	const char* temp  = this->name.c_str();
 
-	WRITE_ON_BIN(data, temp , this->name.size(), sizeBuffer);
+	WRITE_ON_BIN(data, temp, this->name.size(), sizeBuffer);
 
 	for (std::map<std::string, GameComponent*>::iterator iter = this->components.begin(); iter != this->components.end(); iter++) {
 		iter->second->Serialize(data, 0);
@@ -132,12 +133,12 @@ int GameObject::Deserialize(std::fstream* data, int offset) {
 
 		data->read((char*)&sizeBuffer, sizeof(int));
 		if (sizeBuffer < 1) return 0;
-		char* name = new char[sizeBuffer+1];
+		char* name = new char[sizeBuffer + 1];
 		data->read(name, sizeBuffer);
 		name[sizeBuffer] = '\0';
 
 		GameComponent* gc = AddComponent(name);
-		
+
 		if (gc == nullptr) {
 			Scene::currentScene->AddObject(GameObject());
 			Scene::currentScene->sceneObjs.back().Rename(name);
@@ -149,3 +150,5 @@ int GameObject::Deserialize(std::fstream* data, int offset) {
 	}
 	return 2;
 }
+
+

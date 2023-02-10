@@ -7,9 +7,13 @@
 #include "Console.h"
 #include <string.h>
 
+static bool parseUniformLine(std::string* name, DataTypes* type) {
+
+};
+
 std::map<std::string, Shader> Shader::resList;
 
-std::pair<const char*, const char*> parseShader(const char* path)
+std::pair<const char*, const char*> Shader::parseShader(const char* path)
 {
 	std::string frag, vert = "";    //TODO:: Make it directly in the heap
 	uint8 current = 0;
@@ -17,9 +21,7 @@ std::pair<const char*, const char*> parseShader(const char* path)
 	for (std::string line; std::getline(file, line);)
 	{
 		if (line.find("//fragment shader") != -1)
-		{
 			current = 1;
-		}
 		else if (line.find("//vertex shader") != -1) current = 2;
 		if (current == 1) frag += line + '\n';
 		else if (current == 2) vert += line + '\n';

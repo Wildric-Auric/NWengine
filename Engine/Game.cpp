@@ -1,16 +1,18 @@
 #include "NWengine.h"
 #include "Game.h"
+#include "GL/glew.h"
+#include "glfw3.h"
 
 GameObject Game::FrameObject;
 Sprite* Game::RenderedTexture;
 
 int8 Game::Run() {
 
-	GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
+	GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	if (window == nullptr) return -1;
 
 	//init imgui
-	Gui::Init((int)window);
+	Gui::Init((void*)window);
 	//init OpenAL
 	if (!InitOpenAL()) return -1;
 
@@ -45,7 +47,7 @@ void Game::MainLoop() {
 	static GameObject go = GameObject();
 	static Camera* cam    = go.AddComponent<Camera>();
 
-	while (!glfwWindowShouldClose(Context::window)) {
+	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		Context::Clear();
 
 		Inputs::Process(Context::window);
@@ -83,7 +85,7 @@ void Game::MainLoop() {
 		temp->Use();
 		
 		//Update screenSetTexture
-		glfwSwapBuffers(Context::window);
+		glfwSwapBuffers((GLFWwindow*)Context::window);
 		glfwPollEvents();
 		//Calculate fps
 		if (Globals::DEBUG_MODE) {

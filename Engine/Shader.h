@@ -1,8 +1,7 @@
 #pragma once
-#include"glm/glm.hpp"
 #include <string>
 #include <map>
-#include <iostream>
+#include "Globals.h"
 
 #define SHADER_DEFAULT "Shaders\\Textured.shader"
 #define SHADER_POST_PROCESSING "Shaders\\PostProcessing.shader"
@@ -19,7 +18,9 @@ class Shader {
 		void SetUniform3f(const char* name, float x, float y, float z);
 		void SetVector2(const char* name, float value0, float value1);
 		void SetUniform1i(const char* name, const int);
+		std::map<std::string, DataTypes> uniforms;
+
 		static std::map<std::string, Shader> resList;
+		static std::pair<const char*, const char*> parseShader(const char* path);
 };
-std::pair<const char*, const char*> parseShader(const char* path);
 

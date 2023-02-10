@@ -14,7 +14,7 @@ public:
 	int width = 0, height = 0; //ReadOnly
 	Vector2<int> position;
 	Vector2<float> scale;
-	Quad(Vector2<float> position = Vector2<float>(0.0f,0.f),float width = 10.0f, float height = 10.0f);
+	Quad(Vector2<float> position = Vector2<float>(0.0f,0.f),float width = 1.0f, float height = 1.0f);
 	void Draw();
 	~Quad();
 };

@@ -1,8 +1,5 @@
 #pragma once
-#include"Maths.h"
-#include"Globals.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "GameObject.h"
 #include "FrameBuffer.h"
 
 class Camera : public GameComponent {

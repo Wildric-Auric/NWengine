@@ -1,6 +1,4 @@
 #pragma once
-#include <GL/glew.h>
-#include <glfw3.h>
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
@@ -14,7 +12,7 @@
 
 class Gui {
 public:
-	static void Init(uint64 window) {
+	static void Init(void* window) {
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window, true);

@@ -1,4 +1,6 @@
 #include "NWengine.h"
+#include "GL/glew.h"
+#include "glfw3.h"
 
 #ifdef _WINDLL
 extern "C"
@@ -17,7 +19,7 @@ extern "C"
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 			Context::Clear();
-			Inputs::Process(Context::window);
+			Inputs::Process((GLFWwindow*)Context::window);
 			Gui::Update();
 			Globals::uTime += Globals::deltaTime;
 			if (Camera::ActiveCamera != nullptr)
@@ -29,11 +31,11 @@ extern "C"
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapInterval(1);
-			glfwSwapBuffers(Context::window);
+			glfwSwapBuffers((GLFWwindow*)Context::window);
 			glfwPollEvents();
 
 			//Updating dll flag
-			if (glfwWindowShouldClose(Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
+			if (glfwWindowShouldClose((GLFWwindow*)Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
 
 			if (Globals::DEBUG_MODE) {
 				frameCount += 1;
@@ -52,8 +54,8 @@ extern "C"
 	}
 
 	__declspec(dllexport)  int DllRun() {
-		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
-		Gui::Init((int)window);
+		GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
+		Gui::Init((void*)window);
 		if (!InitOpenAL()) return -1;
 		RessourcesLoader::LoadDefaultRessources();
 		ScriptManager::LoadScriptList();
@@ -71,11 +73,11 @@ extern "C"
 
 #ifndef NW_DLL_ENGINE
 int NWengine::Run() {
-		GLFWwindow* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
+		GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
 
 		//init imgui
-		Gui::Init((int)window);
+		Gui::Init((void*)window);
 		//init OpenAL
 		if (!InitOpenAL()) return -1;
 
@@ -110,7 +112,7 @@ void NWengine::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
-	while (!glfwWindowShouldClose(Context::window)) {
+	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -118,7 +120,7 @@ void NWengine::MainLoop() {
 		//Clearing for the UI
 		Context::Clear();	
 
-		Inputs::Process(Context::window);
+		Inputs::Process((GLFWwindow*)Context::window);
 		Gui::Update();
 
 		Globals::uTime += Globals::deltaTime;
@@ -136,7 +138,7 @@ void NWengine::MainLoop() {
 
 		//Update screen
 		glfwSwapInterval(1);
-		glfwSwapBuffers(Context::window);
+		glfwSwapBuffers((GLFWwindow*)Context::window);
 		glfwPollEvents();
 		//Calculate fps
 		if (Globals::DEBUG_MODE) {

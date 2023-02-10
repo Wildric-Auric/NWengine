@@ -2,7 +2,7 @@
 #include<string>
 #include<map>
 #include "Utilities.h"
-#include "GameObject.h"
+#include "Script.h"
 
 
 class ScriptManager {

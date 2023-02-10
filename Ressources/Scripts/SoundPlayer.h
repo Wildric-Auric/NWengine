@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "Script.h"
 
 class SoundPlayer : public Scriptable {
 public:

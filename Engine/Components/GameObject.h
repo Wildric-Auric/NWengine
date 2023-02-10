@@ -7,18 +7,6 @@
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
 
-//Virtual
-//Deprecated
-class Drawable {
-public:
-	virtual void Draw(uint8_t slot = 0) {};
-};
-//Deprecated
-class Updatable {
-public:
-	virtual void Update() {};
-};
-
 class GameComponent: public GuiObject, public Serialized { //I've tried to do multiple inheritance on subclass of GameComponent 
 										//but casting from GameComponent* to GuiObject* messes up virtual functions, I will read more about it
 public:
@@ -27,7 +15,6 @@ public:
 	virtual void Start() {};
 	virtual ~GameComponent() {};
 };
-//------------------------------------
 
 class GameObject : public Serialized {
 private:
@@ -81,24 +68,3 @@ public:
 		components.erase(T::GetType());
 	}
 };
-
-
-
-
-class Scriptable : GuiObject {
-public:
-	GameObject* goc = nullptr;
-	Scriptable(GameObject* goc = nullptr, void* nws = nullptr) {
-		this->goc = goc;
-	};
-	std::string __nwname = "None"; //ReadOnly variables will have double underscore in the beginning
-	virtual ~Scriptable() {};
-	virtual void Start()  {};
-	virtual void Update() {};
-	virtual void Gui()    {};
-	virtual std::string GetName() { return __nwname; };
-	void* nws = nullptr;
-};
-
-
-

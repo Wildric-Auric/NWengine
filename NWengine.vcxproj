@@ -192,6 +192,7 @@
     <ClCompile Include="Engine\Gui\Console.cpp" />
     <ClCompile Include="Engine\Gui\NWGui.cpp" />
     <ClCompile Include="Engine\Reflection\GuiObject.h" />
+    <ClCompile Include="Engine\Rendering\Framebuffer.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
     <ClCompile Include="Engine\Components\ParticleSystem.cpp" />

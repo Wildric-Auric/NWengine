@@ -1,4 +1,6 @@
 #include "Inputs.h"
+#include "GL/glew.h"
+#include "glfw3.h"
 #include<iostream>
 #include <cstring>
 
@@ -11,8 +13,9 @@ double Inputs::mousePosY;
 
 float Inputs::joystickAxis[6] = {0.0f};
 
-void Inputs::Process(GLFWwindow* window)
+void Inputs::Process(void* window0)
 {
+	GLFWwindow* window = (GLFWwindow*)window0;
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
 	usingJoystick = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	const unsigned char* buttons = 0;

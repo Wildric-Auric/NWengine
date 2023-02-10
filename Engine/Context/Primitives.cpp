@@ -30,10 +30,9 @@ void Triangle::Draw() {
 
 
 
-Quad::Quad(Vector2<float> position,float width, float height) : position(0.0f, 0.0f), width(10), height(10),
-vertices{ 0.0f }
+Quad::Quad(Vector2<float> position,float width, float height)
 {
-	float vertices[20] = {
+    float vertices[20] = {
 		//VertexPos                //uv
 		-width / 2, -height / 2, 0.0f,    0.0f,0.0f,
 		 width / 2, -height / 2, 0.0f,    1.0f,0.0f,
@@ -43,7 +42,8 @@ vertices{ 0.0f }
 	this->width = width;
 	this->height = height;
 
-	this->position = position;
+	//this->position = position;
+
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);

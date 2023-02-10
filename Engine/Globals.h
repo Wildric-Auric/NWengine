@@ -36,6 +36,18 @@ typedef Matrix<3, 3, int>  iMat3;
 typedef Matrix<2, 2, float> fMat2;
 typedef Matrix<3, 3, float> fMat3;
 
+enum DataTypes {
+	NW_INT,
+	NW_FLOAT,
+	NW_DOUBLE,
+	NW_VEC2,    //For shaders
+	NW_VEC3,  
+	NW_IVEC2,
+	NW_IVEC3,
+	NW_FVEC2,
+	NW_FVEC3
+};
+
 
 class Globals {
 public:

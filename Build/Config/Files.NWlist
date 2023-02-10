@@ -9,6 +9,7 @@ Engine\\Text.cpp
 Engine\\STL\\NWstd.cpp
 Engine\\STL\\Parser.cpp
 Engine\\Rendering\\Camera.cpp
+Engine\\Rendering\\Framebuffer.cpp
 Engine\\Reflection\\Serializer.cpp
 Engine\\Gui\\Console.cpp
 Engine\\Gui\\NWGui.cpp
