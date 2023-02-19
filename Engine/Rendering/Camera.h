@@ -9,16 +9,17 @@ public:
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
 
-	iVec2 size;
-	iVec2 viewPortSize;
+	fVec2 size;
+	fVec2 viewPortSize;
+	fVec3 clearColor = fVec3(0.0,0.0, 0.0);
 	bool isActive = 0;
 
 	Camera() {};
 	Camera(GameObject* go);
 	GameObject* attachedObj;
 
-	void Capture(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
-	void CaptureWithPostProcessing(void* postProcessing, float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
+	void Capture();
+	//void CaptureWithPostProcessing(void* postProcessing, float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
 
 	void Update();
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
@@ -37,6 +38,4 @@ public:
 
 	int Serialize(std::fstream* data, int offset)    override; 
 	int Deserialize(std::fstream* data, int offset)  override;
-
-
 };
