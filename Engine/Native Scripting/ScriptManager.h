@@ -18,6 +18,7 @@ public:
 	static void LoadScriptList();
 	static bool CompileScripts(); //Should return 0 if action has failed
 	static bool CompileScript(std::string element);
+	static bool CompileScriptManager();
 };
 
 

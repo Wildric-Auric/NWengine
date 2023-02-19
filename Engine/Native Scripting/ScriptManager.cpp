@@ -1,21 +1,23 @@
 #include "ScriptManager.h"
 #include "Builder.h"
+
 Scriptable* ScriptManager::GetScriptFromDLL(std::string name, GameObject* go) {
 	//Deprecated, scripts are no longer dlls
-	const DllHandle h((name + ".dll").c_str());
-	if (!h.Get()) {
-		MessageBox(0, "Could not load DLL", "UnitCallDll", MB_OK);
-		return nullptr;
-	}
+	//const DllHandle h((name + ".dll").c_str());
+	//if (!h.Get()) {
+	//	MessageBox(0, "Could not load DLL", "UnitCallDll", MB_OK);
+	//	return nullptr;
+	//}
 
-	typedef Scriptable* (*scr)(GameObject*);
-	const scr func = (scr)(GetProcAddress(h.Get(), "GetScript"));
+	//typedef Scriptable* (*scr)(GameObject*);
+	//const scr func = (scr)(GetProcAddress(h.Get(), "GetScript"));
 
-	if (!func) {
-		MessageBox(0, "Can't Load Script", "UnitCallDll", MB_OK);
-		return nullptr;
-	}
-	return (*func)(go);
+	//if (!func) {
+	//	MessageBox(0, "Can't Load Script", "UnitCallDll", MB_OK);
+	//	return nullptr;
+	//}
+	//return (*func)(go);
+	return nullptr;
 };
 
 Scriptable* ScriptManager::GetScriptFromHeaderFile(std::string name, GameObject* go) {
@@ -79,6 +81,24 @@ bool ScriptManager::CompileScript(std::string element) {
 	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
 	Builder::IncludeDir.push_back(iter->second);
 	Builder::CompileInd(iter->second + iter->first + ".cpp", Globals::compiledScriptDir);
+	Exec("builder.bat");
+	return 1;
+}
+
+
+bool ScriptManager::CompileScriptManager() {
+	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
+	ScriptManager::SaveScriptList();
+	for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
+		Builder::objs.push_back(Globals::compiledScriptDir + iter->first + ".obj");
+	}
+	//Compile script manager
+	int size = Builder::objs.size();
+	Builder::InitScripts(Globals::scriptListPath, Globals::scriptManagerPath);
+	while (Builder::objs.size() > size)
+		Builder::objs.pop_back(); //Bad solution to refactor
+
+	Builder::CompileInd(Globals::scriptManagerPath, Globals::compiledScriptDir);
 	Exec("builder.bat");
 	return 1;
 }
