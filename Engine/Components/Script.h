@@ -1,6 +1,16 @@
 #pragma once
 #include "GameObject.h"
 
+#define	 SCRIPT_CONSTR(scr)						   \
+	GameObject* goc;                               \
+	std::string __nwname = #scr;                   \
+	std::string GetName() { return __nwname; };    \
+	static Scriptable* GetScript(GameObject* goc); \
+	scr(GameObject* goc) {                         \
+		this->goc = goc;                           \
+	};										       \
+	~scr() { delete this; };					
+
 class Scriptable : GuiObject {
 public:
 	GameObject* goc = nullptr;

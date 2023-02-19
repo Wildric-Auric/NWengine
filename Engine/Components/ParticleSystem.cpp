@@ -1,6 +1,8 @@
 //Memory leak?
 #include "ParticleSystem.h"
 #include "Scene.h"
+#include "imgui/imgui.h"
+#include "NWGui.h"
 
 ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
@@ -11,28 +13,36 @@ std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 void ParticleSystem::Update() {
 	clock += Globals::deltaTime;
 	prop.absoluteStartPosition = attachedObj->GetComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
-	if (clock >= emissionFrequency) Emit();
+	if ((clock >= emissionFrequency) && isActive) Emit();
 	auto it = enabled.begin();
 	while (it != enabled.end()) {
 		int index = *it;
 		Particle* particle = &pool[index];
-		if (particle->prop.speedVarDuration >= 0.0000001) {
+		if (particle->prop.speedVarDuration >= 0.01) {
 			double temp = particle->clock / particle->prop.speedVarDuration;
-			if (abs(temp) < 0.999995)
+			if (abs(temp) < 0.99)
 				particle->currentSpeed = lerp<float, double>(particle->prop.sSpeed, particle->prop.eSpeed,
 															temp);
 		}
 
-		if (particle->prop.scaleVarDuration >= 0.0000001) {
+		if (particle->prop.alphaVarDuration >= 0.01) {
+			double temp = particle->clock / particle->prop.alphaVarDuration;
+			if (abs(temp) < 0.99)
+				particle->currentAlpha = lerp<float, double>(particle->prop.sAlpha, particle->prop.eAlpha, temp);
+			else
+				particle->currentAlpha = particle->prop.eAlpha;
+		}
+
+		if (particle->prop.scaleVarDuration >= 0.01) {
 			double temp = particle->clock / particle->prop.scaleVarDuration;
-			if (abs(temp) < 0.9999995)
+			if (abs(temp) < 0.99)
 				particle->currentScale = lerpVector2<float, double>(particle->prop.sScale, particle->prop.eScale,
 											Vector2<double>(temp, temp));
 		}
 
-		if (particle->prop.directionVarDuration >= 0.0000001) {
+		if (particle->prop.directionVarDuration >= 0.01) {
 			double temp = particle->clock / particle->prop.directionVarDuration;
-			if (abs(temp) < 0.999995)
+			if (abs(temp) < 0.99)
 				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eDirection, 
 												Vector2<double>(temp, temp));
 		}
@@ -71,6 +81,7 @@ void ParticleSystem::Emit() {
 			pool[temp].prop = prop;
 			pool[temp].currentPosition = prop.sPosition;
 			pool[temp].currentScale = prop.sScale;
+			pool[temp].currentAlpha = prop.sAlpha;
 			pool[temp].currentSpeed = prop.sSpeed;
 			pool[temp].currentDirection = prop.sDirection;
 			pool[temp].isActive = 1;
@@ -110,6 +121,10 @@ void ParticleSystem::UpdateParticle(int index) {
 	if (transform == nullptr) transform = attachedObj->AddComponent<Transform>();
 	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
+
+	//Can't work like this, TODO::Add uniform call stack
+	pool[index].sprite->shader->Use();
+	pool[index].sprite->shader->SetUniform1f("uAlpha", pool[index].currentAlpha);
 }
 
 void Particle::Disable() {
@@ -124,49 +139,57 @@ void Particle::Enable() {
 	currentPosition = prop.sPosition;
 	currentScale = prop.sScale;
 	currentSpeed = prop.sSpeed;
+	currentAlpha = prop.sAlpha;
 	currentDirection = prop.sDirection;
 	isActive = 1;
 	go.AddToRender();
 }
 
 void ParticleSystem::Gui() {
+	ImGui::Checkbox("Active", &isActive);
 	if (ImGui::TreeNode("Particles properties")) {
-		NWGui::DragValue<float>("Lifetime", &prop.lifetime, ImGuiDataType_Float);
+		GUI_SEP
+		NWGui::DragValue("Lifetime", &prop.lifetime, ImGuiDataType_Float);
 		GUI_SEP;
-		NWGui::DragValue<int>("Lifedistance", &prop.lifedistance, ImGuiDataType_S32);
+		NWGui::DragValue("Lifedistance", &prop.lifedistance, ImGuiDataType_S32);
 		GUI_SEP;
-		NWGui::DragValue<float>("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
+		NWGui::DragValue("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
 		GUI_SEP;
-		NWGui::DragValue<float>("Starting direction", &prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		NWGui::DragValue("Starting direction", &prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
 		GUI_SEP;
-		NWGui::DragValue<float>("End direction", &prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		NWGui::DragValue("End direction", &prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
 		GUI_SEP;
-		NWGui::DragValue<float>("Direction variation duration", &prop.directionVarDuration, ImGuiDataType_Float);
-		GUI_SEP;
-
-		NWGui::DragValue<float>("Starting scale", &prop.sScale.x, ImGuiDataType_Float, 2);
-		GUI_SEP;
-		NWGui::DragValue<float>("End scale", &prop.eScale.x, ImGuiDataType_Float, 2);
-		GUI_SEP;
-		NWGui::DragValue<float>("Scale variation duration", &prop.scaleVarDuration, ImGuiDataType_Float);
+		NWGui::DragValue("Direction variation duration", &prop.directionVarDuration, ImGuiDataType_Float);
 		GUI_SEP;
 
-		NWGui::DragValue<float>("Starting speed", &prop.sSpeed, ImGuiDataType_Float);
+		NWGui::DragValue("Starting scale", &prop.sScale.x, ImGuiDataType_Float, 2);
 		GUI_SEP;
-		NWGui::DragValue<float>("End speed", &prop.eSpeed, ImGuiDataType_Float);
+		NWGui::DragValue("End scale", &prop.eScale.x, ImGuiDataType_Float, 2);
 		GUI_SEP;
-		NWGui::DragValue<float>("speed variation duration", &prop.speedVarDuration, ImGuiDataType_Float);
+		NWGui::DragValue("Scale variation duration", &prop.scaleVarDuration, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue("Starting Alpha", &prop.sAlpha, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue("End Alpha", &prop.eAlpha, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue("Alpha variation duration", &prop.alphaVarDuration, ImGuiDataType_Float);
+		GUI_SEP
+		NWGui::DragValue("Starting speed", &prop.sSpeed, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue("End speed", &prop.eSpeed, ImGuiDataType_Float);
+		GUI_SEP;
+		NWGui::DragValue("speed variation duration", &prop.speedVarDuration, ImGuiDataType_Float);
 		GUI_SEP; GUI_NEWLINE;
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("Emission properties")) {
-		NWGui::DragValue<double>("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
+		NWGui::DragValue("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
 		GUI_SEP;
-		NWGui::DragValue<uint16>("Emission quantity", &emissionQuantity, ImGuiDataType_U16);
+		NWGui::DragValue("Emission quantity", &emissionQuantity, ImGuiDataType_U16);
 		GUI_SEP;
 		NWGui::CheckBox("Recycle particles", &recycle);
 		GUI_SEP;
-		NWGui::DragValue<int>("Max particles(experimental)", &maxParticles, ImGuiDataType_S32);
+		NWGui::DragValue("Max particles(experimental)", &maxParticles, ImGuiDataType_S32);
 		ImGui::TreePop();
 	}
 }
@@ -178,6 +201,7 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
 
 	WRITE_ON_BIN(data,"ParticleSystem", 14,sizeBuffer);
+	WRITE_ON_BIN(data, &(isActive), sizeof(isActive), sizeBuffer);
 	//serializes particles prop
 	WRITE_ON_BIN(data, &(prop.lifetime), sizeof(prop.lifetime), sizeBuffer);
 	WRITE_ON_BIN(data, &(prop.lifedistance), sizeof(prop.lifedistance), sizeBuffer);
@@ -208,7 +232,7 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 
 int ParticleSystem::Deserialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
-
+	READ_FROM_BIN(data, &(isActive), sizeBuffer);
 	READ_FROM_BIN(data, &(prop.lifetime), sizeBuffer);
 	READ_FROM_BIN(data, &(prop.lifedistance), sizeBuffer);
 	READ_FROM_BIN(data, &(prop.sPosition.x), sizeBuffer);

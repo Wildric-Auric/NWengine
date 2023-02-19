@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include <deque>
 
+#define SHADER_PARTICLES_DEFAULT  "Shaders\\Particle.shader"
+#define TEXTURE_PARTICLES_DEFAULT "Ressources\\Images\\DefaultBox10x10.png"
 
 struct ParticleProperties {
 	fVec2 absoluteStartPosition = fVec2(0.0f, 0.0f); //Read only; buffer of position  used to pass beginning absolute position to particle
@@ -22,6 +24,11 @@ struct ParticleProperties {
 	fVec2 eScale = fVec2(1.0f,1.0f);
 	float scaleVarDuration = 0.0f;
 
+	float sAlpha = 1.0f;
+	float eAlpha = 0.0f;
+	float alphaVarDuration = 0.0f;
+
+
 	float sSpeed = 100.0f; //Pixels per sec
 	float eSpeed = 1.0f;
 	float speedVarDuration = 0.0f;
@@ -38,6 +45,7 @@ public:
 	fVec2 currentPosition;
 	fVec2 currentScale;
 	float currentSpeed;
+	float currentAlpha;
 	fVec2 currentDirection;
 
 	double clock = 0.0;
@@ -60,6 +68,7 @@ public:
 	ParticleSystem(GameObject* attachedObj);
     static std::map<GameObject*, ParticleSystem> componentList;
 
+	bool isActive = true;
 	std::deque<Particle> pool;
 	std::deque<int> disabled;
 	std::deque<int> enabled;
@@ -70,8 +79,8 @@ public:
 	int initNum = 5;
 	ParticleProperties prop;
 	bool recycle = 1;
-	std::string shader =	SHADER_DEFAULT;
-	std::string texture =   TEXTURE_DEFAULT;
+	std::string shader  =	SHADER_PARTICLES_DEFAULT;
+	std::string texture =   TEXTURE_PARTICLES_DEFAULT;
 
 	void Update();
 	void UpdateParticle(int index);

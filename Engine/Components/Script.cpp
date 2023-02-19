@@ -89,6 +89,8 @@ void Scriptable::ShaderCode(void* sprite) {
 
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)position.x, (double)position.y, sprite0->zbuffer));
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
+	model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0, 0, 1));
+
 	sprite0->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
 }
 

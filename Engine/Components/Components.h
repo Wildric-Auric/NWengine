@@ -1,6 +1,6 @@
 #pragma once
 #include "Script.h"
-#include "Collision.h"
+#include "Collider.h"
 #include "ParticleSystem.h"
 #include "Transform.h"
 #include "Sprite.h"

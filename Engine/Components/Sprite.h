@@ -19,6 +19,7 @@ public:
 	double zbuffer = 1.0; //ReadOnly
 
 	void SetTexture(std::string path, bool alpha = 1, bool repeat = 0);
+	void SetTexture(Texture* tex);
 	void SetShader(std::string path);
 	void SetSortingLayer(uint32 order);
 	void Gui() override;

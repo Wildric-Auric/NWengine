@@ -1,5 +1,6 @@
 #include "AudioEmitter.h"
 #include "Utilities.h"
+#include "imgui/imgui.h"
 
 std::map<GameObject*, AudioEmitter*> AudioEmitter::componentList;
 
@@ -62,7 +63,7 @@ void AudioEmitter::Gui() {
 		sound = new Sound(path);
 		//TODO::Check only the file name
 	}
-	NWGui::DragValue<int>("Volume", &this->volume, ImGuiDataType_S16, 1, 1, 0.0f, 100.0f);
-	NWGui::DragValue<float>("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
+	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S16, 1, 1, 0.0f, 100.0f);
+	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
 	NWGui::CheckBox("Loop", &this->isLooping);
 }

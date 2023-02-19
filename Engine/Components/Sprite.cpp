@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include "Utilities.h"
+#include "imgui/imgui.h"
 
 Sprite::Sprite(GameObject* go) {
 	this->go = go;
@@ -19,6 +20,11 @@ void Sprite::SetTexture(std::string path, bool alpha, bool repeat) {
 	container = Quad(iVec2(0, 0), texture->size.x, texture->size.y);
 }
 
+void Sprite::SetTexture(Texture* tex) {
+	if (tex->name == this->texture->name) return;
+	this->texture = tex;
+}
+
 void Sprite::SetShader(std::string path) {
 	RessourcesLoader::ReloadShader(path);
 	shader = &Shader::resList[path];
@@ -33,7 +39,7 @@ void Sprite::SetSortingLayer(uint32 order) {
 }
 
 void Sprite::Gui() {
-	if (NWGui::DragValue<uint32>("Layering Order", &sortingLayer, ImGuiDataType_U32, 1, 1.0f, 0.0f, 6000.0f))
+	if (NWGui::DragValue("Layering Order", &sortingLayer, ImGuiDataType_U32, 1, 1.0f, 0.0f, 6000.0f))
 		SetSortingLayer(sortingLayer);
 	ImGui::Separator();
 	if (NWGui::FileHolder("Texture", texture->name)) {
@@ -45,6 +51,8 @@ void Sprite::Gui() {
 		std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
 		if (path != "") SetShader(path);
 	}
+	if (ImGui::Button("Recompile Shader"))
+		SetShader(this->shader->name);
 	ImGui::Separator();
 }
 

@@ -22,7 +22,6 @@ void GameObject::Draw(int8 textureSlot) {
 	Scriptable temp;
 	Scriptable*	scriptable;
 	Script* script = GetComponent<Script>();
-	bool shouldDel = 0;
 	if ((script == nullptr) || (script->script == nullptr)) {
 		temp = Scriptable();
 		scriptable = &temp;
@@ -100,13 +99,14 @@ void GameObject::DeleteComponent(std::string typeName) {
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 
 GameComponent* GameObject::AddComponent(std::string type) {
-	ADD_COMPONENT(Transform, type);
-	ADD_COMPONENT(Sprite, type);
-	ADD_COMPONENT(ParticleSystem, type);
-	ADD_COMPONENT(AudioEmitter, type);
-	ADD_COMPONENT(AudioListener, type);
-	ADD_COMPONENT(Camera, type);
-	ADD_COMPONENT(Script, type);
+	ADD_COMPONENT(Transform         , type);
+	ADD_COMPONENT(Sprite            , type);
+	ADD_COMPONENT(ParticleSystem    , type);
+	ADD_COMPONENT(AudioEmitter      , type);
+	ADD_COMPONENT(AudioListener     , type);
+	ADD_COMPONENT(Camera			, type);
+	ADD_COMPONENT(Script            , type);
+	ADD_COMPONENT(Collider			, type);
 	return nullptr;
 };
 
