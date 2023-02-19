@@ -19,4 +19,9 @@ class Console {
 public:
 	static std::vector<ConsoleText> stack;
 	static void Write(const char* str, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
+	static void Write(std::string str, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
+	static void Write(int number, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
+	static void Write(float number, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
+	static void Write(double number, uint8 FLAG = CONSOLE_DEBUG_MESSAGE);
+	static void Clear();
 };
