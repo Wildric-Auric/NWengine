@@ -8,16 +8,18 @@ Engine\\Source.cpp
 Engine\\Text.cpp
 Engine\\STL\\NWstd.cpp
 Engine\\STL\\Parser.cpp
+Engine\\STL\\Utilities.cpp
 Engine\\Rendering\\Camera.cpp
 Engine\\Rendering\\Framebuffer.cpp
 Engine\\Reflection\\Serializer.cpp
 Engine\\Gui\\Console.cpp
 Engine\\Gui\\NWGui.cpp
+Engine\\Gui\\Gui.cpp
 Engine\\Gui\\StaticGuiVariable.cpp
 Engine\\Components\\Animator.cpp
 Engine\\Components\\AudioEmitter.cpp
 Engine\\Components\\AudioListener.cpp
-Engine\\Components\\Collision.cpp
+Engine\\Components\\Collider.cpp
 Engine\\Components\\GameObject.cpp
 Engine\\Components\\ParticleSystem.cpp
 Engine\\Components\\Physics.cpp
@@ -38,6 +40,7 @@ Engine\\Context\\Context.cpp
 Engine\\Context\\Inputs.cpp
 Engine\\Context\\Primitives.cpp
 Engine\\Context\\RessourcesLoader.cpp
+Engine\\Rendering\\Renderer.cpp
 Engine\\Context\\Texture.cpp
 dependencies\\vendor\\glm\\detail\\glm.cpp
 dependencies\\vendor\\imgui\\imgui.cpp

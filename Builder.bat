@@ -1,11 +1,10 @@
 @echo off
  if not defined DevEnvDir (call vcvars32)
 LINK "Compiled\\ScriptManager.obj"^
- "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x64\\EngineDll\\NWengine.lib"^
- "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x64\\EngineDll\\NWengine.obj"^
- "Compiled\\SoundPlayer.obj"^
+ "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x86\\Game\\Game.lib"^
+ "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x86\\Game\\Source.obj"^
  "Compiled\\player.obj"^
- /DLL /LIBPATH:"dependencies\\GLFW\\lib-vc2019"^
+ /LIBPATH:"dependencies\\GLFW\\lib-vc2019"^
  /LIBPATH:"dependencies\\GLEW\\lib\\Release\\Win32"^
  /LIBPATH:"dependencies\\freetype\\release static\\vs2015-2022\\win32"^
  /LIBPATH:"dependencies\\SND\\lib"^
@@ -28,4 +27,4 @@ LINK "Compiled\\ScriptManager.obj"^
  uuid.lib^
  odbc32.lib^
  odbccp32.lib^
- /OUT:C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\NWengine_temp.dll > log.txt
+ /OUT:C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\myGame.exe > log.txt

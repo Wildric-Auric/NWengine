@@ -6,7 +6,6 @@ layout(location = 1) in vec2 texCoord;
 
 uniform mat4 uMvp = mat4(1.0);
 uniform vec2 uResolution;
-uniform vec2 uMouse;
 
 out vec2 uv;
 out vec4 screenPos;
@@ -30,7 +29,7 @@ in vec4 screenPos;
 
 out vec4 FragColor;
 
-void main(){ 
+void main(){
     vec4 col = texture(uTex0, uv);
     if (col.a < 0.1) discard;
     FragColor = col;

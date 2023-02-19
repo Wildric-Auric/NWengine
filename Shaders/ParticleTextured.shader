@@ -5,8 +5,6 @@ layout(location = 0) in vec3 attribPos;
 layout(location = 1) in vec2 texCoord;
 
 uniform mat4 uMvp = mat4(1.0);
-uniform vec2 uResolution;
-uniform vec2 uMouse;
 
 out vec2 uv;
 out vec4 screenPos;
@@ -20,22 +18,18 @@ void main() {
 //fragment shader
 #version 330 core
 
-uniform float uTime;
 uniform sampler2D uTex0;
-uniform vec2 uResolution;
-uniform vec2 uMouse;
-uniform float repeat = 3.0;
+uniform float     uAlpha = 1.0;
+
 in vec2 uv;
 in vec4 screenPos;
 
 out vec4 FragColor;
 
-
 void main() {
-    vec2 uv1 = vec2(uv.x*repeat, uv.y);
-    vec2 center = vec2(0.5, 0.5);
-    vec4 col = texture(uTex0, uv1);
-    // Output to screen
-    FragColor = col;
+    vec4 sampled = texture(uTex0, uv);
+    FragColor = vec4(sampled.xyz, sampled.w * uAlpha);
 }
+
+
 
