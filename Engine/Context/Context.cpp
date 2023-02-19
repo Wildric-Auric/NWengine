@@ -6,13 +6,15 @@
 
 void* Context::window = nullptr;
 
-int Context::WINDOW_WIDTH =  850;
-int Context::WINDOW_HEIGHT = 640;
+int Context::WINDOW_WIDTH =  1080;
+int Context::WINDOW_HEIGHT = 720;
 
-int Context::NATIVE_WIDTH = 850;
-int Context::NATIVE_HEIGHT = 640;
+int Context::NATIVE_WIDTH = 1080;
+int Context::NATIVE_HEIGHT = 720;
 
 int Context::dllFlag = NW_KEEP_DLL_RUNNING;
+
+int Context::vSync	 = 1;
 
 void sizeCallBack(GLFWwindow* window, int width, int height)
 {
@@ -43,7 +45,6 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	window = glfwCreateWindow(scrWidth, scrHeight, "NWengine", NULL, NULL);
-
 	if (window == NULL)
 	{
 		const char* buffer = "";
@@ -59,7 +60,14 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 		return nullptr;
 	}
 	glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
+
 	return window;
+}
+
+void Context::Update() {
+		glfwSwapInterval(Context::vSync);
+		glfwSwapBuffers((GLFWwindow*)Context::window);
+		glfwPollEvents();
 }
 
 void Context::EnableBlend(bool status) {
