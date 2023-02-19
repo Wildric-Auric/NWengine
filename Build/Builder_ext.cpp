@@ -25,6 +25,16 @@ int main(int argc, const char* argv[]) {
 			Builder::PreprocessorMacros.push_back("NW_DLL_ENGINE"); //Funny story
 			Builder::Compile("Build\\\\temp\\\\");
 		}
+
+		else if (cur == "/CGame") {
+			Builder::IncludeDir = Builder::GetDirs("Build\\Config\\Additional include.NWlist");
+			Builder::objs = Builder::GetDirs("Build\\Config\\Files.NWlist");
+			Builder::PreprocessorMacros = Builder::GetDirs("Build\\Config\\Macros.NWlist");
+			Builder::PreprocessorMacros.push_back("NW_GAME_BUILD");
+
+			Builder::Compile("Build\\\\temp\\\\");
+		}
+
 		else if (cur == "/CDll") {
 			Builder::IncludeDir = Builder::GetDirs("Build\\Config\\Additional include.NWlist");
 			Builder::objs = Builder::GetDirs("Build\\Config\\Files.NWlist");
@@ -41,6 +51,12 @@ int main(int argc, const char* argv[]) {
 			Builder::objs.clear();
 			Builder::objs.push_back("Build\\temp\\*.obj");
 			Builder::Link("Build\\temp\\temp.exe");
+		}
+
+		else if (cur == "/Lib") {
+			Builder::objs.clear();
+			Builder::objs.push_back("Build\\temp\\*.obj");
+			Builder::GenLib("Build\\temp\\temp.lib");
 		}
 
 		else if (cur == "/LDll") {

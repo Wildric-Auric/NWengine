@@ -12,7 +12,7 @@ public:
 	static void Build();
 	static void CompileInd(std::string file, std::string outputDir); //Compile the cpp file passed to .obj
 	static void GenLib(std::string output);
-	static std::vector<std::string> GetDirs(std::string path);       //Pass .NWlist file TODO::Move it elsewhere?
+	static std::vector<std::string> GetDirs(std::string path);  //TODO::
 
 	static std::string runtimeLib;
 	static std::vector<std::string> PreprocessorMacros;
@@ -20,5 +20,15 @@ public:
 	static std::vector<std::string> IncludeDir;
 	static std::vector<std::string> staticLibs;
 	static std::vector<std::string> objs;
+
+#ifndef BUILDER_EXT
+	static void BuildGameRuntime();
+#endif
+
+#ifdef _WINDLL
+
+	static void CompileEngineDllRuntime();
+
+#endif
 	
 };

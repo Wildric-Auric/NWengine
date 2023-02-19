@@ -1,8 +1,20 @@
 #include <fstream>
+#include <map>
+
 #include "Builder.h"
 #include "Utilities.h"
 #include "Maths.h"
 
+#ifndef BUILDER_EXT
+
+#include "Globals.h"
+#include "ScriptManager.h"
+
+#endif
+
+#ifdef _WINDLL
+#include "Context.h"
+#endif
 
 std::vector<std::string> Builder::IncludeDir = {};
 
@@ -23,7 +35,7 @@ std::vector<std::string> Builder::PreprocessorMacros = {
     //_USRDLL and _WINDLL for DLL
 };
 
-std::string Builder::runtimeLib = "/MDd";
+std::string Builder::runtimeLib = "/MD"; //C runtime library Dynamically linked 
 
 void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
     *ofs << "@echo off\n";
@@ -159,7 +171,7 @@ void Builder::InitScripts(std::string scriptList, std::string scriptManager) {
             j++;
             continue;
         }
-        if (j!=1) *parts[min(j, 1)] += line + "\n";
+        if (j!=1) *parts[Min(j, 1)] += line + "\n";
     }
     ifs0.close();
     std::ofstream ofs0(scriptManager);
@@ -178,7 +190,58 @@ std::vector<std::string> Builder::GetDirs(std::string path) {
     return vec;
 };
 
-
 void Builder::Build() {
     //InitScripts();
 }
+
+
+//Should build external builder with preprocessor macro: BUILDER_EXT
+#ifndef BUILDER_EXT
+
+void Builder::BuildGameRuntime() {
+    //Linking scripts + ScriptManager + Game.lib
+    Builder::LibsDir.clear();
+    Builder::staticLibs.clear();
+    Builder::objs = { Globals::compiledScriptDir + "ScriptManager.obj", Globals::gameLibDir + "Game.lib", Globals::gameLibDir + "Source.obj"};
+
+
+    Builder::LibsDir = GetNWlist(Globals::compilationConfigDir + "Libs Dir.NWlist");
+    Builder::staticLibs = GetNWlist(Globals::compilationConfigDir + "Libs.NWlist");
+
+    for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
+        Builder::objs.push_back(Globals::compiledScriptDir + iter->first + ".obj");
+        Builder::IncludeDir.push_back(iter->second);
+    }
+    Builder::Link(Globals::gamePath, false);
+    Exec("Builder.bat");
+}
+
+#endif 
+    
+
+
+#ifdef _WINDLL
+
+void Builder::CompileEngineDllRuntime() {
+    //TODO::Error check
+    ScriptManager::SaveScriptList();
+    Builder::IncludeDir.clear();
+    Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
+    Builder::objs.clear();
+    Builder::LibsDir.clear();
+    Builder::LibsDir = GetNWlist(Globals::compilationConfigDir + "Libs Dir.NWlist");
+    Builder::staticLibs = GetNWlist(Globals::compilationConfigDir + "Libs.NWlist");
+    //Link NWengine.lib + script Objs + script manager obj to a Dll
+    Builder::objs = { Globals::compiledScriptDir + "ScriptManager.obj", Globals::engineLibDir + "NWengine.lib", Globals::engineLibDir + "NWengine.obj" };
+    
+    ScriptManager::CompileScriptManager();
+
+    Exec("builder.bat"); //TODO::output result on an imgui window
+    Builder::Link(Globals::dllDir + "NWengine_temp.dll", 1);
+
+    Exec("builder.bat");
+
+    Context::dllFlag = NW_RELOAD_DLL;
+}
+
+#endif
