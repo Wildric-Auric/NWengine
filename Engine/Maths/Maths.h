@@ -7,6 +7,15 @@
 #define PI 3.14159265359
 #define ONEDIV180 0.00555555555
 
+
+inline float DegToRad(float degree) {
+	return degree * PI * ONEDIV180;
+}
+
+
+
+
+
 template<typename T>
 class Vector2 {
 public:
@@ -16,6 +25,10 @@ public:
 
 	Vector2<float> normalize();
 	float magnitude();
+	T Dot(Vector2 const& vec1);
+	Vector2 Project(Vector2 const& vec1);
+	Vector2 Rotate(float const& angle); //In degree
+
 	Vector2 operator + (Vector2 const& vec1);
 	Vector2 operator + (T const& num);
 	Vector2 operator - (Vector2 const& vec1);
@@ -46,7 +59,23 @@ float Vector2<T>::magnitude() {
 	return pow(x * x + y * y, 0.5);
 }
 
+template<typename T>
+T Vector2<T>::Dot(Vector2 const& vec1) {
+	return x * vec1.x + y * vec1.y;
+};
 
+template<typename T>
+//Vec1 should be normalized
+Vector2<T> Vector2<T>::Project(Vector2 const& vec1) {
+	return Dot(vec1) * vec1;
+}
+
+template<typename T> 
+Vector2<T> Vector2<T>::Rotate(float const& angle) {
+	float angle0 = DegToRad(angle);
+	return Vector2<T>(cos(angle0) * x - sin(angle0) * y, 
+					  sin(angle0) * x + cos(angle0) * y);
+}
 template<typename T>
 Vector2<T>::Vector2(T x, T y) {
 	Vector2::x = x;
@@ -116,7 +145,7 @@ T* Vector2<T>::operator [] (int index) {
 
 
 template<typename T> 
-int sign(T number) {
+int Sign(T number) {
 	if (number < 0) return -1;
 		return 1;
 }
@@ -148,6 +177,9 @@ public:
 
 	Vector3<float> normalize();
 	float magnitude();
+	T Dot(Vector3 const& vec1);
+
+	Vector3 Project(Vector3 const& vec1);
 
 	Vector3 operator + (Vector3 const& vec1);
 	Vector3 operator + (T const& num);
@@ -166,7 +198,16 @@ template<typename T>
 float Vector3<T>::magnitude() {
 	return pow(x * x + y * y + z * z,0.5);
 }
+template<typename T>
+T Vector3<T>::Dot(Vector3 const& vec1) {
+	return x * vec1.x + y * vec1.y + z * vec1.z;
+};
 
+template<typename T>
+//Vec1 should be normalized
+Vector3<T> Vector3<T>::Project(Vector3 const& vec1) {
+	return vec1; //TODO::
+}
 
 template<class T>
 Vector3<T>::Vector3(T x, T y, T z) {
@@ -267,7 +308,7 @@ void Matrix<n, m, T>::operator += (T const& num) {
 
 template<uint8_t n, uint8_t m, typename T>
 Matrix<n,m,T> Matrix<n, m, T>::operator * (T const& num) {
-    Matrix<n,m,T> result = Matrix<n,m,T>(coeff);
+	Matrix<n,m,T> result = Matrix<n,m,T>(coeff);
 	for (uint8_t i = 0; i < n * m; i++) {
 		result.coeff[i] *= num;
 	};
@@ -377,7 +418,7 @@ T Cbezier(T source, T target, T point1, T point2, T1 percent) {
 template<typename T, typename T1>
 Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point1, Vector2<T> point2, Vector2<T1> percent) {
 	return Vector2<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
-				      Cbezier(source.y, target.y, point1.y, point2.y, percent.y));
+					  Cbezier(source.y, target.y, point1.y, point2.y, percent.y));
 	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
 }
 
@@ -388,14 +429,10 @@ Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector2<T> point
 					  Cbezier(source.z, target.z, point1.z, point2.z, percent.z));
 }
 
+
+
+
 template<typename T>
 T Det2(Vector2<T> a, Vector2<T> b) {
 	return a.x * b.y - a.y * b.x;
 }
-
-inline float DegToRad(float degree) {
-	return degree * PI * ONEDIV180;
-}
-
-
-
