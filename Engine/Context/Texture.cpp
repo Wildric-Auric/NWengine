@@ -6,12 +6,17 @@
 
 std::map<std::string, Texture> Texture::resList;
 
-Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat) {
+Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat, bool genMipMap) {
 	size = Vector2<int>(width, height);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	//Downscaling parameter
+	if (genMipMap)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	else
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//Upscaling parameter
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	if (repeat) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -27,8 +32,8 @@ Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat) 
 	else
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
 
-
-	glGenerateMipmap(GL_TEXTURE_2D);
+	if (genMipMap)
+		glGenerateMipmap(GL_TEXTURE_2D);
 }
 void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(GL_TEXTURE0 + slot);
