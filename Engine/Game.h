@@ -14,9 +14,10 @@
 #include "Context.h"
 #include "RessourcesLoader.h"
 #include "Camera.h"
+#include "Renderer.h"
 #include "Scene.h"
 #include "Audio.h"
-
+#include "Components.h"
 
 class Game {
 public:

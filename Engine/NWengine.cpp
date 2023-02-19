@@ -12,6 +12,10 @@ extern "C"
 		double deltaTimeSum = 0;
 		lastTime = glfwGetTime();
 
+		GameObject renderObj = GameObject();
+		Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
+		Renderer::currentRenderer = Renderer::defaultRenderer;
+
 		Context::dllFlag = NW_KEEP_DLL_RUNNING;
 		while (Context::dllFlag == NW_KEEP_DLL_RUNNING) {
 
@@ -23,9 +27,12 @@ extern "C"
 			Gui::Update();
 			Globals::uTime += Globals::deltaTime;
 			if (Camera::ActiveCamera != nullptr)
-				Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
-			
-			Scene::currentScene->Update();
+				Camera::ActiveCamera->Capture();
+
+			if (Scene::currentScene != nullptr)
+				Scene::currentScene->Update();
+
+			Renderer::currentRenderer->CaptureOnCamFrame();
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -61,8 +68,7 @@ extern "C"
 		ScriptManager::LoadScriptList();
 		Context::EnableBlend();
 		Context::EnableDepthTest();
-		Scene* scene0 = new Scene("scene0");
-		scene0->LoadScene();
+		(Scene::currentScene = new Scene("scene0"))->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
 		return Context::dllFlag;
@@ -88,13 +94,13 @@ int NWengine::Run() {
 		//Context settings
 
 		Context::EnableBlend();
-
-		Context::EnableDepthTest();
+		//Context::EnableDepthTest();
 		
 		////Initialization finished
-		//TODO::UI for scene load ans serialization
-		Scene* scene0 = new Scene("scene0");
-		scene0->LoadScene();
+
+		(Scene::currentScene = new Scene("scene0"))->LoadScene();
+		
+		
 		
 		NWengine::MainLoop();
 
@@ -112,6 +118,10 @@ void NWengine::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
+	GameObject renderObj = GameObject();
+	Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
+	Renderer::currentRenderer = Renderer::defaultRenderer;
+
 	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		// ImGui
 		ImGui_ImplOpenGL3_NewFrame();
@@ -119,27 +129,28 @@ void NWengine::MainLoop() {
 		ImGui::NewFrame();
 		//Clearing for the UI
 		Context::Clear();	
-
 		Inputs::Process((GLFWwindow*)Context::window);
 		Gui::Update();
 
-		Globals::uTime += Globals::deltaTime;
-
-		//Drawing shapes
+		//Updating camera framebuffer
 		if (Camera::ActiveCamera != nullptr) {
-			Camera::ActiveCamera->Capture(0.0, 0.0, 0.1);
+			Camera::ActiveCamera->Capture();
 		}
 
-		Scene::currentScene->Update(); //Leak
+		//Updating Renderer camera framebuffer
+		Renderer::currentRenderer->CaptureOnCamFrame();
+
+		//Updating scene objects
+		if (Scene::currentScene != nullptr)
+			Scene::currentScene->Update();
 
 		//Render Im::Gui
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		//Update screen
-		glfwSwapInterval(1);
-		glfwSwapBuffers((GLFWwindow*)Context::window);
-		glfwPollEvents();
+		//Update window and capturing inputs
+		Context::Update();
+
 		//Calculate fps
 		if (Globals::DEBUG_MODE) {
 			frameCount += 1;
@@ -159,6 +170,8 @@ void NWengine::MainLoop() {
 
 void NWengine::Shutdown() {
 		delete Scene::currentScene;
+		delete Renderer::defaultRenderer;
+
 		ScriptManager::SaveScriptList();
 		DestroyOpenAL();
 		ImGui_ImplOpenGL3_Shutdown();

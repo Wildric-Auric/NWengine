@@ -67,4 +67,6 @@ public:
 	static std::string compilationConfigDir;
 	static std::string compiledScriptDir;
 	static std::string engineLibDir;
+	static std::string gamePath;
+	static std::string gameLibDir;
 };

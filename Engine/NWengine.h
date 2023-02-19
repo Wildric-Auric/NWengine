@@ -1,6 +1,5 @@
 #pragma once
 
-
 /*
 
 
@@ -34,8 +33,10 @@
 #include "Context.h"
 #include "RessourcesLoader.h"
 #include "Camera.h"
+#include "Renderer.h"
 #include "Scene.h"
-#include "Audio.h"
+#include "Components.h"
+#include "ScriptManager.h"
 
 namespace NWengine {
 	int Run();
