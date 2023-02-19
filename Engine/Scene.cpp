@@ -117,8 +117,6 @@ void Scene::Save() {
 }
 
 void Scene::LoadScene() {
-
-	currentScene = this;
 	sceneObjs.clear(); 
 	std::fstream data(std::string("Scenes\\") + this->name + ".NWscene", std::ios::binary | std::ios::in);
 
@@ -133,7 +131,6 @@ void Scene::LoadScene() {
 		
 	data.read((char*)&sizeBuffer, sizeof(int));
 	if (sizeBuffer < 1) {
-		delete[] name;
 		data.close();
 		return;
 	}
