@@ -20,6 +20,11 @@ public:
 		}
 
 		ImGui::Begin("Hierarchy", &isActive, ImGuiWindowFlags_MenuBar);
+		if (Scene::currentScene == nullptr) {
+			ImGui::End();
+			return;
+		}
+
 		ImGui::OpenPopupOnItemClick("createordelete", ImGuiPopupFlags_MouseButtonRight);
 		if (ImGui::BeginPopupContextWindow("createordelete")) {
 	

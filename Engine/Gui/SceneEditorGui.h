@@ -15,11 +15,12 @@ public:
 		if (!isActive) return;
 		if (!f) {
 			go = GameObject();
-			cam = Camera(&go);
+			cam = Camera(&go); //URGENT TODO::Handle this in a renderer class
 			f = 1;
 		};
 		cam.Update();
-		cam.Capture(0.1f, 0.0f, 0.4f, 1.0f);
+		cam.clearColor = fVec3(0.1f, 0.0f, 0.4f);
+		cam.Capture();
 
 		ImGui::Begin("Scene Editor", &isActive, ImGuiWindowFlags_MenuBar);
 

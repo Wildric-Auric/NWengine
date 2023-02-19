@@ -15,7 +15,15 @@ public:
 
 		if (!isActive) return;
 
+
 		ImGui::Begin("Inspector", &isActive);
+
+		if (Scene::currentScene == nullptr) {
+			ImGui::End();
+			return;
+		}
+
+		
 
 		GameObject* go = nullptr;
 

@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Components.h"
 #include "Texture.h"
-#include "PostProcessing.h"
+#include "Renderer.h"
 
 #define SCENE_VIEW_PLAY_ICON "Ressources\\Images\\Icons\\Play.png"
 #define SCENE_VIEW_NEXT_ICON "Ressources\\Images\\Icons\\Next.png"
@@ -24,13 +24,10 @@ public:
 		ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
 		if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
 		
-		uint32 texture = Camera::ActiveCamera->fbo.RenderedImage.texture;
-		PostProcessing* pp = Camera::ActiveCamera->attachedObj->GetComponent<PostProcessing>();
+		Camera* renderCam = Renderer::currentRenderer->attachedObj->GetComponent<Camera>();
 
+		uint32 texture = renderCam->fbo.RenderedImage.texture;
 
-
-
-		if (pp != nullptr) texture = pp->fbo.RenderedImage.texture;
 
 		uint32 playBut = RessourcesLoader::LoadTexture(SCENE_VIEW_PLAY_ICON)->texture;
 		if (Globals::PLAY_MODE) {
@@ -63,7 +60,7 @@ public:
 
 		ImGui::Image((void*)(intptr_t)
 			texture,
-			ImVec2(Camera::ActiveCamera->fbo.RenderedImage.size.x, Camera::ActiveCamera->fbo.RenderedImage.size.y),
+			ImVec2(renderCam->size.x, renderCam->size.y),
 			ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::End();
 	}

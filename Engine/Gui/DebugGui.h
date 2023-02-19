@@ -17,126 +17,25 @@
 #include "Builder.h"
 
 #include "ScriptManagerGui.h"
+#include "Collider.h"
 
 class DebugGui {
 public:
 	static bool isActive;
 	static void Show() {
-		if (!isActive) return;
-		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
-		ImGui::Text("fps = %f", Globals::fps);
-		NWGui::DragValue<int>("Cam pos", &SceneEditorGui::cam.position.x, ImGuiDataType_S32, 2);
-		NWGui::DragValue<float>("Zoom", &SceneEditorGui::cam.zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
+
 		
-
-		//DragFloat("Zoom", &SceneEditorGui::cam.zoom, 0.1, 0.0, 10.0);
-		static std::vector<std::string> vec;
-
-		static ParticleSystem* ps = nullptr;
-		static bool b = 0;
-		static int a = 0;
-		static bool c = 0;
-		static bool d = 0;
-		static bool e = 0;
-		static Script* ee = nullptr;
-		static AudioEmitter* ae = nullptr;
-		static AudioListener* al = nullptr;
-		static GameObject obj = GameObject();
-		static bool fs = 0;
-		NWGui::DragValue<int>("Flag", &a, ImGuiDataType_S32, 1, 0.2f, 0, 4);
-		ImGui::Checkbox("Stop music", &b);
-		ImGui::Checkbox("CompileScripts", &d);
-		ImGui::Checkbox("Deser", &e);
+		if (!isActive) return;
 
 
-		if (ImGui::Checkbox("fullscreen", &fs)) {
-			Context::SetFullscreen(fs);
-		};
 
-		if (d) {
-			ScriptManager::CompileScripts();
-			d = 0;
-		}
+		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 
-		if (e) {
-			GameObject* go = &*Scene::currentScene->sceneObjs.begin();
-			std::fstream read = std::fstream("h.dat", std::ios::in | std::ios::binary);
-			go->GetComponent<Transform>()->Deserialize(&read, 0);
-			read.close();
-			Console::Write("Dese1");
-			e = 0;
-		}
+		NWGui::DragValue("Stretch", &Renderer::currentRenderer->strechCoeff.x, ImGuiDataType_Float, 2, 0.1, 0.0f, 2.0f);
 
-
-		if (al) {
-			al->Update();
-		}
-		if (ImGui::Checkbox("Play music ", &c)) {
-			if (c) {
-				c = 0;
-				
-				if (ae == nullptr) {
-					ae = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioEmitter>();
-					ae->sound = new Sound("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Sounds\\Mystery.wav");
-					ae->isLooping = 1;
-				}
-				if (al == nullptr)
-					al = &*(Scene::currentScene->sceneObjs.begin())->AddComponent<AudioListener>();
-
-				ae->sound->Play();
-				Console::Write(std::to_string(ae->sound->isPlaying).c_str()); //TODO::Write accepting other types
-				
-				// Serializer s = Serializer();
-				//s.GenerateMeta("C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.h", "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.hpp");
-				/*c = 0;
-				ps = Scene::currentScene->sceneObjs.back().AddComponent<ParticleSystem>();
-				ps->prop.lifetime = 10.0f;	
-				ps->prop.sDirection = fVec2(0.0, 1.0);
-
-				ps->prop.sScale = fVec2(0.0, 0.0);
-				ps->prop.eScale = fVec2(0.3, 0.3);
-				ps->prop.scaleVarDuration = 3.0f;
-				ps->prop.sDirection = fVec2(1.0f, 0.0f);
-				ps->prop.eDirection = fVec2(0.0f, 1.0f);
-				ps->prop.directionVarDuration = 3;
-				ps->emissionFrequency = 0.1;
-				ps->prop.lifetime = 1000;
-				ps->prop.lifedistance = 2000;*/
-			}
-		};
-
-		if (ps != nullptr) {
-			ps->Update();
-		}
-
-		GameObject* go = nullptr;
-
-		//------------------------
-
-		if (b) {
-			b = 0;
-			if (ae != nullptr) {
-				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
-				ae->sound->Stop();
-				Console::Write(std::to_string(ae->sound->isPlaying).c_str());
-			}
-			/*for (auto go = Scene::currentScene->sceneObjs.begin(); go!= Scene::currentScene->sceneObjs.end(); go++) {
-				if ( go->name == std::string("Warrior")) {
-					PostProcessing* pp = go->AddComponent<PostProcessing>();
-					pp->SetUp(go->GetComponent<Camera>()->size);
-					break;
-				}
-			}*/
-		}
-		//testing isRendered
-
-
-		//-------------------------
-
-		ImGui::Separator();
 		ImGui::ShowDemoWindow();
 		ImPlot::ShowDemoWindow();
-		static dVec2 point = dVec2(0.0, 0.0);
+		static dVec2 point =  dVec2(0.0, 0.0);
 		static dVec2 point0 = dVec2(1.0, 0.0);
 		static double xx[1000];
 		static double yy[1000];
@@ -151,7 +50,6 @@ public:
 			ImPlot::PlotLine("bezier", xx, yy, 1000, ImPlotLineFlags_Segments);
 			ImPlot::EndPlot();
 		}
-		static ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGui::End();
 	}
 };
