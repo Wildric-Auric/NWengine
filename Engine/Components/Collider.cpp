@@ -88,12 +88,11 @@ bool Collider::isColliding(Collider* other, fVec2* depthBuffer) {
 
 	if (depthBuffer == nullptr)
 		depthBuffer = &temp;
-
-	bool sat0 = Sat(other, &b0);
 	fVec2 dir = (this->GetPosition() - other->GetPosition()).normalize();
-	bool sat  = other->Sat(this, &b1);
-	if (!sat || !sat0)
+
+	if (!other->Sat(this, &b1) || !Sat(other, &b0))
 		return false;
+
 	if (b0.magnitude() < b1.magnitude())
 		*depthBuffer = b0 * Sign<float>(dir.Dot(b0));
 	else
