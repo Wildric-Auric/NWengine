@@ -25,7 +25,14 @@ public:
 			i++;
 		}
 
+		if (ImGui::Button("Compile All")) {
+			ScriptManager::CompileScripts();
+		};
+
 		ImGui::OpenPopupOnItemClick("ScriptManagerPopup", ImGuiPopupFlags_MouseButtonRight);
+
+		ImGui::End();
+
 		if (ImGui::BeginPopupContextWindow("ScriptManagerPopup") && selected != -1 ) {
 			if (ImGui::Selectable("CompileScript")) {
 				ScriptManager::CompileScript(selected0);
@@ -36,12 +43,5 @@ public:
 			};
 			ImGui::EndPopup();
 		}
-
-		if (ImGui::Button("Compile All")) {
-			ScriptManager::CompileScripts();
-		};
-
-
-		ImGui::End();
 	}
 };
