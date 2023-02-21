@@ -1,3 +1,4 @@
+
 #pragma once
 #include <string>
 #include <map>
@@ -22,5 +23,7 @@ class Shader {
 
 		static std::map<std::string, Shader> resList;
 		static std::pair<const char*, const char*> parseShader(const char* path);
+
+		void Delete();
 };
 
