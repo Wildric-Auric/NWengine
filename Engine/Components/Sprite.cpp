@@ -26,7 +26,7 @@ void Sprite::SetTexture(Texture* tex) {
 }
 
 void Sprite::SetShader(std::string path) {
-	RessourcesLoader::ReloadShader(path);
+	RessourcesLoader::LoadShader(path);
 	shader = &Shader::resList[path];
 }
 
@@ -52,7 +52,7 @@ void Sprite::Gui() {
 		if (path != "") SetShader(path);
 	}
 	if (ImGui::Button("Recompile Shader"))
-		SetShader(this->shader->name);
+		RessourcesLoader::ReloadShader(this->shader->name);
 	ImGui::Separator();
 }
 
