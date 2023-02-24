@@ -29,11 +29,11 @@ public:
 	void AddToRender();
 	void StopRendering();
 	void Draw(int8 textureSlot = 0);
-	void BasicDraw(int8 textureSlot = 0);
 	void Rename(std::string newName);
     GameObject();
 	~GameObject();
 	void DeleteComponent(std::string typeName);
+	void DeleteComponents();
 
 	int Serialize(std::fstream* data, int offset);
 	int Deserialize(std::fstream* data, int offset);

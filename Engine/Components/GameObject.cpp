@@ -1,7 +1,5 @@
 #include <GL/glew.h>
 #include <glfw3.h>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 #include "Script.h"
 #include "Inputs.h"
@@ -33,27 +31,9 @@ void GameObject::Draw(int8 textureSlot) {
 	scriptable->ShaderCode(sprite);
 
 	sprite->texture->Bind(textureSlot);
-	sprite->container.position = transform->position;
 	sprite->container.Draw();
 };
 
-//Deprecated
-void GameObject::BasicDraw(int8 textureSlot) {
-
-	//Sprite* sprite = GetComponent<Sprite>();
-	//if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
-	//Transform* transform = GetComponent<Transform>();
-	//if (transform == nullptr) transform = this->AddComponent<Transform>();
-
-	//fVec2 position = transform->position;
-	//fVec2 scale = transform->scale;
-	//glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
-	//model = glm::scale(model, glm::vec3(sign(scale.x), sign(scale.y), 1.0f));   //Flip image if should flip  
-	//sprite->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
-
-	//sprite->container.position = position;
-	//sprite->container.Draw();
-}
 int GameObject::numberOfGameObjects = 0;
 
 void GameObject::Rename(std::string newName) {
@@ -95,6 +75,12 @@ void GameObject::DeleteComponent(std::string typeName) {
 	if (components.find(typeName) == components.end()) return;
 	delete components[typeName];
 	components.erase(typeName);
+}
+
+void GameObject::DeleteComponents() {
+	for (std::map<std::string, GameComponent*>::iterator component = components.begin(); component != components.end(); component++) {
+		delete component->second;
+	}
 }
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 
