@@ -13,6 +13,13 @@ Build/Data/Builder.exe
 Build/Data/build.exe
 Build/Data/Builder.bat
 
+*.exe
+*.dll 
+*.bat 
+*.exp
+*.ini 
+*.txt 
+*.lib 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
