@@ -123,8 +123,8 @@ void ParticleSystem::UpdateParticle(int index) {
 	pool[index].transform->scale = pool[index].currentScale;
 
 	//Can't work like this, TODO::Add uniform call stack
-	pool[index].sprite->shader->Use();
-	pool[index].sprite->shader->SetUniform1f("uAlpha", pool[index].currentAlpha);
+	/*pool[index].sprite->shader->Use();
+	pool[index].sprite->shader->SetUniform1f("uAlpha", pool[index].currentAlpha);*/
 }
 
 void Particle::Disable() {
@@ -263,7 +263,9 @@ ParticleSystem::~ParticleSystem() {
 	//TODO::Better solution
 	for (int i = 0; i < pool.size(); i++) {
 		pool[i].Disable();
+		pool[i].go.DeleteComponents();
 	}
+
 	auto it = Scene::currentScene->drawList.begin();
 	while (it != Scene::currentScene->drawList.end()) {
 		if (((*it) == nullptr) || !(*it)->isRendered) {
