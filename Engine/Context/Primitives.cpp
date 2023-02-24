@@ -14,7 +14,7 @@ Triangle::Triangle() {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBindVertexArray(VAO);
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -30,20 +30,18 @@ void Triangle::Draw() {
 
 
 
-Quad::Quad(Vector2<float> position,float width, float height)
+Quad::Quad(float width, float height)
 {
-    float vertices[20] = {
+    vertices = {
 		//VertexPos                //uv
-		-width / 2, -height / 2, 0.0f,    0.0f,0.0f,
-		 width / 2, -height / 2, 0.0f,    1.0f,0.0f,
-		-width / 2,  height / 2, 0.0f,    0.0f,1.0f,
-		 width / 2 , height / 2, 0.0f,    1.0f,1.0f,
+		-0.5, -0.5, 0.0f,    0.0f,0.0f,
+		 0.5, -0.5, 0.0f,    1.0f,0.0f,
+		-0.5,  0.5, 0.0f,    0.0f,1.0f,
+		 0.5,  0.5, 0.0f,    1.0f,1.0f,
 	};
 	this->width = width;
 	this->height = height;
-
-	//this->position = position;
-
+	
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -51,7 +49,7 @@ Quad::Quad(Vector2<float> position,float width, float height)
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -65,16 +63,25 @@ Quad::Quad(Vector2<float> position,float width, float height)
 };
 
 
-Quad::~Quad() {
-	//glDeleteBuffers(1, &VAO);
-	//glDeleteBuffers(1, &EBO);
-	//glDeleteBuffers(1, &VBO);
-}
+
+Quad::~Quad() {}
 
 void Quad::Draw() {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+#include "iostream"
+
+void Quad::Delete() {
+	//glDeleteBuffers(1, &EBO);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteBuffers(1, &VAO);
+}
+
+void Quad::UpdateSize(float width, float height) {
+	this->width  = width;
+	this->height = height;
+};
 
 
 

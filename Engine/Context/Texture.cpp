@@ -50,3 +50,7 @@ void Texture::UpdateTexture(int width, int height, uint8* texRes, unsigned int s
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 }
+
+void Texture::Delete() {
+	glDeleteTextures(1, &this->texture);
+}

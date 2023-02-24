@@ -7,6 +7,7 @@
 class ConsoleGui {
 public:
 	static bool isActive;
+	static void Init() {};
 	static void Show() {
 		if (!isActive) return;
 		ImGui::Begin("Console", &isActive, ImGuiWindowFlags_MenuBar);

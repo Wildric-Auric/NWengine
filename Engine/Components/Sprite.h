@@ -1,3 +1,4 @@
+
 #pragma once
 #include "GameObject.h"
 #include "RessourcesLoader.h"
@@ -12,8 +13,9 @@ public:
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
 	Sprite() {};
 	Sprite(GameObject* go);
+	~Sprite();
 	Shader* shader = &Shader::resList[SHADER_DEFAULT];
-	Quad container = Quad(iVec2(0), Texture::resList[TEXTURE_DEFAULT].size.x, Texture::resList[TEXTURE_DEFAULT].size.y); //ReadOnly
+	Quad container = Quad(Texture::resList[TEXTURE_DEFAULT].size.x, Texture::resList[TEXTURE_DEFAULT].size.y); //ReadOnly
 	GameObject* go;
 	uint32 sortingLayer = 0; //ReadOnly
 	double zbuffer = 1.0; //ReadOnly

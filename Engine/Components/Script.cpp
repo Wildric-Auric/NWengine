@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "Sprite.h"
+#include "RuntimeManager.h"
+
 
 Script::Script(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
@@ -33,7 +35,7 @@ void Script::Update() {
 	if (this->script == nullptr) return;
 	this->script->Update();
 #else
-	if (!Globals::PLAY_MODE) return;
+	if (!RuntimeManager::__currentMode == EngineMode::PLAY_MODE) return;
 	if (this->script == nullptr) return;
 	this->script->Update();
 #endif
@@ -88,7 +90,7 @@ void Scriptable::ShaderCode(void* sprite) {
 	sprite0->shader->SetVector2("uResolution", (float)Context::NATIVE_WIDTH, (float)Context::NATIVE_HEIGHT);
 
 	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)position.x, (double)position.y, sprite0->zbuffer));
-	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
+	model = glm::scale(model, glm::vec3(scale.x * sprite0->container.width, scale.y * sprite0->container.height, 1.0f));
 	model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0, 0, 1));
 
 	sprite0->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);

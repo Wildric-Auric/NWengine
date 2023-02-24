@@ -15,6 +15,7 @@ public:
 	Vector2<int> size;
 	Texture(){};
 	Texture(int width, int height, uint8* texRes, bool alpha = true, bool repeat = false, bool genMipMap = true);
+	void Delete();
 	void Bind(unsigned int slot);
 	void UpdateTexture(int width, int height, uint8* texRes,unsigned int slot, bool alpha = 1);
 	//The UpdateTexture method was added so I can use glReadPixels

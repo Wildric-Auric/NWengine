@@ -12,6 +12,7 @@
 #include "Scene.h"
 #include "Sprite.h"
 
+#include <iostream>
 std::map<std::string, Image> Image::resList;
 
 

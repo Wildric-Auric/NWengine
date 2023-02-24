@@ -17,7 +17,7 @@ void Sprite::SetTexture(std::string path, bool alpha, bool repeat) {
 	if (path == this->texture->name) return;
 	RessourcesLoader::LoadTexture(path, alpha, repeat);
 	texture = &Texture::resList[path];
-	container = Quad(iVec2(0, 0), texture->size.x, texture->size.y);
+	container.UpdateSize(texture->size.x, texture->size.y);
 }
 
 void Sprite::SetTexture(Texture* tex) {
@@ -91,3 +91,7 @@ int Sprite::Deserialize(std::fstream* data, int offset) {
 
 	return 0;
 };
+
+Sprite::~Sprite() { 
+	this->container.Delete();   //Weird behaviour on runtime texture change
+}
