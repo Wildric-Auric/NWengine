@@ -20,6 +20,15 @@ void Gui::Init(void* window) {
 	static ImGuiIO& io = ImGui::GetIO();
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.Fonts->AddFontFromFileTTF("Ressources/fonts/arial.ttf", 16.0f);
+
+
+	SceneViewGui::Init();
+	DebugGui::Init();
+	HierarchyGui::Init();
+	InspectorGui::Init();
+	SceneEditorGui::Init();
+	ConsoleGui::Init();
+	ScriptManagerGui::Init();
 }
 
 
@@ -58,9 +67,14 @@ void Gui::Update() {
 			if (ImGui::MenuItem("Build game")) {
 				Builder::BuildGameRuntime();
 			}
-
 			ImGui::EndMenu();
 		}
+
+		if (ImGui::BeginMenu("Scene")) {
+			if (ImGui::MenuItem("Save"))	Scene::currentScene->Save(); //TODO::Not save during
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 	}
 

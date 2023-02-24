@@ -5,6 +5,8 @@
 #include "Components.h"
 #include "Texture.h"
 #include "Renderer.h"
+#include "RuntimeManager.h"
+
 
 #define SCENE_VIEW_PLAY_ICON "Ressources\\Images\\Icons\\Play.png"
 #define SCENE_VIEW_NEXT_ICON "Ressources\\Images\\Icons\\Next.png"
@@ -17,20 +19,20 @@ class SceneViewGui {
 
 public:
 	static bool isActive;
-
+	static void Init() {};
 	static void Show() {
 		if (!isActive) return;
 
 		ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
 		if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
-		
+	
 		Camera* renderCam = Renderer::currentRenderer->attachedObj->GetComponent<Camera>();
 
 		uint32 texture = renderCam->fbo.RenderedImage.texture;
 
 
 		uint32 playBut = RessourcesLoader::LoadTexture(SCENE_VIEW_PLAY_ICON)->texture;
-		if (Globals::PLAY_MODE) {
+		if (RuntimeManager::__currentMode == EngineMode::PLAY_MODE) {
 			playBut = RessourcesLoader::LoadTexture(SCENE_VIEW_STOP_ICON)->texture;
 		}
 
@@ -40,8 +42,14 @@ public:
 		if (ImGui::ImageButton((void*)(intptr_t)
 			playBut,
 			ImVec2(30, 30),
-			ImVec2(0, 1), ImVec2(1, 0))) {
-			Globals::PLAY_MODE = 1 - Globals::PLAY_MODE;
+			ImVec2(0, 1), ImVec2(1, 0))) 
+		{
+
+			if (RuntimeManager::__currentMode == EngineMode::PLAY_MODE)
+				RuntimeManager::switchMode(EngineMode::EDIT_MODE);
+
+			else if (RuntimeManager::__currentMode == EngineMode::EDIT_MODE)
+				RuntimeManager::switchMode(EngineMode::PLAY_MODE);
 		}
 
 		ImGui::SameLine();
@@ -60,7 +68,8 @@ public:
 
 		ImGui::Image((void*)(intptr_t)
 			texture,
-			ImVec2(renderCam->size.x, renderCam->size.y),
+			ImVec2(renderCam->viewPortSize.x, 
+				   renderCam->viewPortSize.y),
 			ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::End();
 	}

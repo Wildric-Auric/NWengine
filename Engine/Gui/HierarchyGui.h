@@ -10,6 +10,7 @@ class HierarchyGui {
 public:
 	static bool isActive;
 	static int16 selected;
+	static void Init() {};
 	static void Show() {
 		static int16 renaming = -1;
 		static char str0[128] = "new GameObject";

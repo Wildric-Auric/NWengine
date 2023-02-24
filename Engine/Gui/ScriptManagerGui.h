@@ -6,6 +6,7 @@ class ScriptManagerGui {
 
 public:
 	static bool isActive;
+	static void Init() {}
 	static void Show() {
 		static int selected				= -1;
 		static std::string	selected0   = "";
@@ -30,18 +31,27 @@ public:
 		};
 
 		ImGui::OpenPopupOnItemClick("ScriptManagerPopup", ImGuiPopupFlags_MouseButtonRight);
+		if (ImGui::BeginPopupContextWindow("ScriptManagerPopup")) {
+			if (selected == -1) {
+				ImGui::CloseCurrentPopup();
+				ImGui::EndPopup();
+			}
+			else {
+				if (ImGui::Selectable("CompileScript")) {
+					ScriptManager::CompileScript(selected0);
+				}
+				else if (ImGui::Selectable("Delete")) {
+					if (ScriptManager::scriptList.find(selected0) != ScriptManager::scriptList.end())
+						ScriptManager::scriptList.erase(selected0);
+				}
+				ImGui::EndPopup();
+			}
+
+		}
+
 
 		ImGui::End();
 
-		if (ImGui::BeginPopupContextWindow("ScriptManagerPopup") && selected != -1 ) {
-			if (ImGui::Selectable("CompileScript")) {
-				ScriptManager::CompileScript(selected0);
-			};
-			if (ImGui::Selectable("Delete")) {
-				if (ScriptManager::scriptList.find(selected0) != ScriptManager::scriptList.end())
-						ScriptManager::scriptList.erase(selected0);
-			};
-			ImGui::EndPopup();
-		}
+		
 	}
 };

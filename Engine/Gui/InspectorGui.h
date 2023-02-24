@@ -11,6 +11,7 @@
 class InspectorGui {
 public:
 	static bool isActive;
+	static void Init() {};
 	static void Show() {
 
 		if (!isActive) return;

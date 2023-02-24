@@ -22,6 +22,7 @@
 class DebugGui {
 public:
 	static bool isActive;
+	static void Init() {}
 	static void Show() {
 
 		
@@ -32,6 +33,8 @@ public:
 		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
 
 		NWGui::DragValue("Stretch", &Renderer::currentRenderer->strechCoeff.x, ImGuiDataType_Float, 2, 0.1, 0.0f, 2.0f);
+		NWGui::DragValue("CamPos", &Renderer::currentRenderer->attachedObj->GetComponent<Camera>()->position, ImGuiDataType_Float, 2, 1.0f , -300.0f, 300.0f);
+
 
 		ImGui::ShowDemoWindow();
 		ImPlot::ShowDemoWindow();

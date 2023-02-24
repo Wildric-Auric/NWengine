@@ -17,6 +17,3 @@ bool ConsoleGui::isActive			= 1;
 bool ScriptManagerGui::isActive		= 0;
 
 int16 HierarchyGui::selected = -1;
-Camera SceneEditorGui::cam;
-GameObject SceneEditorGui::go;
-bool SceneEditorGui::f = 0;   // I hate this variable more than all my exes;  TODO::find a better solution (reminds me GMS scripting btw)
