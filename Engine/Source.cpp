@@ -1,4 +1,3 @@
-
 #ifndef _WINDLL	
 
 	#ifdef NW_GAME_BUILD

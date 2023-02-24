@@ -1,7 +1,7 @@
 #pragma once
-#include "Maths.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "Maths.h"  
+#include <string>
+
 
 //#define NW_DLL_ENGINE       //comment this line if you want either dll or independent exe as output
 #define NW_KEEP_DLL_RUNNING  1
@@ -49,15 +49,20 @@ enum DataTypes {
 };
 
 
+enum EngineMode {
+	PLAY_MODE,
+	EDIT_MODE
+};
+
+
 class Globals {
 public:
 	static double fps;
 	static double deltaTime;      //Read only in everyfile except mainloops
 	//Consts
 	static const float SCREENRATIO;
-	static const bool DEBUG_MODE;
-	static bool PLAY_MODE;
-	//Uniforms
+
+
 	static float uTime;
 	//Paths
 	static std::string scriptListPath;

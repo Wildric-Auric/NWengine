@@ -1,3 +1,4 @@
+
 #pragma once
 #include "GameObject.h"
 #include<list>
@@ -15,7 +16,9 @@ public:
 	Scene(const char* name);
 	~Scene();
 	void LoadScene();
+	void Start();
 	void Update();
+	void SetUp(); //Sets up needed static variables and other things
 	void Draw();
 	void Save();
 	static bool GuiActive;

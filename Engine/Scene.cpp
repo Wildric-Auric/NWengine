@@ -10,7 +10,7 @@
 #include <Components.h>
 #include <NWstd.h>
 #include "Animator.h"
-
+#include "Camera.h"
 
 Scene::Scene(const char* name) {
 	this->name = _strdup(name);
@@ -157,16 +157,23 @@ void Scene::LoadScene() {
 static uint16 ind = 0; //Indentation
 
 Scene::~Scene() {
-	Save();
 	for (std::list<GameObject>::iterator it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
 		for (auto pair : it->components) 
 			delete (GameComponent*)pair.second;
 	}
 }
 
+void Scene::Start() {	
+	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+		for (std::map<std::string, GameComponent*>::iterator iter = obj->components.begin(); iter != obj->components.end(); iter++) {
+			iter->second->Start();
+		}
+	}
+}
+
 void Scene::Update() {
-	for (GameObject obj : sceneObjs) {
-		for (std::map<std::string, GameComponent*>::iterator iter = obj.components.begin(); iter != obj.components.end(); iter++) {
+	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+		for (std::map<std::string, GameComponent*>::iterator iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Update();
 		}
 	}
@@ -176,6 +183,14 @@ bool Scene::GuiActive = false;
 Scene* Scene::currentScene = nullptr;
 
 
-void Scene::Gui() {
-
+void Scene::SetUp() {
+	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+		std::map<std::string, GameComponent*>::iterator iter = obj->components.find("Camera");
+		if (iter == obj->components.end())
+			continue;
+		((Camera*)iter->second)->Use();
+		break;
+	}
 }
+
+void Scene::Gui() {}
