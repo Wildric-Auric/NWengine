@@ -1,7 +1,6 @@
 #pragma once
-#include <iostream>
 #include <cmath>
-
+#include <cstdint>
 
 
 #define PI 3.14159265359
