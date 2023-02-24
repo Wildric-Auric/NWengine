@@ -44,14 +44,12 @@ extern "C"
 			//Updating dll flag
 			if (glfwWindowShouldClose((GLFWwindow*)Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
 
-			if (Globals::DEBUG_MODE) {
-				frameCount += 1;
-				deltaTimeSum += Globals::deltaTime;
-				if (frameCount == 60) {
-					Globals::fps = 60.0 / deltaTimeSum;
-					deltaTimeSum = 0;
-					frameCount = 0;
-				}
+			frameCount += 1;
+			deltaTimeSum += Globals::deltaTime;
+			if (frameCount == 60) {
+				Globals::fps = 60.0 / deltaTimeSum;
+				deltaTimeSum = 0;
+				frameCount = 0;
 			}
 			currentTime = glfwGetTime();
 			Globals::deltaTime = currentTime - lastTime;
@@ -67,7 +65,7 @@ extern "C"
 		RessourcesLoader::LoadDefaultRessources();
 		ScriptManager::LoadScriptList();
 		Context::EnableBlend();
-		Context::EnableDepthTest();
+		SceneEditor::Init();
 		(Scene::currentScene = new Scene("scene0"))->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
@@ -94,7 +92,8 @@ int NWengine::Run() {
 		//Context settings
 
 		Context::EnableBlend();
-		//Context::EnableDepthTest();
+
+		SceneEditor::Init();
 		
 		////Initialization finished
 
@@ -152,15 +151,14 @@ void NWengine::MainLoop() {
 		Context::Update();
 
 		//Calculate fps
-		if (Globals::DEBUG_MODE) {
-			frameCount += 1;
-			deltaTimeSum += Globals::deltaTime;
-			if (frameCount == 60) {
-				Globals::fps = 60.0 / deltaTimeSum;
-				deltaTimeSum = 0;
-				frameCount = 0;
-			}
+		frameCount += 1;
+		deltaTimeSum += Globals::deltaTime;
+		if (frameCount == 60) {
+			Globals::fps = 60.0 / deltaTimeSum;
+			deltaTimeSum = 0;
+			frameCount = 0;
 		}
+
 		currentTime = glfwGetTime();
 		Globals::deltaTime = currentTime - lastTime;
 		lastTime = currentTime; //Well it's negligeable operation
@@ -171,6 +169,7 @@ void NWengine::MainLoop() {
 void NWengine::Shutdown() {
 		delete Scene::currentScene;
 		delete Renderer::defaultRenderer;
+		delete SceneEditor::cam;
 
 		ScriptManager::SaveScriptList();
 		DestroyOpenAL();

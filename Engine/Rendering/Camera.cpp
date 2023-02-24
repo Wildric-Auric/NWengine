@@ -37,10 +37,13 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 	if ((sizeX == size.x) && (sizeY == size.y)) return;
 	size.x         = sizeX;
 	size.y         = sizeY;
-	viewPortSize.x = sizeX; //TODO::viewPortSize is deprecated, delete that variable
-	viewPortSize.y = sizeY;
 
-	projectionMatrix = glm::ortho(- sizeX * 0.5f, sizeX *0.5f, -sizeY * 0.5f, sizeY * 0.5f);
+	viewPortSize.x = sizeX;
+	viewPortSize.y = sizeY;
+	fbo.Delete();
+	fbo = FrameBuffer(sizeX, sizeY);
+
+	projectionMatrix = glm::ortho(- sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
 }
 
 Camera* Camera::ActiveCamera = nullptr;
@@ -48,7 +51,7 @@ Camera* Camera::ActiveCamera = nullptr;
 #include "Sprite.h"
 void Camera::Update() {
 		//TODO::Optimize this update
-		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(float)position.x, -(float)position.y, 0.0f));
+		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-position.x, -position.y, 0.0f));
 		viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 1.0f));
 		viewMatrix = glm::rotate(viewMatrix, DegToRad(rotation), glm::vec3(0,0,1));
 }
@@ -75,10 +78,14 @@ void Camera::Gui() {
 		}
 	};
 		
-	NWGui::DragValue("Camera Position", &position.x, ImGuiDataType_S32, 2);
+	NWGui::DragValue("Camera Position", &position.x, ImGuiDataType_Float, 2, 1.0f);
 	NWGui::DragValue("Camera Rotation", &rotation, ImGuiDataType_Float, 1);
 	NWGui::DragValue("Camera Zoom", &zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 100.0f);
 	NWGui::DragValue("Clearing color", &clearColor.x, ImGuiDataType_Float, 3, 0.1, 0.0f, 1.0f);
+}
+
+Camera::~Camera() {
+	this->fbo.Delete();
 }
 
 int Camera::Serialize(std::fstream* data, int offset) {

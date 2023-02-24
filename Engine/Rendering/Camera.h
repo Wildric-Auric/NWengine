@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "FrameBuffer.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 class Camera : public GameComponent {
 public:
@@ -16,6 +18,7 @@ public:
 
 	Camera() {};
 	Camera(GameObject* go);
+	~Camera();
 	GameObject* attachedObj;
 
 	void Capture();
@@ -26,7 +29,7 @@ public:
 	void ChangeOrtho(float sizeX, float sizeY);
 	void MoveTo(Vector2<int> target, float interpolationTime);
 	void Use();
-	Vector2<int> position;
+	fVec2 position = fVec2(0.0f,0.0f);
 	float rotation = 0.0f;
 	float zoom = 1.0;
 

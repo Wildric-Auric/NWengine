@@ -42,8 +42,8 @@ void Game::MainLoop() {
 	double deltaTimeSum = 0;
 	lastTime = glfwGetTime();
 
-	static GameObject go = GameObject();
-	static Camera* cam    = go.AddComponent<Camera>();
+	if (Scene::currentScene != nullptr)
+		Scene::currentScene->Start();
 
 	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		Context::Clear();
@@ -53,7 +53,8 @@ void Game::MainLoop() {
 		Globals::uTime += Globals::deltaTime;
 
 		//Drawing shapes
-		Scene::currentScene->Update();
+		if (Scene::currentScene != nullptr)
+			Scene::currentScene->Update();
 
 		if (Camera::ActiveCamera != nullptr) {
 			Camera::ActiveCamera->Update();
@@ -64,15 +65,14 @@ void Game::MainLoop() {
 		//Update screen
 		Context::Update();
 		//Calculate fps
-		if (Globals::DEBUG_MODE) {
-			frameCount += 1;
-			deltaTimeSum += Globals::deltaTime;
-			if (frameCount == 60) {
-				Globals::fps = 60.0 / deltaTimeSum;
-				deltaTimeSum = 0;
-				frameCount = 0;
-			}
+		frameCount += 1;
+		deltaTimeSum += Globals::deltaTime;
+		if (frameCount == 60) {
+			Globals::fps = 60.0 / deltaTimeSum;
+			deltaTimeSum = 0;
+			frameCount = 0;
 		}
+
 		currentTime = glfwGetTime();
 		Globals::deltaTime = currentTime - lastTime;
 		lastTime = currentTime; //Well it's negligeable operation

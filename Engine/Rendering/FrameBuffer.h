@@ -11,4 +11,5 @@ public:
 	FrameBuffer(uint16 sizeX = Context::NATIVE_WIDTH, uint16 sizeY = Context::NATIVE_HEIGHT);
 	void Bind();
 	void Unbind();
+	void Delete();
 };

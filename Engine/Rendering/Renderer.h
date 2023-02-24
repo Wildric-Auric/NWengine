@@ -5,8 +5,6 @@
 #include "Camera.h"
 
 class Renderer : public GameComponent {
-private:
-	Camera* inputCamera; //Read only
 public:
 	static std::string GetType() { return "Renderer"; }
 	Renderer() {};

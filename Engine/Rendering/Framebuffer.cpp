@@ -23,3 +23,9 @@ void FrameBuffer::Bind() {
 void FrameBuffer::Unbind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void FrameBuffer::Delete() {
+	glDeleteRenderbuffers(1, &this->renderbuffer);
+	glDeleteFramebuffers(1,  &this->framebuffer);
+	RenderedImage.Delete();
+}
