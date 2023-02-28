@@ -19,6 +19,9 @@ class Shader {
 		void SetUniform3f(const char* name, float x, float y, float z);
 		void SetVector2(const char* name, float value0, float value1);
 		void SetUniform1i(const char* name, const int);
+		void SetUniformArrayf(const char* name, float* value, int size);
+		void SetUniformArrayi(const char* name, int* value, int size);
+
 		std::map<std::string, DataTypes> uniforms;
 
 		static std::map<std::string, Shader> resList;

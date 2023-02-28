@@ -95,6 +95,14 @@ void Shader::SetUniform3f(const char* name, float x, float y, float z)
 	glUniform3f(glGetUniformLocation(shaderProgram, name), x, y, z);
 };
 
+void Shader::SetUniformArrayf(const char* name, float* value, int size) {
+	glUniform1fv(glGetUniformLocation(shaderProgram, name), size, value);
+}
+
+void Shader::SetUniformArrayi(const char* name, int* value, int size) {
+	glUniform1iv(glGetUniformLocation(shaderProgram, name), size, value);
+}
+
 
 void Shader::Delete() {
 	glDeleteProgram(this->shaderProgram);
