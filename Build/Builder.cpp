@@ -4,6 +4,7 @@
 #include "Builder.h"
 #include "Utilities.h"
 #include "Maths.h"
+#include <iostream>
 
 #ifndef BUILDER_EXT
 
