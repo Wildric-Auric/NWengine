@@ -5,7 +5,7 @@
 
 class Scene {
 public:
-	const char* name;
+	std::string name;
 	std::list<GameObject> sceneObjs;
 	std::list<GameObject*> drawList;
 	void AddObject(GameObject goc);
@@ -13,7 +13,7 @@ public:
 	void DeleteObject(std::string name);
 	GameObject* GetGameObject(std::string name);
 	void SortScene();
-	Scene(const char* name);
+	Scene(std::string name);
 	~Scene();
 	void LoadScene();
 	void Start();
