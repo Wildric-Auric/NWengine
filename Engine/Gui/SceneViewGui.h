@@ -24,7 +24,7 @@ public:
 		if (!isActive) return;
 
 		ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
-		if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
+		//if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
 	
 		Camera* renderCam = Renderer::currentRenderer->attachedObj->GetComponent<Camera>();
 
