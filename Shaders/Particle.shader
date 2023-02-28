@@ -27,7 +27,7 @@ in vec4 screenPos;
 out vec4 FragColor;
 
 void main() {
-    FragColor = vec4(1.0,1.0,1.0, uAlpha);
+    FragColor = vec4(0.9,0.9,0.0, uAlpha);
 }
 
 

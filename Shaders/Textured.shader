@@ -23,7 +23,6 @@ uniform float uTime;
 uniform sampler2D uTex0;
 uniform vec2 uResolution;
 uniform vec2 uMouse;
-
 in vec2 uv;
 in vec4 screenPos;
 

@@ -52,6 +52,6 @@ vec3 perlin(vec2 uv0, float freq) {
 }
 
 void main(){ 
-    vec4 col = vec4(vec3(perlin(uv,uPerlin)), 1.0);
+    vec4 col = vec4(vec3(0.0,1.0,0.0), 1.0);
     FragColor = col;
 }
