@@ -95,6 +95,10 @@ int NWengine::Run() {
 
 		SceneEditor::Init();
 		
+		Batch::ComputeIndices();
+		
+		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
+	
 		////Initialization finished
 
 		(Scene::currentScene = new Scene("scene0"))->LoadScene();
