@@ -28,7 +28,7 @@ public:
 	bool isRendered = 1; //READONLY
 	void AddToRender();
 	void StopRendering();
-	void Draw(int8 textureSlot = 0);
+	uint32 Draw(int8 textureSlot = 0);  //Returns layer in which it has been drawn
 	void Rename(std::string newName);
     GameObject();
 	~GameObject();

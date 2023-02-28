@@ -53,6 +53,9 @@ void Sprite::Gui() {
 	}
 	if (ImGui::Button("Recompile Shader"))
 		RessourcesLoader::ReloadShader(this->shader->name);
+
+	ImGui::Checkbox("isBatched", &isBatched);
+
 	ImGui::Separator();
 }
 

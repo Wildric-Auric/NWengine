@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include <deque>
 
-#define SHADER_PARTICLES_DEFAULT  "Shaders\\Particle.shader"
+#define SHADER_PARTICLES_DEFAULT  "Shaders\\ParticleBatched.shader"
 #define TEXTURE_PARTICLES_DEFAULT "Ressources\\Images\\DefaultBox10x10.png"
 
 struct ParticleProperties {

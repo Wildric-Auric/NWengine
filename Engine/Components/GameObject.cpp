@@ -9,13 +9,53 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "Primitives.h"
+#include "Batch.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
-void GameObject::Draw(int8 textureSlot) {
+uint32 GameObject::Draw(int8 textureSlot) {
 	Sprite* sprite = GetComponent<Sprite>();
-
-	if (sprite == nullptr) return;		//TODO::Improve this test, not testing GameObjects with no sprite
+	if (sprite == nullptr) return 0;	//TODO::Improve this test, not testing GameObjects with no sprite
 	Transform* transform = GetComponent<Transform>();
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
+
+	if (sprite->isBatched) {
+		glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)transform->position.x, (double)transform->position.y, sprite->zbuffer));
+		model = glm::scale(model, glm::vec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
+		model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0, 0, 1));
+		glm::mat4x4 mvp   = Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model;
+
+		glm::vec4 vert0 = mvp * glm::vec4(-0.5,  -0.5, 0.0, 1.0);
+		glm::vec4 vert1 = mvp * glm::vec4(0.5 ,  -0.5, 0.0, 1.0);
+		glm::vec4 vert2 = mvp * glm::vec4(0.5 ,   0.5,  0.0, 1.0);
+		glm::vec4 vert3 = mvp * glm::vec4(-0.5,   0.5,  0.0, 1.0);
+	
+		//The last element of each stride is set in Render()
+		float stride[24] = {
+			vert0[0], vert0[1], vert0[2], 0.0, 0.0, -1.0,
+			vert1[0], vert1[1], vert1[2], 1.0, 0.0, -1.0,
+			vert3[0], vert3[1], vert3[2], 0.0, 1.0, -1.0,
+			vert2[0], vert2[1], vert2[2], 1.0, 1.0, -1.0
+		};
+
+		//TODO::Calculate stride
+		//First layer batch creation
+		std::unordered_map<uint32, std::vector<Batch*>>::iterator iter = Batch::batchMap.find(sprite->sortingLayer);
+		if (iter == Batch::batchMap.end()) {
+			Batch::batchMap.insert(Batch::batchMap.end(), std::make_pair(sprite->sortingLayer, std::vector<Batch*>{new Batch()}))
+			->second.back()->Render(this, stride);
+			return sprite->sortingLayer;
+		}
+		//Find room in batch
+		for (Batch* batchGroup : iter->second) {
+			if (batchGroup->Render(this, stride)) return sprite->sortingLayer; 
+		}
+		//Room not found->creation of another batch
+		iter->second.push_back(new Batch());
+		iter->second.back()->Render(this, stride);
+
+		return sprite->sortingLayer;
+	}
 
 	Scriptable temp;
 	Scriptable*	scriptable;
@@ -32,6 +72,8 @@ void GameObject::Draw(int8 textureSlot) {
 
 	sprite->texture->Bind(textureSlot);
 	sprite->container.Draw();
+
+	return sprite->sortingLayer;
 };
 
 int GameObject::numberOfGameObjects = 0;

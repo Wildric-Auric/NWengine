@@ -11,6 +11,7 @@ private:
 public:
 	static std::string GetType() { return "Sprite"; };
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
+	bool isBatched   = 0;
 	Sprite() {};
 	Sprite(GameObject* go);
 	~Sprite();

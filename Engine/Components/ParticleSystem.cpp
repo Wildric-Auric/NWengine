@@ -1,8 +1,11 @@
-//Memory leak?
+//TODO::
+//With babtching it is observed that rendering 1000 particle does not slow the game
+//However when particles start to be recycled the fps drops to 30, something wrong in cpu level; fix that
 #include "ParticleSystem.h"
 #include "Scene.h"
 #include "imgui/imgui.h"
 #include "NWGui.h"
+#include "Utilities.h"
 
 ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
@@ -112,7 +115,7 @@ void ParticleSystem::Init() {
 		pool.back().prop = prop;
 		disabled.push_back(pool.size() - 1);
 		pool.back().transform = pool.back().go.AddComponent<Transform>();
-		pool.back().sprite = pool.back().go.AddComponent<Sprite>();	
+		(pool.back().sprite = pool.back().go.AddComponent<Sprite>())->isBatched = 1;	 //TODO::Add batch control
 	}
 }
 
@@ -183,6 +186,18 @@ void ParticleSystem::Gui() {
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("Emission properties")) {
+
+		if (NWGui::FileHolder("Shader", shader)) {
+			std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
+			if (path != "") this->shader = path;
+		}
+		GUI_SEP
+
+		if (NWGui::FileHolder("Texture", this->texture)) {
+			std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
+			if (path != "") path;
+		}
+		GUI_SEP
 		NWGui::DragValue("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
 		GUI_SEP;
 		NWGui::DragValue("Emission quantity", &emissionQuantity, ImGuiDataType_U16);
