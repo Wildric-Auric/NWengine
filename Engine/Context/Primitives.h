@@ -8,7 +8,7 @@ private:
 	uint32 EBO = 0;
 	uint32 VAO = 0;
 	std::vector<float> vertices;
-	unsigned int indices[6] = {
+	uint32 indices[6] = {
 		0,2,1,
 		1,2,3
 	};
@@ -18,7 +18,7 @@ public:
 	void Delete();
 	Quad(float width = 1.0f, float height = 1.0f);
 	void Draw();
-	~Quad();
+	~Quad();	
 };
 
 class Triangle {
@@ -33,7 +33,7 @@ private:
 	 0.0f,  0.5f, 0.0f  // top
 	};
 	uint32 indices[3] = {
-				0,1,2,
+				0,1,2
 	};
 public:
 	Triangle();
