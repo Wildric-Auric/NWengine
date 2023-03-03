@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include "Scene.h"
-#include "PostProcessing.h"
 #include "imgui/imgui.h"
 
 void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
@@ -48,7 +47,6 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 
 Camera* Camera::ActiveCamera = nullptr;
 
-#include "Sprite.h"
 void Camera::Update() {
 		//TODO::Optimize this update
 		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-position.x, -position.y, 0.0f));
@@ -57,7 +55,7 @@ void Camera::Update() {
 }
 
 void Camera::MoveTo(Vector2<int> target, float targetTime) {
-	position = target;   //No interpolation yet sincde no generator UPDATE 06/2022:: Generators??? Are you kiding
+	position = target; 
 }
 
 

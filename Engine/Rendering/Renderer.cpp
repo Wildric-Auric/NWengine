@@ -48,7 +48,7 @@ void Renderer::DrawOnDefaultFrame() {
 	attachedObj->Draw();
 	Camera::ActiveCamera = temp;
 }
-#include "glfw3.h"
+
 void Renderer::CaptureOnCamFrame() {
 	//Adding or getting components
 	Camera* cam			  = attachedObj->AddComponent<Camera>();
