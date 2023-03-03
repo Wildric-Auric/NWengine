@@ -8,10 +8,12 @@
 class Sprite : public GameComponent {
 private:
 	uint32 lastSortingLayer = 0;
+	bool   shouldDraw		= 1;
 public:
 	static std::string GetType() { return "Sprite"; };
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
 	bool isBatched   = 0;
+	bool isRendered	 = 1;
 	Sprite() {};
 	Sprite(GameObject* go);
 	~Sprite();
@@ -25,6 +27,11 @@ public:
 	void SetTexture(Texture* tex);
 	void SetShader(std::string path);
 	void SetSortingLayer(uint32 order);
+
+	void Render();
+	void StopRendering();
+
+	void Update() override;
 	void Gui() override;
 	static std::map<GameObject*, Sprite> componentList;
 

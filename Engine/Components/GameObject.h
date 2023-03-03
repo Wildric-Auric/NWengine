@@ -25,9 +25,6 @@ public:
 	std::string name  = "new GameObject"; //Read only see Rename function;
 	//identifier
 	uint32 id = 0;
-	bool isRendered = 1; //READONLY
-	void AddToRender();
-	void StopRendering();
 	uint32 Draw(int8 textureSlot = 0);  //Returns layer in which it has been drawn
 	void Rename(std::string newName);
     GameObject();

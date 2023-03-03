@@ -132,7 +132,7 @@ void ParticleSystem::UpdateParticle(int index) {
 
 void Particle::Disable() {
 	isActive = 0;
-	go.StopRendering();
+	sprite->StopRendering();
 }
 
 void Particle::Enable() {
@@ -145,7 +145,7 @@ void Particle::Enable() {
 	currentAlpha = prop.sAlpha;
 	currentDirection = prop.sDirection;
 	isActive = 1;
-	go.AddToRender();
+	sprite->Render();
 }
 
 void ParticleSystem::Gui() {

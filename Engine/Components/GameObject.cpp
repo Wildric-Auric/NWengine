@@ -98,15 +98,6 @@ void GameObject::Rename(std::string newName) {
 
 }
 
-void GameObject::AddToRender() {
-	isRendered = 1;
-	Scene::currentScene->drawList.push_back(this);
-}
-
-void GameObject::StopRendering() {
-	isRendered = 0;
-}
-
 GameObject::GameObject() {
 	numberOfGameObjects += 1;
 };

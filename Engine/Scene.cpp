@@ -16,43 +16,51 @@ Scene::Scene(std::string name) {
 	this->name = name;
 };
 
-void Scene::SortScene() {
+void Scene::SortScene() {} //Deprecated
 
-	//TODO: Fix this 
-	auto it = drawList.begin();
-	for (uint16 i = 1; i < drawList.size(); i++) {
-		std::advance(it, 1);
-		GameObject* temp = *it;
-		int j = i - 1;
-		int16 layer0 = -2000;
-		int16 layer  =  -2000;
-		Sprite* sprite0 = temp->GetComponent<Sprite>();
-		auto it0 = drawList.begin();
-		std::advance(it0, j);
-		Sprite* sprite  = (*it0)->GetComponent<Sprite>();
-		if (sprite0 != nullptr) layer0 = sprite0->sortingLayer;
-		
-		if (sprite != nullptr) layer = sprite->sortingLayer;
-		
-		while (j>=0 && layer < layer0) {
-				GameObject* j0 = *it0;
-				std::advance(it0, 1);
-				auto j1 = it0;
-				*j1 = j0;
-				j--;
-				if (j == -1) continue;
-				std::advance(it0, -2);
-		};
-		std::advance(it0, 1);
-		if (j == -1) std::advance(it0,-2);
-		*it0 = temp;
+void Scene::Rearrange(Sprite* sprite) {
+	//Adds the object if not in the list
+	for (auto iter = drawList.begin(); iter != drawList.end(); ++iter)  {
+		if (*iter != sprite)
+			continue;
+		drawList.erase(iter);
+		break;
 	}
+	Render(sprite);
 }
+
+void Scene::Render(Sprite* sprite) {
+	//TODO::Make drawList a list of sprities not gameobjects
+	std::list<Sprite*>::iterator iter = drawList.begin();
+	uint32 layer = sprite->sortingLayer;
+	//Insert at beginning
+	if (drawList.size() < 1 || layer <= (*iter)->sortingLayer) {
+		drawList.insert(drawList.begin(), sprite);
+		return;
+	}
+	if (drawList.size() == 1) {
+		drawList.insert(drawList.end(), sprite);
+		return;
+	}
+	//At the middle
+	while (iter != --drawList.end()) {
+		auto a	   = iter;
+		auto b	   = ++iter;
+		uint32 lA = (*a)->sortingLayer;
+		uint32 lB=  (*b)->sortingLayer;
+		if (lA <= layer && lB >= layer) {
+			drawList.insert(b, sprite);
+			return;
+		}
+	}
+	//At the end
+	drawList.insert(drawList.end(), sprite);
+}
+
 
 void Scene::AddObject(GameObject goc) {
 	sceneObjs.push_back(goc);
 	sceneObjs.back().Rename("new GameObject");
-	drawList.push_back(&sceneObjs.back());
 }
 
 void Scene::DeleteObject(uint32 index) {
@@ -64,17 +72,6 @@ void Scene::DeleteObject(uint32 index) {
 
 	for (auto pair : ptr->components) {
 		delete (GameComponent*)(pair.second);
-	}
-
-	for (auto it = drawList.begin(); it != drawList.end(); it++) {
-		GameObject* ptr1 = *it;
-		if (ptr1 == ptr) {
-			auto it = drawList.begin();
-			std::advance(it, count);
-			drawList.erase(it);
-			break;
-		}
-		count++;
 	}
 
 	sceneObjs.erase(it1);
@@ -92,25 +89,25 @@ GameObject* Scene::GetGameObject(std::string name) {
 }
 
 void Scene::Draw() {
-
-	SortScene();
-	std::list<GameObject*>::iterator it		  = drawList.begin();
+	std::list<Sprite*>::iterator it		  = drawList.end();
 	std::unordered_map<uint32, std::vector<Batch*>>::iterator it0;
+
 	uint32 lastLayer							  = -1;
 	uint32 temp									  = 0;
-	while (it != drawList.end()) {
+
+	while (it != drawList.begin()) {
+		--it;
 		if (!(*it)->isRendered) {
 			it = drawList.erase(it);
 			continue;
 		}
-		temp  = (*it)->Draw();
+		temp  = (*it)->go->Draw();
 		//Drawing batches
 		if ( (temp != lastLayer) &&  ( (it0 = Batch::batchMap.find(lastLayer)) != Batch::batchMap.end() )) {
 			for (Batch* batch : it0->second)
 				batch->Draw();
 		}
 		lastLayer = temp;
-		it++;
 	}
 	//Drawing last layer batches
 	if  ((it0 = Batch::batchMap.find(temp)) != Batch::batchMap.end()) {

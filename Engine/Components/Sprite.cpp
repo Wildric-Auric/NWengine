@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include "Utilities.h"
+#include "Scene.h"
 #include "imgui/imgui.h"
 
 Sprite::Sprite(GameObject* go) {
@@ -35,7 +36,25 @@ void Sprite::SetSortingLayer(uint32 order) {
 	if (sortingLayer != lastSortingLayer) {
 		zbuffer = 1.0 / ((double)(sortingLayer + 1));
 		lastSortingLayer = sortingLayer;
+		if (isRendered)
+			Scene::currentScene->Rearrange(this);
 	}
+	
+}
+
+void Sprite::Render() {
+	isRendered = 1;
+	shouldDraw = 1;
+}
+
+void Sprite::StopRendering() {
+	isRendered = 0;
+}
+
+void Sprite::Update() {
+	if (!shouldDraw) return;
+	Scene::currentScene->Rearrange(this);
+	shouldDraw = 0;
 }
 
 void Sprite::Gui() {
@@ -64,6 +83,7 @@ int Sprite::Serialize(std::fstream* data, int offset) {
 	WRITE_ON_BIN(data, "Sprite", 6, sizeBuffer);
 
 	WRITE_ON_BIN(data, &sortingLayer, sizeof(sortingLayer), sizeBuffer);
+
 
 	const char* temp0 = texture->name.c_str();
 	WRITE_ON_BIN(data, temp0, texture->name.size(), sizeBuffer);
@@ -96,5 +116,12 @@ int Sprite::Deserialize(std::fstream* data, int offset) {
 };
 
 Sprite::~Sprite() { 
-	this->container.Delete();   //Weird behaviour on runtime texture change
+	this->container.Delete();
+	
+	for (auto iter = Scene::currentScene->drawList.begin(); iter != Scene::currentScene->drawList.end(); ++iter) {
+		if (*iter != this)
+			continue;
+		Scene::currentScene->drawList.erase(iter);
+		return;
+	}
 }
