@@ -19,5 +19,7 @@ public:
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;
 
+	void  SetGameObject(void* go)  override;
+	void* GetGameObject()		   override;
 	static std::map<GameObject*, Transform> componentList;
 };

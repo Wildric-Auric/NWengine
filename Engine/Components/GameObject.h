@@ -11,8 +11,10 @@ class GameComponent: public GuiObject, public Serialized { //I've tried to do mu
 										//but casting from GameComponent* to GuiObject* messes up virtual functions, I will read more about it
 public:
 	static std::string GetType() { return "GameComponent"; }
-	virtual void Update() {};
-	virtual void Start() {};
+	virtual void  Update() {};
+	virtual void  Start() {};
+	virtual void  SetGameObject(void* go) {};
+	virtual void* GetGameObject() { return nullptr; };
 	virtual ~GameComponent() {};
 };
 
@@ -28,6 +30,7 @@ public:
 	uint32 Draw(int8 textureSlot = 0);  //Returns layer in which it has been drawn
 	void Rename(std::string newName);
     GameObject();
+	GameObject(const GameObject& other);
 	~GameObject();
 	void DeleteComponent(std::string typeName);
 	void DeleteComponents();

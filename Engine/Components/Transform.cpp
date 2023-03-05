@@ -38,4 +38,12 @@ int Transform::Deserialize(std::fstream* data, int offset) {
 	return offset + 16; //Not updated
 }
 
+//TODO::The same for all GameComponents
+void  Transform::SetGameObject(void* go) {
+	attachedObj = (GameObject*)go;
+}
+void* Transform::GetGameObject() {
+	return (void*)attachedObj;
+}
+//-----
 std::map<GameObject*, Transform> Transform::componentList;

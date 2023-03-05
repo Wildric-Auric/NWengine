@@ -4,7 +4,7 @@
 #include "imgui/imgui.h"
 
 Sprite::Sprite(GameObject* go) {
-	this->go = go;
+	this->attachedObj = go;
 };
 
 std::map<GameObject*, Sprite> Sprite::componentList;
@@ -114,6 +114,13 @@ int Sprite::Deserialize(std::fstream* data, int offset) {
 
 	return 0;
 };
+
+void  Sprite::SetGameObject(void* go) {
+	this->attachedObj = (GameObject*)go;
+}
+void* Sprite::GetGameObject() {
+	return (void*)attachedObj;
+}
 
 Sprite::~Sprite() { 
 	this->container.Delete();

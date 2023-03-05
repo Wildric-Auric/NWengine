@@ -19,7 +19,7 @@ public:
 	~Sprite();
 	Shader* shader = &Shader::resList[SHADER_DEFAULT];
 	Quad container = Quad(Texture::resList[TEXTURE_DEFAULT].size.x, Texture::resList[TEXTURE_DEFAULT].size.y); //ReadOnly
-	GameObject* go;
+	GameObject* attachedObj;
 	uint32 sortingLayer = 0; //ReadOnly
 	double zbuffer = 1.0; //ReadOnly
 
@@ -37,4 +37,7 @@ public:
 
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;
+
+	void  SetGameObject(void* go)  override;
+	void* GetGameObject()		   override;
 };

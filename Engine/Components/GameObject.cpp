@@ -102,6 +102,14 @@ GameObject::GameObject() {
 	numberOfGameObjects += 1;
 };
 
+GameObject::GameObject(const GameObject& other) {
+	for (auto iter = other.components.begin(); iter != other.components.end(); ++iter) {
+		this->components.emplace(iter->first, iter->second);
+		iter->second->SetGameObject((void*)this);
+	}
+};
+
+
 GameObject::~GameObject() {};
 
 void GameObject::DeleteComponent(std::string typeName) {

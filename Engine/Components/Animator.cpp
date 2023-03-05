@@ -19,3 +19,11 @@ void Animator::Update() {
 		if (!animation.repeat && (currentFrame == animation.frames.size() - 1)) isActive = false;
 	}
 }
+
+
+void Animator::SetGameObject(void* go) {
+	attachedObj = (GameObject*)go;
+};
+void* Animator::GetGameObject() {
+	return (void*)attachedObj;
+};

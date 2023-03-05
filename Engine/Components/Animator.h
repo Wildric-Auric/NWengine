@@ -16,4 +16,7 @@ public:
 
 	Animation animation;
 	void Update();
+
+	void  SetGameObject(void* go) override;
+	void* GetGameObject()		  override;
 };
