@@ -6,18 +6,23 @@
 
 std::map<std::string, Texture> Texture::resList;
 
-Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat, bool genMipMap) {
+Texture::Texture(int width, int height, uint8* texRes, int alpha, bool repeat, bool genMipMap, bool linear) {
+	int32 filter = GL_LINEAR;
+	if (!linear)
+		filter = GL_NEAREST;
+
 	size = Vector2<int>(width, height);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	
 
 	//Downscaling parameter
 	if (genMipMap)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	else
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	//Upscaling parameter
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	if (repeat) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -27,10 +32,14 @@ Texture::Texture(int width, int height, uint8* texRes, bool alpha, bool repeat, 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	}
-	if (alpha)
+	if (alpha == 1)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
-	else
+	else if (alpha == 0)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
+	else if (alpha == 2) {
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, texRes);
+	}
 
 	if (genMipMap)
 		glGenerateMipmap(GL_TEXTURE_2D);
