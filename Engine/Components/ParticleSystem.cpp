@@ -124,7 +124,7 @@ void ParticleSystem::UpdateParticle(int index) {
 	if (transform == nullptr) transform = attachedObj->AddComponent<Transform>();
 	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
-
+	pool[index].sprite->Update();
 	//Can't work like this, TODO::Add uniform call stack
 	/*pool[index].sprite->shader->Use();
 	pool[index].sprite->shader->SetUniform1f("uAlpha", pool[index].currentAlpha);*/
