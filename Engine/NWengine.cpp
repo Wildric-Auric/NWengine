@@ -84,7 +84,11 @@ int NWengine::Run() {
 		Gui::Init((void*)window);
 		//init OpenAL
 		if (!InitOpenAL()) return -1;
-
+		//init freetype
+		if (!TextSystem::Init())
+			return -1;
+		
+		Primitives::Init();
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
 		//Loading script list

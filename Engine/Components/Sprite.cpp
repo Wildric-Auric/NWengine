@@ -123,7 +123,7 @@ void* Sprite::GetGameObject() {
 }
 
 Sprite::~Sprite() { 
-	this->container.Delete();
+	//this->container.Delete(); No longer vertex array buffer in quad
 	
 	for (auto iter = Scene::currentScene->drawList.begin(); iter != Scene::currentScene->drawList.end(); ++iter) {
 		if (*iter != this)

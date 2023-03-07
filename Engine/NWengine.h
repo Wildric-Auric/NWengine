@@ -39,6 +39,7 @@
 #include "ScriptManager.h"
 #include "SceneEditor.h"
 #include "Batch.h"
+#include "Text.h"
 
 namespace NWengine {
 	int Run();

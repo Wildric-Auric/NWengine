@@ -5,40 +5,22 @@
 #include "RessourcesLoader.h"
 #include "Camera.h"
 
-Triangle::Triangle() {
-		glGenBuffers(1, &EBO);
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
+QuadInternal QuadInternal::quadInstance = QuadInternal(0);
 
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-		glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices[0], GL_STATIC_DRAW);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-}
-void Triangle::Draw() {
-		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-	}
-
-
-
-Quad::Quad(float width, float height)
+QuadInternal::QuadInternal()
 {
-    vertices = {
+    float vertices[] = {
 		//VertexPos                //uv
 		-0.5, -0.5, 0.0f,    0.0f,0.0f,
 		 0.5, -0.5, 0.0f,    1.0f,0.0f,
 		-0.5,  0.5, 0.0f,    0.0f,1.0f,
 		 0.5,  0.5, 0.0f,    1.0f,1.0f,
 	};
-	this->width = width;
-	this->height = height;
+
+	uint32 indices[] = {
+		0,2,1,
+		1,2,3
+	};
 	
 	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
@@ -48,12 +30,9 @@ Quad::Quad(float width, float height)
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);  
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
-
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -62,19 +41,21 @@ Quad::Quad(float width, float height)
 	glEnableVertexAttribArray(1);
 };
 
-
-
-Quad::~Quad() {}
-
-void Quad::Draw() {
+void QuadInternal::Draw() {
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Quad::Delete() {
+void QuadInternal::Delete() {
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1,		&VBO);
+	glDeleteBuffers(1,		&EBO);
+}
+
+
+Quad::Quad(float width, float height) {
+	this->width = width;
+	this->height = height;
 }
 
 void Quad::UpdateSize(float width, float height) {
@@ -82,56 +63,16 @@ void Quad::UpdateSize(float width, float height) {
 	this->height = height;
 };
 
+void Quad::Draw() {
+	glBindVertexArray(QuadInternal::quadInstance.VAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
 
+void Primitives::Init() {
+	QuadInternal::quadInstance = QuadInternal();
+}
 
-//Line::Line(Vector2<int> start, Vector2<int> end, Vector3<float> color): start(0,0), end(0,0), color(0.f,0.f,0.f) {
-//	float vertices[6] = {
-//		start.x, start.y, 0.0f,
-//		end.x  ,   end.y, 0.0f,
-//	};
-//	glGenVertexArrays(1, &VAO);
-//	glGenBuffers(1, &VBO);
-//	glBindVertexArray(VAO);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-//
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-//	glEnableVertexAttribArray(0);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	glBindVertexArray(0);
-//}
+void Primitives::Destroy() {
+	QuadInternal::quadInstance.Delete();
+}
 
-//void Line::Draw() {
-//	glUseProgram(Shader::resList["shader_simple"].shaderProgram);
-//	Shader::resList["shader_simple"].SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix)[0][0]);
-//	Shader::resList["shader_simple"].SetUniform3f("uColor", color.x, color.y, color.z);
-//	Shader::resList["shader_simple"].SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
-//	glBindVertexArray(VAO);
-//	glDrawArrays(GL_LINES, 0, 2);
-//}
-
-
-//Square::Square(Vector2<int> position, Vector2<int> size, Vector3<float> color, float alpha) {
-//	this->alpha = alpha;
-//	this->position = position;
-//	this->size = size;
-//	this->color = color;
-//	quad = Quad(position, size.x, size.y);
-//
-//};
-
-//void Square::Draw() {
-//	quad.position = this->position;
-//	glUseProgram(Shader::resList["shader_simple"].shaderProgram);
-//	Shader::resList["shader_simple"].SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix)[0][0]);
-//	Shader::resList["shader_simple"].SetUniform3f("uColor", color.x, color.y, color.z);
-//	Shader::resList["shader_simple"].SetUniform1f("uAlpha", alpha); //TODO::Add Vector4 template
-//	//TODO:: Pass following lines directly to Quad class
-//	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((float)position.x, (float)position.y, 0.0f));
-//	Shader::resList["shader_simple"].SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
-//
-//	quad.Draw();
-//
-//};
