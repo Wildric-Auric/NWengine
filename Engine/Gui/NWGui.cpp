@@ -39,10 +39,13 @@ bool NWGui::DragValue(const char* label, void* target, int dataType, int16 vecto
 		ImGui::TableNextColumn();
 		ImGui::Text(label);
 		ImGui::TableNextColumn();
-		//TODO::integrate ImGui ids
-		ret = ImGui::DragScalarN((std::string("##") + std::string(label)).c_str(), dataType, target, vectorSize, speed, &minn, &maxx);
+		ret = ImGui::DragScalarN(NWGui::GenLabel("", (int64)target).c_str(), dataType, target, vectorSize, speed, &minn, &maxx);
 		ImGui::EndTable();
 	}
 
 	return ret;
+}
+
+std::string NWGui::GenLabel(const char* string, int64 id) {
+	return std::string(string) + std::string("##") + std::to_string(id);
 }
