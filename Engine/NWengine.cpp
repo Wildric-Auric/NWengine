@@ -181,6 +181,10 @@ void NWengine::Shutdown() {
 
 		ScriptManager::SaveScriptList();
 		DestroyOpenAL();
+
+		TextSystem::Destroy();
+		Primitives::Destroy();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImPlot::DestroyContext();
 		ImGui::DestroyContext();

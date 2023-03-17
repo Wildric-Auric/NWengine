@@ -1,5 +1,4 @@
 #include "Text.h"
-
 #include "Sprite.h"
 #include "Transform.h"
 
@@ -10,7 +9,7 @@ bool TextSystem::Init() {
 }
 
 void TextSystem::Destroy() {
-		FT_Done_FreeType(TextSystem::lib);
+	FT_Done_FreeType(TextSystem::lib);
 }
 
 Font::Font(std::string path) {
@@ -19,22 +18,21 @@ Font::Font(std::string path) {
 
 bool Font::LoadFont(std::string path) {
 	if (FT_New_Face(TextSystem::lib, path.c_str(), 0, &face)) return 0;
-	FT_Set_Pixel_Sizes(face, 0, 320);
+	FT_Set_Pixel_Sizes(face, 0, 32);
 	for (uint8 i = 0; i < 128; ++i) {
-		if (FT_Load_Char(face, i, FT_LOAD_RENDER))
+		if (FT_Load_Char(face, i, FT_LOAD_RENDER)) {
+			printf("Error loading character");
 			continue;
+		}
 		 Texture tex	  = Texture(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, 2, false, 1, 1);
 		 tex.name         = i;
 		 charactersMap.emplace(i, Glyph());
 		 Glyph* character   =	&charactersMap.find(i)->second;
 	
 		 character->texture =   tex;
-		 Sprite* sprite = character->go.GetComponent<Sprite>();
-		 sprite->SetTexture(&character->texture);
-		 sprite->container.UpdateSize(face->glyph->bitmap.width, face->glyph->bitmap.rows);
 
 		 character->size.x	  = face->glyph->bitmap.width;
-		 character->size.x	  = face->glyph->bitmap.rows;
+		 character->size.y	  = face->glyph->bitmap.rows;
 
 		 character->bearing.x = face->glyph->bitmap_left;
 		 character->bearing.y = face->glyph->bitmap_top;
@@ -50,7 +48,5 @@ void Font::Delete() {
 }
 
 Glyph::Glyph() {
-	go = GameObject();
-	go.AddComponent<Sprite>()->SetShader("Shaders\\TextBasic.shader");
-	go.AddComponent<Transform>();
+
 }

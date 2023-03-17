@@ -18,11 +18,10 @@ public:
 class Glyph {
 public:
 	Glyph();
-	GameObject go;
 	Texture    texture;
-	uint32 advance;
-	iVec2  bearing;
-	iVec2  size;
+	uint32	   advance;
+	iVec2	   bearing;
+	iVec2	   size;
 };
 
 class Font {
@@ -34,6 +33,11 @@ public:
 	Font(std::string path);
 	bool LoadFont(std::string path);
 	void Delete();
+};
+
+struct Character {
+	Glyph*	   glyph;
+	GameObject go;
 };
 
 
