@@ -101,7 +101,7 @@ void Scene::Draw() {
 			it = drawList.erase(it);
 			continue;
 		}
-		temp  = (*it)->go->Draw();
+		temp  = (*it)->attachedObj->Draw();
 		//Drawing batches
 		if ( (temp != lastLayer) &&  ( (it0 = Batch::batchMap.find(lastLayer)) != Batch::batchMap.end() )) {
 			for (Batch* batch : it0->second)
