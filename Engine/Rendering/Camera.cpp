@@ -80,6 +80,9 @@ void Camera::Gui() {
 	NWGui::DragValue("Camera Rotation", &rotation, ImGuiDataType_Float, 1);
 	NWGui::DragValue("Camera Zoom", &zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 100.0f);
 	NWGui::DragValue("Clearing color", &clearColor.x, ImGuiDataType_Float, 3, 0.1, 0.0f, 1.0f);
+	NWGui::DragValue("Resolution", &viewPortSize.x, ImGuiDataType_Float, 2, 10.0f, 0.0f, 10000.0f);
+	if (ImGui::Button(NWGui::GenLabel("Apply", (int64)this).c_str()))
+		this->ChangeOrtho(viewPortSize.x, viewPortSize.y);
 }
 
 Camera::~Camera() {
@@ -97,6 +100,9 @@ int Camera::Serialize(std::fstream* data, int offset) {
 	WRITE_ON_BIN(data, &clearColor.x, sizeof(clearColor.x), sizeBuffer);
 	WRITE_ON_BIN(data, &clearColor.y, sizeof(clearColor.y), sizeBuffer);
 	WRITE_ON_BIN(data, &clearColor.z, sizeof(clearColor.z), sizeBuffer);
+	WRITE_ON_BIN(data, &size.x,       sizeof(size.x),		sizeBuffer);
+	WRITE_ON_BIN(data, &size.y,       sizeof(size.y),		sizeBuffer);
+
 	return 0;
 }
 
@@ -111,6 +117,8 @@ int Camera::Deserialize(std::fstream* data, int offset) {
 	READ_FROM_BIN(data, &clearColor.x, sizeBuffer);
 	READ_FROM_BIN(data, &clearColor.y, sizeBuffer);
 	READ_FROM_BIN(data, &clearColor.z, sizeBuffer);
-	
+	READ_FROM_BIN(data, &viewPortSize.x,       sizeBuffer);
+	READ_FROM_BIN(data, &viewPortSize.y,       sizeBuffer);
+	ChangeOrtho(viewPortSize.x, viewPortSize.y);
 	return 0;
 }
