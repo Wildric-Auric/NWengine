@@ -31,14 +31,12 @@ uint32 GameObject::Draw(int8 textureSlot) {
 		glm::vec4 vert3 = mvp * glm::vec4(-0.5,   0.5,  0.0, 1.0);
 	
 		//The last element of each stride is set in Render()
-		float stride[24] = {
-			vert0[0], vert0[1], vert0[2], 0.0, 0.0, -1.0,
-			vert1[0], vert1[1], vert1[2], 1.0, 0.0, -1.0,
-			vert3[0], vert3[1], vert3[2], 0.0, 1.0, -1.0,
-			vert2[0], vert2[1], vert2[2], 1.0, 1.0, -1.0
-		};
-
-		//TODO::Calculate stride
+		float stride[36] = {
+			vert0[0], vert0[1], vert0[2], 0.0, 0.0, 0.0, 0.0, 0.0, -1.0,
+			vert1[0], vert1[1], vert1[2], 1.0, 0.0, 0.0, 0.0, 0.0, -1.0,
+			vert3[0], vert3[1], vert3[2], 0.0, 1.0, 1.0, 1.0, 1.0, -1.0,
+			vert2[0], vert2[1], vert2[2], 1.0, 1.0, 1.0, 1.0, 1.0, -1.0
+		}; //TODO:: The free buffer accessible to the user
 		//First layer batch creation
 		std::unordered_map<uint32, std::vector<Batch*>>::iterator iter = Batch::batchMap.find(sprite->sortingLayer);
 		if (iter == Batch::batchMap.end()) {
@@ -134,6 +132,7 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Camera			, type);
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
+	ADD_COMPONENT(Renderer          , type);
 	return nullptr;
 };
 
