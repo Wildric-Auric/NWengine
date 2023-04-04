@@ -40,12 +40,12 @@
 #include "SceneEditor.h"
 #include "Batch.h"
 #include "Text.h"
+#include "SceneEditor.h"
 
 namespace NWengine {
 	int Run();
 	void MainLoop();
 	void Shutdown();
-
 }
 
 #endif

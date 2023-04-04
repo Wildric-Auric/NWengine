@@ -62,10 +62,17 @@ extern "C"
 		GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		Gui::Init((void*)window);
 		if (!InitOpenAL()) return -1;
+		if (!TextSystem::Init())
+			return -1;
+		Primitives::Init();
 		RessourcesLoader::LoadDefaultRessources();
 		ScriptManager::LoadScriptList();
 		Context::EnableBlend();
 		SceneEditor::Init();
+		Batch::ComputeIndices();
+		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
+		////Initialization finished
+
 		(Scene::currentScene = new Scene("scene0"))->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
@@ -106,8 +113,6 @@ int NWengine::Run() {
 		////Initialization finished
 
 		(Scene::currentScene = new Scene("scene0"))->LoadScene();
-		
-		
 		
 		NWengine::MainLoop();
 
