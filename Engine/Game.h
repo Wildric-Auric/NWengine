@@ -4,10 +4,6 @@
 #include"Utilities.h"
 
 #include <iostream>
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/implot/implot.h"
-#include "Gui.h"
 
 #include "Primitives.h"
 #include "Inputs.h"
@@ -18,6 +14,10 @@
 #include "Scene.h"
 #include "Audio.h"
 #include "Components.h"
+#include "Batch.h"
+#include "Text.h"
+#include "ScriptManager.h"
+#include "SceneEditor.h"
 
 class Game {
 public:

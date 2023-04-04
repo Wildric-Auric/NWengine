@@ -1,4 +1,3 @@
-#include "NWengine.h"
 #include "Game.h"
 #include "GL/glew.h"
 #include "glfw3.h"
@@ -8,25 +7,18 @@ int8 Game::Run() {
 	GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	if (window == nullptr) return -1;
 
-	//init imgui
-	Gui::Init((void*)window);
-	//init OpenAL
+	//Gui::Init((void*)window);
 	if (!InitOpenAL()) return -1;
-
-	//Load ressources
+	if (!TextSystem::Init())
+		return -1;
+	Primitives::Init();
 	RessourcesLoader::LoadDefaultRessources();
-
+	ScriptManager::LoadScriptList();
 	Context::EnableBlend();
-
-	////Initialization finished
-	//TODO::UI for scene load ans serialization
+	//SceneEditor::Init();
+	Batch::ComputeIndices();
+	Batch::maxBatchTextures = 32;
 	(Scene::currentScene = new Scene("scene0"))->LoadScene();
-
-	//Initializing Game class
-
-	GameObject renderObj	  = GameObject();
-	Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
-	Renderer::currentRenderer = Renderer::defaultRenderer;
 
 	MainLoop();
 
@@ -85,9 +77,8 @@ void Game::Shutdown() {
 	delete Renderer::defaultRenderer;
 
 	DestroyOpenAL();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImPlot::DestroyContext();
-	ImGui::DestroyContext();
+	TextSystem::Destroy();
+	Primitives::Destroy();
 	glfwTerminate();
 }
 
