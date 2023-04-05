@@ -100,7 +100,7 @@ bool Sound::HasFinished() {
 void Sound::SetFrequency(float frequency) {
 	if (frequency == this->frequency) return;
 	this->frequency = frequency;
-	alSourcef(source, AL_FREQUENCY, frequency);
+	alSourcef(source, AL_PITCH, frequency);
 }
 
 void Sound::SetLoop(bool loop) {
