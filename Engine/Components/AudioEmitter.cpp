@@ -63,7 +63,19 @@ void AudioEmitter::Gui() {
 		sound = new Sound(path);
 		//TODO::Check only the file name
 	}
+
+	if (sound == nullptr) return;
+	bool temp0 = sound->isPlaying;
+	if (NWGui::CheckBox("isPlaying", &temp0 ) ) {
+		if (!sound->isPlaying)
+			sound->Play();
+		else
+			sound->Stop();
+		temp0 = !temp0;
+	}
+
 	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S16, 1, 1, 0.0f, 100.0f);
 	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
 	NWGui::CheckBox("Loop", &this->isLooping);
+
 }
