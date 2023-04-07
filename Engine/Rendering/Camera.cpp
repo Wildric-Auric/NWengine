@@ -81,7 +81,7 @@ void Camera::Gui() {
 	NWGui::DragValue("Camera Zoom", &zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 100.0f);
 	NWGui::DragValue("Clearing color", &clearColor.x, ImGuiDataType_Float, 3, 0.1, 0.0f, 1.0f);
 	NWGui::DragValue("Resolution", &viewPortSize.x, ImGuiDataType_Float, 2, 10.0f, 0.0f, 10000.0f);
-	if (ImGui::Button(NWGui::GenLabel("Apply", (int64)this).c_str()))
+	if (NWGui::Button("Apply"))
 		this->ChangeOrtho(viewPortSize.x, viewPortSize.y);
 }
 

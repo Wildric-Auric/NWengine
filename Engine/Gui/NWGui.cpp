@@ -3,8 +3,8 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+uint32 NWGui::AutoInc = 1;
 
-//TODO::ImGui id fix
 bool NWGui::FileHolder(std::string name, std::string holdedFile) {
 	bool ret = 0;
 	if (ImGui::BeginTable("testTable0", 2)) {
@@ -31,6 +31,10 @@ bool NWGui::CheckBox(std::string label, bool* value) {
 	return ret;
 }
 
+bool NWGui::Button(std::string label) {
+	return ImGui::Button(NWGui::GenLabel(label.c_str(), AutoInc++).c_str());
+}
+
 
 bool NWGui::DragValue(const char* label, void* target, int dataType, int16 vectorSize, float speed, float minn, float maxx) {
 	bool ret = 0;
@@ -39,13 +43,13 @@ bool NWGui::DragValue(const char* label, void* target, int dataType, int16 vecto
 		ImGui::TableNextColumn();
 		ImGui::Text(label);
 		ImGui::TableNextColumn();
-		ret = ImGui::DragScalarN(NWGui::GenLabel("", (int64)target).c_str(), dataType, target, vectorSize, speed, &minn, &maxx);
+		ret = ImGui::DragScalarN(NWGui::GenLabel("", AutoInc++).c_str(), dataType, target, vectorSize, speed, &minn, &maxx);
 		ImGui::EndTable();
 	}
 
 	return ret;
 }
 
-std::string NWGui::GenLabel(const char* string, int64 id) {
+std::string NWGui::GenLabel(const char* string, uint32 id) {
 	return std::string(string) + std::string("##") + std::to_string(id);
 }

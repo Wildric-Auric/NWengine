@@ -71,12 +71,14 @@ void Gui::Update() {
 		}
 
 		if (ImGui::BeginMenu("Scene")) {
-			if (ImGui::MenuItem("Save"))	Scene::currentScene->Save(); //TODO::Not save during
+			if (ImGui::MenuItem("Save"))	Scene::currentScene->Save(); //TODO::Not save during runtime
 			ImGui::EndMenu();
 		}
 
 		ImGui::EndMainMenuBar();
 	}
+
+	NWGui::AutoInc = 1; //Renitialize autoincremented id on each gui update;
 
 	SceneViewGui::Show();
 	DebugGui::Show();

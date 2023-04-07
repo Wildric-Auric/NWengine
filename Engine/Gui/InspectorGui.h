@@ -40,7 +40,7 @@ public:
 				it++;
 				if (!ImGui::CollapsingHeader(key.c_str())) continue;
 				gc->Gui();
-				if (!ImGui::Button((std::string("Delete##") + std::to_string(n)).c_str())) continue;
+				if (!NWGui::Button("Delete")) continue;
 				go->DeleteComponent(key);
 				n++;
 			}
@@ -60,7 +60,8 @@ public:
 				ADD_COMPONENT_TO_INSPECTOR(ParticleSystem, go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioEmitter  , go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioListener , go);
-				ADD_COMPONENT_TO_INSPECTOR(Script,         go)
+				ADD_COMPONENT_TO_INSPECTOR(Script,         go);
+				ADD_COMPONENT_TO_INSPECTOR(Renderer,       go);
  				ImGui::EndPopup();
 			}
 		}
