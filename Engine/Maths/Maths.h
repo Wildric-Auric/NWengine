@@ -406,12 +406,12 @@ template<typename T, typename T1>
 T Cbezier(T source, T target, T point1, T point2, T1 percent) {
 	percent = Clamp<T1>(percent, (T1)0.0, (T1)1.0);
 	T1 t2 = percent * percent;
-	T1 t3 = percent * t2;
-	T1 x = 1 - percent;
-	T1 x2 = x * x;
-	T1 x3 = x2 * x;
+	T1 t3 = percent * t2;       //t3
+	T1 x = 1 - percent;  
+	T1 x2 = x * x;        //(1-t)^2
+	T1 x3 = x2 * x;       //(1-t)^3
 
-	return  x3 * source + 3 * percent * x2 * point1 + 3 * t2 * x * point2 + x3 * target;
+	return  x3 * source + 3 * percent * x2 * point1 + 3 * t2 * x * point2 + t3 * target;
 }
 
 template<typename T, typename T1>
