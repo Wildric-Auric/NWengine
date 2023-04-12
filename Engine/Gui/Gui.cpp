@@ -78,7 +78,7 @@ void Gui::Update() {
 		ImGui::EndMainMenuBar();
 	}
 
-	NWGui::AutoInc = 1; //Renitialize autoincremented id on each gui update;
+	NWGui::AutoInc		= 1; //Renitialize autoincremented id on each gui update;
 
 	SceneViewGui::Show();
 	DebugGui::Show();
@@ -87,4 +87,10 @@ void Gui::Update() {
 	SceneEditorGui::Show();
 	ConsoleGui::Show();
 	ScriptManagerGui::Show();
+}
+
+void Gui::Destroy() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImPlot::DestroyContext();
+	ImGui::DestroyContext();
 }
