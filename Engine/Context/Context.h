@@ -11,6 +11,7 @@ public:
 	static void Clear(float r = 0.0f, float g = .0f, float b = 0.0f, float a = 1.0f);
 	static void SetViewPort(int x, int y, int sizeX, int sizeY);
 	static void SetFullscreen(bool state = 1);
+	static void Destroy();
 	static int  dllFlag;
 	static int vSync;
 	static int  NATIVE_WIDTH;
