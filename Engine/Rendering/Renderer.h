@@ -4,7 +4,7 @@
 #include "Maths.h"
 #include "Camera.h"
 
-class Renderer : public GameComponent {
+class Renderer {
 public:
 	static std::string GetType() { return "Renderer"; }
 	Renderer() {};
@@ -24,9 +24,4 @@ public:
 	void CaptureOnCamFrame();
 	void Use();
 	void Unuse();
-
-	void Gui() override;
-	int Serialize(std::fstream* data, int offset) override;
-	int Deserialize(std::fstream* data, int offset) override;
-
 };

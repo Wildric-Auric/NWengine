@@ -3,6 +3,9 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "Script.h"
+#ifndef NW_GAME_BUILD
+#include "Utilities.h"
+#endif
 
 Renderer::Renderer(GameObject* go) {
 	this->attachedObj = go;
@@ -90,7 +93,3 @@ Renderer::~Renderer() {
 
 Renderer* Renderer::defaultRenderer = nullptr;
 Renderer* Renderer::currentRenderer = nullptr;
-
-void Renderer::Gui() {};
-int Renderer::Serialize(std::fstream* data, int offset) { return 0; };
-int Renderer::Deserialize(std::fstream* data, int offset) { return 0; };
