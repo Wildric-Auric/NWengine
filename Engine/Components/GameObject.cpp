@@ -132,7 +132,6 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Camera			, type);
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
-	ADD_COMPONENT(Renderer          , type);
 	return nullptr;
 };
 
