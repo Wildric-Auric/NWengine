@@ -61,7 +61,6 @@ public:
 				ADD_COMPONENT_TO_INSPECTOR(AudioEmitter  , go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioListener , go);
 				ADD_COMPONENT_TO_INSPECTOR(Script,         go);
-				ADD_COMPONENT_TO_INSPECTOR(Renderer,       go);
  				ImGui::EndPopup();
 			}
 		}
