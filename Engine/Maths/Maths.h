@@ -18,8 +18,10 @@ inline float DegToRad(float degree) {
 template<typename T>
 class Vector2 {
 public:
-	T x;
-	T y;
+	struct {
+		T x;
+		T y;
+	};
 	Vector2(T x = 0.0f, T y = 0.0f);
 
 	Vector2<float> normalize();
@@ -169,9 +171,19 @@ T Clamp(T num, T min, T max) {
 template<typename T>
 class Vector3 {
 public:
-	T x;
-	T y;
-	T z;
+	union {
+		struct {
+			T x;
+			T y;
+			T z;
+		};
+
+		struct {
+			T r;
+			T g;
+			T b;
+		};
+	};
 	Vector3(T x = 0.0f, T y = 0.0f, T z = 0.0f);
 
 	Vector3<float> normalize();
