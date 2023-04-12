@@ -18,38 +18,19 @@ void ParticleSystem::Update() {
 	prop.absoluteStartPosition = attachedObj->GetComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
 	if ((clock >= emissionFrequency) && isActive) Emit();
 	auto it = enabled.begin();
+
+#define UPDATE_ATTRIBUTE(duration, value, interpolator)\
+	 if (duration > 0.0)  { value = interpolator.Evaluate(particle->clock / duration);}
 	while (it != enabled.end()) {
 		int index = *it;
 		Particle* particle = &pool[index];
-		if (particle->prop.speedVarDuration >= 0.01) {
-			double temp = particle->clock / particle->prop.speedVarDuration;
-			if (abs(temp) < 0.99)
-				particle->currentSpeed = lerp<float, double>(particle->prop.sSpeed, particle->prop.eSpeed,
-															temp);
-		}
-
-		if (particle->prop.alphaVarDuration >= 0.01) {
-			double temp = particle->clock / particle->prop.alphaVarDuration;
-			if (abs(temp) < 0.99)
-				particle->currentAlpha = lerp<float, double>(particle->prop.sAlpha, particle->prop.eAlpha, temp);
-			else
-				particle->currentAlpha = particle->prop.eAlpha;
-		}
-
-		if (particle->prop.scaleVarDuration >= 0.01) {
-			double temp = particle->clock / particle->prop.scaleVarDuration;
-			if (abs(temp) < 0.99)
-				particle->currentScale = lerpVector2<float, double>(particle->prop.sScale, particle->prop.eScale,
-											Vector2<double>(temp, temp));
-		}
-
-		if (particle->prop.directionVarDuration >= 0.01) {
-			double temp = particle->clock / particle->prop.directionVarDuration;
-			if (abs(temp) < 0.99)
-				particle->currentDirection = lerpVector2<float, double>(particle->prop.sDirection, particle->prop.eDirection, 
-												Vector2<double>(temp, temp));
-		}
-
+		UPDATE_ATTRIBUTE(particle->prop.speed.duration, particle->currentSpeed, particle->prop.speed);
+		UPDATE_ATTRIBUTE(particle->prop.alpha.duration, particle->currentAlpha, particle->prop.alpha);
+		UPDATE_ATTRIBUTE(particle->prop.scaleX.duration, particle->currentScale.x, particle->prop.scaleX);
+		UPDATE_ATTRIBUTE(particle->prop.scaleY.duration, particle->currentScale.y, particle->prop.scaleY);
+		UPDATE_ATTRIBUTE(particle->prop.directionX.duration, particle->currentDirection.x, particle->prop.directionX);
+		UPDATE_ATTRIBUTE(particle->prop.directionY.duration, particle->currentDirection.y, particle->prop.directionY);
+#undef UPDATE_ATTRIBUTE(duration, value, interpolator)
 
 		particle->currentPosition = particle->currentPosition +  particle->currentDirection.normalize() * Globals::deltaTime * particle->currentSpeed;
 		particle->distance = (particle->currentPosition - particle->prop.sPosition).magnitude();
@@ -81,14 +62,14 @@ void ParticleSystem::Emit() {
 			pool[temp].clock = 0.0;
 			pool[temp].distance = 0.0;
 
-			pool[temp].prop = prop;
-			pool[temp].currentPosition = prop.sPosition;
-			pool[temp].currentScale = prop.sScale;
-			pool[temp].currentAlpha = prop.sAlpha;
-			pool[temp].currentSpeed = prop.sSpeed;
-			pool[temp].currentDirection = prop.sDirection;
-			pool[temp].isActive = 1;
-			//----
+			pool[temp].prop				= prop;
+			pool[temp].currentPosition  = prop.sPosition;
+			pool[temp].currentScale		= fVec2(prop.scaleX.source, prop.scaleY.source);
+			pool[temp].currentDirection = fVec2(prop.directionX.source, prop.directionY.source);
+			pool[temp].currentAlpha		= prop.alpha.source;
+			pool[temp].currentSpeed		= prop.speed.source;
+			pool[temp].isActive			= 1;
+			//---- 
 			pool[temp].sprite->SetShader(shader);
 			pool[temp].sprite->SetTexture(texture);
 			continue;
@@ -139,11 +120,14 @@ void Particle::Enable() {
 	clock = 0.0;
 	distance = 0.0;
 
-	currentPosition = prop.sPosition;
-	currentScale = prop.sScale;
-	currentSpeed = prop.sSpeed;
-	currentAlpha = prop.sAlpha;
-	currentDirection = prop.sDirection;
+	currentPosition  = prop.sPosition;
+
+	currentScale     = fVec2(prop.scaleX.source, prop.scaleY.source);
+	currentDirection = fVec2(prop.directionX.source, prop.directionY.target);
+
+	currentSpeed     = prop.speed.source;
+	currentAlpha     = prop.alpha.source;
+
 	isActive = 1;
 	sprite->Render();
 }
@@ -158,30 +142,22 @@ void ParticleSystem::Gui() {
 		GUI_SEP;
 		NWGui::DragValue("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
 		GUI_SEP;
-		NWGui::DragValue("Starting direction", &prop.sDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		NWGui::Text("Horizontal direction");
+		prop.directionX.Gui();
+		ImGui::Text("Vertical direction");
+		prop.directionY.Gui();
 		GUI_SEP;
-		NWGui::DragValue("End direction", &prop.eDirection.x, ImGuiDataType_Float, 2, 0.05f, -1.0f, 1.0f);
+		NWGui::Text("Horizontal scale");
+		prop.scaleX.Gui();
+		NWGui::Text("Vertical scale");
+		prop.scaleY.Gui();
 		GUI_SEP;
-		NWGui::DragValue("Direction variation duration", &prop.directionVarDuration, ImGuiDataType_Float);
+		NWGui::Text("Alpha");
+		prop.alpha.Gui();
 		GUI_SEP;
-
-		NWGui::DragValue("Starting scale", &prop.sScale.x, ImGuiDataType_Float, 2);
+		NWGui::Text("Speed");
+		prop.speed.Gui();
 		GUI_SEP;
-		NWGui::DragValue("End scale", &prop.eScale.x, ImGuiDataType_Float, 2);
-		GUI_SEP;
-		NWGui::DragValue("Scale variation duration", &prop.scaleVarDuration, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("Starting Alpha", &prop.sAlpha, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("End Alpha", &prop.eAlpha, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("Alpha variation duration", &prop.alphaVarDuration, ImGuiDataType_Float);
-		GUI_SEP
-		NWGui::DragValue("Starting speed", &prop.sSpeed, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("End speed", &prop.eSpeed, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("speed variation duration", &prop.speedVarDuration, ImGuiDataType_Float);
 		GUI_SEP; GUI_NEWLINE;
 		ImGui::TreePop();
 	}
@@ -218,23 +194,20 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 	WRITE_ON_BIN(data,"ParticleSystem", 14,sizeBuffer);
 	WRITE_ON_BIN(data, &(isActive), sizeof(isActive), sizeBuffer);
 	//serializes particles prop
-	WRITE_ON_BIN(data, &(prop.lifetime), sizeof(prop.lifetime), sizeBuffer);
+
+
+
+	WRITE_ON_BIN(data, &(prop.lifetime),     sizeof(prop.lifetime), sizeBuffer);
 	WRITE_ON_BIN(data, &(prop.lifedistance), sizeof(prop.lifedistance), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sPosition.x), sizeof(prop.sPosition.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sPosition.y), sizeof(prop.sPosition.y), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sDirection.x), sizeof(prop.sPosition.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sDirection.y), sizeof(prop.sDirection.y), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.eDirection.x), sizeof(prop.eDirection.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.directionVarDuration), sizeof(prop.directionVarDuration), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sScale.x), sizeof(prop.sPosition.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sScale.y), sizeof(prop.sPosition.y), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.eScale.x), sizeof(prop.eScale.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.eScale.y), sizeof(prop.eScale.y), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.eScale.x), sizeof(prop.eScale.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.scaleVarDuration), sizeof(prop.scaleVarDuration), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sSpeed),	 sizeof(prop.sSpeed), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.eSpeed),	 sizeof(prop.eSpeed), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.speedVarDuration), sizeof(prop.speedVarDuration), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sPosition.x),  sizeof(prop.sPosition.x), sizeBuffer);
+	WRITE_ON_BIN(data, &(prop.sPosition.y),  sizeof(prop.sPosition.y), sizeBuffer);
+
+	prop.directionX.Serialize(data, offset);
+	prop.directionY.Serialize(data, offset);
+	prop.scaleX.Serialize(data, offset);
+	prop.scaleY.Serialize(data, offset);
+	prop.speed.Serialize(data, offset);
+
 	//emitter prop
 	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
 	WRITE_ON_BIN(data, &(emissionQuantity), sizeof(emissionQuantity), sizeBuffer);
@@ -252,20 +225,13 @@ int ParticleSystem::Deserialize(std::fstream* data, int offset) {
 	READ_FROM_BIN(data, &(prop.lifedistance), sizeBuffer);
 	READ_FROM_BIN(data, &(prop.sPosition.x), sizeBuffer);
 	READ_FROM_BIN(data, &(prop.sPosition.y), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sDirection.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sDirection.y), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.eDirection.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.directionVarDuration), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sScale.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sScale.y), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.eScale.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.eScale.y), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.eScale.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.scaleVarDuration), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sSpeed), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.eSpeed), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.speedVarDuration), sizeBuffer);
-	
+
+	prop.directionX.Deserialize(data, offset);
+	prop.directionY.Deserialize(data, offset);
+	prop.scaleX.Deserialize(data, offset);
+	prop.scaleY.Deserialize(data, offset);
+	prop.speed.Deserialize(data, offset);
+
 	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
 	READ_FROM_BIN(data, &(emissionQuantity), sizeBuffer);
 	READ_FROM_BIN(data, &(recycle), sizeBuffer);

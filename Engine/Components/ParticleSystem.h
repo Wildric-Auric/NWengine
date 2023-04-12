@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Transform.h"
 #include "Globals.h"
+#include "Interpolation.h"
 #include <deque>
 
 #define SHADER_PARTICLES_DEFAULT  "Shaders\\ParticleBatched.shader"
@@ -16,23 +17,12 @@ struct ParticleProperties {
 	//s stands for start and e for end; notice that position is relative to particle system position
 	fVec2 sPosition = fVec2(0.0f,0.0f); 
 	
-	fVec2 sDirection = fVec2(0.0f,1.0f);
-	fVec2 eDirection = fVec2(0.0f,1.0f);
-	float directionVarDuration = 0.0f;
-
-	fVec2 sScale = fVec2(1.0f,1.0f);
-	fVec2 eScale = fVec2(1.0f,1.0f);
-	float scaleVarDuration = 0.0f;
-
-	float sAlpha = 1.0f;
-	float eAlpha = 0.0f;
-	float alphaVarDuration = 0.0f;
-
-
-	float sSpeed = 100.0f; //Pixels per sec
-	float eSpeed = 1.0f;
-	float speedVarDuration = 0.0f;
-
+	BezierInterpolator       directionX = BezierInterpolator(0.0f, 0.0f, 0.0f);
+	BezierInterpolator       directionY = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       scaleX	    = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       scaleY     = BezierInterpolator(1.0f, 1.0f, 0.0f);	
+	BezierInterpolator       alpha      = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       speed      = BezierInterpolator(100.0f, 0.0f, 0.0f);
 };
 class Particle {	
 private:
