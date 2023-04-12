@@ -185,15 +185,13 @@ void NWengine::Shutdown() {
 		delete SceneEditor::cam;
 
 		ScriptManager::SaveScriptList();
-		DestroyOpenAL();
+		DestroyOpenAL();  //TODO::Put init, destroy audio functions in class
 
 		TextSystem::Destroy();
 		Primitives::Destroy();
 
-		ImGui_ImplOpenGL3_Shutdown();
-		ImPlot::DestroyContext();
-		ImGui::DestroyContext();
-		glfwTerminate();
+		Gui::Destroy();
+		Context::Destroy();
 }
 
 #endif

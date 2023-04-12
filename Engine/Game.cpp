@@ -79,6 +79,6 @@ void Game::Shutdown() {
 	DestroyOpenAL();
 	TextSystem::Destroy();
 	Primitives::Destroy();
-	glfwTerminate();
+	Context::Destroy();
 }
 
