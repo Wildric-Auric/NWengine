@@ -70,7 +70,7 @@ std::vector<std::string> GetDirFiles(const std::string& directory)
 	if (hFind == INVALID_HANDLE_VALUE)
 		return {};
 
-	bool first = 0; //first file found is always ".." and I don't know why so i'm not adding it to the list
+	bool first = 0;
 	while (FindNextFileA(hFind, &findData) != 0)
 	{
 		if (first) dirList.push_back(std::string(findData.cFileName));
