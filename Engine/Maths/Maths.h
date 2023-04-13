@@ -269,6 +269,37 @@ bool Vector3<T>::operator != (Vector3 const& vec1) {
 	return (x != vec1.x) && (y != vec1.y) && (z != vec1.z);
 }
 
+template<typename T>
+class Vector4 { //TODO::Complete this class
+public:
+	union {
+		struct {
+			T x;
+			T y;
+			T z;
+			T w;
+		};
+
+		struct {
+			T r;
+			T g;
+			T b;
+			T a;
+		};
+	};
+	Vector4(T x = 0.0f, T y = 0.0f, T z = 0.0f, T w = 0.0f);
+
+};
+
+template<typename T>
+Vector4<T>::Vector4(T x, T y, T z, T w) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
+}
+
+
 template<uint8_t n, uint8_t m, typename T>
 class Matrix {
 public:
