@@ -3,11 +3,10 @@
 
 layout(location = 0) in vec3  attribPos;
 layout(location = 1) in vec2  texCoord;
-layout(location = 2) in vec3  usrData;
-layout(location = 3) in float sampleIDattrib;
+layout(location = 2) in float sampleIDattrib;
 
 out vec2 uv;
-out vec4 screenPos; 
+out vec4 screenPos;
 out float sampleID;
 
 void main() {
@@ -26,7 +25,8 @@ in vec4  screenPos;
 in float sampleID;
 out vec4 FragColor;
 
+vec3 color = vec3(1.0);
 void main() {
-    vec4 col = texture(uTex[int(sampleID)], uv);
+    vec4 col = vec4(  color , max ( pow (1.0 - length(uv - 0.5) / 1.414, 10.0 ), 0.0 ) );
     FragColor = col;
 }
