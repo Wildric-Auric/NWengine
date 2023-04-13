@@ -18,6 +18,8 @@ public:
 	Font* font;
 	std::string text;
 	std::string shader;
+	bool isBatched = 0;
+	Vector4<uint16> colors;
 
 	fVec2 position = fVec2(0.0f, 0.0f);
 	fVec2 scale    = fVec2(1.0f, 1.0f);

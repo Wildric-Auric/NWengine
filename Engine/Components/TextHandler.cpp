@@ -8,14 +8,21 @@ TextHandler::TextHandler(GameObject* go) {
 
 void TextHandler::Update() {
 	float x = this->position.x;
-	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
-		Transform* transform = chr->go.GetComponent<Transform>(); //TODO::add transform variable to glyph
-		Sprite*    sprite    = chr->go.GetComponent<Sprite>();
+	uint32 temp  = (uint32)this->colors.g | ((uint32)this->colors.r << 0xA);
+	uint32 temp0 = (uint32)this->colors.a | ((uint32)this->colors.b << 0xA);
 
+	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
+		Transform* transform       = chr->go.GetComponent<Transform>(); //TODO::add transform variable to glyph
+		Sprite*    sprite          = chr->go.GetComponent<Sprite>();
+
+
+		sprite->vertexAttributes.x = *((float*)&temp );
+		sprite->vertexAttributes.y = *((float*)&temp0);
 
 		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2) * transform->scale.x * this->scale.x;
 		transform->position.y = this->position.y - (chr->glyph->size.y - chr->glyph->bearing.y - chr->glyph->size.y / 2) * transform->scale.y * this->scale.y;
 		sprite->Update(); 
+		sprite->isBatched = this->isBatched;
 		x += (chr->glyph->advance / 64 ) * transform->scale.x;
 	}
 }
@@ -35,6 +42,7 @@ void TextHandler::UpdateGlyphs() {
 
 		iter->glyph = &this->font->charactersMap.find(c)->second;
 		sprite->SetShader(this->shader); //TODO::AddFunction to set shader by its pointer
+		sprite->isBatched = this->isBatched;
 		sprite->SetTexture(&iter->glyph->texture);
 		sprite->container.UpdateSize(iter->glyph->size.x, iter->glyph->size.y);
 		++iter;
