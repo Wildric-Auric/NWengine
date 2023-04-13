@@ -32,10 +32,11 @@ uint32 GameObject::Draw(int8 textureSlot) {
 	
 		//The last element of each stride is set in Render()
 		float stride[36] = {
-			vert0[0], vert0[1], vert0[2], 0.0, 0.0, 0.0, 0.0, 0.0, -1.0,
-			vert1[0], vert1[1], vert1[2], 1.0, 0.0, 0.0, 0.0, 0.0, -1.0,
-			vert3[0], vert3[1], vert3[2], 0.0, 1.0, 1.0, 1.0, 1.0, -1.0,
-			vert2[0], vert2[1], vert2[2], 1.0, 1.0, 1.0, 1.0, 1.0, -1.0
+			//x         y          z      uv.x uv.y          user.x                    user.y                       user.z               tex
+			vert0[0], vert0[1], vert0[2], 0.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert1[0], vert1[1], vert1[2], 1.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert3[0], vert3[1], vert3[2], 0.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert2[0], vert2[1], vert2[2], 1.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0
 		}; //TODO:: The free buffer accessible to the user
 		//First layer batch creation
 		std::unordered_map<uint32, std::vector<Batch*>>::iterator iter = Batch::batchMap.find(sprite->sortingLayer);

@@ -12,8 +12,11 @@ private:
 public:
 	static std::string GetType() { return "Sprite"; };
 	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
+
 	bool isBatched   = 0;
 	bool isRendered	 = 1;
+
+	fVec3 vertexAttributes; //TODO::Find better place for these variabels
 	Sprite() {};
 	Sprite(GameObject* go);
 	~Sprite();
