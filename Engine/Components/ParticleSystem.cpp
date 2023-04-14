@@ -25,9 +25,15 @@ void ParticleSystem::Update() {
 		int index = *it;
 		Particle* particle = &pool[index];
 		UPDATE_ATTRIBUTE(particle->prop.speed.duration, particle->currentSpeed, particle->prop.speed);
-		UPDATE_ATTRIBUTE(particle->prop.alpha.duration, particle->currentAlpha, particle->prop.alpha);
+
+		UPDATE_ATTRIBUTE(particle->prop.colorX.duration, particle->currentColor.x, particle->prop.colorX);
+		UPDATE_ATTRIBUTE(particle->prop.colorY.duration, particle->currentColor.y, particle->prop.colorY);
+		UPDATE_ATTRIBUTE(particle->prop.colorZ.duration, particle->currentColor.z, particle->prop.colorZ);
+		UPDATE_ATTRIBUTE(particle->prop.colorA.duration, particle->currentColor.a, particle->prop.colorA);
+
 		UPDATE_ATTRIBUTE(particle->prop.scaleX.duration, particle->currentScale.x, particle->prop.scaleX);
 		UPDATE_ATTRIBUTE(particle->prop.scaleY.duration, particle->currentScale.y, particle->prop.scaleY);
+
 		UPDATE_ATTRIBUTE(particle->prop.directionX.duration, particle->currentDirection.x, particle->prop.directionX);
 		UPDATE_ATTRIBUTE(particle->prop.directionY.duration, particle->currentDirection.y, particle->prop.directionY);
 #undef UPDATE_ATTRIBUTE(duration, value, interpolator)
@@ -66,7 +72,7 @@ void ParticleSystem::Emit() {
 			pool[temp].currentPosition  = prop.sPosition;
 			pool[temp].currentScale		= fVec2(prop.scaleX.source, prop.scaleY.source);
 			pool[temp].currentDirection = fVec2(prop.directionX.source, prop.directionY.source);
-			pool[temp].currentAlpha		= prop.alpha.source;
+			pool[temp].currentColor     = fVec4(prop.colorX.source, prop.colorY.source, prop.colorZ.source, prop.colorA.source);
 			pool[temp].currentSpeed		= prop.speed.source;
 			pool[temp].isActive			= 1;
 			//---- 
@@ -105,10 +111,13 @@ void ParticleSystem::UpdateParticle(int index) {
 	if (transform == nullptr) transform = attachedObj->AddComponent<Transform>();
 	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
+
+	uint32 temp = (uint32)(pool[index].currentColor.g  * 1023.0f) | ((uint32)(pool[index].currentColor.r * 1023.0f) << 0xA); //TODO::formalize these magic values
+	uint32 temp0= (uint32)(pool[index].currentColor.a *  1023.0f) | ((uint32)(pool[index].currentColor.b * 1023.0f) << 0xA);
+	pool[index].sprite->vertexAttributes.x = *((float*)&temp);
+	pool[index].sprite->vertexAttributes.y = *((float*)&temp0);
+
 	pool[index].sprite->Update();
-	//Can't work like this, TODO::Add uniform call stack
-	/*pool[index].sprite->shader->Use();
-	pool[index].sprite->shader->SetUniform1f("uAlpha", pool[index].currentAlpha);*/
 }
 
 void Particle::Disable() {
@@ -126,7 +135,7 @@ void Particle::Enable() {
 	currentDirection = fVec2(prop.directionX.source, prop.directionY.target);
 
 	currentSpeed     = prop.speed.source;
-	currentAlpha     = prop.alpha.source;
+	currentColor     = fVec4(prop.colorX.source, prop.colorY.source, prop.colorZ.source, prop.colorA.source);
 
 	isActive = 1;
 	sprite->Render();
@@ -152,8 +161,14 @@ void ParticleSystem::Gui() {
 		NWGui::Text("Vertical scale");
 		prop.scaleY.Gui();
 		GUI_SEP;
-		NWGui::Text("Alpha");
-		prop.alpha.Gui();
+		NWGui::Text("Color: Red channel");
+		prop.colorX.Gui();
+		NWGui::Text("Color: Green channel");
+		prop.colorY.Gui();
+		NWGui::Text("Color: Blue channel");
+		prop.colorZ.Gui();
+		NWGui::Text("Color: Alpha channel");
+		prop.colorA.Gui();
 		GUI_SEP;
 		NWGui::Text("Speed");
 		prop.speed.Gui();
@@ -195,8 +210,6 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 	WRITE_ON_BIN(data, &(isActive), sizeof(isActive), sizeBuffer);
 	//serializes particles prop
 
-
-
 	WRITE_ON_BIN(data, &(prop.lifetime),     sizeof(prop.lifetime), sizeBuffer);
 	WRITE_ON_BIN(data, &(prop.lifedistance), sizeof(prop.lifedistance), sizeBuffer);
 	WRITE_ON_BIN(data, &(prop.sPosition.x),  sizeof(prop.sPosition.x), sizeBuffer);
@@ -207,6 +220,10 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 	prop.scaleX.Serialize(data, offset);
 	prop.scaleY.Serialize(data, offset);
 	prop.speed.Serialize(data, offset);
+	prop.colorX.Serialize(data, offset);
+	prop.colorY.Serialize(data, offset);
+	prop.colorZ.Serialize(data, offset);
+	prop.colorA.Serialize(data, offset);
 
 	//emitter prop
 	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
@@ -231,6 +248,11 @@ int ParticleSystem::Deserialize(std::fstream* data, int offset) {
 	prop.scaleX.Deserialize(data, offset);
 	prop.scaleY.Deserialize(data, offset);
 	prop.speed.Deserialize(data, offset);
+
+	prop.colorX.Deserialize(data, offset);
+	prop.colorY.Deserialize(data, offset);
+	prop.colorZ.Deserialize(data, offset);
+	prop.colorA.Deserialize(data, offset);
 
 	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
 	READ_FROM_BIN(data, &(emissionQuantity), sizeBuffer);

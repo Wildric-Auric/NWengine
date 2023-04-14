@@ -21,9 +21,15 @@ struct ParticleProperties {
 	BezierInterpolator       directionY = BezierInterpolator(1.0f, 1.0f, 0.0f);
 	BezierInterpolator       scaleX	    = BezierInterpolator(1.0f, 1.0f, 0.0f);
 	BezierInterpolator       scaleY     = BezierInterpolator(1.0f, 1.0f, 0.0f);	
-	BezierInterpolator       alpha      = BezierInterpolator(1.0f, 1.0f, 0.0f);
+
+	BezierInterpolator       colorX     = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       colorY     = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       colorZ     = BezierInterpolator(1.0f, 1.0f, 0.0f);
+	BezierInterpolator       colorA     = BezierInterpolator(1.0f, 1.0f, 0.0f);
+
 	BezierInterpolator       speed      = BezierInterpolator(100.0f, 0.0f, 0.0f);
 };
+
 class Particle {	
 private:
 public:
@@ -35,7 +41,7 @@ public:
 	fVec2 currentPosition;
 	fVec2 currentScale;
 	float currentSpeed;
-	float currentAlpha;
+	fVec4 currentColor;
 	fVec2 currentDirection;
 
 	double clock = 0.0;
