@@ -3,8 +3,6 @@
 #include "HierarchyGui.h"
 #include "ScriptManager.h"
 #include "Utilities.h"
-#include "Animation.h"
-#include "Animator.h"
 
 
 #define ADD_COMPONENT_TO_INSPECTOR(type, go) if (ImGui::Selectable(#type)) go->AddComponent<type>();
@@ -61,6 +59,7 @@ public:
 				ADD_COMPONENT_TO_INSPECTOR(AudioEmitter  , go);
 				ADD_COMPONENT_TO_INSPECTOR(AudioListener , go);
 				ADD_COMPONENT_TO_INSPECTOR(Script,         go);
+				ADD_COMPONENT_TO_INSPECTOR(TextHandler,    go);
  				ImGui::EndPopup();
 			}
 		}

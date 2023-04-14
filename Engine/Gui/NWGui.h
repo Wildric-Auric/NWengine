@@ -38,6 +38,7 @@ public:
 	static bool Button(std::string label);
 	static bool DragValue(const char* label, void* target, int dataType, int16 vectorSize = 1, float speed = 1.0f, float minn = 0.0f, float maxx = 0.0f);
 	static std::string GenLabel(const char* string, uint32 id);
+    static bool Input(std::string label, std::string* buffer);
     
 
 	static bool QuadraticBezierPlot(std::string label, fVec2* source, fVec2* target, fVec2* controlPoint);

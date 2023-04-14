@@ -150,3 +150,27 @@ bool NWGui::CubicBezierInterpolationPlot(std::string label, float* source, float
 	*target = t.y;
 	return ret;
 }
+
+bool NWGui::Input(std::string label, std::string* buffer) {
+	static char tempBuffer[1024];
+	int i;
+	for (i=0; (i < 1023) && (i < buffer->size()); i++) {
+		tempBuffer[i] = (*buffer)[i];
+	}
+	tempBuffer[i] = '\n';
+
+	bool ret = 0;
+	if (ImGui::BeginTable("testTable0", 2)) {
+		ImGui::TableNextRow();
+		ImGui::TableNextColumn();
+		ImGui::Text(label.c_str());
+		ImGui::TableNextColumn();
+		ret = ImGui::InputText(NWGui::GenLabel("", GET_GUI_ID).c_str(), tempBuffer, 1024);
+		ImGui::EndTable();
+	}
+	*buffer = "";
+	char c; i = 0;
+	while ((c = tempBuffer[i++]) != '\n')
+		*buffer += c;
+	return ret;
+}
