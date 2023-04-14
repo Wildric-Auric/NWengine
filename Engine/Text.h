@@ -29,6 +29,8 @@ private:
 	FT_Face face;
 public:
 	std::unordered_map<char, Glyph> charactersMap;
+	std::string name = "";
+
 	Font(){};
 	Font(std::string path);
 	bool LoadFont(std::string path);
