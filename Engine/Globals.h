@@ -24,12 +24,15 @@ typedef uint32_t  uint32;
 typedef uint64_t  uint64;
 
 
-typedef Vector2<int> iVec2;
-typedef Vector2<float> fVec2;
-typedef Vector3<float> fVec3;
-typedef Vector3<int> iVec3;
+typedef Vector2<int>	iVec2;
+typedef Vector2<float>	fVec2;
+typedef Vector3<float>	fVec3;
+typedef Vector3<int>	iVec3;
 typedef Vector2<double> dVec2;
 typedef Vector3<double> dVec3;
+typedef Vector4<int>	iVec4;
+typedef Vector4<float>  fVec4;
+typedef Vector4<double> dVec4;
 
 typedef Matrix<2, 2, int> iMat2;
 typedef Matrix<3, 3, int>  iMat3;
