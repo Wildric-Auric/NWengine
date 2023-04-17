@@ -8,6 +8,7 @@ Engine\\SceneEditor.cpp
 Engine\\Shader.cpp
 Engine\\Source.cpp
 Engine\\Text.cpp
+Engine\\Interpolation.cpp
 Engine\\Audio\\Audio.cpp
 Engine\\Components\\Animator.cpp
 Engine\\Components\\AudioEmitter.cpp

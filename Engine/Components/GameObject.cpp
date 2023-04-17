@@ -12,6 +12,7 @@
 #include "Batch.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Renderer.h"
 
 uint32 GameObject::Draw(int8 textureSlot) {
 	Sprite* sprite = GetComponent<Sprite>();
@@ -134,6 +135,7 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
 	ADD_COMPONENT(TextHandler       , type);
+	ADD_COMPONENT(Renderer          , type);
 	return nullptr;
 };
 

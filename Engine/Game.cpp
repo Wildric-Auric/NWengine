@@ -6,8 +6,6 @@ int8 Game::Run() {
 
 	GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	if (window == nullptr) return -1;
-
-	//Gui::Init((void*)window);
 	if (!InitOpenAL()) return -1;
 	if (!TextSystem::Init())
 		return -1;
@@ -15,13 +13,9 @@ int8 Game::Run() {
 	RessourcesLoader::LoadDefaultRessources();
 	ScriptManager::LoadScriptList();
 	Context::EnableBlend();
-	//SceneEditor::Init();
 	Batch::ComputeIndices();
 	Batch::maxBatchTextures = 32;
-	(Scene::currentScene = new Scene("scene0"))->LoadScene();
-
 	MainLoop();
-
 	Shutdown();
 }
 
@@ -37,6 +31,13 @@ void Game::MainLoop() {
 	if (Scene::currentScene != nullptr)
 		Scene::currentScene->Start();
 
+	GameObject renderObj = GameObject();
+	Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
+	Renderer::currentRenderer = Renderer::defaultRenderer;
+
+	//TODO::Custom scene loading
+	(Scene::currentScene = new Scene("Scenes\\scene0.NWscene"))->LoadScene();
+
 	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		Context::Clear();
 
@@ -44,14 +45,12 @@ void Game::MainLoop() {
 
 		Globals::uTime += Globals::deltaTime;
 
-		//Drawing shapes
-		if (Scene::currentScene != nullptr)
-			Scene::currentScene->Update();
-
 		if (Camera::ActiveCamera != nullptr) {
-			Camera::ActiveCamera->Update();
 			Camera::ActiveCamera->Capture();
 		}
+
+		if (Scene::currentScene != nullptr)
+			Scene::currentScene->Update();
 		//Final frame
 		Renderer::currentRenderer->DrawOnDefaultFrame();
 		//Update screen
@@ -76,6 +75,7 @@ void Game::Shutdown() {
 	delete Scene::currentScene;
 	delete Renderer::defaultRenderer;
 
+	ScriptManager::SaveScriptList();
 	DestroyOpenAL();
 	TextSystem::Destroy();
 	Primitives::Destroy();

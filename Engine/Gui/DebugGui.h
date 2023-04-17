@@ -3,7 +3,6 @@
 #include "SceneEditorGui.h"
 #include "Scene.h"
 #include "Utilities.h"
-#include "PostProcessing.h"
 #include "Console.h"
 #include "ScriptManager.h"
 #include "ParticleSystem.h"
@@ -19,40 +18,26 @@
 #include "ScriptManagerGui.h"
 #include "Collider.h"
 
+#include "Text.h"
+#include "Batch.h"
+#include "TextHandler.h"
+#include <iostream>
+
 class DebugGui {
 public:
 	static bool isActive;
 	static void Init() {}
 	static void Show() {
-
-		
 		if (!isActive) return;
-
-
-
-		ImGui::Begin("Debug", &isActive, ImGuiWindowFlags_MenuBar);
-
-		NWGui::DragValue("Stretch", &Renderer::currentRenderer->strechCoeff.x, ImGuiDataType_Float, 2, 0.1, 0.0f, 2.0f);
-		NWGui::DragValue("CamPos", &Renderer::currentRenderer->attachedObj->GetComponent<Camera>()->position, ImGuiDataType_Float, 2, 1.0f , -300.0f, 300.0f);
-
+		ImGui::Begin("Debug", &isActive);
 
 		ImGui::ShowDemoWindow();
 		ImPlot::ShowDemoWindow();
-		static dVec2 point =  dVec2(0.0, 0.0);
-		static dVec2 point0 = dVec2(1.0, 0.0);
-		static double xx[1000];
-		static double yy[1000];
-		for (int i = 1; i < 1001; i++) {
-			fVec2 temp = CbezierVector2(dVec2(0.0f, 0.0f), dVec2(1.0f,1.0f), point, point0, fVec2(((float)i)/1000.0f, ((float)i)/1000.0f));
-			xx[i-1] = temp.x;
-			yy[i-1] = temp.y;
-		}
-		if (ImPlot::BeginPlot("Hello World")) {
-			ImPlot::DragPoint(1504, &point.x, &point.y, ImVec4(1.0f,0.0f,0.0f, 1.0f));
-			ImPlot::DragPoint(2069, &point0.x, &point0.y, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-			ImPlot::PlotLine("bezier", xx, yy, 1000, ImPlotLineFlags_Segments);
-			ImPlot::EndPlot();
-		}
+		static float point =  0.0f;
+		static float point0 = 1.0f;
+		static fVec2 point1 = fVec2(0.0, 0.0);
+		static fVec2 point2 = fVec2(1.0, 0.0);
+		NWGui::CubicBezierInterpolationPlot("Test", &point, &point0, &point1, &point2);
 		ImGui::End();
 	}
 };

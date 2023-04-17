@@ -9,7 +9,6 @@
 	scr(GameObject* goc) {                         \
 		this->goc = goc;                           \
 	};										       \
-	~scr() { delete this; };					
 
 class Scriptable : GuiObject {
 public:

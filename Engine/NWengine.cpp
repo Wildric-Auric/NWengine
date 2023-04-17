@@ -73,7 +73,7 @@ extern "C"
 		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
 		////Initialization finished
 
-		(Scene::currentScene = new Scene("scene0"))->LoadScene();
+		(Scene::currentScene = new Scene("Scenes\\scene0.NWscene"))->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
 		return Context::dllFlag;
@@ -111,8 +111,6 @@ int NWengine::Run() {
 		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
 	
 		////Initialization finished
-
-		(Scene::currentScene = new Scene("scene0"))->LoadScene();
 		
 		NWengine::MainLoop();
 
@@ -149,12 +147,14 @@ void NWengine::MainLoop() {
 			Camera::ActiveCamera->Capture();
 		}
 
-		//Updating Renderer camera framebuffer
-		Renderer::currentRenderer->CaptureOnCamFrame();
-
 		//Updating scene objects
 		if (Scene::currentScene != nullptr)
 			Scene::currentScene->Update();
+
+		//Updating Renderer camera framebuffer
+		Renderer::currentRenderer->CaptureOnCamFrame();
+
+	
 
 		//Render Im::Gui
 		ImGui::Render();

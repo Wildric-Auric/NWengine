@@ -98,7 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\release static\vs2015-2022\win32;$(SolutionDir)dependencies\SND\lib;$(SolutionDir)dependencies\OPENAL\win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\GLFW\lib-vc2019;$(SolutionDir)dependencies\GLEW\lib\Release\Win32;$(SolutionDir)dependencies\IRRKLANG\lib\Win32-visualStudio;$(SolutionDir)dependencies\freetype\lib\win32;$(SolutionDir)dependencies\SND\lib;$(SolutionDir)dependencies\OPENAL\win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;OpenAL32.lib;libsndfile-1.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
@@ -185,20 +185,23 @@
     <ClCompile Include="Engine\Components\AudioEmitter.cpp" />
     <ClCompile Include="Engine\Components\AudioListener.cpp" />
     <ClCompile Include="Engine\Components\Collider.cpp" />
-    <ClCompile Include="Engine\Components\PostProcessing.cpp" />
     <ClCompile Include="Engine\Components\Script.cpp" />
+    <ClCompile Include="Engine\Components\TextHandler.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
     <ClCompile Include="Engine\Gui\Console.cpp" />
     <ClCompile Include="Engine\Gui\Gui.cpp" />
     <ClCompile Include="Engine\Gui\NWGui.cpp" />
+    <ClCompile Include="Engine\Interpolation.cpp" />
     <ClCompile Include="Engine\Reflection\GuiObject.h" />
+    <ClCompile Include="Engine\Rendering\Batch.cpp" />
     <ClCompile Include="Engine\Rendering\Framebuffer.cpp" />
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
+    <ClCompile Include="Engine\RuntimeManager.cpp" />
+    <ClCompile Include="Engine\SceneEditor.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
     <ClCompile Include="Engine\Components\ParticleSystem.cpp" />
-    <ClCompile Include="Engine\Components\Physics.cpp" />
     <ClCompile Include="Engine\Rendering\Camera.cpp" />
     <ClCompile Include="Engine\Context\Context.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\mouni\OneDrive\Documents\GraphicsLibrary\glm-master\glm\gtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -217,10 +220,12 @@
     <ClCompile Include="Engine\STL\Utilities.cpp" />
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
-    <ClCompile Include="Ressources\Scripts\player.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
     <ClCompile Include="Ressources\Scripts\SoundPlayer.cpp" />
+    <ClCompile Include="Scripts\Ball.cpp" />
+    <ClCompile Include="Scripts\Player.cpp" />
+    <ClCompile Include="Scripts\PostProcessing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -911,8 +916,8 @@
     <ClInclude Include="Engine\Components\AudioListener.h" />
     <ClInclude Include="Engine\Components\Collider.h" />
     <ClInclude Include="Engine\Components\Components.h" />
-    <ClInclude Include="Engine\Components\PostProcessing.h" />
     <ClInclude Include="Engine\Components\Script.h" />
+    <ClInclude Include="Engine\Components\TextHandler.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
     <ClInclude Include="Engine\Game.h" />
     <ClInclude Include="Engine\Gui\Console.h" />
@@ -924,17 +929,20 @@
     <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
     <ClInclude Include="Engine\Gui\ScriptManagerGui.h" />
+    <ClInclude Include="Engine\Interpolation.h" />
     <ClInclude Include="Engine\Reflection\NWReflection.h" />
     <ClInclude Include="Engine\Reflection\Serialized.h" />
     <ClInclude Include="Engine\Reflection\Serializer.h" />
+    <ClInclude Include="Engine\Rendering\Batch.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Gui\Gui.h" />
     <ClInclude Include="Engine\Rendering\Renderer.h" />
+    <ClInclude Include="Engine\RuntimeManager.h" />
+    <ClInclude Include="Engine\SceneEditor.h" />
     <ClInclude Include="Engine\STL\NWstd.h" />
     <ClInclude Include="Engine\NWengine.h" />
     <ClInclude Include="Engine\STL\Parser.h" />
     <ClInclude Include="Engine\Components\ParticleSystem.h" />
-    <ClInclude Include="Engine\Components\Physics.h" />
     <ClInclude Include="Engine\Rendering\Camera.h" />
     <ClInclude Include="Engine\Context\Context.h" />
     <ClInclude Include="Engine\Components\GameObject.h" />
@@ -950,6 +958,8 @@
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\STL\Utilities.h" />
     <ClInclude Include="Engine\Components\Sprite.h" />
+    <ClInclude Include="Scripts\Ball.h" />
+    <ClInclude Include="Scripts\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -1265,6 +1275,7 @@
     <None Include="Shaders\Particle.shader" />
     <None Include="Shaders\PostProcessing.shader" />
     <None Include="Shaders\SemiTranscapentTexture.shader" />
+    <None Include="Shaders\TexturedBatched.shader" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.command.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.read.1.tlog" />
     <None Include="x64\Debug\TopDownS.6ddaa3b5.tlog\CL.write.1.tlog" />

@@ -10,6 +10,7 @@ class TextHandler : public GameComponent {
 public:
 	static std::string GetType() { return "TextHandler"; }
 	TextHandler() {};
+	~TextHandler();
 	TextHandler(GameObject* go);
 	GameObject* attachedObj;
 

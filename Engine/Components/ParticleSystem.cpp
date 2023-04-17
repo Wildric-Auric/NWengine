@@ -15,7 +15,7 @@ std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 
 void ParticleSystem::Update() {
 	clock += Globals::deltaTime;
-	prop.absoluteStartPosition = attachedObj->GetComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
+	prop.absoluteStartPosition = attachedObj->AddComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
 	if ((clock >= emissionFrequency) && isActive) Emit();
 	auto it = enabled.begin();
 

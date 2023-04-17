@@ -87,6 +87,8 @@ void Camera::Gui() {
 
 Camera::~Camera() {
 	this->fbo.Delete();
+	if (Camera::ActiveCamera == this)
+		Camera::ActiveCamera = nullptr;
 }
 
 int Camera::Serialize(std::fstream* data, int offset) {

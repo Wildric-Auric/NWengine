@@ -117,8 +117,7 @@ void Scene::Draw() {
 }
 
 void Scene::Save() {
-	std::fstream data((std::string)"Scenes\\" + std::string(this->name) + ".NWscene",
-		std::ios::binary | std::ios::out | std::ios::trunc);
+	std::fstream data( this->name, std::ios::binary | std::ios::out | std::ios::trunc);
 	for (std::list<GameObject>::iterator iter = sceneObjs.begin(); iter != sceneObjs.end(); iter++) {
 		iter->Serialize(&data, 0);
 	}
@@ -129,7 +128,7 @@ void Scene::Save() {
 
 void Scene::LoadScene() {
 	sceneObjs.clear(); 
-	std::fstream data(std::string("Scenes\\") + this->name + ".NWscene", std::ios::binary | std::ios::in);
+	std::fstream data(this->name, std::ios::binary | std::ios::in);
 
 	data.seekg(0, std::ios::end);
 	if (data.tellg() < 1) {
@@ -164,6 +163,7 @@ void Scene::LoadScene() {
 };
 
 Scene::~Scene() {
+	//Delete all components
 	for (std::list<GameObject>::iterator it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
 		for (auto pair : it->components) 
 			delete (GameComponent*)pair.second;

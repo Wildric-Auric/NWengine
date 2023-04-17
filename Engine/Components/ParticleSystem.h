@@ -26,7 +26,7 @@ struct ParticleProperties {
 	BezierInterpolator       colorY     = BezierInterpolator(1.0f, 1.0f, 0.0f);
 	BezierInterpolator       colorZ     = BezierInterpolator(1.0f, 1.0f, 0.0f);
 	BezierInterpolator       colorA     = BezierInterpolator(1.0f, 1.0f, 0.0f);
-
+	
 	BezierInterpolator       speed      = BezierInterpolator(100.0f, 0.0f, 0.0f);
 };
 
@@ -36,7 +36,7 @@ public:
 	GameObject go;
 	Sprite* sprite;
 	Transform* transform;
-	bool isActive = 0; 
+	bool isActive = 0;
 	ParticleProperties prop;
 	fVec2 currentPosition;
 	fVec2 currentScale;

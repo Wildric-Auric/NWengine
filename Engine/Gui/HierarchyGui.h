@@ -19,7 +19,7 @@ public:
 			renaming = -1;
 			return;
 		}
-
+		
 		ImGui::Begin("Hierarchy", &isActive, ImGuiWindowFlags_MenuBar);
 		if (Scene::currentScene == nullptr) {
 			ImGui::End();

@@ -1,4 +1,17 @@
-Microsoft (R) Incremental Linker Version 14.34.31942.0
-Copyright (C) Microsoft Corporation.  All rights reserved.
-
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+PostProcessing.cpp
+C:\Users\HP\source\repos\Wildric-Auric\NWengine\Engine\Components\GameObject.h(58): error C2243: 'type cast': conversion from 'T *' to 'const _Ty2' exists, but is inaccessible
+        with
+        [
+            T=Renderer
+        ]
+        and
+        [
+            _Ty2=GameComponent *
+        ]
+C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Scripts\\PostProcessing.cpp(8): note: see reference to function template instantiation 'T *GameObject::AddComponent<Renderer>(void)' being compiled
+        with
+        [
+            T=Renderer
+        ]
+player.cpp
+Generating Code...

@@ -98,4 +98,8 @@ int TextHandler::Deserialize(std::fstream* data, int offset) {
 	return 0;
 }
 
+TextHandler::~TextHandler() {
+	this->font.Delete(); //Temporary
+}
+
 

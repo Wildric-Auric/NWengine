@@ -1,30 +1,27 @@
 @echo off
  if not defined DevEnvDir (call vcvars32)
-LINK "Compiled\\ScriptManager.obj"^
- "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x86\\Game\\Game.lib"^
- "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build\\Data\\x86\\Game\\Source.obj"^
- "Compiled\\player.obj"^
- /LIBPATH:"dependencies\\GLFW\\lib-vc2019"^
- /LIBPATH:"dependencies\\GLEW\\lib\\Release\\Win32"^
- /LIBPATH:"dependencies\\freetype\\release static\\vs2015-2022\\win32"^
- /LIBPATH:"dependencies\\SND\\lib"^
- /LIBPATH:"dependencies\\OPENAL\\win32"^
- opengl32.lib^
- freetype.lib^
- OpenAL32.lib^
- libsndfile-1.lib^
- glew32s.lib^
- glfw3.lib^
- kernel32.lib^
- user32.lib^
- gdi32.lib^
- winspool.lib^
- comdlg32.lib^
- advapi32.lib^
- shell32.lib^
- ole32.lib^
- oleaut32.lib^
- uuid.lib^
- odbc32.lib^
- odbccp32.lib^
- /OUT:C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\myGame.exe > log.txt
+cl /EHsc /MD /c  /DGLEW_STATIC  /DWIN32  /DWIN_32  /D_CRT_SECURE_NO_WARNINGS  /D_CONSOLE  /D_MBCS ^
+ /Fo"Compiled\\" /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\GLEW\\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\GLFW\\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\vendor"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\IRRKLANG\\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\freetype\\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\OPENAL\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\dependencies\\SND\\include"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Components"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Audio"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Context"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Gui"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Maths"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Rendering"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\STL"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Native Scripting"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Engine\\Reflection"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Build"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Scripts\\"^
+ /I "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\" "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Scripts\\PostProcessing.cpp"^
+ "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.cpp"^
+ > log.txt

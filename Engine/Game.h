@@ -19,6 +19,8 @@
 #include "ScriptManager.h"
 #include "SceneEditor.h"
 
+#include "NWGui.h" //TODO::Remove this!!! No GUI in GAME BUILD, just for testing now
+
 class Game {
 public:
 	static int8 Run();

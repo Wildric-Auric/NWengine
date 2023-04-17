@@ -71,7 +71,16 @@ void Gui::Update() {
 		}
 
 		if (ImGui::BeginMenu("Scene")) {
-			if (ImGui::MenuItem("Save"))	Scene::currentScene->Save(); //TODO::Not save during runtime
+			if (ImGui::MenuItem("Save") && Scene::currentScene != nullptr)
+				Scene::currentScene->Save();
+			
+			if (ImGui::MenuItem("Load")) {
+				std::string path = GetFile("NWscene\0*.NWscene");
+				if (path != "") {
+					delete Scene::currentScene;
+					(Scene::currentScene = new Scene(path))->LoadScene();
+				}
+			}
 			ImGui::EndMenu();
 		}
 
@@ -80,6 +89,7 @@ void Gui::Update() {
 
 	NWGui::AutoInc		= 1; //Renitialize autoincremented id on each gui update;
 
+	if (Scene::currentScene == nullptr) return;
 	SceneViewGui::Show();
 	DebugGui::Show();
 	HierarchyGui::Show();
