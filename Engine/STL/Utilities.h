@@ -26,20 +26,20 @@ std::vector<std::string> GetNWlist(std::string path);
 
 struct DllHandle {
 	DllHandle(const char* filename);
+	DllHandle() {};
 	~DllHandle();
 	const void* Get() const;
 
 private:
-	void* h;
+	void* h = nullptr;
 };
-
 
 void* GetDllFunction(DllHandle* dll, const char* functionName);
 
 std::vector<int> GetRecusivelyFilesNumber(const std::string& directory);
 //DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
 //C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
-std::vector<std::string> GetDirFiles(const std::string& directory);
+std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter = "");
 
 std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory);
 
@@ -51,8 +51,19 @@ std::string GetExePath();
 
 std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0");
 
+std::string SaveAs(const char* type = "Text Files\0*.txt\0*.*\0");
+
+std::string ToSingleBackSlash(const std::string& dir);
+
+std::string ToDoubleBackSlash(const std::string& dir);
 //Returns filename + extension
 std::string GetFileName(std::string path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr);
+
+bool CopyDirectory(const std::string& dest, const std::string& src);
+
+bool MakeDir(const std::string& path);
+
+bool MakeFile(const std::string& path);
 
 bool FileCopy(std::string dest, std::string src, bool failIfExists = 0);
 

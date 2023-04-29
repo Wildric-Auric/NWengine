@@ -1,6 +1,9 @@
 #include "Utilities.h"
 #include <fstream>
 #include <windows.h>
+#include <wchar.h>
+#include <codecvt>
+#include <locale>
 
 std::vector<std::string> GetNWlist(std::string path) {
 	std::fstream stream(path); //TODO::ERROR checking
@@ -12,9 +15,11 @@ std::vector<std::string> GetNWlist(std::string path) {
 
 DllHandle::DllHandle(const char* filename) {
 	HINSTANCE temp = LoadLibrary(filename);
-	if (!h || h == INVALID_HANDLE_VALUE)
-		printf("Cannot load DLL\n");
 	h = temp;
+	if (!temp || temp == INVALID_HANDLE_VALUE) {
+		h = nullptr;
+		printf("Cannot load DLL\n");
+	}
 }
 
 DllHandle::~DllHandle() { if (h) FreeLibrary((HINSTANCE)h); }
@@ -57,7 +62,7 @@ std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
 }
 //DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
 //C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
-std::vector<std::string> GetDirFiles(const std::string& directory)
+std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter)
 {
 	WIN32_FIND_DATAA findData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -73,8 +78,19 @@ std::vector<std::string> GetDirFiles(const std::string& directory)
 	bool first = 0;
 	while (FindNextFileA(hFind, &findData) != 0)
 	{
-		if (first) dirList.push_back(std::string(findData.cFileName));
-		first = 1;
+		if (!first) {
+			first = 1;
+			continue;
+		}
+		std::string filename  = findData.cFileName;
+		if (extensionFilter != "") {
+			std::string extension = "";
+			GetFileName(filename, nullptr, &extension);
+			if (extension == extensionFilter)
+				dirList.push_back(filename);
+			continue;
+		}
+		dirList.push_back(filename);
 	}
 
 	FindClose(hFind);
@@ -134,7 +150,7 @@ inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int inde
 std::string GetCurrentDir() {
 	char dir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, dir);
-	return std::string(dir);
+	return std::string(dir) + "\\";
 }
 
 std::string GetExePath() {
@@ -144,13 +160,12 @@ std::string GetExePath() {
 }
 
 std::string GetFile(const char* type) {
-	//Thank you Duthomhas
 	char filename[MAX_PATH];
 	OPENFILENAME ofn;
 	ZeroMemory(&filename, sizeof(filename));
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = NULL;  // If you have a window to center over, put its HANDLE here
+	ofn.hwndOwner = NULL; 
 	ofn.lpstrFilter = type;
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
@@ -160,29 +175,95 @@ std::string GetFile(const char* type) {
 	if (GetOpenFileName(&ofn)) {
 		return std::string(filename);
 	}
+	return "";
+}
 
-	// All this stuff below is to tell you exactly how you messed up above. 
-	// Once you've got that fixed, you can often (not always!) reduce it to a 'user cancelled' assumption.
-	switch (CommDlgExtendedError())
-	{
-	case CDERR_DIALOGFAILURE:  printf("CDERR_DIALOGFAILURE\n");		break;
-	case CDERR_FINDRESFAILURE: printf("CDERR_FINDRESFAILURE\n");	break;
-	case CDERR_INITIALIZATION: printf("CDERR_INITIALIZATION\n");	break;
-	case CDERR_LOADRESFAILURE: printf("CDERR_LOADRESFAILURE\n");	break;
-	case CDERR_LOADSTRFAILURE: printf("CDERR_LOADSTRFAILURE\n");	break;
-	case CDERR_LOCKRESFAILURE: printf("CDERR_LOCKRESFAILURE\n");	break;
-	case CDERR_MEMALLOCFAILURE: printf("CDERR_MEMALLOCFAILURE\n");	break;
-	case CDERR_MEMLOCKFAILURE:  printf("CDERR_MEMLOCKFAILURE\n");	break;
-	case CDERR_NOHINSTANCE:		printf("CDERR_NOHINSTANCE\n");		break;
-	case CDERR_NOHOOK:			printf("CDERR_NOHOOK\n");			break;
-	case CDERR_NOTEMPLATE:		printf("CDERR_NOTEMPLATE\n");		break;
-	case CDERR_STRUCTSIZE:		printf("CDERR_STRUCTSIZE\n");		break;
-	case FNERR_BUFFERTOOSMALL:	printf("FNERR_BUFFERTOOSMALL\n");	break;
-	case FNERR_INVALIDFILENAME: printf("FNERR_INVALIDFILENAME\n");	break;
-	case FNERR_SUBCLASSFAILURE: printf("FNERR_SUBCLASSFAILURE\n");	break;
-	default: return "";
+std::string SaveAs(const char* type) {
+	char filename[MAX_PATH];
+	OPENFILENAME ofn;
+	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL; 
+	ofn.lpstrFilter  = type;
+	ofn.lpstrFile = filename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrTitle = "Select a File";
+	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (GetSaveFileName(&ofn)) {
+		return std::string(filename);
 	}
 	return "";
+}
+
+std::string ToSingleBackSlash(const std::string& dir) {
+	std::string ret = "";
+	bool v = 0;
+	for (char c : dir) {
+		if (v && c == '\\')
+			continue;
+		if (c == '\\') {
+			v = 1;
+			ret += c;
+			continue;
+		}
+		ret += c;
+		v = 0;
+	}
+	return ret;
+}
+
+std::string ToDoubleBackSlash(const std::string& dir) {
+	std::string ret = "";
+	bool v = 0;
+	for (char c : dir) {
+		if (v && c == '\\')
+			continue;
+		if (c == '\\') {
+			v = 1;
+			ret += "\\\\";
+			continue;
+		}
+		ret += c;
+		v = 0;
+	}
+	return ret;
+}
+
+
+bool CopyDirectory(const std::string& dest, const std::string& src) {
+	SHFILEOPSTRUCTW s   = { 0 };
+	std::wstring tempSrc = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(src) + L"*";
+	std::wstring tempDst = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(dest);
+
+
+	WCHAR    src0[MAX_PATH + 1];
+	WCHAR   dest0[MAX_PATH + 1];
+	wcscpy_s(src0 , MAX_PATH, tempSrc.c_str());
+	wcscpy_s(dest0, MAX_PATH, tempDst.c_str());
+	 src0[lstrlenW(src0)+1]   = 0;
+	dest0[lstrlenW(dest0)+1]  = 0;
+
+	s.wFunc				= FO_COPY;
+	s.fFlags			= FOF_SILENT;
+	s.pTo			    = dest0;
+	s.pFrom				= src0;
+
+	int	res = SHFileOperationW(&s);
+	return !res;
+} 
+
+bool MakeDir(const std::string& path) {
+	return CreateDirectory(path.c_str(), NULL);
+}
+
+bool MakeFile(const std::string& path) {
+	HANDLE h = CreateFileA(path.c_str(),FILE_READ_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, NULL);
+	if (h == INVALID_HANDLE_VALUE)
+		return 0;
+	CloseHandle(h);
+	return 1;
 }
 
 //Returns filename + extension
@@ -201,7 +282,7 @@ std::string GetFileName(std::string path, std::string* bFilename, std::string* b
 		}
 		if (chr == '\\') {
 			if (slash) continue;
-			root += filename + "\\\\";
+			root += filename + "\\";
 			filename = "";
 			extension = "";
 			slash = 1;
@@ -241,9 +322,12 @@ bool Exec(std::string cmd) {
 		return 0;
 
 	WaitForSingleObject(pInfo.hProcess, INFINITE);
+	DWORD exitCode;
+	GetExitCodeProcess(pInfo.hProcess, &exitCode);
+
 	CloseHandle(pInfo.hProcess);
 	CloseHandle(pInfo.hThread);
-	return 1;
+	return !exitCode;
 }
 
 bool FileDelete(std::string name) {
