@@ -56,10 +56,10 @@ void ScriptManager::LoadScriptList() {
 
 std::map<std::string, std::string> ScriptManager::scriptList = {};
 //BEG_PPP
-#include "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Ressources\\Scripts\\player.h"
+#include "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Scripts\\PostProcessing.h"
 std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {
 
-  {"player",player::GetScript}
+  {"PostProcessing",PostProcessing::GetScript}
 };
 //END_PPP
 

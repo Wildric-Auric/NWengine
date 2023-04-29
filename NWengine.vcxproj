@@ -193,6 +193,7 @@
     <ClCompile Include="Engine\Gui\Gui.cpp" />
     <ClCompile Include="Engine\Gui\NWGui.cpp" />
     <ClCompile Include="Engine\Interpolation.cpp" />
+    <ClCompile Include="Engine\NWproj.cpp" />
     <ClCompile Include="Engine\Reflection\GuiObject.h" />
     <ClCompile Include="Engine\Rendering\Batch.cpp" />
     <ClCompile Include="Engine\Rendering\Framebuffer.cpp" />
@@ -222,10 +223,6 @@
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
-    <ClCompile Include="Ressources\Scripts\SoundPlayer.cpp" />
-    <ClCompile Include="Scripts\Ball.cpp" />
-    <ClCompile Include="Scripts\Player.cpp" />
-    <ClCompile Include="Scripts\PostProcessing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -930,6 +927,7 @@
     <ClInclude Include="Engine\Gui\SceneViewGui.h" />
     <ClInclude Include="Engine\Gui\ScriptManagerGui.h" />
     <ClInclude Include="Engine\Interpolation.h" />
+    <ClInclude Include="Engine\NWproj.h" />
     <ClInclude Include="Engine\Reflection\NWReflection.h" />
     <ClInclude Include="Engine\Reflection\Serialized.h" />
     <ClInclude Include="Engine\Reflection\Serializer.h" />
@@ -958,8 +956,6 @@
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\STL\Utilities.h" />
     <ClInclude Include="Engine\Components\Sprite.h" />
-    <ClInclude Include="Scripts\Ball.h" />
-    <ClInclude Include="Scripts\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
