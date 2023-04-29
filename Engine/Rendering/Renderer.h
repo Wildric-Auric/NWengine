@@ -11,8 +11,8 @@ public:
 	Renderer(GameObject* go);
 	~Renderer();
 
-	GameObject* attachedObj;
-	Camera*     target; //TODO::Update logic in nwengine.cpp and game.cpp
+	GameObject* attachedObj = nullptr;
+	Camera*     target	    = nullptr; //TODO::Update logic in nwengine.cpp and game.cpp
 
 	fVec2 strechCoeff = fVec2(1.0f, 1.0f);
 

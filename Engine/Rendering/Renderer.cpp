@@ -28,14 +28,19 @@ void Renderer::DrawOnDefaultFrame() {
 	//Adding or getting components
 	Camera* cam = attachedObj->AddComponent<Camera>();
 	Sprite* sprite = attachedObj->AddComponent<Sprite>();
+
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
-	if (temp == nullptr) return;
-	sprite->container.UpdateSize(temp->fbo.RenderedImage.size.x, temp->fbo.RenderedImage.size.y);
-	cam->ChangeOrtho(temp->fbo.RenderedImage.size.x, temp->fbo.RenderedImage.size.y);
+	if (target == nullptr)
+		target = temp;
+	if (target == nullptr)
+		return; //TODO::Show Blank image instead
+
+	sprite->container.UpdateSize(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
+	cam->ChangeOrtho(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
 	cam->Update();
 	//Setting sprite texture
-	sprite->SetTexture(&temp->fbo.RenderedImage);
+	sprite->SetTexture(&target->fbo.RenderedImage);
 	if (sprite->shader->name != shaderName)
 		sprite->SetShader(shaderName);
 
@@ -50,6 +55,7 @@ void Renderer::DrawOnDefaultFrame() {
 	Camera::ActiveCamera = cam;
 	attachedObj->Draw();
 	Camera::ActiveCamera = temp;
+	target               = nullptr; //May be temporary solution
 }
 
 void Renderer::CaptureOnCamFrame() {
@@ -59,16 +65,17 @@ void Renderer::CaptureOnCamFrame() {
 	Transform* transform  = attachedObj->AddComponent<Transform>();
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
-	if (temp == nullptr)
+	if (target == nullptr)
+		target = temp;
+	if (target == nullptr)
 		return;
-	 
 	//TODO::Downscale the texture to which post processing shader is applied and then pass it to imgui
-	sprite->container.UpdateSize(temp->fbo.RenderedImage.size.x, temp->fbo.RenderedImage.size.y);
-	cam->ChangeOrtho(temp->fbo.RenderedImage.size.x, temp->fbo.RenderedImage.size.y);
+	sprite->container.UpdateSize(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
+	cam->ChangeOrtho(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
 	cam->Update();
 
 	//Setting srpite texture
-	sprite->SetTexture(&temp->fbo.RenderedImage);
+	sprite->SetTexture(&target->fbo.RenderedImage);
 	if (sprite->shader->name != shaderName)
 		sprite->SetShader(shaderName);
 
@@ -84,6 +91,7 @@ void Renderer::CaptureOnCamFrame() {
 	cam->fbo.Unbind();
 
 	Camera::ActiveCamera = temp;
+	target = nullptr;
 }
 
 Renderer::~Renderer() {
