@@ -186,7 +186,7 @@ void ParticleSystem::Gui() {
 
 		if (NWGui::FileHolder("Texture", this->texture)) {
 			std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
-			if (path != "") path;
+			if (path != "") this->texture = path;
 		}
 		GUI_SEP
 		NWGui::DragValue("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
@@ -226,6 +226,8 @@ int ParticleSystem::Serialize(std::fstream* data, int offset) {
 	prop.colorA.Serialize(data, offset);
 
 	//emitter prop
+	WRITE_ON_BIN(data, &this->shader[0],  this->shader.size(), sizeBuffer);
+	WRITE_ON_BIN(data, &this->texture[0], this->texture.size(), sizeBuffer);
 	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
 	WRITE_ON_BIN(data, &(emissionQuantity), sizeof(emissionQuantity), sizeBuffer);
 	WRITE_ON_BIN(data, &(recycle), sizeof(recycle), sizeBuffer);
@@ -254,6 +256,16 @@ int ParticleSystem::Deserialize(std::fstream* data, int offset) {
 	prop.colorZ.Deserialize(data, offset);
 	prop.colorA.Deserialize(data, offset);
 
+	char* texPath    = new char[512];
+	char* shaderPath = new char[512];
+	READ_FROM_BIN(data, shaderPath, sizeBuffer);	shaderPath[sizeBuffer] = '\0';
+	READ_FROM_BIN(data, texPath, sizeBuffer);		texPath[sizeBuffer]	   = '\0';
+	this->texture = texPath;
+	this->shader  = shaderPath;
+	delete[] texPath;
+	delete[] shaderPath;
+
+
 	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
 	READ_FROM_BIN(data, &(emissionQuantity), sizeBuffer);
 	READ_FROM_BIN(data, &(recycle), sizeBuffer);
@@ -268,13 +280,5 @@ ParticleSystem::~ParticleSystem() {
 		pool[i].Disable();
 		pool[i].go.DeleteComponents();
 	}
-
-	auto it = Scene::currentScene->drawList.begin();
-	while (it != Scene::currentScene->drawList.end()) {
-		if (((*it) == nullptr) || !(*it)->isRendered) {
-			it = Scene::currentScene->drawList.erase(it);
-			continue;
-		}
-		it++;
-	}
+	Scene::currentScene->ForceRenderStop();
 }

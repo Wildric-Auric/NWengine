@@ -6,7 +6,7 @@
 #include "Interpolation.h"
 #include <deque>
 
-#define SHADER_PARTICLES_DEFAULT  "Shaders\\ParticleBatched.shader"
+#define SHADER_PARTICLES_DEFAULT  "Ressources\\Shaders\\ParticleBatched.shader"
 #define TEXTURE_PARTICLES_DEFAULT "Ressources\\Images\\DefaultBox10x10.png"
 
 struct ParticleProperties {
