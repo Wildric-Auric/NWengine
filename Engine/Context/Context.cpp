@@ -106,6 +106,10 @@ void Context::Clear(float r, float g, float b, float a) { ///RGBA
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+
+void Context::SetTitle(const char* title) {
+	glfwSetWindowTitle((GLFWwindow*)Context::window, title);
+}
 void Context::Destroy() {
 	glfwTerminate();
 }
