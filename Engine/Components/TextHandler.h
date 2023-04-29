@@ -3,8 +3,8 @@
 #include "GameObject.h"
 #include <list>
 
-#define FONT_DEFAULT			"arial.ttf"
-#define SHADER_TEXT_DEFAULT		"Shaders\\TextBasicBatched.shader"
+#define FONT_DEFAULT			"Ressources\\Fonts\\arial.ttf"
+#define SHADER_TEXT_DEFAULT		"Ressources\\Shaders\\TextBasicBatched.shader"
 
 class TextHandler : public GameComponent {
 public:
@@ -18,6 +18,7 @@ public:
 	void* GetGameObject()					override;
 	void  SetGameObject(void* go)			override;
 	void  UpdateGlyphs();
+	void  SetFont(const std::string& path);
 	std::list<Character> characters;
 
 	Font font = Font(FONT_DEFAULT); //TODO::Make font a ressouce and this a pointer

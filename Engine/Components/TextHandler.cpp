@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Sprite.h"
 #include "Utilities.h"
+#include "Scene.h"
 
 #define MAX_BIT_10 1023.0
 TextHandler::TextHandler(GameObject* go) {
@@ -67,14 +68,18 @@ void  TextHandler::SetGameObject(void* go) {
 	this->attachedObj = (GameObject*)go;
 }
 
+void TextHandler::SetFont(const std::string& path) {
+	if (path == "")
+		return;
+	this->font.Delete();
+	this->font.LoadFont(path);
+	UpdateGlyphs();
+}
+
 void TextHandler::Gui() {
 	if (NWGui::FileHolder("Font", this->font.name)) {
 		std::string path = GetFile("Font files\0*.ttf");
-		if (path != "") {
-			this->font.Delete();
-			this->font.LoadFont(path);
-			UpdateGlyphs();
-		}
+		this->SetFont(path);
 	}
 
 	if (NWGui::FileHolder("Shader", this->shader)) {
@@ -85,20 +90,65 @@ void TextHandler::Gui() {
 	NWGui::DragValue("Position", &this->position, GuiDataType_Float, 2, 1.0);
 	NWGui::DragValue("Scale", &this->scale, GuiDataType_Float,2, 0.05f, 0.0f, 100.0f);
 	NWGui::DragValue("Color", &this->colors, GuiDataType_Float, 4, 0.05f, 0.0f, 1.0f);
-	NWGui::Input("", &this->text);
+	NWGui::Input("Text", &this->text);
 	if (NWGui::Button("Update characters"))
 		this->UpdateGlyphs();
 }
 
 int TextHandler::Serialize(std::fstream* data, int offset) {
-	return 1;
+	int sizeBuffer = 0;
+	WRITE_ON_BIN(data, "TextHandler", 11, sizeBuffer);
+	WRITE_ON_BIN(data, &this->font.name[0], this->font.name.size(), sizeBuffer);
+	WRITE_ON_BIN(data, &this->shader[0] ,	this->shader.size(), sizeBuffer);
+	WRITE_ON_BIN(data, &this->isBatched,	sizeof(isBatched), sizeBuffer);
+	WRITE_ON_BIN(data, &position.x,			sizeof(position.x), sizeBuffer);
+	WRITE_ON_BIN(data, &position.y,			sizeof(position.x), sizeBuffer);
+	WRITE_ON_BIN(data, &scale.x,			sizeof(scale.x), sizeBuffer);
+	WRITE_ON_BIN(data, &scale.y,			sizeof(scale.y), sizeBuffer);
+	WRITE_ON_BIN(data, &colors.r,			sizeof(colors.r), sizeBuffer);
+	WRITE_ON_BIN(data, &colors.g,			sizeof(colors.g), sizeBuffer);
+	WRITE_ON_BIN(data, &colors.b,			sizeof(colors.b), sizeBuffer);
+	WRITE_ON_BIN(data, &colors.a,			sizeof(colors.a), sizeBuffer);
+	WRITE_ON_BIN(data, &this->text[0],		this->text.size(), sizeBuffer);
+	return 0;
 }
-
+//TODO::Make serialization functions for different basic datatypes?
 int TextHandler::Deserialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0; 
+	char* fontTemp    = new char[512];
+	char* shaderTemp  = new char[512];
+	char* textTemp    = new char[512];
+
+	READ_FROM_BIN(data, fontTemp, sizeBuffer);				fontTemp[sizeBuffer]    = '\0';
+	READ_FROM_BIN(data, shaderTemp, sizeBuffer);			shaderTemp[sizeBuffer] =  '\0';
+	READ_FROM_BIN(data, &this->isBatched	, sizeBuffer);
+	READ_FROM_BIN(data, &position.x			, sizeBuffer);
+	READ_FROM_BIN(data, &position.y			, sizeBuffer);
+	READ_FROM_BIN(data, &scale.x     		, sizeBuffer);
+	READ_FROM_BIN(data, &scale.y			, sizeBuffer);
+	READ_FROM_BIN(data, &colors.r			, sizeBuffer);
+	READ_FROM_BIN(data, &colors.g			, sizeBuffer);
+	READ_FROM_BIN(data, &colors.b			, sizeBuffer);
+	READ_FROM_BIN(data, &colors.a			, sizeBuffer);
+	READ_FROM_BIN(data, textTemp			, sizeBuffer);  textTemp[sizeBuffer]  = '\0';
+
+	std::string fontPath = std::string(fontTemp);
+	this->shader		 = std::string(shaderTemp);
+	this->text			 = std::string(textTemp);
+	this->SetFont(fontPath); //Calls implicitly UpdateGlyphs
+
+	delete[] fontTemp;
+	delete[] shaderTemp;
+	delete[] textTemp;
 	return 0;
 }
 
 TextHandler::~TextHandler() {
+	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
+		Sprite* sprite = chr->go.GetComponent<Sprite>();
+		sprite->isRendered = 0;
+	}
+	Scene::currentScene->ForceRenderStop();
 	this->font.Delete(); //Temporary
 }
 
