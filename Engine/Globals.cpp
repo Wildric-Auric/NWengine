@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include <windows.h>
+#include <fstream>
 
 double Globals::fps = 60.0;
 double Globals::deltaTime = 0.016;        //Read only in everyfile except mainloop
@@ -8,12 +9,36 @@ double Globals::deltaTime = 0.016;        //Read only in everyfile except mainlo
 //Uniforms
 float Globals::uTime = 0;
 //Paths
-std::string Globals::projectDir        = "C:\\\\Users\\\\HP\\\\source\\\\repos\\\\Wildric-Auric\\\\NWengine\\\\";
-std::string Globals::scriptListPath    = "Scripts.NWlist";
-std::string Globals::scriptManagerPath = "Compiled\\\\ScriptManager.cpp";
-std::string Globals::compilationConfigDir = "C:\\\\Users\\\\HP\\\\source\\\\repos\\\\Wildric-Auric\\\\NWengine\\\\Build\\\\Config\\\\";
-std::string Globals::compiledScriptDir = "Compiled\\\\";
-std::string Globals::dllDir			   = projectDir;
-std::string Globals::gamePath          = projectDir + "myGame.exe";
-std::string Globals::engineLibDir	   = Globals::projectDir + "Build\\\\Data\\\\x86\\\\EngineDll\\\\";
-std::string Globals::gameLibDir        = Globals::projectDir + "Build\\\\Data\\\\x86\\\\Game\\\\";
+std::string Globals::installationDir      = "";
+std::string Globals::projDir              = "";
+
+std::string Globals::engineLibDir	      = Globals::installationDir + "Build\\Data\\x86\\EngineDll\\";
+std::string Globals::gameLibDir           = Globals::installationDir + "Build\\Data\\x86\\Game\\";
+std::string Globals::compilationConfigDir = Globals::installationDir + "Build\\Config\\";
+
+std::string Globals::scriptListPath       = Globals::projDir + "Scripts.NWlist";
+std::string Globals::scriptManagerPath    = Globals::projDir + "Compiled\\ScriptManager.cpp";
+std::string Globals::compiledScriptDir	  = Globals::projDir + "Compiled\\";
+std::string Globals::gamePath             = Globals::projDir + "myGame.exe";
+std::string Globals::dllDir			      = Globals::projDir;
+
+
+void Globals::SetInstallationDir(std::string dir) {
+	Globals::installationDir      = dir;
+	Globals::compilationConfigDir = Globals::installationDir + "Build\\Config\\";
+	Globals::engineLibDir		  = Globals::installationDir + "Build\\Data\\x86\\EngineDll\\";
+	Globals::gameLibDir			  = Globals::installationDir + "Build\\Data\\x86\\Game\\";
+}
+
+void Globals::SetProjDir(std::string dir) {
+	std::fstream file = std::fstream("CurrentProj.NWlist", std::ios_base::out | std::ios_base::trunc);
+	file << dir;
+	file.close();
+	Globals::projDir              = dir;
+    Globals::scriptListPath		  = Globals::projDir + "Scripts.NWlist";
+    Globals::scriptManagerPath	  = Globals::projDir + "Compiled\\ScriptManager.cpp";
+    Globals::compiledScriptDir	  = Globals::projDir + "Compiled\\";
+    Globals::gamePath			  = Globals::projDir + "myGame.exe";
+    Globals::dllDir			      = Globals::projDir;
+}
+

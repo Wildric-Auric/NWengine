@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Maths.h"  
 #include <string>
 
@@ -70,11 +71,15 @@ public:
 	//Paths
 	static std::string scriptListPath;
 	static std::string scriptManagerPath;
-	static std::string projectDir;
+	static std::string installationDir;
+	static std::string projDir;
 	static std::string dllDir;
 	static std::string compilationConfigDir;
 	static std::string compiledScriptDir;
 	static std::string engineLibDir;
 	static std::string gamePath;
 	static std::string gameLibDir;
+
+	static void SetProjDir(std::string dir);
+	static void SetInstallationDir(std::string dir);
 };
