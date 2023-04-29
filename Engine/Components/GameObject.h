@@ -41,10 +41,9 @@ public:
 	template<typename T>
 	T* GetComponent() {
 		T* component = nullptr;
-		
-		if (components.find(T::GetType()) == components.end()) return component;
+		if (this->components.find(T::GetType()) == this->components.end()) return component;
 
-		component = (T*)components[T::GetType()];
+		component = (T*)this->components[T::GetType()];
 		return component;
 	};
 
