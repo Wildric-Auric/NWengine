@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef NW_DEFAULT_SCENE
+#define NW_DEFAULT_SCENE "scene.NWscene"
+#endif
+
 #include "Globals.h"
 #include"Utilities.h"
 
