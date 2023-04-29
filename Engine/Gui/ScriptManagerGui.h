@@ -26,8 +26,9 @@ public:
 			i++;
 		}
 
-		if (ImGui::Button("Compile All")) {
-			ScriptManager::CompileScripts();
+		if (ImGui::Button("Compile All") && ScriptManager::scriptList.size() > 0) {
+			if (!ScriptManager::CompileScripts())
+				Console::Write("Error has occured during compilation; check \"log.txt\" for details", CONSOLE_ERROR_MESSAGE);
 		};
 
 		ImGui::OpenPopupOnItemClick("ScriptManagerPopup", ImGuiPopupFlags_MouseButtonRight);
@@ -38,11 +39,15 @@ public:
 			}
 			else {
 				if (ImGui::Selectable("CompileScript")) {
-					ScriptManager::CompileScript(selected0);
+					if (!ScriptManager::CompileScript(selected0))
+						Console::Write("Error has occured during compilation; check \"log.txt\" for details", CONSOLE_ERROR_MESSAGE);
 				}
 				else if (ImGui::Selectable("Delete")) {
-					if (ScriptManager::scriptList.find(selected0) != ScriptManager::scriptList.end())
+					if (ScriptManager::scriptList.find(selected0) != ScriptManager::scriptList.end()) {
 						ScriptManager::scriptList.erase(selected0);
+						ScriptManager::SaveScriptList();
+						selected = -1;
+					}
 				}
 				ImGui::EndPopup();
 			}
