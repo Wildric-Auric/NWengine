@@ -60,6 +60,11 @@ extern "C"
 
 	__declspec(dllexport)  int DllRun() {
 		GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
+
+		Globals::SetInstallationDir(GetCurrentDir());
+		(NWproj::currentProj = new NWproj(NWproj::GetCurrentProjFromInstallationDir()))->Load();
+		Globals::SetProjDir(NWproj::currentProj->dir);
+
 		Gui::Init((void*)window);
 		if (!InitOpenAL()) return -1;
 		if (!TextSystem::Init())
@@ -70,10 +75,11 @@ extern "C"
 		Context::EnableBlend();
 		SceneEditor::Init();
 		Batch::ComputeIndices();
-		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
-		////Initialization finished
+		Batch::maxBatchTextures = 32; 
 
-		(Scene::currentScene = new Scene("Scenes\\scene0.NWscene"))->LoadScene();
+		////Initialization finished
+		if (NWproj::currentProj != nullptr && NWproj::currentProj->defaultScenePath != "")
+			(Scene::currentScene = new Scene(NWproj::currentProj->defaultScenePath))->LoadScene();
 	    DllLoop();
 		NWengine::Shutdown();
 		return Context::dllFlag;
@@ -86,6 +92,11 @@ extern "C"
 int NWengine::Run() {
 		GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 		if (window == nullptr) return -1;
+		//Init project
+
+		Globals::SetInstallationDir(GetCurrentDir());
+		(NWproj::currentProj = new NWproj(NWproj::GetCurrentProjFromInstallationDir()))->Load();
+		Globals::SetProjDir(NWproj::currentProj->dir);
 
 		//init imgui
 		Gui::Init((void*)window);
@@ -95,6 +106,7 @@ int NWengine::Run() {
 		if (!TextSystem::Init())
 			return -1;
 		
+
 		Primitives::Init();
 		//Load ressources
 		RessourcesLoader::LoadDefaultRessources();
@@ -108,9 +120,11 @@ int NWengine::Run() {
 		
 		Batch::ComputeIndices();
 		
-		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS ...
-	
+		Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS...
+
 		////Initialization finished
+		if (NWproj::currentProj != nullptr && NWproj::currentProj->defaultScenePath != "")
+			(Scene::currentScene = new Scene(NWproj::currentProj->defaultScenePath))->LoadScene();
 		
 		NWengine::MainLoop();
 
@@ -174,7 +188,7 @@ void NWengine::MainLoop() {
 
 		currentTime = glfwGetTime();
 		Globals::deltaTime = currentTime - lastTime;
-		lastTime = currentTime; //Well it's negligeable operation
+		lastTime = currentTime;
 	}
 }
 
@@ -183,6 +197,7 @@ void NWengine::Shutdown() {
 		delete Scene::currentScene;
 		delete Renderer::defaultRenderer;
 		delete SceneEditor::cam;
+		delete NWproj::currentProj;
 
 		ScriptManager::SaveScriptList();
 		DestroyOpenAL();  //TODO::Put init, destroy audio functions in class

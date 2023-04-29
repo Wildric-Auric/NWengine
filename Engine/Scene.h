@@ -15,6 +15,7 @@ public:
 	GameObject* GetGameObject(std::string name);
 	void SortScene();
 	void Render(Sprite* sprite);
+	void ForceRenderStop();
 	void Rearrange(Sprite* sprite);
 	Scene(std::string name);
 	~Scene();

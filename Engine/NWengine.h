@@ -17,8 +17,8 @@
 
 																														*/
 
+#include "Utilities.h"
 #include "Globals.h"
-#include"Utilities.h"
 
 #ifndef NW_DLL_ENGINE
 
@@ -41,6 +41,7 @@
 #include "Batch.h"
 #include "Text.h"
 #include "SceneEditor.h"
+#include "NWproj.h"
 
 namespace NWengine {
 	int Run();

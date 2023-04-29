@@ -4,8 +4,8 @@
 #include <map>
 #include "Globals.h"
 
-#define SHADER_DEFAULT "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Shaders\\Textured.shader"
-#define SHADER_POST_PROCESSING "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Shaders\\PostProcessing.shader"
+#define SHADER_DEFAULT		   "Ressources\\Shaders\\Textured.shader"
+#define SHADER_POST_PROCESSING "Ressources\\Shaders\\PostProcessing.shader"
 
 class Shader {
 	public:

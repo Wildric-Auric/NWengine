@@ -57,6 +57,17 @@ void Scene::Render(Sprite* sprite) {
 	drawList.insert(drawList.end(), sprite);
 }
 
+void Scene::ForceRenderStop() {
+	auto it = this->drawList.begin();
+	while (it != this->drawList.end()) {
+		if (((*it) == nullptr) || !(*it)->isRendered) {
+			it = this->drawList.erase(it);
+			continue;
+		}
+		it++;
+	}
+}
+
 
 void Scene::AddObject(GameObject goc) {
 	sceneObjs.push_back(goc);
