@@ -22,7 +22,7 @@ public:
 	static std::vector<std::string> objs;
 
 #ifndef BUILDER_EXT
-	static void BuildGameRuntime();
+	static bool BuildGameRuntime();
 #endif
 
 #ifdef _WINDLL

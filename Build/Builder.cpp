@@ -39,6 +39,7 @@ std::vector<std::string> Builder::PreprocessorMacros = {
 std::string Builder::runtimeLib = "/MD"; //C runtime library Dynamically linked 
 
 void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
+    outputDir = ToDoubleBackSlash(outputDir);
     *ofs << "@echo off\n";
     *ofs << " if not defined DevEnvDir (call vcvars32)\n";
 
@@ -55,6 +56,7 @@ void Builder::InitCompilation(std::ofstream* ofs, std::string outputDir) {
     bool b = 0;
     //Adding include dirs
     for (std::string dir : IncludeDir) {
+        dir = ToDoubleBackSlash(dir); //Fuck msvc and its double backslash
         if (b) {
             *ofs << "^\n ";
         }
@@ -69,6 +71,7 @@ void Builder::GenerateCompilationData(std::ofstream* ofs, std::string file, std:
     std::string extension = "";
     GetFileName(file, &filename, &extension);
     //Adding cpp file
+    file = ToDoubleBackSlash(file); 
     *ofs << " \"" << file << "\"";
     *ofs << "^\n";
 }
@@ -97,6 +100,7 @@ void Builder::Compile(std::string outputDir) {
 
 //output is directory + name
 void Builder::Link(std::string output, bool isDll) {
+    output = ToDoubleBackSlash(output);
     std::ofstream ofs("Builder.bat");
     ofs << "@echo off\n";
     ofs << " if not defined DevEnvDir (call vcvars32)\n";
@@ -107,6 +111,7 @@ void Builder::Link(std::string output, bool isDll) {
     if (isDll)
         ofs <<  "/DLL ";
     for (std::string dir : LibsDir) {
+        dir = ToDoubleBackSlash(dir);
         ofs << "/LIBPATH:" << "\"" <<dir<< "\""<< "^\n ";
     }
     for (std::string lib : staticLibs) {
@@ -122,6 +127,7 @@ void Builder::GenLib(std::string output) {
     ofs << " if not defined DevEnvDir (call vcvars32)\n";
     ofs << "lib ";
     for (std::string obj : objs) {
+        obj = ToDoubleBackSlash(obj);
         ofs <<"\n" << obj << "^\n";
     }
     ofs << " /OUT:" << output;
@@ -146,6 +152,7 @@ void Builder::InitScripts(std::string scriptList, std::string scriptManager) {
     for (std::string line; std::getline(ifs, line);) {
         GetFileName(line, &fileName, nullptr, &root);
         scriptMap += "\n  {\"" + fileName + "\"," + fileName + "::GetScript" + "},";
+        root = ToDoubleBackSlash(root);
         objs.push_back(root + fileName + ".cpp"); //Add user's script to files that should be compiled
         scripts +=  "#include \"" + root + fileName + ".h\"\n";
     };
@@ -199,22 +206,25 @@ void Builder::Build() {
 //Should build external builder with preprocessor macro: BUILDER_EXT
 #ifndef BUILDER_EXT
 
-void Builder::BuildGameRuntime() {
+bool Builder::BuildGameRuntime() {
     //Linking scripts + ScriptManager + Game.lib
     Builder::LibsDir.clear();
     Builder::staticLibs.clear();
-    Builder::objs = { Globals::compiledScriptDir + "ScriptManager.obj", Globals::gameLibDir + "Game.lib", Globals::gameLibDir + "Source.obj"};
+    Builder::objs = { ToDoubleBackSlash(Globals::compiledScriptDir) + "ScriptManager.obj", 
+                      ToDoubleBackSlash(Globals::gameLibDir)        + "Game.lib", 
+                      ToDoubleBackSlash(Globals::gameLibDir)        + "Source.obj",
+                    };
 
 
-    Builder::LibsDir = GetNWlist(Globals::compilationConfigDir + "Libs Dir.NWlist");
-    Builder::staticLibs = GetNWlist(Globals::compilationConfigDir + "Libs.NWlist");
+    Builder::LibsDir    =  GetNWlist(Globals::compilationConfigDir + "Libs Dir.NWlist");
+    Builder::staticLibs =  GetNWlist(Globals::compilationConfigDir + "Libs.NWlist");
 
     for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
-        Builder::objs.push_back(Globals::compiledScriptDir + iter->first + ".obj");
-        Builder::IncludeDir.push_back(iter->second);
+        Builder::objs.push_back(ToDoubleBackSlash(Globals::compiledScriptDir) + iter->first + ".obj");
+        Builder::IncludeDir.push_back(ToDoubleBackSlash(iter->second));
     }
     Builder::Link(Globals::gamePath, false);
-    Exec("Builder.bat");
+    return Exec("Builder.bat");
 }
 
 #endif 
@@ -233,7 +243,10 @@ void Builder::CompileEngineDllRuntime() {
     Builder::LibsDir = GetNWlist(Globals::compilationConfigDir + "Libs Dir.NWlist");
     Builder::staticLibs = GetNWlist(Globals::compilationConfigDir + "Libs.NWlist");
     //Link NWengine.lib + script Objs + script manager obj to a Dll
-    Builder::objs = { Globals::compiledScriptDir + "ScriptManager.obj", Globals::engineLibDir + "NWengine.lib", Globals::engineLibDir + "NWengine.obj" };
+    Builder::objs = { ToDoubleBackSlash(Globals::compiledScriptDir) + "ScriptManager.obj", 
+                      ToDoubleBackSlash(Globals::engineLibDir)      + "NWengine.lib", 
+                      ToDoubleBackSlash(Globals::engineLibDir)      + "NWengine.obj" 
+                    };
     
     ScriptManager::CompileScriptManager();
 
