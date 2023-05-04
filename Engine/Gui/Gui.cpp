@@ -82,8 +82,8 @@ void Gui::Update() {
 		if (ImGui::BeginMenu("Compilation")) {
 			if (ImGui::MenuItem("Recompile engine")) {
 #ifdef _WINDLL
-				ScriptManager::CompileScriptManager();
-				Builder::CompileEngineDllRuntime();
+				if (!Builder::CompileEngineDllRuntime())
+					Console::Write("Build failed: See log.txt for more details", CONSOLE_ERROR_MESSAGE);
 #else		
 				Console::Write("Build failed: Cannot recompile static debugging engine", CONSOLE_WARNING_MESSAGE);
 #endif
@@ -91,17 +91,19 @@ void Gui::Update() {
 
 			if (ImGui::MenuItem("Build game")) {
 				std::string path = SaveAs("");
-				std::string dir = "";
-				std::string fileName = "";
-				std::string file = GetFileName(path, &fileName, nullptr, &dir);
-				std::string dir0 = ToSingleBackSlash(dir) + fileName + "\\";
-				MakeDir(dir0);
-				if (CopyDirectory(dir0, "GameBuildTemplate\\")) {
-					Globals::gamePath = dir0 + fileName + ".exe";
-					if (!Builder::BuildGameRuntime())
-						Console::Write("Game build failed: See log.txt for more details", CONSOLE_ERROR_MESSAGE);
+				if (path != "") {
+					std::string dir = "";
+					std::string fileName = "";
+					std::string file = GetFileName(path, &fileName, nullptr, &dir);
+					std::string dir0 = ToSingleBackSlash(dir) + fileName + "\\";
+					MakeDir(dir0);
+					if (CopyDirectory(dir0, "GameBuildTemplate\\")) {
+						Globals::gamePath = dir0 + fileName + ".exe";
+						if (!Builder::BuildGameRuntime())
+							Console::Write("Game build failed: See log.txt for more details", CONSOLE_ERROR_MESSAGE);
+					}
+					else Console::Write("Failed to create game build", CONSOLE_ERROR_MESSAGE);
 				}
-				else Console::Write("Failed to create project", CONSOLE_ERROR_MESSAGE);
 			}
 			ImGui::EndMenu();
 		}
@@ -109,11 +111,20 @@ void Gui::Update() {
 		if (ImGui::BeginMenu("Scene")) {
 
 			if (ImGui::MenuItem("New Scene")) {
-				std::string path = SaveAs("NWscene\0*.NWscene\0All\0*.*\0") + ".NWscene";
-				std::string dir = "";
-				std::string fileName = "";
-				std::string file = GetFileName(path, &fileName, nullptr, &dir);
-				MakeFile(dir + file);
+				std::string path = SaveAs("NWscene\0*.NWscene\0All\0*.*\0");
+				if (path != "") {
+					path += ".NWscene";
+					std::string dir = "";
+					std::string fileName = "";
+					std::string file = GetFileName(path, &fileName, nullptr, &dir);
+					MakeFile(dir + file);
+					//Load the scene
+					//TODO::Embed this within a function
+					delete Scene::currentScene;
+					(Scene::currentScene = new Scene(dir + file))->LoadScene();
+					NWproj::currentProj->defaultScenePath = Scene::currentScene->name;
+					NWproj::currentProj->Save();
+				}
 			}
 			if (ImGui::MenuItem("Save") && Scene::currentScene != nullptr) {
 				Scene::currentScene->Save();
