@@ -97,6 +97,5 @@ bool ScriptManager::CompileScriptManager() {
 		Builder::objs.pop_back(); //Bad solution to refactor
 
 	Builder::CompileInd(Globals::scriptManagerPath, Globals::compiledScriptDir);
-	Exec("builder.bat");
-	return 1;
+	return Exec("builder.bat");
 }
