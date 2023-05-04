@@ -9,7 +9,7 @@
 
 
 bool SceneViewGui::isActive			= 1;
-bool DebugGui::isActive				= 1;
+bool DebugGui::isActive				= 0;
 bool HierarchyGui::isActive			= 1;
 bool InspectorGui::isActive			= 1;
 bool SceneEditorGui::isActive		= 1;
