@@ -35,9 +35,8 @@ void Game::MainLoop() {
 	Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
 	Renderer::currentRenderer = Renderer::defaultRenderer;
 
-	//TODO::Custom scene loading
 	(Scene::currentScene = new Scene(NW_DEFAULT_SCENE))->LoadScene();
-
+	Scene::currentScene->Start();
 	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
 		Context::Clear();
 
