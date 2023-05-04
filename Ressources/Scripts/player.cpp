@@ -10,8 +10,7 @@ void player::Update() {
 		speed = 2500.0f;
 	fVec2 direction		 = fVec2((int)Inputs::right - (int)Inputs::left, 
 							(int)Inputs::up	   - (int)Inputs::down);
-	transform->position = transform->position + direction * speed * Globals::deltaTime;
-
+	transform->position  = transform->position + direction * speed * Globals::deltaTime;
 }
 
 

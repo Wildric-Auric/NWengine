@@ -56,11 +56,7 @@ void ScriptManager::LoadScriptList() {
 
 std::map<std::string, std::string> ScriptManager::scriptList = {};
 //BEG_PPP
-#include "C:\\Users\\HP\\source\\repos\\Wildric-Auric\\NWengine\\Scripts\\PostProcessing.h"
-std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {
-
-  {"PostProcessing",PostProcessing::GetScript}
-};
+std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = {};
 //END_PPP
 
 bool ScriptManager::CompileScripts() {
@@ -75,8 +71,7 @@ bool ScriptManager::CompileScripts() {
 		Builder::objs.push_back(iter->second + iter->first + ".cpp");
 	}
 	Builder::Compile(Globals::compiledScriptDir);
-	Exec("builder.bat");
-	return 1;
+	return Exec("builder.bat");
 }
 
 bool ScriptManager::CompileScript(std::string element) {
@@ -85,8 +80,7 @@ bool ScriptManager::CompileScript(std::string element) {
 	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
 	Builder::IncludeDir.push_back(iter->second);
 	Builder::CompileInd(iter->second + iter->first + ".cpp", Globals::compiledScriptDir);
-	Exec("builder.bat");
-	return 1;
+	return Exec("builder.bat");
 }
 
 
@@ -103,6 +97,5 @@ bool ScriptManager::CompileScriptManager() {
 		Builder::objs.pop_back(); //Bad solution to refactor
 
 	Builder::CompileInd(Globals::scriptManagerPath, Globals::compiledScriptDir);
-	Exec("builder.bat");
-	return 1;
+	return Exec("builder.bat");
 }
