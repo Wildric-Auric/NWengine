@@ -54,11 +54,12 @@ void AudioEmitter::Gui() {
 	if (sound != nullptr) temp = sound->name;
 
 	if (NWGui::FileHolder("Sound", temp)) {
-		std::string path = GetFile("Sound Files\0*.wav\0*.ogg\0*.flac\0*.*\0");
+		std::string path = GetFile(WIN_STR_FILTER("Sound Files", "*.wav;*.ogg;*.flac"));
 		if (path == "") return;
 
 		if (sound == nullptr) { sound = new Sound(path); return; } //TODO::Add Sound function
 		if (sound->name == path) return;
+		sound->Stop();
 		delete sound;
 		sound = new Sound(path);
 		//TODO::Check only the file name

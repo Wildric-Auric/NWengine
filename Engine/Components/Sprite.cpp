@@ -62,12 +62,12 @@ void Sprite::Gui() {
 		SetSortingLayer(sortingLayer);
 	ImGui::Separator();
 	if (NWGui::FileHolder("Texture", texture->name)) {
-		std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
+		std::string path = GetFile(WIN_STR_FILTER("Image files", "*.png;*.jpeg;*.jpg"));
 		if (path != "") SetTexture(path);
 	}
 	ImGui::Separator();
 	if (NWGui::FileHolder("Shader", shader->name)) {
-		std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
+		std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
 		if (path != "") SetShader(path);
 	}
 	if (ImGui::Button("Recompile Shader"))

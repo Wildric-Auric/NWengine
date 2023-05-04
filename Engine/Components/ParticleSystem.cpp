@@ -179,13 +179,13 @@ void ParticleSystem::Gui() {
 	if (ImGui::TreeNode("Emission properties")) {
 
 		if (NWGui::FileHolder("Shader", shader)) {
-			std::string path = GetFile("Shader Files\0*.shader\0*.*\0");
+			std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
 			if (path != "") this->shader = path;
 		}
 		GUI_SEP
 
 		if (NWGui::FileHolder("Texture", this->texture)) {
-			std::string path = GetFile("Image Files\0*.png;*.jpeg;*.jpg\0*.*\0");
+			std::string path = GetFile(WIN_STR_FILTER("Image files", "*.png;*.jpeg;*.jpg"));
 			if (path != "") this->texture = path;
 		}
 		GUI_SEP

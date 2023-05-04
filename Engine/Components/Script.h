@@ -36,6 +36,7 @@ public:
 	GameObject* attachedObj = nullptr;
 	Scriptable* script = nullptr;
 	void Gui()	  override;
+	void Start()  override;
 	void Update() override;
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;

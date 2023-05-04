@@ -78,12 +78,12 @@ void TextHandler::SetFont(const std::string& path) {
 
 void TextHandler::Gui() {
 	if (NWGui::FileHolder("Font", this->font.name)) {
-		std::string path = GetFile("Font files\0*.ttf");
+		std::string path = GetFile(WIN_STR_FILTER("Font files", "*.ttf"));
 		this->SetFont(path);
 	}
 
 	if (NWGui::FileHolder("Shader", this->shader)) {
-		std::string path = GetFile("Shade\0*.shader");
+		std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
 		if (path != "") {this->shader = path;}
 	}
 	NWGui::CheckBox("isBatched", &this->isBatched);

@@ -10,7 +10,7 @@ public:
 	GameObject* attachedObj = nullptr;
 	static std::map <GameObject*, AudioEmitter*> componentList;
 
-	Sound* sound;
+	Sound* sound = nullptr;
 	int			volume    = 100; //Should be clamped from 0.0 to 1.0 in order to be passed to Sound.setvolume
 	float 		frequency = 1.0f;
 	bool        isLooping = 0;
