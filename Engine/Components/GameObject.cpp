@@ -22,8 +22,8 @@ uint32 GameObject::Draw(int8 textureSlot) {
 
 	if (sprite->isBatched) {
 		glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)transform->position.x, (double)transform->position.y, sprite->zbuffer));
-		model = glm::scale(model, glm::vec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
 		model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0, 0, 1));
+		model = glm::scale(model, glm::vec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
 		glm::mat4x4 mvp   = Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model;
 
 		glm::vec4 vert0 = mvp * glm::vec4(-0.5,  -0.5, 0.0, 1.0);
