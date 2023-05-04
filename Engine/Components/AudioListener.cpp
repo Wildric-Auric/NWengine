@@ -35,3 +35,13 @@ void AudioListener::Update() {
 		}
 	}
 }
+
+int AudioListener::Serialize(std::fstream* data, int offset) {
+	int sizeBuffer = 0;
+	WRITE_ON_BIN(data, "AudioListener", 13, sizeBuffer);
+	return 0;
+}
+int AudioListener::Deserialize(std::fstream* data, int offset) {
+	return 0;
+}
+
