@@ -7,6 +7,15 @@
 #endif
 #define WIN 
 
+/*
+* Process text to make it compatible with lpstr filter in functons such as GetFile() or SaveAs
+* filesType: "Image Files" or "Sound files" for example
+* types:     all types extension separated by semicolon and preceded by a star example:
+* "*.jpeg;*.png;*.jpg"
+*/
+#define WIN_STR_FILTER(filesType, types) filesType "\0" types "\0All\0*.*\0"
+
+
 template<typename T> 
 void ExtendVector(std::vector<T>* a, std::vector<T> b) {
 	for (auto c : b) {

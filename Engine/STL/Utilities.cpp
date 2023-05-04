@@ -188,7 +188,7 @@ std::string SaveAs(const char* type) {
 	ofn.lpstrFilter  = type;
 	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
-	ofn.lpstrTitle = "Select a File";
+	ofn.lpstrTitle = "Save as";
 	ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 	if (GetSaveFileName(&ofn)) {
