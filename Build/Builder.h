@@ -27,7 +27,7 @@ public:
 
 #ifdef _WINDLL
 
-	static void CompileEngineDllRuntime();
+	static bool CompileEngineDllRuntime();
 
 #endif
 	

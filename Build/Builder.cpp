@@ -233,8 +233,8 @@ bool Builder::BuildGameRuntime() {
 
 #ifdef _WINDLL
 
-void Builder::CompileEngineDllRuntime() {
-    //TODO::Error check
+bool Builder::CompileEngineDllRuntime() {
+    //TODO::Error check: Update: Added not tested yet
     ScriptManager::SaveScriptList();
     Builder::IncludeDir.clear();
     Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
@@ -248,14 +248,15 @@ void Builder::CompileEngineDllRuntime() {
                       ToDoubleBackSlash(Globals::engineLibDir)      + "NWengine.obj" 
                     };
     
-    ScriptManager::CompileScriptManager();
-
-    Exec("builder.bat"); //TODO::output result on an imgui window
+    if (!ScriptManager::CompileScriptManager())
+        return 0;
+    if (!Exec("builder.bat"))
+        return 0;
     Builder::Link(Globals::dllDir + "NWengine_temp.dll", 1);
-
-    Exec("builder.bat");
-
+    if (!Exec("builder.bat"))
+        return 0;
     Context::dllFlag = NW_RELOAD_DLL;
+    return 1;
 }
 
 #endif
