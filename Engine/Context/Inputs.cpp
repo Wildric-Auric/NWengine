@@ -4,18 +4,27 @@
 #include<iostream>
 #include <cstring>
 
+static GLFWwindow* window = nullptr;
+
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,
- Inputs::space, Inputs::usingJoystick, Inputs::f2, Inputs::enter
- = 0;
+ Inputs::space, Inputs::usingJoystick, Inputs::f2, Inputs::enter = 0;
+
 double Inputs::mousePosX;
 double Inputs::mousePosY;
 
 float Inputs::joystickAxis[6] = {0.0f};
 
-void Inputs::Process(void* window0)
-{
-	GLFWwindow* window = (GLFWwindow*)window0;
+bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
+	return glfwGetKey(window, key) == mode;
+}
+
+bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) {
+	return glfwGetMouseButton(window, key) == mode;
+}
+
+void Inputs::Process(void* window0) {
+	window = (GLFWwindow*)window0;
 	glfwGetCursorPos(window, &mousePosX, &mousePosY);
 	usingJoystick = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	const unsigned char* buttons = 0;
@@ -29,7 +38,6 @@ void Inputs::Process(void* window0)
 			if (abs(joystickAxis[i]) < 0.01) joystickAxis[i] = 0;
 		}
 	}
-
 	left = ( glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS );
 	right = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
 	up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
@@ -44,6 +52,4 @@ void Inputs::Process(void* window0)
 	space = ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoystick&& GLFW_PRESS == buttons[1] ); 
 	f2 = (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
 	enter = (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
-
-
 };
