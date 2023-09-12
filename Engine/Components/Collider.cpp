@@ -16,7 +16,7 @@ void Collider::Start() {
 		return;
 
 	fVec2 size = fVec2(sprite->container.width * 0.5f, sprite->container.height * 0.5) * transform->scale;
-
+		
 	this->edges = {
 		fVec2(size.x , size.y).Rotate(transform->rotation) ,
 		fVec2(-size.x, size.y).Rotate(transform->rotation) ,
