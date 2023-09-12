@@ -50,9 +50,10 @@ uint32 GameObject::Draw(int8 textureSlot) {
 		for (Batch* batchGroup : iter->second) {
 			if (batchGroup->Render(this, stride)) return sprite->sortingLayer; 
 		}
-		//Room not found->creation of another batch
+		//Room not found->creation of another batch;
 		iter->second.push_back(new Batch());
-		iter->second.back()->Render(this, stride);
+		iter->second.back()->Render(this, stride); 
+		//TODO::Not accessing batch data batch vector here, call a function instead
 
 		return sprite->sortingLayer;
 	}
