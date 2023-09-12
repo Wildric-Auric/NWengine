@@ -31,7 +31,8 @@ Batch::Batch() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glBufferData(GL_ARRAY_BUFFER, Batch::batchMaxQuads * strideSizeByte * 4, nullptr ,GL_DYNAMIC_DRAW); //4 is sizeof float
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, Batch::indices, GL_DYNAMIC_DRAW);
+	//TODO::Multiply per sizeof(uint32)?? DONE BUT UNTESTED)
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(uint32), Batch::indices, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)0);
 	glEnableVertexAttribArray(0);
