@@ -107,8 +107,7 @@ void ParticleSystem::Init() {
 }
 
 void ParticleSystem::UpdateParticle(int index) {
-	Transform* transform = attachedObj->GetComponent<Transform>();
-	if (transform == nullptr) transform = attachedObj->AddComponent<Transform>();
+	Transform* transform = attachedObj->AddComponent<Transform>();
 	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
 
