@@ -59,7 +59,6 @@ void AudioEmitter::Gui() {
 
 		if (sound == nullptr) { sound = new Sound(path); return; } //TODO::Add Sound function
 		if (sound->name == path) return;
-		sound->Stop();
 		delete sound;
 		sound = new Sound(path);
 		//TODO::Check only the file name
@@ -75,8 +74,7 @@ void AudioEmitter::Gui() {
 		temp0 = !temp0;
 	}
 
-	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S16, 1, 1, 0.0f, 100.0f);
-	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 10.0f);
+	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S32, 1, 1, 0.0f, 100.0f);
+	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 2.0f);
 	NWGui::CheckBox("Loop", &this->isLooping);
-
 }
