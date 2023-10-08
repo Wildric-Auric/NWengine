@@ -1,11 +1,20 @@
 #include "Builder.h"
 #include <iostream>
 
-#define HELP_LOG "/C : Compile engine and scripts, will generate Object files\n/B : Link existing objs, generates an exe\n/IS: Include users scripts in the code\n/M[Your preprocessor macro]"
-#define UNK_LOG "Unknown command, try /Help"
+#define HELP_LOG "/C : Compile engine and scripts, will generate Object files; note that it compiles as THE EXECUTABLE USING NWengine DLL \n------------\n"\
+				 "/CDebug: Will compile engine files to obj for NWengine debug executable, no scripting or game build sytem will be available \n------------\n"\
+				 "/CGame: Will compile files for game executable build \n------------\n"\
+			     "/CDll: Will compile files that will be linked as NWengine.DLL \n------------\n"\
+			     "/Lib: Will merge obj files in temporary build directory into .lib file \n------------\n"\
+				 "/L: link files to generate executable \n------------\n"\
+				 "/LDll: link files to generate Dll"
+#define UNK_LOG  "Unknown command. Existing commands are the following ones\n"
 
 int main(int argc, const char* argv[]) {
-	if (argc <= 1) return 0;
+	if (argc <= 1)  {
+		std::cout << HELP_LOG << std::endl;
+		return 0;
+	}
 	std::string cur = "";
 	for (int i = 1; i < argc; i++) {
 		cur = argv[i];
@@ -65,6 +74,9 @@ int main(int argc, const char* argv[]) {
 			Builder::objs.clear();
 			Builder::objs.push_back("Build\\temp\\*.obj");
 			Builder::Link("Build\\temp\\temp.dll", 1);
+		}
+		else {
+			std::cout << UNK_LOG  << HELP_LOG << std::endl;
 		}
 	}
 	return 0;
