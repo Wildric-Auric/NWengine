@@ -4,12 +4,16 @@
 #include <string>
 
 
+//For now using just printf, should output to console later
+#define NW_LOG_ERROR(str)	printf(str)
+#define NW_LOG_WARNING(str) printf(str)
+#define NW_LOG(str)			printf(str)
+
 //#define NW_DLL_ENGINE       //comment this line if you want either dll or independent exe as output
 #define NW_KEEP_DLL_RUNNING  1
 #define NW_RELOAD_DLL        2
 #define NW_SHUTDOWN_DLL      0
-
-#define PROJECT_DIRECTORY Globals::projectDir
+#define PROJECT_DIRECTORY    Globals::projectDir
 
 typedef int8_t   int8;
 typedef int32_t  int32;
