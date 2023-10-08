@@ -16,10 +16,10 @@ private:
 public:
 	std::string name = "";
 
-	float volume = 1.0f;
+	float volume    = 1.0f;
 	float frequency = 1.0f;
-	bool isLooping = 0;
-	bool isPlaying = 0;
+	bool  isLooping = 0;
+	bool  isPlaying = 0;
 
 	Sound() {};
 	Sound(std::string path);

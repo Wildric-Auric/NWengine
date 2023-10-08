@@ -1,6 +1,7 @@
 #include<sndfile.h>
 #include<vector>
 #include "Audio.h"
+#include "Globals.h"
 
 
 bool InitOpenAL(){
@@ -47,10 +48,11 @@ ALuint LoadSound(const char* path) {
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer, format, &samples[0], sampleNumber * sizeof(ALushort), sampleRate);
-	if (alGetError() != AL_NO_ERROR) {
-		return 0;
-	}
-	return buffer;
+	ALenum err = alGetError();
+	if (err == AL_NO_ERROR) 
+		return buffer;
+	NW_LOG_ERROR((std::string("OpenAL Error: ") + std::to_string(err)).c_str());
+	return 0;
 }
 
 
@@ -60,7 +62,7 @@ ALuint LoadSound(const char* path) {
 Sound::Sound(std::string path) {
 	this->snd = LoadSound(path.c_str());
 	name	  = path;
-	if (!this->snd) { printf("OpenAL error"); return; }
+	if (!this->snd) { return; }
 	alGenSources(1, &this->source);
 	alSourcei(source, AL_BUFFER, this->snd);
 }
@@ -68,6 +70,7 @@ Sound::Sound(std::string path) {
 #include<iostream>
 
 Sound::~Sound() {
+	this->Stop();
 	alSourcei(this->source, AL_BUFFER, 0);
 	alDeleteSources(1, &this->source);
 	alDeleteBuffers(1, &this->snd);
@@ -87,7 +90,7 @@ void Sound::Stop() {
 
 void Sound::SetVolume(float volume) {
 	if (volume == this->volume) return;
-	this->volume = volume;
+	this->volume = volume; 
 	alSourcef(source, AL_GAIN, this->volume);
 }
 
@@ -96,11 +99,11 @@ bool Sound::HasFinished() {
 	alGetSourcei(this->source, AL_SOURCE_STATE, &state);
 	return (state != AL_PLAYING);
 }
-
+//Not Written in the doc; but max value of pitch is 2.0 otherwise error
 void Sound::SetFrequency(float frequency) {
 	if (frequency == this->frequency) return;
-	this->frequency = frequency;
-	alSourcef(source, AL_PITCH, frequency);
+	this->frequency = Clamp<float>(frequency, 0.0f, 2.0f);
+	alSourcef(source, AL_PITCH, this->frequency);
 }
 
 void Sound::SetLoop(bool loop) {
