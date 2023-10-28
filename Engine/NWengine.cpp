@@ -66,7 +66,7 @@ extern "C"
 		Globals::SetProjDir(NWproj::currentProj->dir);
 
 		Gui::Init((void*)window);
-		if (!InitOpenAL()) return -1;
+		if (!SoundSystem::InitOpenAL()) return -1;
 		if (!TextSystem::Init())
 			return -1;
 		Primitives::Init();
@@ -101,7 +101,7 @@ int NWengine::Run() {
 		//init imgui
 		Gui::Init((void*)window);
 		//init OpenAL
-		if (!InitOpenAL()) return -1;
+		if (!SoundSystem::InitOpenAL()) return -1;
 		//init freetype
 		if (!TextSystem::Init())
 			return -1;
@@ -200,7 +200,7 @@ void NWengine::Shutdown() {
 		delete NWproj::currentProj;
 
 		ScriptManager::SaveScriptList();
-		DestroyOpenAL();  //TODO::Put init, destroy audio functions in class
+		SoundSystem::DestroyOpenAL();  //TODO::Put init, destroy audio functions in class
 
 		TextSystem::Destroy();
 		Primitives::Destroy();

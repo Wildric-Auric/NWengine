@@ -4,7 +4,7 @@
 #include "Globals.h"
 
 
-bool InitOpenAL(){
+bool SoundSystem::InitOpenAL() {
 	ALCdevice * device = alcOpenDevice(0);
 	if (!device)
 		return false;
@@ -20,7 +20,7 @@ bool InitOpenAL(){
 }
 
 
-void DestroyOpenAL() {
+void SoundSystem::DestroyOpenAL() {
 	ALCcontext* ctx			= alcGetCurrentContext();
 	ALCdevice*  device		= alcGetContextsDevice(ctx);
 	alcMakeContextCurrent(NULL);
@@ -29,7 +29,7 @@ void DestroyOpenAL() {
 }
 
 
-ALuint LoadSound(const char* path) {
+ALuint SoundSystem::LoadSound(const char* path) {
 	SF_INFO info;
 	SNDFILE* data = sf_open(path, SFM_READ, &info);  //hold on, does not support mp3? TODO::Write your own sound loading solution
 	if (!data) { printf("ERROR::Could not open sound file at : %s", path); return 0; }
@@ -55,19 +55,13 @@ ALuint LoadSound(const char* path) {
 	return 0;
 }
 
-
-
-
-
 Sound::Sound(std::string path) {
-	this->snd = LoadSound(path.c_str());
+	this->snd = SoundSystem::LoadSound(path.c_str());
 	name	  = path;
 	if (!this->snd) { return; }
 	alGenSources(1, &this->source);
 	alSourcei(source, AL_BUFFER, this->snd);
 }
-
-#include<iostream>
 
 Sound::~Sound() {
 	this->Stop();

@@ -6,7 +6,7 @@ int8 Game::Run() {
 
 	GLFWwindow* window = (GLFWwindow*)Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	if (window == nullptr) return -1;
-	if (!InitOpenAL()) return -1;
+	if (!SoundSystem::InitOpenAL()) return -1;
 	if (!TextSystem::Init())
 		return -1;
 	Primitives::Init();
@@ -75,7 +75,7 @@ void Game::Shutdown() {
 	delete Renderer::defaultRenderer;
 
 	ScriptManager::SaveScriptList();
-	DestroyOpenAL();
+	SoundSystem::DestroyOpenAL();
 	TextSystem::Destroy();
 	Primitives::Destroy();
 	Context::Destroy();

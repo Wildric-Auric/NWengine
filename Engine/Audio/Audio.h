@@ -3,11 +3,13 @@
 #include <AL/alc.h>
 #include <string>
 
-bool InitOpenAL();
 
-ALuint LoadSound(const char* path);
-
-void DestroyOpenAL();
+class SoundSystem {
+public:
+	static bool	  InitOpenAL();
+	static ALuint LoadSound(const char* path);
+	static void   DestroyOpenAL();
+};
 
 class Sound {
 private:
