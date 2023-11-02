@@ -30,7 +30,7 @@ in float sampleID;
 out vec4 FragColor;
 
 void main() {
-    int texID     = int(sampleID);
-    vec4 col  = vec4(test, 1.0);//texture(uTex[texID], uv);
-    FragColor = col;
+    int texID  = int(sampleID);
+    vec4 col   = texture(uTex[texID], uv);
+    FragColor  = col;
 }
