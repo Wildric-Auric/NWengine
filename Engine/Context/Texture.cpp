@@ -6,24 +6,32 @@
 
 std::map<std::string, Texture> Texture::resList;
 
-Texture::Texture(int width, int height, uint8* texRes, int alpha, bool repeat, bool genMipMap, bool linear) {
+
+Texture::Texture(const uint8* texRes, const iVec2& size, const TextureData& texData) {
+
+	this->alpha =  texData.alpha;
+	this->repeat = texData.repeat;
+	this->name   = texData.name;
+	this->size   = size;
+
+	this->_texData = texData;
+
 	int32 filter = GL_LINEAR;
-	if (!linear)
+	if (!this->_texData.linear)
 		filter = GL_NEAREST;
 
-	size = Vector2<int>(width, height);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
+
 
 	//Downscaling parameter
-	if (genMipMap)
+	if (this->_texData.genMipMap)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	else
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 	//Upscaling parameter
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-	if (repeat) {
+	if (this->_texData.repeat) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
@@ -32,18 +40,22 @@ Texture::Texture(int width, int height, uint8* texRes, int alpha, bool repeat, b
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	}
-	if (alpha == 1)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
-	else if (alpha == 0)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
-	else if (alpha == 2) {
+	if (this->_texData.alpha == 1)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
+	else if (this->_texData.alpha == 0)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
+	else if (this->_texData.alpha == 2) {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, texRes);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RED, GL_UNSIGNED_BYTE, texRes);
 	}
 
-	if (genMipMap)
+	if (this->_texData.genMipMap)
 		glGenerateMipmap(GL_TEXTURE_2D);
 }
+
+Texture::Texture(std::string name, int width, int height, uint8* texRes, uint8 alpha, uint8 repeat, uint8 genMipMap, uint8 linear) :
+Texture(texRes, iVec2(width, height), TextureData{ name, alpha, repeat, genMipMap, linear }) {}
+
 void Texture::Bind(unsigned int slot = 0) {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
