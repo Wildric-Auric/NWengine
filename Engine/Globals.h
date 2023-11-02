@@ -15,6 +15,9 @@
 #define NW_SHUTDOWN_DLL      0
 #define PROJECT_DIRECTORY    Globals::projectDir
 
+//arch is always an integer type with size of pointer of the architecture
+typedef long     arch;
+
 typedef int8_t   int8;
 typedef int32_t  int32;
 typedef int16_t  int16;
