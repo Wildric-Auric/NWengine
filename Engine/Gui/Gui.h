@@ -1,10 +1,24 @@
 #pragma once
+#include <unordered_map>
+#include "GuiWindow.h"
+#include "Globals.h"
+
+enum class GUI_WINDOW {
+	None,
+	SceneView,
+	Hierarchy,
+	Inspector,
+	SceneEditor,
+	Console,
+	ScriptManager,
+	Debug
+};
 
 class Gui {
 public:
+	//Windows are heap allocated
+	static std::unordered_map<uint32, GuiWindow*> Windows;
 	static void Init(void* window);
 	static void Update();
 	static void Destroy();
 };
-
-

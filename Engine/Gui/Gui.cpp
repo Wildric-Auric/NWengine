@@ -7,10 +7,16 @@
 #include "ConsoleGui.h"
 #include "ScriptManagerGui.h"
 #include "NWproj.h"
+#include "Console.h"
+#include "Utilities.h"
+#include "Scene.h"
+#include "Builder.h"
 
+#include "imgui/implot/implot.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+std::unordered_map<uint32, GuiWindow*> Gui::Windows;
 
 void Gui::Init(void* window) {
 	ImGui::CreateContext();
@@ -21,13 +27,21 @@ void Gui::Init(void* window) {
 	static ImGuiIO& io = ImGui::GetIO();
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.Fonts->AddFontFromFileTTF("Ressources/fonts/arial.ttf", 16.0f);
-	SceneViewGui::Init();
-	DebugGui::Init();
-	HierarchyGui::Init();
-	InspectorGui::Init();
-	SceneEditorGui::Init();
-	ConsoleGui::Init();
-	ScriptManagerGui::Init();
+
+
+	Gui::Windows.insert({{(uint32)GUI_WINDOW::SceneView,     new SceneViewGui() },
+						 {(uint32)GUI_WINDOW::Debug,         new DebugGui()},
+						 {(uint32)GUI_WINDOW::Hierarchy,     new HierarchyGui()},
+						 {(uint32)GUI_WINDOW::Inspector,     new InspectorGui()},
+						 {(uint32)GUI_WINDOW::SceneEditor,   new SceneEditorGui()},
+						 {(uint32)GUI_WINDOW::Console,		 new ConsoleGui()},
+						 {(uint32)GUI_WINDOW::ScriptManager, new ScriptManagerGui()},
+
+	});	
+
+	for (std::pair<const uint32, GuiWindow*>& it : Gui::Windows) {
+		it.second->Init();
+	};
 }
 
 
@@ -68,13 +82,13 @@ void Gui::Update() {
 		}
 
 		if (ImGui::BeginMenu("Explore")) {
-			if (ImGui::MenuItem("Scene View Window"))	SceneViewGui::isActive = 1;
-			if (ImGui::MenuItem("Debugging Window"))    DebugGui::isActive = 1;
-			if (ImGui::MenuItem("Hierarchy Window"))    HierarchyGui::isActive = 1;
-			if (ImGui::MenuItem("Inspector Window"))    InspectorGui::isActive = 1;
-			if (ImGui::MenuItem("Scene Editor"))        SceneEditorGui::isActive = 1;
-			if (ImGui::MenuItem("Console"))			    ConsoleGui::isActive = 1;
-			if (ImGui::MenuItem("Script Manager"))      ScriptManagerGui::isActive = 1;
+			if (ImGui::MenuItem("Scene View Window"))	(Gui::Windows.find((uint32)GUI_WINDOW::SceneView))->second->isActive		= 1;
+			if (ImGui::MenuItem("Debugging Window"))    (Gui::Windows.find((uint32)GUI_WINDOW::Debug))->second->isActive			= 1;
+			if (ImGui::MenuItem("Hierarchy Window"))    (Gui::Windows.find((uint32)GUI_WINDOW::Hierarchy))->second->isActive		= 1;
+			if (ImGui::MenuItem("Inspector Window"))    (Gui::Windows.find((uint32)GUI_WINDOW::Inspector))->second->isActive		= 1;
+			if (ImGui::MenuItem("Scene Editor"))        (Gui::Windows.find((uint32)GUI_WINDOW::SceneEditor))->second->isActive		= 1;
+			if (ImGui::MenuItem("Console"))			    (Gui::Windows.find((uint32)GUI_WINDOW::Console))->second->isActive			= 1;
+			if (ImGui::MenuItem("Script Manager"))      (Gui::Windows.find((uint32)GUI_WINDOW::ScriptManager))->second->isActive	= 1;
 
 			ImGui::EndMenu();
 		}
@@ -151,14 +165,9 @@ void Gui::Update() {
 
 	NWGui::AutoInc		= 1; //Renitialize autoincremented id on each gui update;
 
-	ConsoleGui::Show();
-	if (Scene::currentScene == nullptr) return;
-	SceneViewGui::Show();
-	DebugGui::Show();
-	HierarchyGui::Show();
-	InspectorGui::Show();
-	SceneEditorGui::Show();
-	ScriptManagerGui::Show();
+	for (auto& it : Gui::Windows) {
+		it.second->Show();
+	};
 }
 
 void Gui::Destroy() {
