@@ -58,10 +58,7 @@ Texture* RessourcesLoader::LoadTexture(std::string path, bool alpha, bool repeat
 		return &Texture::resList[path];
 	}
 	Image temp = Image(path, alpha);
-	Texture::resList[path] = Texture(temp.width, temp.height, temp.tex, alpha, repeat);
-	Texture::resList[path].name = path;
-	Texture::resList[path].alpha = alpha;
-	Texture::resList[path].repeat = repeat;
+	Texture::resList[path] = Texture(path, temp.width, temp.height, temp.tex, alpha, repeat);
 	temp.Clear();
 	return &Texture::resList[path];
 };
