@@ -6,8 +6,7 @@ FrameBuffer::FrameBuffer(uint16 sizeX, uint16 sizeY) {
 	if (Context::window == nullptr) return;
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	RenderedImage = Texture(sizeX, sizeY, nullptr, 1, 0, 0);
-	RenderedImage.name = std::to_string((long)this);
+	RenderedImage = Texture(std::to_string((arch)this), sizeX, sizeY, nullptr, 1, 0, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, RenderedImage.texture, 0);
 
 	glGenRenderbuffers(1, &renderbuffer);
