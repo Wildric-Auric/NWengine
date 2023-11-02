@@ -9,10 +9,10 @@ private:
 	int channels;
 public:
 	Image(std::string path = "Ressources/Images/test.png", bool alpha = 1);
-	uint8* tex;
-	int width;
-	int height;
-	bool alpha;
+	uint8* tex = nullptr;
+	int width  = 0;
+	int height = 0;
+	bool alpha = 0;
 	void Clear();
 	static std::map<std::string, Image> resList;
 };
