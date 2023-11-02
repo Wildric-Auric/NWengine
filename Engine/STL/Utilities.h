@@ -17,8 +17,8 @@
 
 
 template<typename T> 
-void ExtendVector(std::vector<T>* a, std::vector<T> b) {
-	for (auto c : b) {
+void ExtendVector(std::vector<T>* a, const std::vector<T>& b) {
+	for (auto& c : b) {
 		a->push_back(c);
 	}
 }
