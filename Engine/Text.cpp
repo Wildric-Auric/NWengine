@@ -25,8 +25,7 @@ bool Font::LoadFont(std::string path) {
 			printf("Error loading character");
 			continue;
 		}
-		 Texture tex	  = Texture(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, 2, false, 1, 1);
-		 tex.name         = i;
+		 Texture tex	  = Texture(std::to_string(i), face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer, 2, false, 1, 1);
 		 charactersMap.emplace(i, Glyph());
 		 Glyph* character   =	&charactersMap.find(i)->second;
 	
