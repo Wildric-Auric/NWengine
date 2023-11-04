@@ -3,9 +3,8 @@
 Camera*		SceneEditor::cam = nullptr;
 GameObject  SceneEditor::cameraObj;
 
-//TODO::This function init shouldnt be called directly in main I think... Change this!
 void SceneEditor::Init() {
-	cameraObj        = GameObject();
+	cameraObj = GameObject();
 	SceneEditor::cam = cameraObj.AddComponent<Camera>();
 }
 

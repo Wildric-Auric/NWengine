@@ -6,12 +6,9 @@
 
 static GLFWwindow* window = nullptr;
 
- bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d, Inputs::r, Inputs::s, Inputs::t,
+ bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,
- Inputs::space, Inputs::usingJoystick, Inputs::f2, Inputs::enter = 0,
- Inputs::ctrl,
- Inputs::left_ctrl,
- Inputs::right_ctrl;
+ Inputs::space, Inputs::usingJoystick, Inputs::f2, Inputs::enter = 0;
 
 double Inputs::mousePosX;
 double Inputs::mousePosY;
@@ -46,20 +43,13 @@ void Inputs::Process(void* window0) {
 	up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
 	down = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
 	d = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
-	r = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
-	s = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
-	t = glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS;
 	left_click = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 	n_0 = glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS;
 	n_1 = glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS;
 	n_2 = glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS;
 	n_3 = glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS;
 	n_4 = glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS;
-	space		= ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoystick&& GLFW_PRESS == buttons[1] ); 
-	f2			= (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
-	enter		= (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
-	left_ctrl	= (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS);
-	right_ctrl  = (glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
-	ctrl		=  right_ctrl || left_ctrl;
-
+	space = ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoystick&& GLFW_PRESS == buttons[1] ); 
+	f2 = (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
+	enter = (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
 };

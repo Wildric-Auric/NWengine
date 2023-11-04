@@ -75,15 +75,13 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <ReferencePath>$(VC_ReferencesPath_x86);;$(SolutionDir)Dlls;$(SolutionDir)Dlls;$(SolutionDir)Dlls\</ReferencePath>
+    <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <ReferencePath>$(VC_ReferencesPath_x64);;$(SolutionDir)Dlls;$(SolutionDir)Dlls;$(SolutionDir)Dlls\</ReferencePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -96,7 +94,6 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;$(SolutionDir)Engine\Reflection;$(SolutionDir)Build</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,7 +136,6 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting</AdditionalIncludeDirectories>
-      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,10 +168,6 @@
   <ItemGroup>
     <ClCompile Include="Build\Builder.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imguizmo\GraphEditor.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imguizmo\ImCurveEdit.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imguizmo\ImGradient.cpp" />
-    <ClCompile Include="dependencies\vendor\imgui\imguizmo\ImGuizmo.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_demo.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="dependencies\vendor\imgui\imgui_impl_opengl2.cpp" />
@@ -198,15 +190,8 @@
     <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
     <ClCompile Include="Engine\Gui\Console.cpp" />
-    <ClCompile Include="Engine\Gui\ConsoleGui.cpp" />
-    <ClCompile Include="Engine\Gui\DebugGui.cpp" />
     <ClCompile Include="Engine\Gui\Gui.cpp" />
-    <ClCompile Include="Engine\Gui\InspectorGui.cpp" />
     <ClCompile Include="Engine\Gui\NWGui.cpp" />
-    <ClCompile Include="Engine\Gui\HierarchyGui.cpp" />
-    <ClCompile Include="Engine\Gui\SceneEditorGui.cpp" />
-    <ClCompile Include="Engine\Gui\SceneViewGui.cpp" />
-    <ClCompile Include="Engine\Gui\ScriptManagerGui.cpp" />
     <ClCompile Include="Engine\Interpolation.cpp" />
     <ClCompile Include="Engine\NWproj.cpp" />
     <ClCompile Include="Engine\Reflection\GuiObject.h" />
@@ -237,7 +222,7 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
-    <ClCompile Include="Engine\Gui\GuiWindow.cpp" />
+    <ClCompile Include="Engine\Gui\StaticGuiVariable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -261,12 +246,6 @@
     <ClInclude Include="dependencies\SND\include\sndfile.h" />
     <ClInclude Include="dependencies\SND\include\sndfile.hh" />
     <ClInclude Include="dependencies\vendor\imgui\imgui.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\GraphEditor.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\ImCurveEdit.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\ImGradient.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\ImGuizmo.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\ImSequencer.h" />
-    <ClInclude Include="dependencies\vendor\imgui\imguizmo\ImZoomSlider.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx10.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="dependencies\vendor\imgui\imgui_impl_dx12.h" />
@@ -941,7 +920,6 @@
     <ClInclude Include="Engine\Gui\Console.h" />
     <ClInclude Include="Engine\Gui\ConsoleGui.h" />
     <ClInclude Include="Engine\Gui\DebugGui.h" />
-    <ClInclude Include="Engine\Gui\GuiWindow.h" />
     <ClInclude Include="Engine\Gui\HierarchyGui.h" />
     <ClInclude Include="Engine\Gui\InspectorGui.h" />
     <ClInclude Include="Engine\Gui\NWGui.h" />

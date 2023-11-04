@@ -206,7 +206,6 @@ void Builder::Build() {
 //Should build external builder with preprocessor macro: BUILDER_EXT
 #ifndef BUILDER_EXT
 
-//POSSIBLE URGENT TODO::Compile with macro for game build?
 bool Builder::BuildGameRuntime() {
     //Linking scripts + ScriptManager + Game.lib
     Builder::LibsDir.clear();

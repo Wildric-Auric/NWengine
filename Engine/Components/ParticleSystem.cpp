@@ -150,23 +150,15 @@ void ParticleSystem::Gui() {
 		GUI_SEP;
 		NWGui::DragValue("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
 		GUI_SEP;
-
-		GUI_NODE_BEG("Horizontal direction")
-			prop.directionX.Gui();
-		GUI_NODE_END
-
-		GUI_NODE_BEG("Vertical direction")
-			prop.directionY.Gui();
-		GUI_NODE_END
+		NWGui::Text("Horizontal direction");
+		prop.directionX.Gui();
+		ImGui::Text("Vertical direction");
+		prop.directionY.Gui();
 		GUI_SEP;
-
-		GUI_NODE_BEG("Horizontal scale")
-			prop.scaleX.Gui();
-		GUI_NODE_END;
-
-		GUI_NODE_BEG("Vertical scale")
-			prop.scaleY.Gui();
-		GUI_NODE_END
+		NWGui::Text("Horizontal scale");
+		prop.scaleX.Gui();
+		NWGui::Text("Vertical scale");
+		prop.scaleY.Gui();
 		GUI_SEP;
 		NWGui::Text("Color: Red channel");
 		prop.colorX.Gui();

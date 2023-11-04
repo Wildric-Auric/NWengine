@@ -70,8 +70,10 @@ bool Collider::Sat(Collider* other, fVec2* depthBuffer) {
 		float temp = Min<float>(maxx - min0, max0 - minn);
 		if ( temp <= depth) {
 			depth = temp;
-			*depthBuffer = normal * depth;		
+			*depthBuffer = normal * depth;
+			
 		}
+
 		if ( temp <= 0.0 ) {
 			return false;
 		}

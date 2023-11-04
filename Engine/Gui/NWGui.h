@@ -8,9 +8,6 @@
 #define GUI_SEP ImGui::Separator();
 #define GUI_NEWLINE ImGui::NewLine();
 #define GUI_SAMELINE ImGui::SameLine();
-#define GUI_NODE_BEG(str) if (ImGui::TreeNode(str)) {
-#define GUI_NODE_END      ImGui::TreePop(); }
-
 
 
 enum GuiDataType_

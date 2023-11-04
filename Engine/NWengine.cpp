@@ -18,7 +18,10 @@ extern "C"
 
 		Context::dllFlag = NW_KEEP_DLL_RUNNING;
 		while (Context::dllFlag == NW_KEEP_DLL_RUNNING) {
-			Gui::Begin();
+
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 			Context::Clear();
 			Inputs::Process((GLFWwindow*)Context::window);
 			Gui::Update();
@@ -31,9 +34,13 @@ extern "C"
 
 			Renderer::currentRenderer->CaptureOnCamFrame();
 
-			Gui::Render();
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			Context::Update();
+			glfwSwapInterval(1);
+			glfwSwapBuffers((GLFWwindow*)Context::window);
+			glfwPollEvents();
+
 			//Updating dll flag
 			if (glfwWindowShouldClose((GLFWwindow*)Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
 
@@ -140,7 +147,10 @@ void NWengine::MainLoop() {
 	Renderer::currentRenderer = Renderer::defaultRenderer;
 
 	while (!glfwWindowShouldClose((GLFWwindow*)Context::window)) {
-		Gui::Begin();
+		// ImGui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 		//Clearing for the UI
 		Context::Clear();	
 		Inputs::Process((GLFWwindow*)Context::window);
@@ -161,7 +171,9 @@ void NWengine::MainLoop() {
 	
 
 		//Render Im::Gui
-		Gui::Render();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		//Update window and capturing inputs
 		Context::Update();
 
