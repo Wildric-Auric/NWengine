@@ -15,6 +15,7 @@
 #include "imgui/implot/implot.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imguizmo/ImGuizmo.h"
 
 std::unordered_map<uint32, GuiWindow*> Gui::Windows;
 
@@ -42,6 +43,18 @@ void Gui::Init(void* window) {
 	for (std::pair<const uint32, GuiWindow*>& it : Gui::Windows) {
 		it.second->Init();
 	};
+}
+
+void Gui::Begin() {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
+}
+
+void Gui::Render() {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 

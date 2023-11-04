@@ -54,7 +54,6 @@ bool NWGui::DragValue(const char* label, void* target, int dataType, int16 vecto
 		ret = ImGui::DragScalarN(NWGui::GenLabel("", GET_GUI_ID).c_str(), dataType, target, vectorSize, speed, &minn, &maxx);
 		ImGui::EndTable();
 	}
-
 	return ret;
 }
 
@@ -112,7 +111,7 @@ bool NWGui::CubicBezierPlot(std::string label, fVec2* source, fVec2* target, fVe
 #define FUNC(p, origin, r, g, b, a)  if (ImPlot::DragPoint(GET_GUI_ID, &p.x, &p.y, ImVec4(r, g, b, a)))  { origin->x = p.x; origin->y = p.y; }
 	bool ret = 0;
 
-	NWGui::DragValue( (label + " (Source)").c_str(), &source->y, ImGuiDataType_Float, 1);
+	NWGui::DragValue( (label + "Source").c_str(), &source->y, ImGuiDataType_Float, 1);
 	NWGui::DragValue( ("Target"), &target->y, ImGuiDataType_Float, 1);
 
 	if (ImGui::TreeNode(GenLabel("Bezier Plot", GET_GUI_ID).c_str())) {

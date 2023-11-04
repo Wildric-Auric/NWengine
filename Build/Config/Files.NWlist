@@ -26,10 +26,7 @@ Engine\\Context\\Inputs.cpp
 Engine\\Context\\Primitives.cpp
 Engine\\Context\\RessourcesLoader.cpp
 Engine\\Context\\Texture.cpp
-Engine\\Gui\\Console.cpp
-Engine\\Gui\\Gui.cpp
-Engine\\Gui\\NWGui.cpp
-Engine\\Gui\\StaticGuiVariable.cpp
+Engine\\Gui\\*.cpp
 Engine\\Native Scripting\\ScriptManager.cpp
 Engine\\Reflection\\Serializer.cpp
 Engine\\Rendering\\Batch.cpp

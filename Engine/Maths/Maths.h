@@ -6,12 +6,13 @@
 #define PI 3.14159265359
 #define ONEDIV180 0.00555555555
 
-
 inline float DegToRad(float degree) {
 	return degree * PI * ONEDIV180;
 }
 
-
+inline float RadToDeg(float rad) {
+	return 180.0 * rad / PI;
+}
 
 
 

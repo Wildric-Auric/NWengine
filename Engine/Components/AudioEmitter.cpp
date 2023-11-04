@@ -49,7 +49,7 @@ int AudioEmitter::Deserialize(std::fstream* data, int offset) {
 };
 
 
-void AudioEmitter::Gui() {
+NW_IMPL_GUI( AudioEmitter,
 	std::string temp = "";
 	if (sound != nullptr) temp = sound->name;
 
@@ -77,4 +77,4 @@ void AudioEmitter::Gui() {
 	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S32, 1, 1, 0.0f, 100.0f);
 	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 2.0f);
 	NWGui::CheckBox("Loop", &this->isLooping);
-}
+)
