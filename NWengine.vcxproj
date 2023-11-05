@@ -94,7 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN_32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;$(SolutionDir)Engine\Reflection;$(SolutionDir)Build</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;$(SolutionDir)Engine\Reflection;$(SolutionDir)Build</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -138,7 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Engine\Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)dependencies\GLEW\include;$(SolutionDir)dependencies\GLFW\include;$(SolutionDir)dependencies\vendor;$(SolutionDir)dependencies\IRRKLANG\include;$(SolutionDir)dependencies\freetype\include;$(SolutionDir)dependencies\OPENAL\include;$(SolutionDir)Engine;$(SolutionDir)dependencies\SND\include;$(SolutionDir)Engine\Components;$(SolutionDir)Engine\Audio;$(SolutionDir)Ressources;$(SolutionDir)Engine\Context;$(SolutionDir)Gui;$(SolutionDir)Engine\Maths;$(SolutionDir)Engine\Rendering;$(SolutionDir)Engine\STL;$(SolutionDir)Engine\Native Scripting;</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -197,16 +197,16 @@
     <ClCompile Include="Engine\Components\TextHandler.cpp" />
     <ClCompile Include="Engine\Components\Transform.cpp" />
     <ClCompile Include="Engine\Game.cpp" />
-    <ClCompile Include="Engine\Gui\Console.cpp" />
-    <ClCompile Include="Engine\Gui\ConsoleGui.cpp" />
-    <ClCompile Include="Engine\Gui\DebugGui.cpp" />
-    <ClCompile Include="Engine\Gui\Gui.cpp" />
-    <ClCompile Include="Engine\Gui\InspectorGui.cpp" />
-    <ClCompile Include="Engine\Gui\NWGui.cpp" />
-    <ClCompile Include="Engine\Gui\HierarchyGui.cpp" />
-    <ClCompile Include="Engine\Gui\SceneEditorGui.cpp" />
-    <ClCompile Include="Engine\Gui\SceneViewGui.cpp" />
-    <ClCompile Include="Engine\Gui\ScriptManagerGui.cpp" />
+    <ClCompile Include="Gui\Console.cpp" />
+    <ClCompile Include="Gui\ConsoleGui.cpp" />
+    <ClCompile Include="Gui\DebugGui.cpp" />
+    <ClCompile Include="Gui\Gui.cpp" />
+    <ClCompile Include="Gui\InspectorGui.cpp" />
+    <ClCompile Include="Gui\NWGui.cpp" />
+    <ClCompile Include="Gui\HierarchyGui.cpp" />
+    <ClCompile Include="Gui\SceneEditorGui.cpp" />
+    <ClCompile Include="Gui\SceneViewGui.cpp" />
+    <ClCompile Include="Gui\ScriptManagerGui.cpp" />
     <ClCompile Include="Engine\Interpolation.cpp" />
     <ClCompile Include="Engine\NWproj.cpp" />
     <ClCompile Include="Engine\Reflection\GuiObject.h" />
@@ -214,7 +214,7 @@
     <ClCompile Include="Engine\Rendering\Framebuffer.cpp" />
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\RuntimeManager.cpp" />
-    <ClCompile Include="Engine\SceneEditor.cpp" />
+    <ClCompile Include="Gui\SceneEditor.cpp" />
     <ClCompile Include="Engine\STL\NWstd.cpp" />
     <ClCompile Include="Engine\STL\Parser.cpp" />
     <ClCompile Include="Engine\Components\ParticleSystem.cpp" />
@@ -237,7 +237,7 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Context\Texture.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
-    <ClCompile Include="Engine\Gui\GuiWindow.cpp" />
+    <ClCompile Include="Gui\GuiWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\TopDownShooter0.0.Build.CppClean.log" />
@@ -938,16 +938,16 @@
     <ClInclude Include="Engine\Components\TextHandler.h" />
     <ClInclude Include="Engine\Components\Transform.h" />
     <ClInclude Include="Engine\Game.h" />
-    <ClInclude Include="Engine\Gui\Console.h" />
-    <ClInclude Include="Engine\Gui\ConsoleGui.h" />
-    <ClInclude Include="Engine\Gui\DebugGui.h" />
-    <ClInclude Include="Engine\Gui\GuiWindow.h" />
-    <ClInclude Include="Engine\Gui\HierarchyGui.h" />
-    <ClInclude Include="Engine\Gui\InspectorGui.h" />
-    <ClInclude Include="Engine\Gui\NWGui.h" />
-    <ClInclude Include="Engine\Gui\SceneEditorGui.h" />
-    <ClInclude Include="Engine\Gui\SceneViewGui.h" />
-    <ClInclude Include="Engine\Gui\ScriptManagerGui.h" />
+    <ClInclude Include="Gui\Console.h" />
+    <ClInclude Include="Gui\ConsoleGui.h" />
+    <ClInclude Include="Gui\DebugGui.h" />
+    <ClInclude Include="Gui\GuiWindow.h" />
+    <ClInclude Include="Gui\HierarchyGui.h" />
+    <ClInclude Include="Gui\InspectorGui.h" />
+    <ClInclude Include="Gui\NWGui.h" />
+    <ClInclude Include="Gui\SceneEditorGui.h" />
+    <ClInclude Include="Gui\SceneViewGui.h" />
+    <ClInclude Include="Gui\ScriptManagerGui.h" />
     <ClInclude Include="Engine\Interpolation.h" />
     <ClInclude Include="Engine\NWproj.h" />
     <ClInclude Include="Engine\Reflection\NWReflection.h" />
@@ -955,10 +955,10 @@
     <ClInclude Include="Engine\Reflection\Serializer.h" />
     <ClInclude Include="Engine\Rendering\Batch.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
-    <ClInclude Include="Engine\Gui\Gui.h" />
+    <ClInclude Include="Gui\Gui.h" />
     <ClInclude Include="Engine\Rendering\Renderer.h" />
     <ClInclude Include="Engine\RuntimeManager.h" />
-    <ClInclude Include="Engine\SceneEditor.h" />
+    <ClInclude Include="Gui\SceneEditor.h" />
     <ClInclude Include="Engine\STL\NWstd.h" />
     <ClInclude Include="Engine\NWengine.h" />
     <ClInclude Include="Engine\STL\Parser.h" />

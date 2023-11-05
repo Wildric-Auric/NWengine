@@ -3,7 +3,6 @@
 #include "Globals.h"
 #include "GameObject.h"
 
-#include "Console.h"
 class Transform : public GameComponent {
 public:
 	static std::string GetType() { return "Transform"; };

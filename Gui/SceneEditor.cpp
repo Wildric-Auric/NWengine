@@ -12,5 +12,6 @@ void SceneEditor::Init() {
 void SceneEditor::Update() {
 	SceneEditor::cam->Update();
 	SceneEditor::cam->clearColor = fVec3(0.1f, 0.0f, 0.4f);
+	SceneEditor::cam->alpha      = 0.5;
 	SceneEditor::cam->Capture();
 }

@@ -6,7 +6,7 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 
 	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
-		Context::Clear(clearColor.x, clearColor.y, clearColor.z, 1.0);
+		Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
 		Camera* temp = ActiveCamera;
 		ActiveCamera = this;
 		if (Scene::currentScene != nullptr)

@@ -14,6 +14,7 @@ public:
 	fVec2 size;
 	fVec2 viewPortSize;
 	fVec3 clearColor = fVec3(0.0,0.0, 0.0);
+	float alpha      = 1.0f;
 	bool isActive = 0;
 
 	Camera() {};
