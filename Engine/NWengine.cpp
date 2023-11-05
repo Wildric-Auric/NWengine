@@ -188,7 +188,7 @@ void NWengine::Shutdown() {
 		delete NWproj::currentProj;
 
 		ScriptManager::SaveScriptList();
-		SoundSystem::DestroyOpenAL();  //TODO::Put init, destroy audio functions in class
+		SoundSystem::DestroyOpenAL(); 
 
 		TextSystem::Destroy();
 		Primitives::Destroy();
