@@ -9,12 +9,15 @@
 *.ini
 
 #Dependencies
+Bin/
+bin/
+Bin/**
 dependencies/
 GNUBuild/
 Build/Data
-Build/Data/Builder.exe
-Build/Data/build.exe
-Build/Data/Builder.bat
+Build/temp
+Build/*.exe
+
 
 *.exe
 *.dll 
