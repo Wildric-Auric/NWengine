@@ -1,8 +1,8 @@
-workspace "NWengineWorkspace"
+workspace "NWengine"
     configurations {"Debug32", "Release32", "Static-Editor-Debug32", "Static-Editor-Release32" }
     architecture "x86"
 
-    project "NWengineSolution"
+    project "NWengineProject"
         kind "ConsoleApp"
         language   "C++"
         cppdialect "C++11"
