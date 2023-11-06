@@ -13,13 +13,6 @@ float Interpolator::Evaluate(float clock) {
 	return currentValue = lerp(this->source, this->target, clock);
 }
 
-
-void Interpolator::Gui() {
-	NWGui::DragValue("Source", &this->source, GuiDataType_Float, 1);
-	NWGui::DragValue("Target", &this->target, GuiDataType_Float, 1);
-	NWGui::DragValue("Duration", &this->duration, GuiDataType_Float, 1);
-};
-
 int  Interpolator::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
 
@@ -59,11 +52,6 @@ float BezierInterpolator::Evaluate(float clock) {
 	fVec2 e = fVec2(1.0f, this->target);
 	return this->currentValue = CbezierVector2(s, e, controlPoints[0], controlPoints[1], fVec2(clock, clock)).y; //TODO::This in one dimension only
 }
-
-void BezierInterpolator::Gui() {
-	NWGui::CubicBezierInterpolationPlot("", &this->source, &this->target, &this->controlPoints[0], &this->controlPoints[1]);	
-	NWGui::DragValue("Duration", &this->duration, GuiDataType_Float, 1);
-};
 
 int  BezierInterpolator::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;

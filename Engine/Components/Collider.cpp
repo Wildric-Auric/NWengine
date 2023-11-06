@@ -107,9 +107,3 @@ int Collider::Serialize(std::fstream* data, int offset) {
 int Collider::Deserialize(std::fstream* data, int offset) {
 	return 0;
 }
-
-void Collider::Gui() {
-	if (ImGui::Button("Update Size")) {
-		Start();
-	}
-}

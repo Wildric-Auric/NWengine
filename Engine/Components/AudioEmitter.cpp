@@ -1,6 +1,5 @@
 #include "AudioEmitter.h"
 #include "Utilities.h"
-#include "imgui/imgui.h"
 
 std::map<GameObject*, AudioEmitter*> AudioEmitter::componentList;
 
@@ -47,34 +46,3 @@ int AudioEmitter::Deserialize(std::fstream* data, int offset) {
 	READ_FROM_BIN(data, &this->isLooping, sizeBuffer);
 	return 0;
 };
-
-
-NW_IMPL_GUI( AudioEmitter,
-	std::string temp = "";
-	if (sound != nullptr) temp = sound->name;
-
-	if (NWGui::FileHolder("Sound", temp)) {
-		std::string path = GetFile(WIN_STR_FILTER("Sound Files", "*.wav;*.ogg;*.flac"));
-		if (path == "") return;
-
-		if (sound == nullptr) { sound = new Sound(path); return; } //TODO::Add Sound function
-		if (sound->name == path) return;
-		delete sound;
-		sound = new Sound(path);
-		//TODO::Check only the file name
-	}
-
-	if (sound == nullptr) return;
-	bool temp0 = sound->isPlaying;
-	if (NWGui::CheckBox("isPlaying", &temp0 ) ) {
-		if (!sound->isPlaying)
-			sound->Play();
-		else
-			sound->Stop();
-		temp0 = !temp0;
-	}
-
-	NWGui::DragValue("Volume", &this->volume, ImGuiDataType_S32, 1, 1, 0.0f, 100.0f);
-	NWGui::DragValue("Frequency", &this->frequency, ImGuiDataType_Float, 1, 0.1f, 0.0f, 2.0f);
-	NWGui::CheckBox("Loop", &this->isLooping);
-)

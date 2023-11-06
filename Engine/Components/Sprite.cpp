@@ -1,7 +1,6 @@
 #include "Sprite.h"
 #include "Utilities.h"
 #include "Scene.h"
-#include "imgui/imgui.h"
 
 Sprite::Sprite(GameObject* go) {
 	this->attachedObj = go;
@@ -55,27 +54,6 @@ void Sprite::Update() {
 	if (!shouldDraw) return;
 	Scene::currentScene->Rearrange(this);
 	shouldDraw = 0;
-}
-
-void Sprite::Gui() {
-	if (NWGui::DragValue("Layering Order", &sortingLayer, ImGuiDataType_U32, 1, 1.0f, 0.0f, 6000.0f))
-		SetSortingLayer(sortingLayer);
-	ImGui::Separator();
-	if (NWGui::FileHolder("Texture", texture->name)) {
-		std::string path = GetFile(WIN_STR_FILTER("Image files", "*.png;*.jpeg;*.jpg"));
-		if (path != "") SetTexture(path);
-	}
-	ImGui::Separator();
-	if (NWGui::FileHolder("Shader", shader->name)) {
-		std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
-		if (path != "") SetShader(path);
-	}
-	if (ImGui::Button("Recompile Shader"))
-		RessourcesLoader::ReloadShader(this->shader->name);
-
-	ImGui::Checkbox("isBatched", &isBatched);
-
-	ImGui::Separator();
 }
 
 int Sprite::Serialize(std::fstream* data, int offset) {

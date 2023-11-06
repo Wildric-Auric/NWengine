@@ -35,7 +35,6 @@ public:
 	void StopRendering();
 
 	void Update() override;
-	void Gui() override;
 	static std::map<GameObject*, Sprite> componentList;
 
 	int Serialize(std::fstream* data, int offset) override;
@@ -43,4 +42,6 @@ public:
 
 	void  SetGameObject(void* go)  override;
 	void* GetGameObject()		   override;
+
+	OVERRIDE_GUI
 };

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdint>
 
+#pragma warning(disable: 4244) 
 
 #define PI 3.14159265359
 #define ONEDIV180 0.00555555555

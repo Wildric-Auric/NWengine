@@ -1,20 +1,7 @@
 #include "Transform.h"
-#include "imgui/imgui.h"
 
 Transform::Transform(GameObject* go) {
 	this->attachedObj = go;
-}
-
-void Transform::Gui() {
-	static iVec2 guiPosition;
-	guiPosition = position;
-	if (NWGui::DragValue("Position", &guiPosition.x, ImGuiDataType_S32, 2)) {
-		position = guiPosition;
-	};
-	ImGui::Separator();
-	NWGui::DragValue("Scale", &scale.x, ImGuiDataType_Float, 2, 0.01f);
-	NWGui::DragValue("Rotation", &rotation, ImGuiDataType_Float, 1, 1.0);
-	ImGui::Separator();
 }
 
 int Transform::Serialize(std::fstream* data, int offset) {

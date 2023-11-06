@@ -32,5 +32,5 @@ public:
 
 	int Serialize(std::fstream* data, int offset)	override;
 	int Deserialize(std::fstream* data, int offset) override;
-	void Gui()										override;
+	OVERRIDE_GUI
 };

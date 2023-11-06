@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "GuiWindow.h"
 #include "Globals.h"
+#include "NWGui.h"
 
 enum class GUI_WINDOW {
 	None,

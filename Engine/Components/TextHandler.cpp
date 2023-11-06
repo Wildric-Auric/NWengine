@@ -76,25 +76,6 @@ void TextHandler::SetFont(const std::string& path) {
 	UpdateGlyphs();
 }
 
-void TextHandler::Gui() {
-	if (NWGui::FileHolder("Font", this->font.name)) {
-		std::string path = GetFile(WIN_STR_FILTER("Font files", "*.ttf"));
-		this->SetFont(path);
-	}
-
-	if (NWGui::FileHolder("Shader", this->shader)) {
-		std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
-		if (path != "") {this->shader = path;}
-	}
-	NWGui::CheckBox("isBatched", &this->isBatched);
-	NWGui::DragValue("Position", &this->position, GuiDataType_Float, 2, 1.0);
-	NWGui::DragValue("Scale", &this->scale, GuiDataType_Float,2, 0.05f, 0.0f, 100.0f);
-	NWGui::DragValue("Color", &this->colors, GuiDataType_Float, 4, 0.05f, 0.0f, 1.0f);
-	NWGui::Input("Text", &this->text);
-	if (NWGui::Button("Update characters"))
-		this->UpdateGlyphs();
-}
-
 int TextHandler::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
 	WRITE_ON_BIN(data, "TextHandler", 11, sizeBuffer);

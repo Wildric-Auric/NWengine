@@ -4,7 +4,6 @@
 #include "ParticleSystem.h"
 #include "Scene.h"
 #include "imgui/imgui.h"
-#include "NWGui.h"
 #include "Utilities.h"
 #include "NWTime.h"
 
@@ -139,73 +138,6 @@ void Particle::Enable() {
 
 	isActive = 1;
 	sprite->Render();
-}
-
-void ParticleSystem::Gui() {
-	ImGui::Checkbox("Active", &isActive);
-	if (ImGui::TreeNode("Particles properties")) {
-		GUI_SEP
-		NWGui::DragValue("Lifetime", &prop.lifetime, ImGuiDataType_Float);
-		GUI_SEP;
-		NWGui::DragValue("Lifedistance", &prop.lifedistance, ImGuiDataType_S32);
-		GUI_SEP;
-		NWGui::DragValue("Relative start position", &prop.sPosition, ImGuiDataType_Float, 2);
-		GUI_SEP;
-
-		GUI_NODE_BEG("Horizontal direction")
-			prop.directionX.Gui();
-		GUI_NODE_END
-
-		GUI_NODE_BEG("Vertical direction")
-			prop.directionY.Gui();
-		GUI_NODE_END
-		GUI_SEP;
-
-		GUI_NODE_BEG("Horizontal scale")
-			prop.scaleX.Gui();
-		GUI_NODE_END;
-
-		GUI_NODE_BEG("Vertical scale")
-			prop.scaleY.Gui();
-		GUI_NODE_END
-		GUI_SEP;
-		NWGui::Text("Color: Red channel");
-		prop.colorX.Gui();
-		NWGui::Text("Color: Green channel");
-		prop.colorY.Gui();
-		NWGui::Text("Color: Blue channel");
-		prop.colorZ.Gui();
-		NWGui::Text("Color: Alpha channel");
-		prop.colorA.Gui();
-		GUI_SEP;
-		NWGui::Text("Speed");
-		prop.speed.Gui();
-		GUI_SEP;
-		GUI_SEP; GUI_NEWLINE;
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Emission properties")) {
-
-		if (NWGui::FileHolder("Shader", shader)) {
-			std::string path = GetFile(WIN_STR_FILTER("Shader files", "*.shader"));
-			if (path != "") this->shader = path;
-		}
-		GUI_SEP
-
-		if (NWGui::FileHolder("Texture", this->texture)) {
-			std::string path = GetFile(WIN_STR_FILTER("Image files", "*.png;*.jpeg;*.jpg"));
-			if (path != "") this->texture = path;
-		}
-		GUI_SEP
-		NWGui::DragValue("Emission frequency", &emissionFrequency, ImGuiDataType_Double);
-		GUI_SEP;
-		NWGui::DragValue("Emission quantity", &emissionQuantity, ImGuiDataType_U16);
-		GUI_SEP;
-		NWGui::CheckBox("Recycle particles", &recycle);
-		GUI_SEP;
-		NWGui::DragValue("Max particles(experimental)", &maxParticles, ImGuiDataType_S32);
-		ImGui::TreePop();
-	}
 }
 
 

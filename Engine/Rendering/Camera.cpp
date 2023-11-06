@@ -3,7 +3,7 @@
 #include "imgui/imgui.h"
 
 
-static void UpdateActiveCamera() {
+void Camera::UpdateActiveCamera() {
 	if (Camera::ActiveCamera != nullptr) 
 		Camera::ActiveCamera->Capture();
 }
@@ -69,24 +69,7 @@ void Camera::Use() {
 	this->isActive = 1;
 	Camera::ActiveCamera = this;
 }
-void Camera::Gui() {
 
-	if (NWGui::CheckBox("Activate", &isActive)) {
-		if (isActive) { Use(); }
-		else {
-			Camera::ActiveCamera = nullptr;
-			this->isActive = 0;
-		}
-	};
-		
-	NWGui::DragValue("Camera Position", &position.x, ImGuiDataType_Float, 2, 1.0f);
-	NWGui::DragValue("Camera Rotation", &rotation, ImGuiDataType_Float, 1);
-	NWGui::DragValue("Camera Zoom", &zoom, ImGuiDataType_Float, 1, 0.1f, 0.0f, 100.0f);
-	NWGui::DragValue("Clearing color", &clearColor.x, ImGuiDataType_Float, 3, 0.1, 0.0f, 1.0f);
-	NWGui::DragValue("Resolution", &viewPortSize.x, ImGuiDataType_Float, 2, 10.0f, 0.0f, 10000.0f);
-	if (NWGui::Button("Apply"))
-		this->ChangeOrtho(viewPortSize.x, viewPortSize.y);
-}
 
 Camera::~Camera() {
 	this->fbo.Delete();

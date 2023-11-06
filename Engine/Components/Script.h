@@ -21,9 +21,7 @@ public:
 	virtual void Start() {};
 	virtual void Update() {};
 	virtual void Gui() {};
-
 	virtual void ShaderCode(void* sprite);
-
 	virtual std::string GetName() { return __nwname; };
 	void* nws = nullptr;
 };
@@ -35,13 +33,12 @@ public:
 	Script(GameObject* attachedObj);
 	GameObject* attachedObj = nullptr;
 	Scriptable* script = nullptr;
-	void Gui()	  override;
 	void Start()  override;
 	void Update() override;
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;
 
-
+	OVERRIDE_GUI
 	static std::map<GameObject*, Script> componentList;
 };
 

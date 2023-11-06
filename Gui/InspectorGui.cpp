@@ -6,6 +6,7 @@
 #include "Gui.h"
 #include "Components.h"
 #include "Camera.h"
+#include "NWGui.h"
 
 #define ADD_COMPONENT_TO_INSPECTOR(type, go) if (ImGui::Selectable(#type)) go->AddComponent<type>();
 

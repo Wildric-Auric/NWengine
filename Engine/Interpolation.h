@@ -22,7 +22,7 @@ public:
 	//Clock between 0 and 1
 	virtual float Evaluate(float clock);
 
-	void Gui()										 override;
+	OVERRIDE_GUI
 	int  Serialize(std::fstream* data, int offset)   override;
 	int  Deserialize(std::fstream* data, int offset) override;
 };
@@ -38,7 +38,7 @@ public:
 	void Linearize();
 
 	float Evaluate(float clock) override;
-	void Gui() override;
+	OVERRIDE_GUI
 	int  Serialize(std::fstream* data, int offset) override;
 	int  Deserialize(std::fstream* data, int offset) override;
 };

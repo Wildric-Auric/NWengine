@@ -38,7 +38,7 @@ public:
 
 	static Camera* ActiveCamera;
 
-	void Gui() override;
+	OVERRIDE_GUI
 
 	int Serialize(std::fstream* data, int offset)    override; 
 	int Deserialize(std::fstream* data, int offset)  override;

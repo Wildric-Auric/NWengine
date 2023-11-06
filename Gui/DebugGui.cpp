@@ -6,6 +6,7 @@
 #include "Utilities.h"
 #include "NWproj.h"
 #include "Renderer.h"
+#include "NWGui.h"
 
 #include <iostream>
 

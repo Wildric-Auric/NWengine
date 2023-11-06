@@ -13,22 +13,7 @@ Script::Script(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
 }
 
-void Script::Gui() {
-	std::string text = "None";
-	if (this->script != nullptr) text = this->script->GetName();
-	if (NWGui::FileHolder("Script", text.c_str())) {
-		std::string path	 = GetFile(WIN_STR_FILTER("Script files", "*.h"));
-		std::string filename = "";
-		std::string root	 = "";
-		GetFileName(path, &filename, nullptr,&root);
-		if (path == "") return;
-		script = ScriptManager::CreateScript(filename, attachedObj); //TODO::Get if file is valid
-		ScriptManager::scriptList.insert(std::make_pair(filename, root));
-	}
 
-	if (this->script != nullptr)
-		this->script->Gui();
-}
 
 void Script::Start() {
 	if (this->script == nullptr) return;

@@ -21,7 +21,7 @@ public:
 	bool Sat(Collider* other, fVec2* depthBuffer		 = nullptr);
 	bool isColliding(Collider* other, fVec2* depthBuffer = nullptr);
 
-	void Gui()	  override;
+	OVERRIDE_GUI
 	void Start()  override;
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;

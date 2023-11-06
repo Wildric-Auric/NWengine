@@ -11,6 +11,7 @@
 #include "Utilities.h"
 #include "Scene.h"
 #include "Builder.h"
+#include "NWGui.h"
 
 #include "imgui/implot/implot.h"
 #include "imgui/imgui_impl_glfw.h"

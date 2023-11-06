@@ -1,4 +1,7 @@
 #include "NWengine.h"
+#include "NWGui.h"
+#include "Gui.h"
+#include "SceneEditor.h"
 #include "GL/glew.h"
 #include "glfw3.h"
 
@@ -125,7 +128,7 @@ void NWengine::MainLoop() {
 		Context::Clear();	
 		Inputs::Process((GLFWwindow*)Context::window);
 		Gui::Update();
-		Camera::ActiveCamera->Update();
+		Camera::UpdateActiveCamera();
 		Scene::UpdateActiveScene();
 		//Updating Renderer camera framebuffer
 		Renderer::currentRenderer->CaptureOnCamFrame();

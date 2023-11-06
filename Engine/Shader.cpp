@@ -1,11 +1,10 @@
 #include <GL/glew.h>
-#include <glfw3.h>
+//#include <glfw3.h>
 #include <iostream>
 #include <fstream>
+#include <string.h>
 #include "Shader.h"
 #include "Globals.h"
-#include "Console.h"
-#include <string.h>
 
 static bool parseUniformLine(std::string* name, DataTypes* type) {
 
@@ -42,8 +41,8 @@ Shader::Shader(std::string path) {
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, log);
-		Console::Write((std::string("SHADER::VERTEX::COMPILATION FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
-		Console::Write(log, CONSOLE_ERROR_MESSAGE);
+		NW_LOG_ERROR((std::string("SHADER::VERTEX::COMPILATION FAILED AT: ") + path).c_str());
+		NW_LOG_ERROR(log);
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &(shaderSrc.second), NULL);
@@ -51,8 +50,8 @@ Shader::Shader(std::string path) {
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
-		Console::Write((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
-		Console::Write(log, CONSOLE_ERROR_MESSAGE);
+		NW_LOG_ERROR((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + path).c_str());
+		NW_LOG_ERROR(log);
 	}
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -62,8 +61,8 @@ Shader::Shader(std::string path) {
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &successInfo);
 	if (!successInfo) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, log);
-		Console::Write((std::string("SHADER::SHADER::PROGRAM::LINKING FAILED AT: ") + path).c_str(), CONSOLE_ERROR_MESSAGE);
-		Console::Write(log, CONSOLE_ERROR_MESSAGE);
+		NW_LOG_ERROR((std::string("SHADER::LINKAGE FAILED AT: ") + path).c_str());
+		NW_LOG_ERROR(log);
 	}
 
 	glDeleteShader(vertexShader);
