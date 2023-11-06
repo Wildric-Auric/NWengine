@@ -4,6 +4,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
+*.vcx*
+*.ini
 
 #Dependencies
 dependencies/
