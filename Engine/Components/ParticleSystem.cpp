@@ -6,6 +6,7 @@
 #include "imgui/imgui.h"
 #include "NWGui.h"
 #include "Utilities.h"
+#include "NWTime.h"
 
 ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
@@ -14,7 +15,7 @@ ParticleSystem::ParticleSystem(GameObject* attachedObj) {
 std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 
 void ParticleSystem::Update() {
-	clock += Globals::deltaTime;
+	clock += NWTime::GetDeltaTime();
 	prop.absoluteStartPosition = attachedObj->AddComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
 	if ((clock >= emissionFrequency) && isActive) Emit();
 	auto it = enabled.begin();
@@ -38,9 +39,9 @@ void ParticleSystem::Update() {
 		UPDATE_ATTRIBUTE(particle->prop.directionY.duration, particle->currentDirection.y, particle->prop.directionY);
 #undef UPDATE_ATTRIBUTE(duration, value, interpolator)
 
-		particle->currentPosition = particle->currentPosition +  particle->currentDirection.normalize() * Globals::deltaTime * particle->currentSpeed;
+		particle->currentPosition = particle->currentPosition +  particle->currentDirection.normalize() * NWTime::GetDeltaTime() * particle->currentSpeed;
 		particle->distance = (particle->currentPosition - particle->prop.sPosition).magnitude();
-		particle->clock += Globals::deltaTime;
+		particle->clock += NWTime::GetDeltaTime();
 		if ((particle->clock >= particle->prop.lifetime) || (particle->distance >= particle->prop.lifedistance)) {
 			disabled.push_back(index);
 			it = enabled.erase(it);

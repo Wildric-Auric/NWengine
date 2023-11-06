@@ -2,8 +2,13 @@
 #include "Scene.h"
 #include "imgui/imgui.h"
 
-void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
 
+static void UpdateActiveCamera() {
+	if (Camera::ActiveCamera != nullptr) 
+		Camera::ActiveCamera->Capture();
+}
+
+void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
 	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
 		Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
@@ -12,9 +17,7 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 		if (Scene::currentScene != nullptr)
 			Scene::currentScene->Draw();
 		ActiveCamera = temp;
-
 	this->fbo.Unbind();
-
 }
 
 Camera::Camera(GameObject* go) {

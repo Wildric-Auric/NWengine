@@ -5,6 +5,7 @@
 #endif
 
 #include "Globals.h"
+#include "NWTime.h"
 #include "Utilities.h"
 
 #include <iostream>

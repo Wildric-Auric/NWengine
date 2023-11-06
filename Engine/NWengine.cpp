@@ -22,13 +22,8 @@ extern "C"
 			Context::Clear();
 			Inputs::Process((GLFWwindow*)Context::window);
 			Gui::Update();
-			Globals::uTime += Globals::deltaTime;
-			if (Camera::ActiveCamera != nullptr)
-				Camera::ActiveCamera->Capture();
-
-			if (Scene::currentScene != nullptr)
-				Scene::currentScene->Update();
-
+			Camera::Update();
+			Scene::Update();
 			Renderer::currentRenderer->CaptureOnCamFrame();
 
 			Gui::Render();
@@ -36,17 +31,7 @@ extern "C"
 			Context::Update();
 			//Updating dll flag
 			if (glfwWindowShouldClose((GLFWwindow*)Context::window)) Context::dllFlag = NW_SHUTDOWN_DLL;
-
-			frameCount += 1;
-			deltaTimeSum += Globals::deltaTime;
-			if (frameCount == 60) {
-				Globals::fps = 60.0 / deltaTimeSum;
-				deltaTimeSum = 0;
-				frameCount = 0;
-			}
-			currentTime = glfwGetTime();
-			Globals::deltaTime = currentTime - lastTime;
-			lastTime = currentTime;
+			NWTime::Update();
 		}
 		return Context::dllFlag;
 	}
@@ -129,11 +114,6 @@ int NWengine::Run() {
 //------------------
 void NWengine::MainLoop() {
 
-	int frameCount = 0;
-	double currentTime;
-	double lastTime;
-	double deltaTimeSum = 0;
-	lastTime = glfwGetTime();
 
 	GameObject renderObj = GameObject();
 	Renderer::defaultRenderer = new Renderer(&renderObj); //Unchanged by the user
@@ -145,38 +125,16 @@ void NWengine::MainLoop() {
 		Context::Clear();	
 		Inputs::Process((GLFWwindow*)Context::window);
 		Gui::Update();
-
-		//Updating camera framebuffer
-		if (Camera::ActiveCamera != nullptr) {
-			Camera::ActiveCamera->Capture();
-		}
-
-		//Updating scene objects
-		if (Scene::currentScene != nullptr)
-			Scene::currentScene->Update();
-
+		Camera::ActiveCamera->Update();
+		Scene::UpdateActiveScene();
 		//Updating Renderer camera framebuffer
 		Renderer::currentRenderer->CaptureOnCamFrame();
-
-	
-
 		//Render Im::Gui
 		Gui::Render();
 		//Update window and capturing inputs
 		Context::Update();
-
 		//Calculate fps
-		frameCount += 1;
-		deltaTimeSum += Globals::deltaTime;
-		if (frameCount == 60) {
-			Globals::fps = 60.0 / deltaTimeSum;
-			deltaTimeSum = 0;
-			frameCount = 0;
-		}
-
-		currentTime = glfwGetTime();
-		Globals::deltaTime = currentTime - lastTime;
-		lastTime = currentTime;
+		NWTime::Update();
 	}
 }
 

@@ -21,13 +21,6 @@ int8 Game::Run() {
 
 //------------------
 void Game::MainLoop() {
-
-	int frameCount = 0;
-	double currentTime;
-	double lastTime;
-	double deltaTimeSum = 0;
-	lastTime = glfwGetTime();
-
 	if (Scene::currentScene != nullptr)
 		Scene::currentScene->Start();
 
@@ -42,8 +35,6 @@ void Game::MainLoop() {
 
 		Inputs::Process(Context::window);
 
-		Globals::uTime += Globals::deltaTime;
-
 		if (Camera::ActiveCamera != nullptr) {
 			Camera::ActiveCamera->Capture();
 		}
@@ -55,17 +46,7 @@ void Game::MainLoop() {
 		//Update screen
 		Context::Update();
 		//Calculate fps
-		frameCount += 1;
-		deltaTimeSum += Globals::deltaTime;
-		if (frameCount == 60) {
-			Globals::fps = 60.0 / deltaTimeSum;
-			deltaTimeSum = 0;
-			frameCount = 0;
-		}
-
-		currentTime = glfwGetTime();
-		Globals::deltaTime = currentTime - lastTime;
-		lastTime = currentTime; //Well it's negligeable operation
+		NWTime::Update();
 	}
 }
 

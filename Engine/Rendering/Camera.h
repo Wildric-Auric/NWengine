@@ -6,7 +6,9 @@
 
 class Camera : public GameComponent {
 public:
-	static std::string GetType() { return "Camera"; };
+	static std::string GetType() { return "Camera"; }; 
+	//This static method calls capture on ActiveCamera if not null
+	static void UpdateActiveCamera();
 
 	glm::mat4 projectionMatrix;
 	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
@@ -23,8 +25,6 @@ public:
 	GameObject* attachedObj;
 
 	void Capture();
-	//void CaptureWithPostProcessing(void* postProcessing, float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
-
 	void Update();
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
 	void ChangeOrtho(float sizeX, float sizeY);

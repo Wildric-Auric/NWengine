@@ -19,6 +19,7 @@
 
 #include "Utilities.h"
 #include "Globals.h"
+#include "NWTime.h"
 
 #ifndef NW_DLL_ENGINE
 

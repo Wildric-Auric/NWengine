@@ -211,4 +211,9 @@ void Scene::SetUp() {
 	}
 }
 
+void Scene::UpdateActiveScene() {
+	if (Scene::currentScene != nullptr)
+		Scene::currentScene->Update();
+}
+
 void Scene::Gui() {}

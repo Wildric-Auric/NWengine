@@ -68,13 +68,8 @@ enum EngineMode {
 
 class Globals {
 public:
-	static double fps;
-	static double deltaTime;      //Read only in everyfile except mainloops
 	//Consts
 	static const float SCREENRATIO;
-
-
-	static float uTime;
 	//Paths
 	static std::string scriptListPath;
 	static std::string scriptManagerPath;

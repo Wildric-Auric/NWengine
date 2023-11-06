@@ -25,6 +25,8 @@ public:
 	void SetUp(); //Sets up needed static variables and other things
 	void Draw();
 	void Save();
+	//This static method calls Update on current scene if not null
+	static void UpdateActiveScene();
 	static bool GuiActive;
 	static Scene* currentScene;
 	static void Gui();

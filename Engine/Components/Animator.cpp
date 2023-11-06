@@ -1,4 +1,5 @@
 #include "Animator.h"
+#include "NWTime.h"
 
 Animator::Animator(GameObject* go) {
 	attachedObj = go;
@@ -9,7 +10,7 @@ void Animator::Update() {
 	if (!isActive) return;
 	Sprite* buffer = attachedObj->GetComponent<Sprite>();
 	if (buffer == nullptr ) return;
-	cycle += Globals::deltaTime;
+	cycle += NWTime::GetDeltaTime();
 	double duration = animation.durations[currentFrame];
 	if (cycle >= duration) {
 		currentFrame = (currentFrame + 1) % animation.frames.size(); 

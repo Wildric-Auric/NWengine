@@ -2,12 +2,6 @@
 #include <windows.h>
 #include <fstream>
 
-double Globals::fps = 60.0;
-double Globals::deltaTime = 0.016;        //Read only in everyfile except mainloop
-//Consts      
-
-//Uniforms
-float Globals::uTime = 0;
 //Paths
 std::string Globals::installationDir      = "";
 std::string Globals::projDir              = "";
