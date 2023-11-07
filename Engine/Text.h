@@ -1,16 +1,19 @@
 #pragma once
-#include "ft2build.h"
-#include FT_FREETYPE_H
 #include <string>
 #include <unordered_map>
 
 #include "GameObject.h"
 #include "Texture.h"
 
+
+
+typedef void* NW_FT_Lib ;
+typedef void* NW_FT_Face;
+
 class TextSystem {
 private:
 public:
-	static FT_Library lib;
+	static NW_FT_Lib lib;
 	static bool Init();
 	static void Destroy();
 };
@@ -26,7 +29,7 @@ public:
 
 class Font {
 private:
-	FT_Face face;
+	NW_FT_Face face;
 public:
 	std::unordered_map<char, Glyph> charactersMap;
 	std::string name = "";

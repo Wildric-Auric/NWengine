@@ -1,20 +1,18 @@
 #pragma once
-#include <AL/al.h>
-#include <AL/alc.h>
 #include <string>
-
+#include "Globals.h"
 
 class SoundSystem {
 public:
 	static bool	  InitOpenAL();
-	static ALuint LoadSound(const char* path);
+	static uint32 LoadSound(const char* path);
 	static void   DestroyOpenAL();
 };
 
 class Sound {
 private:
-	ALuint snd = 0;
-	ALuint source = 0;
+	uint32 snd = 0;
+	uint32 source = 0;
 public:
 	std::string name = "";
 

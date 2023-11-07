@@ -2,6 +2,8 @@
 #include<vector>
 #include "Audio.h"
 #include "Globals.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
 
 bool SoundSystem::InitOpenAL() {
@@ -29,7 +31,7 @@ void SoundSystem::DestroyOpenAL() {
 }
 
 
-ALuint SoundSystem::LoadSound(const char* path) {
+uint32 SoundSystem::LoadSound(const char* path) {
 	SF_INFO info;
 	SNDFILE* data = sf_open(path, SFM_READ, &info);  //hold on, does not support mp3? TODO::Write your own sound loading solution
 	if (!data) { printf("ERROR::Could not open sound file at : %s", path); return 0; }
