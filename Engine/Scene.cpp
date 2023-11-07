@@ -68,7 +68,7 @@ void Scene::ForceRenderStop() {
 	}
 }
 
-
+//TODO::delete the parameter
 void Scene::AddObject(GameObject goc) {
 	sceneObjs.push_back(goc);
 	sceneObjs.back().Rename("new GameObject");
