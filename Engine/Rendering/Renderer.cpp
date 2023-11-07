@@ -46,9 +46,8 @@ void Renderer::DrawOnDefaultFrame() {
 
 	cam->viewPortSize.x = cam->size.x * strechCoeff.x;
 	cam->viewPortSize.y = cam->size.y * strechCoeff.y;
-
-	Context::SetViewPort(Max<int>(Context::WINDOW_WIDTH - cam->viewPortSize.x, 0) * 0.5, 
-					     Max<int>(Context::WINDOW_HEIGHT - cam->viewPortSize.y, 0)* 0.5,
+	Context::SetViewPort((Context::WINDOW_WIDTH  - cam->viewPortSize.x) * 0.5, 
+					     (Context::WINDOW_HEIGHT - cam->viewPortSize.y) * 0.5,
 				         cam->viewPortSize.x, cam->viewPortSize.y);
 
 	Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
