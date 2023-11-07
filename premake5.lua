@@ -74,7 +74,7 @@ workspace "NWengine"
                         "%{prj.location}/Build/Builder.cpp",
                         "%{prj.location}/dependencies/vendor/glm/**.cpp"
                     }
-                    removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
+                    --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
     
     workspace "*"
         libdirs { 
