@@ -19,7 +19,7 @@ class Gui {
 public:
 	//Windows are heap allocated
 	static std::unordered_map<uint32, GuiWindow*> Windows;
-	static void Init(void* window);
+	static void Init();
 	//Called at each frame
 	static void Begin();
 	//Called at end of frame

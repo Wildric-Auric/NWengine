@@ -18,9 +18,23 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imguizmo/ImGuizmo.h"
 
+#include "ScriptManager.h"
+#include "SceneEditor.h"
+#include "Renderer.h"
+
+
 std::unordered_map<uint32, GuiWindow*> Gui::Windows;
 
-void Gui::Init(void* window) {
+void Gui::Init() {
+
+	Globals::SetInstallationDir(GetCurrentDir());
+	(NWproj::currentProj = new NWproj(NWproj::GetCurrentProjFromInstallationDir()))->Load();
+	Globals::SetProjDir(NWproj::currentProj->dir);
+	RessourcesLoader::LoadDefaultRessources();
+	ScriptManager::LoadScriptList();
+
+	void* window = Context::window;
+
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window, true);
@@ -44,6 +58,13 @@ void Gui::Init(void* window) {
 	for (std::pair<const uint32, GuiWindow*>& it : Gui::Windows) {
 		it.second->Init();
 	};
+
+	SceneEditor::Init();
+	RessourcesLoader::LoadDefaultRessources();
+	ScriptManager::LoadScriptList();
+
+	if (NWproj::currentProj != nullptr && NWproj::currentProj->defaultScenePath != "")
+		(Scene::currentScene = new Scene(NWproj::currentProj->defaultScenePath))->LoadScene();
 }
 
 void Gui::Begin() {
@@ -54,6 +75,7 @@ void Gui::Begin() {
 }
 
 void Gui::Render() {
+	Renderer::currentRenderer->CaptureOnCamFrame(); //Capture what is drawn by the core
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -185,6 +207,10 @@ void Gui::Update() {
 }
 
 void Gui::Destroy() {
+	delete SceneEditor::cam;
+	delete NWproj::currentProj;
+	delete Scene::currentScene;
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImPlot::DestroyContext();
 	ImGui::DestroyContext();
