@@ -65,6 +65,10 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 	return window;
 }
 
+bool Context::ShouldClose() {
+	return glfwWindowShouldClose((GLFWwindow*)Context::window);
+}
+
 void Context::Update() {
 		glfwSwapInterval(Context::vSync);
 		glfwSwapBuffers((GLFWwindow*)Context::window);

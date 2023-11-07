@@ -4,6 +4,7 @@ class Context {
 public:
 	static void* window;  //Should be converted to GLFWwindow* to be used
 	static void* InitContext(int scrWidth, int scrHeight);
+	static bool ShouldClose();
 	static void Update();
 	static void EnableBlend(bool status = 1);
 	static void EnableWireframe(bool status = 1);
