@@ -75,7 +75,7 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/vendor/glm/**.cpp"
                     }
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
-    
+
     workspace "*"
         libdirs { 
                         "%{wks.location}/dependencies/GLFW/lib-vc2019",
