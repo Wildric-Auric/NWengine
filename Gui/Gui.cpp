@@ -32,7 +32,7 @@ void Gui::Init() {
 	Globals::SetProjDir(NWproj::currentProj->dir);
 	RessourcesLoader::LoadDefaultRessources();
 	ScriptManager::LoadScriptList();
-
+	RessourcesLoader::LoadDefaultRessources();
 	void* window = Context::window;
 
 	ImGui::CreateContext();

@@ -55,7 +55,6 @@ enum class ON_MAIN_CALL_LOCATION {
 };
 
 extern std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
-extern GameObject NWengineDefaultRendererContainer;
 
 NW_PREFIX int  NWengineInit();
 NW_PREFIX void NWengineLoop();

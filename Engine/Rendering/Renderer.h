@@ -4,25 +4,35 @@
 #include "Maths.h"
 #include "Camera.h"
 
-class Renderer : public GameComponent {
+class Renderer {
 public:
-	static std::string GetType() { return "Renderer"; }
-	Renderer() {};
-	Renderer(GameObject* go);
+	Renderer(const std::string& shaderPath = SHADER_POST_PROCESSING);
 	~Renderer();
 
-	GameObject* attachedObj = nullptr;
-	Camera*     target	    = nullptr; //TODO::Update logic in nwengine.cpp and game.cpp
+	std::string shaderName;
+	GameObject  componentContainer = GameObject();
+	Camera*     target			   = nullptr; 
+	fVec2 strechCoeff			   = fVec2(1.0f, 1.0f);
+	//Intended to be used as decorator; Sobel(Blur(), 1) would update renderer, called Blur, camera  and then use 
+	// its framebuffer to draw it using Sobel renderer
+	// captureOnDefaultFrame is a boolean indicating if we should draw on the the default framebuffer on camera framebuffer
+	//TODO::Test this
+	Renderer* operator()(Renderer* renderer, bool captureOnDefaultFrame = 0);
+	Renderer* operator()(bool captureOnDefaultFrame = 0);
 
-	fVec2 strechCoeff = fVec2(1.0f, 1.0f);
-
-	static Renderer* defaultRenderer;
-	static Renderer* currentRenderer;
-
-	std::string shaderName  = SHADER_POST_PROCESSING;
-	
 	void DrawOnDefaultFrame();
 	void CaptureOnCamFrame();
 	void Use();
 	void Unuse();
+	void SetShader(const std::string& shaderPath);
+	//Add components to componentContainer
+	void SetUp();
+
+	static void Init();
+	static void Destroy();
+
+	static std::string GetType() { return "Renderer"; }
+	static Renderer* defaultRenderer;
+	static Renderer* currentRenderer;
+
 };

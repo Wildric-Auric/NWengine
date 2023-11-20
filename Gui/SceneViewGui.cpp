@@ -12,7 +12,7 @@ void SceneViewGui::Show() {
 	ImGui::Begin("Scene", &isActive, ImGuiWindowFlags_MenuBar);
 	//if (Camera::ActiveCamera == nullptr) { ImGui::End(); return;}
 
-	Camera* renderCam = Renderer::currentRenderer->attachedObj->GetComponent<Camera>();
+	Camera* renderCam = Renderer::currentRenderer->componentContainer.GetComponent<Camera>();
 
 	uint32 texture = renderCam->fbo.RenderedImage.texture;
 

@@ -4,7 +4,6 @@
 
 
 std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
-GameObject NWengineDefaultRendererContainer;
 
 
 NW_PREFIX int NWengineInit() {
@@ -24,8 +23,7 @@ NW_PREFIX int NWengineInit() {
 	Batch::ComputeIndices();
 	Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS...
 	//Init Renderer
-	Renderer::defaultRenderer = new Renderer(&NWengineDefaultRendererContainer); //Unchanged by the user
-	Renderer::currentRenderer = Renderer::defaultRenderer;
+	Renderer::Init();
 
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitEnd)
 
@@ -56,10 +54,8 @@ NW_NO_MANGLING void NWengineLoop() {
 
 NW_NO_MANGLING void NWengineShutdown() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::Destroy)
-
-	delete Scene::currentScene;
-	delete Renderer::defaultRenderer;
 	SoundSystem::DestroyOpenAL();
+	Renderer::Destroy();
 	TextSystem::Destroy();
 	Primitives::Destroy();
 	Context::Destroy();

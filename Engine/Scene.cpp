@@ -68,10 +68,23 @@ void Scene::ForceRenderStop() {
 	}
 }
 
-//TODO::delete the parameter
-void Scene::AddObject(GameObject goc) {
-	sceneObjs.push_back(goc);
-	sceneObjs.back().Rename("new GameObject");
+GameObject* Scene::GetGameObject(const uint32& position) {
+	if  (position <  this->sceneObjs.size())
+		return nullptr;
+	std::list<GameObject>::iterator it = sceneObjs.begin();
+	std::advance(it, position);
+	return &*it;
+}
+
+GameObject* Scene::GetGameObject() {
+	if (this->sceneObjs.size() <= 0) return nullptr;
+	return &this->sceneObjs.back();
+}
+
+GameObject& const Scene::AddObject() {
+	sceneObjs.push_back(GameObject());
+    Rename("new GameObject", &sceneObjs.back());
+	return sceneObjs.back();
 }
 
 void Scene::DeleteObject(uint32 index) {
@@ -159,8 +172,8 @@ void Scene::LoadScene() {
 	data.read(name0, sizeBuffer);
 	name0[sizeBuffer] = '\0';
 
-	this->AddObject(GameObject());
-	sceneObjs.back().Rename(name0);
+	this->AddObject();
+	Rename(name0, &sceneObjs.back());
 	delete[] name0;
 
 	int flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
@@ -197,9 +210,27 @@ void Scene::Update() {
 	}
 };
 
-bool Scene::GuiActive = false;
-Scene* Scene::currentScene = nullptr;
+const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
+	uint32 n = 0;
+	bool exists = 0;
+	while (1) {
+		bool br = 1;
+		for (auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
+			if (obj == &(*it)) exists = 1;
+			else if (it->name == obj->name) {
+				n += 1;
+				br = 0;
+				obj->name = newName + std::to_string(n);
+			}
+		}
+		if (br) break;
+	}
+	if (n == 0) obj->name = newName;
+	else obj->name = newName + std::to_string(n);
+	return name;
+}
 
+Scene* Scene::currentScene = nullptr;
 
 void Scene::SetUp() {
 	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
@@ -215,5 +246,3 @@ void Scene::UpdateActiveScene() {
 	if (Scene::currentScene != nullptr)
 		Scene::currentScene->Update();
 }
-
-void Scene::Gui() {}

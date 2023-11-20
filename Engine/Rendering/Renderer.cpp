@@ -2,18 +2,26 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "Transform.h"
-#include "Script.h"
 #ifndef NW_GAME_BUILD
 #include "Utilities.h"
 #endif
 
-Renderer::Renderer(GameObject* go) {
-	this->attachedObj = go;
+//TODO::Default constructor creates the gameobject
 
-	this->attachedObj->AddComponent<Transform>();
-	this->attachedObj->AddComponent<Camera>();
-	this->attachedObj->AddComponent<Sprite>();
-	this->attachedObj->AddComponent<Script>();
+Renderer::Renderer(const std::string& shaderPath) {
+	this->shaderName = shaderPath;
+}
+
+void Renderer::SetUp() {
+	componentContainer.AddComponent<Transform>();
+	componentContainer.AddComponent<Sprite>();
+	componentContainer.AddComponent<Camera>();
+}
+
+void Renderer::SetShader(const std::string& shaderPath) {
+	if (this->shaderName == shaderPath)
+		return;
+	this->shaderName = shaderPath;
 }
 
 void Renderer::Use() {
@@ -26,8 +34,9 @@ void Renderer::Unuse() {
 
 void Renderer::DrawOnDefaultFrame() {
 	//Adding or getting components
-	Camera* cam = attachedObj->AddComponent<Camera>();
-	Sprite* sprite = attachedObj->AddComponent<Sprite>();
+	
+	Camera* cam = componentContainer.AddComponent<Camera>();
+	Sprite* sprite = componentContainer.AddComponent<Sprite>();
 
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
@@ -52,16 +61,16 @@ void Renderer::DrawOnDefaultFrame() {
 
 	Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
 	Camera::ActiveCamera = cam;
-	attachedObj->Draw();
+	componentContainer.Draw();
 	Camera::ActiveCamera = temp;
 	target               = nullptr; //May be temporary solution
 }
 
 void Renderer::CaptureOnCamFrame() {
 	//Adding or getting components
-	Camera* cam			  = attachedObj->AddComponent<Camera>();
-	Sprite* sprite		  = attachedObj->AddComponent<Sprite>();
-	Transform* transform  = attachedObj->AddComponent<Transform>();
+	Camera* cam			  = componentContainer.AddComponent<Camera>();
+	Sprite* sprite		  = componentContainer.AddComponent<Sprite>();
+	Transform* transform  = componentContainer.AddComponent<Transform>();
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
 	if (target == nullptr)
@@ -86,7 +95,7 @@ void Renderer::CaptureOnCamFrame() {
 	//Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	cam->fbo.Bind();
 		Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
-		attachedObj->Draw();
+		componentContainer.Draw();
 	cam->fbo.Unbind();
 
 	Camera::ActiveCamera = temp;
@@ -96,6 +105,39 @@ void Renderer::CaptureOnCamFrame() {
 Renderer::~Renderer() {
 	if (Renderer::currentRenderer == this)
 		Renderer::currentRenderer = Renderer::defaultRenderer;
+}
+
+Renderer* Renderer::operator()(Renderer* renderer, bool captureOnDefaultFrame) {
+	Camera* temp		 = Camera::ActiveCamera;
+	Camera::ActiveCamera = renderer->componentContainer.GetComponent<Camera>();
+
+	if (captureOnDefaultFrame)
+		this->DrawOnDefaultFrame();
+	else
+		this->CaptureOnCamFrame();
+
+	Camera::ActiveCamera = temp;
+	return this;
+}
+
+Renderer* Renderer::operator()(bool captureOnDefaultFrame) {
+	if (captureOnDefaultFrame)
+		this->DrawOnDefaultFrame();
+	else
+		this->CaptureOnCamFrame();
+	return this;
+};
+
+void Renderer::Init() {
+	Renderer::defaultRenderer = new Renderer(); 
+	Renderer::defaultRenderer->SetUp();
+	Renderer::currentRenderer = Renderer::defaultRenderer;
+}
+
+void Renderer::Destroy() {
+	if (Renderer::currentRenderer == Renderer::defaultRenderer)
+		Renderer::currentRenderer = nullptr;
+	delete Renderer::defaultRenderer;
 }
 
 Renderer* Renderer::defaultRenderer = nullptr;

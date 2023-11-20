@@ -26,7 +26,7 @@ void HierarchyGui::Show() {
 	if (ImGui::BeginPopupContextWindow("createordelete")) {
 
 		if (ImGui::Selectable("new GameObject")) {
-			Scene::currentScene->AddObject(GameObject());
+			Scene::currentScene->AddObject();
 		}
 		if (_selected != -1 && ImGui::Selectable("Delete GameObject")) {
 			Scene::currentScene->DeleteObject(_selected);
@@ -42,7 +42,7 @@ void HierarchyGui::Show() {
 
 			ImGui::InputText("input name", str0, IM_ARRAYSIZE(str0));
 			if (Inputs::enter) {
-				it->Rename(std::string(str0));
+				Scene::currentScene->Rename(std::string(str0), &*it);
 				renaming = -1;
 			}
 		}
