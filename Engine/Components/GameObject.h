@@ -28,7 +28,6 @@ public:
 	//identifier
 	uint32 id = 0;
 	uint32 Draw(int8 textureSlot = 0);  //Returns layer in which it has been drawn
-	void Rename(std::string newName);
     GameObject();
 	GameObject(const GameObject& other);
 	~GameObject();

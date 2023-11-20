@@ -79,26 +79,6 @@ uint32 GameObject::Draw(int8 textureSlot) {
 
 int GameObject::numberOfGameObjects = 0;
 
-void GameObject::Rename(std::string newName) {
-	uint16 n = 0;
-	name = newName;
-	while (1) {
-		bool br = 1;
-		for (auto it = Scene::currentScene->sceneObjs.begin(); it != Scene::currentScene->sceneObjs.end(); it++) {
-			if (it->name == name && &(*it) != this) {
-				n += 1;
-				br = 0;
-				name = newName + std::to_string(n);
-			}
-		}
-		if (br) break;
-	}
-
-	if (n == 0) name = newName;
-	else name = newName + std::to_string(n);
-
-}
-
 GameObject::GameObject() {
 	numberOfGameObjects += 1;
 };
@@ -136,7 +116,6 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
 	ADD_COMPONENT(TextHandler       , type);
-	ADD_COMPONENT(Renderer          , type);
 	return nullptr;
 };
 
@@ -170,8 +149,8 @@ int GameObject::Deserialize(std::fstream* data, int offset) {
 		GameComponent* gc = AddComponent(name);
 
 		if (gc == nullptr) {
-			Scene::currentScene->AddObject(GameObject());
-			Scene::currentScene->sceneObjs.back().Rename(name);
+			GameObject& obj =  Scene::currentScene->AddObject();
+			Scene::currentScene->Rename(name, &obj);
 			delete[] name;
 			return 1;
 		}
