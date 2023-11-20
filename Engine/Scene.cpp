@@ -212,12 +212,11 @@ void Scene::Update() {
 
 const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
 	uint32 n = 0;
-	bool exists = 0;
+	obj->name = newName;
 	while (1) {
 		bool br = 1;
 		for (auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
-			if (obj == &(*it)) exists = 1;
-			else if (it->name == obj->name) {
+		    if (it->name == obj->name && &(*it) != obj) {
 				n += 1;
 				br = 0;
 				obj->name = newName + std::to_string(n);
@@ -227,7 +226,7 @@ const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
 	}
 	if (n == 0) obj->name = newName;
 	else obj->name = newName + std::to_string(n);
-	return name;
+	return obj->name;
 }
 
 Scene* Scene::currentScene = nullptr;
