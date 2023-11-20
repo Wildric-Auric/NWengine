@@ -23,7 +23,6 @@ Build/*.exe
 *.dll 
 *.bat 
 *.exp
-*.ini 
 *.txt 
 *.lib 
 
