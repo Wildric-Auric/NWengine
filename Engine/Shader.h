@@ -5,7 +5,7 @@
 #include "Globals.h"
 
 #define SHADER_DEFAULT		   "Ressources\\Shaders\\Textured.shader"
-#define SHADER_POST_PROCESSING "Ressources\\Shaders\\PostProcessing.shader"
+#define SHADER_POST_PROCESSING "Ressources\\Shaders\\Textured.shader"
 
 class Shader {
 	public:
