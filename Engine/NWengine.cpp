@@ -30,7 +30,7 @@ NW_PREFIX int NWengineInit() {
 	return 0;
 }
 
-NW_NO_MANGLING void NWengineLoop() {
+NW_PREFIX void NWengineLoop() {
 	while (!Context::ShouldClose()) {
 		//Initializing imgui here for example
 		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameBegin)
@@ -52,7 +52,7 @@ NW_NO_MANGLING void NWengineLoop() {
 	}
 }
 
-NW_NO_MANGLING void NWengineShutdown() {
+NW_PREFIX void NWengineShutdown() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::Destroy)
 	SoundSystem::DestroyOpenAL();
 	Renderer::Destroy();
@@ -61,7 +61,7 @@ NW_NO_MANGLING void NWengineShutdown() {
 	Context::Destroy();
 }
 
-NW_NO_MANGLING bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {
+NW_PREFIX bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {
 	if ((void*)func == nullptr)
 		return 0;
 	std::vector<void(*)()>& vec = functionMap[loc];
@@ -73,7 +73,7 @@ NW_NO_MANGLING bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)(
 	return 1;
 }
 
-NW_NO_MANGLING bool NWenginePopFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {
+NW_PREFIX bool NWenginePopFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {
 	auto pair = functionMap.find(loc);
 	if (pair == functionMap.end() || pair->second.size() <= 0)
 		return 0;
