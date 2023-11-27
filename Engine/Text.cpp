@@ -19,7 +19,6 @@ Font::Font(std::string path) {
 }
 
 //TODO::Add ressources base class, refactor ressources loader:
-#include <iostream>
 bool Font::LoadFont(std::string path) {
 	if (FT_New_Face((FT_Library)TextSystem::lib, path.c_str(), 0, (FT_Face*)&this->face)) {
 		NW_LOG_ERROR("Error::Loading font error");
