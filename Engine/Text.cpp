@@ -7,8 +7,7 @@
 NW_FT_Lib TextSystem::lib;
 
 bool TextSystem::Init() {
-	FT_Library l = (FT_Library)TextSystem::lib;
-	return !FT_Init_FreeType(&l);
+	return !FT_Init_FreeType((FT_Library*)(&TextSystem::lib));
 }
 
 void TextSystem::Destroy() {
@@ -20,10 +19,13 @@ Font::Font(std::string path) {
 }
 
 //TODO::Add ressources base class, refactor ressources loader:
+#include <iostream>
 bool Font::LoadFont(std::string path) {
+	if (FT_New_Face((FT_Library)TextSystem::lib, path.c_str(), 0, (FT_Face*)&this->face)) {
+		NW_LOG_ERROR("Error::Loading font error");
+		return 0;
+	}
 	FT_Face f = (FT_Face)this->face;
-	if (FT_New_Face((FT_Library)TextSystem::lib, path.c_str(), 0, &f)) return 0;
-	
 	FT_Set_Pixel_Sizes(f, 0, 64);
 	for (uint8 i = 0; i < 128; ++i) {
 		if (FT_Load_Char(f, i, FT_LOAD_RENDER)) {
