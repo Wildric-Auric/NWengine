@@ -89,6 +89,7 @@ bool Batch::Render(GameObject* go, float* stride) {
 	//Case of addition not possible
 	auto texture = textures.find(sprite->texture);
 	if ( (sprite->sortingLayer != this->layer)  || 
+		 (this->offset >= this->batchMaxQuads * Batch::strideSize * 4) ||
 		 (sprite->shader->name != this->shader) || 
 		 (texture == textures.end() && textures.size() >= Batch::maxBatchTextures) )
 	{
