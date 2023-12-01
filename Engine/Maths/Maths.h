@@ -188,7 +188,7 @@ public:
 	};
 	Vector3(T x = 0.0f, T y = 0.0f, T z = 0.0f);
 
-	Vector3<float> normalize();
+	Vector3<float> normalize() const;
 	float magnitude();
 	T Dot(Vector3 const& vec1);
 
@@ -203,7 +203,7 @@ public:
 };
 
 template<typename T>
-Vector3<float> Vector3<T>::normalize() {
+Vector3<float> Vector3<T>::normalize() const {
 	float magnitude = pow(x * x + y * y + z * z, 0.5);
 	return Vector3<float>(x / magnitude, y / magnitude, z / magnitude);
 }
@@ -399,11 +399,256 @@ Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
 }
 
 
+enum class MATFLAG {
+	NOINIT,
+};
+
+template<typename T>
+class Matrix2 {
+	T values[4]; //Column major
+	Matrix2();
+	Matrix2(T diag);
+	Matrix2(MATFLAG flag);
+	Matrix2 operator * (const Matrix2& other);
+	void    operator *=(const Matrix2& other);
+	T operator ()(int i, int j); //Row major access
+};
+template<typename T>
+Matrix2<T>::Matrix2<T>(T diag) {
+	values[0] = diag; values[1] = 0;
+	values[2] = 0	; values[3] = diag:
+}
+template<typename T>
+Matrix2<T>::Matrix2<T>() : Matrix2<T>((T)1.0) {};
+
+template<typename T>
+Matrix2<T>::Matrix2<T>(MATFLAG flag) {}
+
+template<typename T>
+Matrix2<T> Matrix2<T>::operator* (const Matrix2<T>& other) {
+	Matrix2<T> result = Matrix2(MATFLAG::NOINIT);
+	result.values[0] = this->values[0] * other.values[0] + this->values[1] * other.values[2];
+	result.values[1] = this->values[0] * other.values[1] + this->values[1] * other.values[3];
+	result.values[2] = this->values[2] * other.values[0] + this->values[3] * other.values[2];
+	result.values[3] = this->values[2] * other.values[1] + this->values[3] * other.values[3];
+	return result;
+}
+
+template<typename T>
+void Matrix2<T>::operator *= (const Matrix2<T>& other) {
+	Matrix2<T> result = Matrix2(MATFLAG::NOINIT);
+	result.values[0] = other.values[0] * values[0] + other.values[1] * values[2];
+	result.values[1] = other.values[0] * values[1] + other.values[1] * values[3];
+	result.values[2] = other.values[2] * values[0] + other.values[3] * values[2];
+	result.values[3] = other.values[2] * values[1] + other.values[3] * values[3];
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+}
+
+template<typename T>
+T Matrix2<T>::operator()(int i, int j) {
+	return j * 2  + i;
+}
+
+template<typename T>
+class Matrix3 {
+	T values[9]; //Column major
+	Matrix3();
+	Matrix3(T diag);
+	Matrix3(MATFLAG flag);
+	Matrix3 operator * (const Matrix3& other);
+	void    operator *=(const Matrix3& other);
+	T       operator ()(int i, int j);
+};
+
+template<typename T>
+Matrix3<T>::Matrix3<T>(T diag) {
+	values[0] = diag; values[1] = 0   ; values[2] = 0;
+	values[3] = 0   ; values[4] = diag; values[5] = 0;
+	values[6] = 0   ; values[7] = 0   ; values[8] = diag;
+}
+
+template<typename T>
+Matrix3<T>::Matrix3<T>() : Matrix2<T>((T)1.0) {};
+
+template<typename T>
+Matrix3<T>::Matrix3<T>(MATFLAG flag) {}
+
+template<typename T>
+Matrix3<T> Matrix3<T>::operator* (const Matrix3<T>&other) {
+	Matrix3<T> result = Matrix3(MATFLAG::NOINIT);
+	result.values[0] = other.values[0] * values[0] + other.values[1] * values[3] + other.values[2] * values[6];
+	result.values[1] = other.values[0] * values[1] + other.values[1] * values[4] + other.values[2] * values[7];
+	result.values[2] = other.values[0] * values[2] + other.values[1] * values[5] + other.values[2] * values[8];
+	result.values[3] = other.values[3] * values[0] + other.values[4] * values[3] + other.values[5] * values[6];
+	result.values[4] = other.values[3] * values[1] + other.values[4] * values[4] + other.values[5] * values[7];
+	result.values[5] = other.values[3] * values[2] + other.values[4] * values[5] + other.values[5] * values[8];
+	result.values[6] = other.values[6] * values[0] + other.values[7] * values[3] + other.values[8] * values[6];
+	result.values[7] = other.values[6] * values[1] + other.values[7] * values[4] + other.values[8] * values[7];
+	result.values[8] = other.values[6] * values[2] + other.values[7] * values[5] + other.values[8] * values[8];
+	return result;
+}
+
+template<typename T>
+void Matrix3<T>::operator *= (const Matrix3<T>& other) {
+	Matrix3<T> result = Matrix3<T>(MATFLAG::NOINIT);
+	result.values[0] = other.values[0] * values[0] + other.values[1] * values[3] + other.values[2] * values[6];
+	result.values[1] = other.values[0] * values[1] + other.values[1] * values[4] + other.values[2] * values[7];
+	result.values[2] = other.values[0] * values[2] + other.values[1] * values[5] + other.values[2] * values[8];
+	result.values[3] = other.values[3] * values[0] + other.values[4] * values[3] + other.values[5] * values[6];
+	result.values[4] = other.values[3] * values[1] + other.values[4] * values[4] + other.values[5] * values[7];
+	result.values[5] = other.values[3] * values[2] + other.values[4] * values[5] + other.values[5] * values[8];
+	result.values[6] = other.values[6] * values[0] + other.values[7] * values[3] + other.values[8] * values[6];
+	result.values[7] = other.values[6] * values[1] + other.values[7] * values[4] + other.values[8] * values[7];
+	result.values[8] = other.values[6] * values[2] + other.values[7] * values[5] + other.values[8] * values[8];
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+}
+
+template<typename T>
+T Matrix3<T>::operator()(int i, int j) {
+	return j * 3 + i;
+}
+
+//4x4--------------------------
+template<typename T>
+class Matrix4 {
+public:
+	T values[16]; //Column major
+	Matrix4();
+	Matrix4(T diag);
+	Matrix4(MATFLAG flag);
+	Matrix4 operator * (const Matrix4& other);
+	Vector4<T> operator * (const Vector4<T>& other);
+	void    operator *=(const Matrix4& other);
+	T operator ()(int i, int j); //Row major access
+};
+
+template<typename T>
+Matrix4<T>::Matrix4<T>(T diag) {
+	values[0] = diag; values[1] = 0;    values[2] = 0;		values[3] = 0;
+	values[4] = 0;    values[5] = diag; values[6] = 0;		values[7] = 0;
+	values[8] = 0;    values[9] = 0;    values[10] = diag;   values[11] = 0;
+	values[12] = 0;   values[13] = 0;   values[14] = 0;		values[15] = diag;
+}
+template<typename T>
+Matrix4<T>::Matrix4<T>() : Matrix4<T>((T)1.0) {};
+
+template<typename T>
+Matrix4<T>::Matrix4<T>(MATFLAG flag) {}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::operator* (const Matrix4<T>& other) {
+	Matrix4<T> result = Matrix4(MATFLAG::NOINIT);
+#define TMP_MAT_4x4_MUL \
+	result.values[0] = other.values[0]   * values[0] + other.values[1]  * values[4] + other.values[2]  *  values[8] +  other.values[3] *  values[12];     \
+	result.values[1] = other.values[0]   * values[1] + other.values[1]  * values[5] + other.values[2]  *  values[9] +  other.values[3] * values[13];	  \
+	result.values[2] = other.values[0]   * values[2] + other.values[1]  * values[6] + other.values[2]  *  values[10] + other.values[3] *  values[14];	  \
+	result.values[3] = other.values[0]   * values[3] + other.values[1]  * values[7] + other.values[2]  *  values[11] + other.values[3] *  values[15];	  \
+	result.values[4] = other.values[4]   * values[0] + other.values[5]  * values[4] + other.values[6]  *  values[8] +  other.values[7] * values[12];	  \
+	result.values[5] = other.values[4]   * values[1] + other.values[5]  * values[5] + other.values[6]  *  values[9] +  other.values[7] * values[13];	  \
+	result.values[6] = other.values[4]   * values[2] + other.values[5]  * values[6] + other.values[6]  *  values[10] + other.values[7] *  values[14];	  \
+	result.values[7] = other.values[4]   * values[3] + other.values[5]  * values[7] + other.values[6]  *  values[11] + other.values[7] *  values[15];	  \
+	result.values[8] = other.values[8]   * values[0] + other.values[9]  * values[4] + other.values[10] * values[8] +  other.values[11] * values[12];	  \
+	result.values[9] = other.values[8]   * values[1] + other.values[9]  * values[5] + other.values[10] * values[9] +  other.values[11] * values[13];	  \
+	result.values[10] = other.values[8]  * values[2] + other.values[9]  * values[6] + other.values[10] * values[10] + other.values[11] * values[14];	  \
+	result.values[11] = other.values[8]  * values[3] + other.values[9]  * values[7] + other.values[10] * values[11] + other.values[11] * values[15];	  \
+	result.values[12] = other.values[12] * values[0] + other.values[13] * values[4] + other.values[14] * values[8] +  other.values[15] * values[12];	  \
+	result.values[13] = other.values[12] * values[1] + other.values[13] * values[5] + other.values[14] * values[9] +  other.values[15] * values[13];	  \
+	result.values[14] = other.values[12] * values[2] + other.values[13] * values[6] + other.values[14] * values[10] + other.values[15] * values[14];	  \
+	result.values[15] = other.values[12] * values[3] + other.values[13] * values[7] + other.values[14] * values[11] + other.values[15] * values[15];	  
+
+	TMP_MAT_4x4_MUL
+	return result;
+}
+
+template<typename T>
+void Matrix4<T>::operator *= (const Matrix4<T>& other) {
+	Matrix4<T> result = Matrix4(MATFLAG::NOINIT);
+	TMP_MAT_4x4_MUL
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+}
+#undef TMP_MAT_4x4_MUL
+
+template<typename T>
+Vector4<T> Matrix4<T>::operator * (const Vector4<T>& other) {
+	Vector4<T> result;
+	result.x = values[0] * other.x + values[4] * other.y + values[8] * other.z + values[12] * other.w;
+	result.y = values[1] * other.x + values[5] * other.y + values[9] * other.z + values[13] * other.w;
+	result.z = values[2] * other.x + values[6] * other.y + values[10] * other.z + values[14] * other.w;
+	result.w = values[3] * other.x + values[7] * other.y + values[11] * other.z + values[15] * other.w;
+	return result;
+}
 
 
 
+template<typename T>
+T Matrix4<T>::operator()(int i, int j) {
+	return j * 4 + i;
+}
 
-//Functions
+//Matrix passed as reference to this function should be identity matrix; otherwise, behaviour is undefined
+inline void OrthorgraphicMat(Matrix4<float>& matrix, float left, float right, float buttom, float top, float near = 1.0f, float far = -1.0f) {
+	float rml = 1.0f / (right - left);
+	float tmb = 1.0f / (top   - buttom);
+	float fmn = 1.0f / (far   - near);
+	matrix.values[0]   =  2.0f * rml;
+	matrix.values[5]   =  2.0f * tmb;
+	matrix.values[10]  = -2.0f * fmn;
+
+	matrix.values[12] = (-right - left)  * rml;
+	matrix.values[13] = (- top  - buttom)* tmb;
+	matrix.values[14] = (- far  - near)  * fmn;
+}
+
+template<typename T>
+void TranslateMat(Matrix4<T>&matrix, const Vector3<T>& coeff) {
+	matrix.values[12]   += coeff.x;
+	matrix.values[13]	+= coeff.y;
+	matrix.values[14]   += coeff.z;
+}
+
+template<typename T>
+void ScaleMat(Matrix4<T>& matrix, const Vector3<T>& coeff) {
+	matrix.values[0]  *= coeff.x ;
+	matrix.values[5]  *= coeff.y;
+	matrix.values[10] *= coeff.z;
+}
+
+//TODO::Optimize this and do it in palce
+template<typename T>
+void RotateMat(Matrix4<T>& matrix, float degAngle, const Vector3<T>& axis) {
+	Matrix4<T> newMat(MATFLAG::NOINIT);
+	degAngle	   = DegToRad(degAngle);
+	float   c	   = cos(degAngle);
+	float   cmpC   = 1.0f - c;  // NAME: Complementary of cos
+	float   s      = sin(degAngle);
+
+	Vector3<float> n = axis.normalize();
+
+	newMat.values[0] = c + n.x * n.x * cmpC;
+	newMat.values[1] = cmpC * n.x * n.y + n.z * s;
+	newMat.values[2] = cmpC * n.z * n.x - n.y * s;
+	newMat.values[3] = 0;
+
+	newMat.values[4] = cmpC * n.x * n.y - n.z * s;
+	newMat.values[5] = c    + n.y * n.y * cmpC;
+	newMat.values[6] = n.y * n.z * cmpC + n.x * s;
+	newMat.values[7] = 0;
+
+	newMat.values[8]  = n.x * n.z * cmpC + n.y * s;
+	newMat.values[9]  = n.y * n.z * cmpC - n.x * s;
+	newMat.values[10] = c   + n.z * n.z * cmpC;
+	newMat.values[11] = 0;
+
+	newMat.values[12] = 0;
+	newMat.values[13] = 0;
+	newMat.values[14] = 0;
+	newMat.values[15] = 1;
+
+	matrix = newMat * matrix;
+}
+
+
+//Functions---------------------------------------
 
 template<typename T, typename T1>
 T lerp(T source, T target, T1 percent) {

@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include "Sprite.h"
 
-
+//TODO::Implement static batch
 
 /*Each vertex has 36 byte of data :
 * -------------------

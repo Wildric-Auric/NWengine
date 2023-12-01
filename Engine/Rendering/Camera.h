@@ -1,17 +1,15 @@
 #pragma once
 #include "GameObject.h"
 #include "FrameBuffer.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
+#include "Maths.h"
 class Camera : public GameComponent {
 public:
 	static std::string GetType() { return "Camera"; }; 
 	//This static method calls capture on ActiveCamera if not null
 	static void UpdateActiveCamera();
 
-	glm::mat4 projectionMatrix;
-	glm::mat4 viewMatrix = glm::mat4(viewMatrix);
+	Matrix4<float> projectionMatrix;
+	Matrix4<float> viewMatrix = Matrix4<float>(1.0f);
 
 	fVec2 size;
 	fVec2 viewPortSize;

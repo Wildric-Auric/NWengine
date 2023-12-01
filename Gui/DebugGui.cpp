@@ -7,8 +7,9 @@
 #include "NWproj.h"
 #include "Renderer.h"
 #include "NWGui.h"
-
+#include "Scene.h"
 #include <iostream>
+
 
 void DebugGui::Init() { this->isActive = 1; }
 void DebugGui::Show() {
@@ -23,12 +24,10 @@ void DebugGui::Show() {
 
 	ImGui::ShowDemoWindow();
 	ImPlot::ShowDemoWindow();
+	static bool a = 1;
+
 
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-	glm::mat4 cameraView = glm::mat4(1.0);
-	glm::mat4 projection = glm::mat4(1.0);
-	static glm::mat4 matrix = glm::mat4(1.0);
-
 	static float point = 0.0f;
 	static float point0 = 1.0f;
 	static fVec2 point1 = fVec2(0.0, 0.0);

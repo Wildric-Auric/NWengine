@@ -42,10 +42,13 @@ typedef Vector4<int>	iVec4;
 typedef Vector4<float>  fVec4;
 typedef Vector4<double> dVec4;
 
-typedef Matrix<2, 2, int> iMat2;
-typedef Matrix<3, 3, int>  iMat3;
-typedef Matrix<2, 2, float> fMat2;
-typedef Matrix<3, 3, float> fMat3;
+typedef Matrix2<int>    iMat2;
+typedef Matrix3<int>    iMat3;
+typedef Matrix2<float>  fMat2;
+typedef Matrix3<float>  fMat3;
+typedef Matrix4<int>    iMat4;
+typedef Matrix4<float>  fMat4;
+
 
 enum DataTypes {
 	NW_INT,

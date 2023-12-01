@@ -23,17 +23,13 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 Camera::Camera(GameObject* go) {
 	size = iVec2(Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
 	viewPortSize = size;
-	projectionMatrix = glm::ortho(-(float)Context::NATIVE_WIDTH / 2.0f, (float)Context::NATIVE_WIDTH / 2.0f, 
-								  -(float)Context::NATIVE_HEIGHT / 2.0f, (float)Context::NATIVE_HEIGHT / 2.0f);
+	OrthorgraphicMat(projectionMatrix,  -(float)Context::NATIVE_WIDTH / 2.0f, (float)Context::NATIVE_WIDTH / 2.0f,
+									    -(float)Context::NATIVE_HEIGHT / 2.0f, (float)Context::NATIVE_HEIGHT / 2.0f);
 	position = Vector2<int>(0, 0);
 	fbo = FrameBuffer();
 
 	attachedObj = go;
 };
-
-//void Camera::ChangeOrtho(float minX, float maxX, float minY, float maxY) {
-//	projectionMatrix = glm::ortho(minX, maxX, minY, maxY);
-//}
 
 void Camera::ChangeOrtho(float sizeX, float sizeY) {
 	if ((sizeX == size.x) && (sizeY == size.y)) return;
@@ -45,16 +41,17 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 	fbo.Delete();
 	fbo = FrameBuffer(sizeX, sizeY);
 
-	projectionMatrix = glm::ortho(- sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
+	OrthorgraphicMat(projectionMatrix, -sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
 }
 
 Camera* Camera::ActiveCamera = nullptr;
 
 void Camera::Update() {
 		//TODO::Optimize this update
-		viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-position.x, -position.y, 0.0f));
-		viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 1.0f));
-		viewMatrix = glm::rotate(viewMatrix, DegToRad(rotation), glm::vec3(0,0,1));
+		viewMatrix = Matrix4<float>(1.0);
+		ScaleMat(viewMatrix, fVec3(zoom, zoom, 1.0));
+		RotateMat(viewMatrix, rotation, fVec3(0.0f, 0.0f, 1.0f));
+		TranslateMat(viewMatrix, fVec3(-position.x, -position.y, 0.0f));
 }
 
 void Camera::MoveTo(Vector2<int> target, float targetTime) {

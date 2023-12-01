@@ -10,8 +10,6 @@
 #include "Shader.h"
 #include "Primitives.h"
 #include "Batch.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 #include "Renderer.h"
 
 uint32 GameObject::Draw(int8 textureSlot) {
@@ -21,23 +19,26 @@ uint32 GameObject::Draw(int8 textureSlot) {
 	if (transform == nullptr) transform = this->AddComponent<Transform>();
 
 	if (sprite->isBatched) {
-		glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)transform->position.x, (double)transform->position.y, sprite->zbuffer));
-		model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
-		glm::mat4x4 mvp   = Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model;
+		Matrix4<float> model = Matrix4<float>(1.0f);
+		
+		ScaleMat(model, fVec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
+		RotateMat(model, transform->rotation, fVec3(0.0f, 0.0f, 1.0f));
+		TranslateMat(model, fVec3(transform->position.x, transform->position.y, sprite->zbuffer));
 
-		glm::vec4 vert0 = mvp * glm::vec4(-0.5,  -0.5, 0.0, 1.0);
-		glm::vec4 vert1 = mvp * glm::vec4(0.5 ,  -0.5, 0.0, 1.0);
-		glm::vec4 vert2 = mvp * glm::vec4(0.5 ,   0.5,  0.0, 1.0);
-		glm::vec4 vert3 = mvp * glm::vec4(-0.5,   0.5,  0.0, 1.0);
+		Matrix4<float> mvp = Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model;
+
+		fVec4 vert0 = mvp * fVec4(-0.5,  -0.5, 0.0, 1.0);
+		fVec4 vert1 = mvp * fVec4(0.5 ,  -0.5, 0.0, 1.0);
+		fVec4 vert2 = mvp * fVec4(0.5 ,   0.5,  0.0, 1.0);
+		fVec4 vert3 = mvp * fVec4(-0.5,   0.5,  0.0, 1.0);
 	
 		//The last element of each stride is set in Render()
 		float stride[36] = {
 			//x         y          z      uv.x uv.y          user.x                    user.y                       user.z               tex
-			vert0[0], vert0[1], vert0[2], 0.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
-			vert1[0], vert1[1], vert1[2], 1.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
-			vert3[0], vert3[1], vert3[2], 0.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
-			vert2[0], vert2[1], vert2[2], 1.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0
+			vert0.x, vert0.y, vert0.z, 0.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert1.x, vert1.y, vert0.z, 1.0, 0.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert3.x, vert3.y, vert0.z, 0.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0,
+			vert2.x, vert2.y, vert0.z, 1.0, 1.0, sprite->vertexAttributes.x, sprite->vertexAttributes.y, sprite->vertexAttributes.z, -1.0
 		}; //TODO:: The free buffer accessible to the user
 		//First layer batch creation
 		std::unordered_map<uint32, std::vector<Batch*>>::iterator iter = Batch::batchMap.find(sprite->sortingLayer);

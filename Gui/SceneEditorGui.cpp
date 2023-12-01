@@ -1,9 +1,6 @@
 #include "imgui/imgui.h"
 #include "imgui/imguizmo/ImGuizmo.h"
 #include "imgui/implot/implot.h"
-#include "glm/gtx/matrix_decompose.hpp"
-
-
 #include "Scene.h"
 #include "Transform.h"
 #include "Inputs.h"
@@ -83,27 +80,24 @@ void SceneEditorGui::Show() {
 	if (obj != nullptr && (transform = obj->GetComponent<Transform>()) != nullptr) {
 		snapValue		= 8.0f;
 		fVec2 pos		= transform->position;
-		glm::vec4 v		= glm::vec4(pos.x, pos.y, 0.0f, 1.0f);
-		glm::mat4 mat   = glm::mat4(1.0);
-		mat[3][0] = p.x; mat[3][1] = p.y; mat[3][2] = -1.0f; mat[3][3] = 1.0f;
 		static fVec2 sizeBuffer;
 
 
 		cam.Update();
-		ImGuizmo::Manipulate((const float*)&cam.viewMatrix[0][0],(const float*)&cam.projectionMatrix[0][0], guizmoOp, ImGuizmo::LOCAL, (float*)(&mat[0]),
-			0, snap ? &snapValue : 0);
+		//ImGuizmo::Manipulate((const float*)&cam.viewMatrix[0][0],(const float*)&cam.projectionMatrix[0][0], guizmoOp, ImGuizmo::LOCAL, (float*)(&mat[0]),
+		//	0, snap ? &snapValue : 0);
 		
-		cam.Update();
-		if (ImGuizmo::IsUsing()) {
-			fVec3 scale, trans, rot;
-			ImGuizmo::DecomposeMatrixToComponents(&mat[0][0], &trans.x, &rot.x, &scale.x);
-			transform->position    =  fVec2(trans.x, trans.y);
-			transform->scale       =  sizeBuffer * fVec2(scale.x, scale.y);
-			transform->rotation   +=  rot.z;	
-		}
-		else {
-			sizeBuffer = obj->GetComponent<Transform>()->scale;
-		}
+		//cam.Update();
+		//if (ImGuizmo::IsUsing()) {
+		//	fVec3 scale, trans, rot;
+		//	//ImGuizmo::DecomposeMatrixToComponents(&mat[0][0], &trans.x, &rot.x, &scale.x);
+		//	transform->position    =  fVec2(trans.x, trans.y);
+		//	transform->scale       =  sizeBuffer * fVec2(scale.x, scale.y);
+		//	transform->rotation   +=  rot.z;	
+		//}
+		//else {
+		//	sizeBuffer = obj->GetComponent<Transform>()->scale;
+		//}
 	}
 	
 

@@ -78,11 +78,11 @@ void Scriptable::ShaderCode(void* sprite) {
 	sprite0->shader->Use();
 	sprite0->shader->SetUniform1i("uTex0", 0);
 	sprite0->shader->SetVector2("uResolution", (float)Context::NATIVE_WIDTH, (float)Context::NATIVE_HEIGHT);
-	glm::mat4x4 model = glm::translate(glm::mat4(1.0f), glm::vec3((double)position.x, (double)position.y, sprite0->zbuffer));
-	model = glm::rotate(model, DegToRad(transform->rotation), glm::vec3(0.0f, 0.0f, 0.5f));
-	model = glm::scale(model, glm::vec3(scale.x * sprite0->container.width, scale.y * sprite0->container.height, 1.0f));
-
-	sprite0->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model)[0][0]);
+	Matrix4<float> model(1.0f);
+	ScaleMat(model, fVec3(scale.x * sprite0->container.width, scale.y * sprite0->container.height, 1.0f));
+	RotateMat(model, transform->rotation, fVec3(0.0f, 0.0f, 1.0f));
+	TranslateMat(model, fVec3(transform->position.x, transform->position.y, sprite0->zbuffer));
+	sprite0->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model).values[0]);
 }
 
 
