@@ -13,7 +13,7 @@ NW_PREFIX int NWengineInit() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitBegin)
 	
 	//init InitSoundSystem
-	if (!SoundSystem::InitOpenAL()) return -1;
+	if (!SoundSystem::InitOpenAL()) { NW_LOG_ERROR("Could not init audio engine");return -1; }
 	//init Text System
 	if (!TextSystem::Init())
 		return -1;

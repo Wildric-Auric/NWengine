@@ -13,6 +13,14 @@ struct TextureData {
 	uint8 linear     = 0;
 };
 
+//TODO::Fully test texture filtering update
+struct TextureDataUpdate {
+	uint8 repeat = 0;
+	uint8 genMipMap = 1;
+	uint8 linear = 0;
+};
+
+//TODO::Fix names duplicate member
 class Texture {
 private:
 public:
@@ -29,6 +37,9 @@ public:
 	Texture(const uint8* texRes, const iVec2& size, const TextureData& texData);
 	void Delete();
 	void Bind(unsigned int slot);
+	//Deprecated
 	void UpdateTexture(int width, int height, uint8* texRes,unsigned int slot, bool alpha = 1);
+
+	void UpdateTextureData(const TextureDataUpdate& texData);
 	static std::map<std::string, Texture> resList;
 };

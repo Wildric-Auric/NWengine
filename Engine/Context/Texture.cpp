@@ -72,6 +72,39 @@ void Texture::UpdateTexture(int width, int height, uint8* texRes, unsigned int s
 
 }
 
+void Texture::UpdateTextureData(const TextureDataUpdate& texData) {
+	Bind();
+	if (texData.genMipMap != _texData.genMipMap) {
+		_texData.genMipMap = texData.genMipMap;
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	if (texData.linear != _texData.linear) {
+		_texData.linear = texData.linear;
+		int32 filter = GL_LINEAR;
+		if (!this->_texData.linear)
+			filter = GL_NEAREST;
+		if (this->_texData.genMipMap)
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		else
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+	}
+
+	if (texData.repeat != _texData.repeat) {
+		_texData.repeat = texData.repeat;
+		if (this->_texData.repeat) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		}
+	}
+}
+
 void Texture::Delete() {
 	glDeleteTextures(1, &this->texture);
 }

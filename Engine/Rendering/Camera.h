@@ -26,6 +26,7 @@ public:
 	void Update();
 	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
 	void ChangeOrtho(float sizeX, float sizeY);
+	void SetFilteringData(const TextureDataUpdate& texData);
 	void MoveTo(Vector2<int> target, float interpolationTime);
 	void Use();
 	fVec2 position = fVec2(0.0f,0.0f);

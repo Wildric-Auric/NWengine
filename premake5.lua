@@ -46,6 +46,7 @@ workspace "NWengine"
                     }
     project "NWEngineCore" 
                       kind "StaticLib"
+                      defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
                       targetname ("NWengineCore")
                       location "./"
                       includedirs {

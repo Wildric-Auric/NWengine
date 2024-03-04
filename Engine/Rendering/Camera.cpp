@@ -44,6 +44,10 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 	OrthorgraphicMat(projectionMatrix, -sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
 }
 
+void Camera::SetFilteringData(const TextureDataUpdate& texData) {
+		fbo.RenderedImage.UpdateTextureData(texData);
+}
+
 Camera* Camera::ActiveCamera = nullptr;
 
 void Camera::Update() {

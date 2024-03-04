@@ -9,7 +9,7 @@
 #include "NWGui.h"
 #include "Scene.h"
 #include <iostream>
-
+#include "ParticleSystem.h"
 
 void DebugGui::Init() { this->isActive = 1; }
 void DebugGui::Show() {
@@ -20,12 +20,23 @@ void DebugGui::Show() {
 	GameObject* container1 = nullptr;
 	NWproj      proj;
 
+
+
 	ImGui::Begin("Debug", &isActive);
+
+	static ParticleSystem* particleSystem = Scene::currentScene->GetGameObject("new GameObject")->GetComponent<ParticleSystem>();
+	ImGui::Text(std::to_string(particleSystem->pool.size()).c_str());
 
 	ImGui::ShowDemoWindow();
 	ImPlot::ShowDemoWindow();
+	static bool tttt = 0;
+	if (ImGui::Checkbox("Filtering test", &tttt)) {
+		TextureDataUpdate tex;
+		tex.linear = tttt;
+		Scene::currentScene->GetGameObject("Warrior")->GetComponent<Sprite>()->texture->UpdateTextureData(tex);
+	}
 	static bool a = 1;
-
+	ImGui::DragFloat2("StretchValue", &Renderer::currentRenderer->strechCoeff.x, 0.01, 0.0, 100.0);
 
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 	static float point = 0.0f;
