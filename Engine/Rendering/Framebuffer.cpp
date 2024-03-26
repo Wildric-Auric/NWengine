@@ -1,6 +1,6 @@
 #include "FrameBuffer.h"
 #include "GL/glew.h"
-#include "glfw3.h"
+
 
 FrameBuffer::FrameBuffer(uint16 sizeX, uint16 sizeY) {
 	TextureData texData;

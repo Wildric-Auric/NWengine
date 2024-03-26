@@ -1,10 +1,13 @@
 #include "Inputs.h"
 #include "GL/glew.h"
-#include "glfw3.h"
+
+#include "nwin/keyboard.h"
+#include "nwin/window.h"
+
 #include<iostream>
 #include <cstring>
 
-static GLFWwindow* window = nullptr;
+static NWin::Window* window = nullptr;
 
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d, Inputs::r, Inputs::s, Inputs::t,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,
@@ -19,47 +22,54 @@ double Inputs::mousePosY;
 float Inputs::joystickAxis[6] = {0.0f};
 
 bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
-	return glfwGetKey(window, key) == mode;
+	if (mode == NWin::KeyEventEnum::NWIN_KeyPressed) {
+		return window->_getKeyboard().isKeyPressed((NWin::Key)key);
+	}
+	if (mode == NWin::KeyEventEnum::NWIN_KeyReleased) {
+		return window->_getKeyboard().isKeyReleased((NWin::Key)key);
+	}
 }
 
+//Legacy lol
 bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) {
-	return glfwGetMouseButton(window, key) == mode;
+	return Inputs::GetInputKey(key, mode);
 }
 
 void Inputs::Process(void* window0) {
-	window = (GLFWwindow*)window0;
-	glfwGetCursorPos(window, &mousePosX, &mousePosY);
-	usingJoystick = glfwJoystickPresent(GLFW_JOYSTICK_1);
-	const unsigned char* buttons = 0;
-	if (usingJoystick) {
-		int count;
-		const float* local = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-		int buttonCount;
-		buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-		memcpy(joystickAxis, local, count * sizeof(float)); //TODO::See if memcpy is the  Best Solution here
-		for (int i = 0; i < count; i++) {
-			if (abs(joystickAxis[i]) < 0.01) joystickAxis[i] = 0;
-		}
-	}
-	left = ( glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS );
-	right = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
-	up = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
-	down = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
-	d = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
-	r = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
-	s = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
-	t = glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS;
-	left_click = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	n_0 = glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS;
-	n_1 = glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS;
-	n_2 = glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS;
-	n_3 = glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS;
-	n_4 = glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS;
-	space		= ( glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS ) || ( usingJoystick&& GLFW_PRESS == buttons[1] ); 
-	f2			= (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS);
-	enter		= (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS);
-	left_ctrl	= (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS);
-	right_ctrl  = (glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
-	ctrl		=  right_ctrl || left_ctrl;
+	window = (NWin::Window*)window0;
+	//glfwGetCursorPos(window, &mousePosX, &mousePosY); //TODO::LATER Should be added to NWin
+	usingJoystick = 0;
+	/*const unsigned char* buttons = 0;
+		if (usingJoystick) {
+			int count;
+			const float* local = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+			int buttonCount;
+			buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+			memcpy(joystickAxis, local, count * sizeof(float)); //TODO::See if memcpy is the  Best Solution here
+			for (int i = 0; i < count; i++) {
+				if (abs(joystickAxis[i]) < 0.01) joystickAxis[i] = 0;
+			}
+	}*/
+	NWin::Keyboard& kb = window->_getKeyboard();
+	left       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_LEFT);
+	right      = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_RIGHT);
+	up	       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_UP);
+	down       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_DOWN);
+	d          = kb.isKeyPressed((NWin::Key)'A'); //TODO::Add wrapper function to NWin so that conversion is done within it with correct values
+	r          = kb.isKeyPressed((NWin::Key)'R');
+	s          = kb.isKeyPressed((NWin::Key)'S');
+	t		   = kb.isKeyPressed((NWin::Key)'T');
+	left_click = kb.isKeyPressed((NWin::Key)NW_INPUT_MOUSE_BUTTON_LEFT);
+	n_0        = kb.isKeyPressed((NWin::Key)'0');
+	n_1        = kb.isKeyPressed((NWin::Key)'1');
+	n_2        = kb.isKeyPressed((NWin::Key)'2');
+	n_3        = kb.isKeyPressed((NWin::Key)'3');
+	n_4        = kb.isKeyPressed((NWin::Key)'4');
+	space	   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_SPACE);
+	f2		   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_F2);
+	enter	   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_ENTER);
+	left_ctrl  = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_LEFT_CONTROL);
+	right_ctrl = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_RIGHT_CONTROL);
+	ctrl	   =  right_ctrl || left_ctrl;
 
 };

@@ -68,11 +68,13 @@ workspace "NWengine"
                         "%{prj.location}/Engine/STL",
                         "%{prj.location}/Engine/Reflection",
                         "%{prj.location}/Engine/Native Scripting",
-                        "%{prj.location}/Build",
+                        "%{prj.location}/Build"
+
                     }
                     files {
                         "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Build/Builder.cpp"
+                        "%{prj.location}/Build/Builder.cpp",
+                        "%{prj.location}/dependencies/vendor/nwin/*.cpp"
                     }
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
 

@@ -1,7 +1,7 @@
 #include "Texture.h"
 #include "RessourcesLoader.h"
 #include "GL/glew.h"
-#include "glfw3.h"
+
 
 
 std::map<std::string, Texture> Texture::resList;

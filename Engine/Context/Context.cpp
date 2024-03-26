@@ -2,7 +2,10 @@
 #include "Context.h"
 #include "Globals.h"
 #include "GL/glew.h"
-#include "glfw3.h"
+
+#include "nwin/window.h"
+#include "nwin/gl_context.h"
+
 #include <iostream>
 
 void* Context::window = nullptr;
@@ -17,10 +20,10 @@ int Context::dllFlag = NW_KEEP_DLL_RUNNING;
 
 int Context::vSync	 = 1;
 
-void sizeCallBack(GLFWwindow* window, int width, int height)
+void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size)
 {
-		Context::WINDOW_WIDTH = width;
-		Context::WINDOW_HEIGHT = height;
+		Context::WINDOW_WIDTH = size.x;
+		Context::WINDOW_HEIGHT = size.y;
 }
 
 void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
@@ -28,32 +31,38 @@ void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
 }
 
 void Context::SetFullscreen(bool state) {
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
-	if (!state) {
-		glfwSetWindowMonitor((GLFWwindow*)window, nullptr, 100, 100, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT, vidmode->refreshRate);
-		sizeCallBack((GLFWwindow*)window, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
+	NWin::Window* win = ((NWin::Window*)Context::window);
+	if (state) {
+		win->enableFullscreen();
 		return;
 	}
-	glfwSetWindowMonitor((GLFWwindow*)window, monitor, 0, 0, vidmode->width, vidmode->height, vidmode->refreshRate);
-	sizeCallBack((GLFWwindow*)window, vidmode->width, vidmode->height);
+	win->disableFullscreen();
 }
 
+static NWin::GlContext context; //TODO::REFACTOR this!!!!
 void* Context::InitContext(int scrWidth, int scrHeight)
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	window = glfwCreateWindow(scrWidth, scrHeight, "NWengine", NULL, NULL);
-	if (window == NULL)
-	{
-		const char* buffer = "";
-		std::cout << "Failed to init glfw window, ERROR: " <<glfwGetError(&buffer) << " " << buffer;
-		return nullptr;
-	}
-	glfwMakeContextCurrent((GLFWwindow*)window);
-	glfwSetFramebufferSizeCallback((GLFWwindow*)window, sizeCallBack);
+	NWin::Window* w;
+	NWin::WindowCrtInfo c{};
+	NWin::OpenGLInfo glInfo;
+	c.metrics.pos = { 0,0 };
+	c.description = "NWengine";
+	c.metrics.size = { scrWidth, scrHeight};
+	c.style = (NWin::Word)NWin::WindowStyle::Default;
+	c.exStyle = (NWin::Word)NWin::WindowExStyle::Default;
+	w = NWin::Window::stCreateWindow(c);
+
+	w->setResizeCallback(sizeCallBack);
+
+	w->dwmDarkModeFrame(1);
+	w->dwmDontRoundCorners(0);
+	//Context------------------
+	glInfo.minVersion = 3;
+	glInfo.maxVersion = 3;
+	context.create(w, glInfo);
+	context.makeCurrent();
+
+	window = w;
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -66,13 +75,12 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 }
 
 bool Context::ShouldClose() {
-	return glfwWindowShouldClose((GLFWwindow*)Context::window);
+	return !((NWin::Window*)(Context::window))->shouldLoop();
 }
 
 void Context::Update() {
-		glfwSwapInterval(Context::vSync);
-		glfwSwapBuffers((GLFWwindow*)Context::window);
-		glfwPollEvents();
+		((NWin::Window*)(Context::window))->update();
+		((NWin::Window*)(Context::window))->swapBuffers();
 }
 
 void Context::EnableBlend(bool status) {
@@ -112,8 +120,9 @@ void Context::Clear(float r, float g, float b, float a) { ///RGBA
 
 
 void Context::SetTitle(const char* title) {
-	glfwSetWindowTitle((GLFWwindow*)Context::window, title);
+	//TODO::Add title change function to NWin
 }
 void Context::Destroy() {
-	glfwTerminate();
+	NWin::Window::stDestroyWindow((NWin::Window*)(Context::window));
+	context.makeCurrent(1);
 }

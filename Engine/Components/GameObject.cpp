@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-#include <glfw3.h>
 
 #include "Script.h"
 #include "Inputs.h"

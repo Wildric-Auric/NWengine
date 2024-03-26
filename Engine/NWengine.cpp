@@ -7,9 +7,11 @@ std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
 
 
 NW_PREFIX int NWengineInit() {
+	//Opens a window and init openGL context
 	void* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
 	if (window == nullptr) return -1;
-
+	//Init Timer, absolute 0
+	NWTime::Init();
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitBegin)
 	
 	//init InitSoundSystem
