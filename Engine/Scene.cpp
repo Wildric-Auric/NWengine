@@ -1,20 +1,21 @@
 #include "Scene.h"
-#include<string>
-#include<fstream>
-#include"GameObject.h"
-#include"RessourcesLoader.h"
-#include <vector>
-#include <iostream>
+#include "GameObject.h"
+#include "RessourcesLoader.h"
 #include "ScriptManager.h"
 #include "Parser.h"
 #include "Components.h"
-#include "NWstd.h"
 #include "Camera.h"
 #include "Batch.h"
 
-Scene::Scene(std::string name) {
+#include <fstream>
+#include <string>
+#include <vector>
+#include <iostream>
+
+Scene::Scene(const std::string& name) {
 	this->name = name;
 };
+
 
 void Scene::SortScene() {} //Deprecated
 
@@ -181,10 +182,17 @@ void Scene::LoadScene() {
 		flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
 		if (flag == 0) break;
 	}
-
-
 	data.close();
 };
+
+void Scene::MakeCurrent() {
+	currentScene = this;
+}
+
+bool Scene::IsCurrent() {
+	return Scene::currentScene == this;
+}
+
 
 Scene::~Scene() {
 	//Delete all components
@@ -230,6 +238,8 @@ const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
 }
 
 Scene* Scene::currentScene = nullptr;
+std::list<Scene> Scene::_scenes;
+
 
 void Scene::SetUp() {
 	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
@@ -240,6 +250,46 @@ void Scene::SetUp() {
 		break;
 	}
 }
+
+
+void Scene::SetPath(const std::string& path) {
+	name = path;
+}
+
+
+Scene& Scene::CreateNew(const std::string& path) {
+	_scenes.push_back(Scene(path));
+	return _scenes.back();
+}
+
+Scene* Scene::GetScene(const std::string& path) {
+	for (auto iter = _scenes.begin(); iter != _scenes.end(); ++iter) {
+		if (iter->name == path) {
+			return &*iter;
+		}
+	}
+	return nullptr;
+}
+
+
+bool Scene::DeleteScene(const std::string& path) {
+	for (auto iter = _scenes.begin(); iter != _scenes.end(); ++iter) {
+		if (iter->name == path) {
+			_scenes.erase(iter);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void Scene::Destroy() {
+	_scenes.clear();
+}
+
+Scene* Scene::GetCurrent() {
+	return currentScene;
+}
+
 
 void Scene::UpdateActiveScene() {
 	if (Scene::currentScene != nullptr)

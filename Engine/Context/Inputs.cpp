@@ -51,25 +51,25 @@ void Inputs::Process(void* window0) {
 			}
 	}*/
 	NWin::Keyboard& kb = window->_getKeyboard();
-	left       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_LEFT);
-	right      = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_RIGHT);
-	up	       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_UP);
-	down       = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_DOWN);
-	d          = kb.isKeyPressed((NWin::Key)'A'); //TODO::Add wrapper function to NWin so that conversion is done within it with correct values
+	left       = kb.isKeyPressed(NWin::Key::NWIN_KEY_LEFT);
+	right      = kb.isKeyPressed(NWin::Key::NWIN_KEY_RIGHT);
+	up	       = kb.isKeyPressed(NWin::Key::NWIN_KEY_UP);
+	down       = kb.isKeyPressed(NWin::Key::NWIN_KEY_DOWN);
+	d          = kb.isKeyPressed((NWin::Key)'D'); //TODO::Add wrapper function to NWin so that conversion is done within it with correct values
 	r          = kb.isKeyPressed((NWin::Key)'R');
 	s          = kb.isKeyPressed((NWin::Key)'S');
 	t		   = kb.isKeyPressed((NWin::Key)'T');
-	left_click = kb.isKeyPressed((NWin::Key)NW_INPUT_MOUSE_BUTTON_LEFT);
+	left_click = kb.isKeyPressed(NWin::Key::NWIN_KEY_LBUTTON);
 	n_0        = kb.isKeyPressed((NWin::Key)'0');
 	n_1        = kb.isKeyPressed((NWin::Key)'1');
 	n_2        = kb.isKeyPressed((NWin::Key)'2');
 	n_3        = kb.isKeyPressed((NWin::Key)'3');
 	n_4        = kb.isKeyPressed((NWin::Key)'4');
-	space	   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_SPACE);
-	f2		   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_F2);
-	enter	   = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_ENTER);
-	left_ctrl  = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_LEFT_CONTROL);
-	right_ctrl = kb.isKeyPressed((NWin::Key)NW_INPUT_KEY_RIGHT_CONTROL);
+	space	   = kb.isKeyPressed(NWin::Key::NWIN_KEY_SPACE);
+	f2		   = kb.isKeyPressed(NWin::Key::NWIN_KEY_F2);
+	enter	   = kb.isKeyPressed(NWin::Key::NWIN_KEY_RETURN);
+	left_ctrl  = kb.isKeyPressed(NWin::Key::NWIN_KEY_LCONTROL);
+	right_ctrl = kb.isKeyPressed(NWin::Key::NWIN_KEY_RCONTROL);
 	ctrl	   =  right_ctrl || left_ctrl;
 
 };

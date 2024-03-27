@@ -22,17 +22,20 @@ public:
 
 	void DrawOnDefaultFrame();
 	void CaptureOnCamFrame();
+	//Make this renderer as current renderer
 	void Use();
+	//Make default renderer as current. Default renderer is managed by Core frontend or custom one
 	void Unuse();
 	void SetShader(const std::string& shaderPath);
 	//Add components to componentContainer
 	void SetUp();
 
+	//Sets up default renderer
 	static void Init();
 	static void Destroy();
 
-	static std::string GetType() { return "Renderer"; }
 	static Renderer* defaultRenderer;
 	static Renderer* currentRenderer;
+	inline static std::string GetType() { return "Renderer"; }
 
 };
