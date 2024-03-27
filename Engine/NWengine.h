@@ -27,7 +27,6 @@
 #include "Components.h"
 #include "Batch.h"
 #include "Text.h"
-#include "NWproj.h"
 
 #include "Utilities.h"
 #include "Globals.h"

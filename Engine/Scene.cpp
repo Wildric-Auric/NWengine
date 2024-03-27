@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "RessourcesLoader.h"
 #include "ScriptManager.h"
-#include "Parser.h"
 #include "Components.h"
 #include "Camera.h"
 #include "Batch.h"

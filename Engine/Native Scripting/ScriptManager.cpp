@@ -1,5 +1,4 @@
 #include "ScriptManager.h"
-#include "Builder.h"
 
 Scriptable* ScriptManager::GetScriptFromDLL(std::string name, GameObject* go) {
 	//Deprecated, scripts are no longer dlls
@@ -60,42 +59,44 @@ std::map<std::string, Scriptable* (*)(GameObject*)> ScriptManager::ScriptsMap = 
 //END_PPP
 
 bool ScriptManager::CompileScripts() {
-	if (ScriptManager::scriptList.size() < 1) return 0;
-	Builder::objs.clear();
-	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
-	for (std::map < std::string, std::string > ::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
-		//std::string root = "";
-		//std::string filename = "";
-		//GetFileName(iter->second, &filename, nullptr, &root);
-		Builder::IncludeDir.push_back(iter->second);
-		Builder::objs.push_back(iter->second + iter->first + ".cpp");
-	}
-	Builder::Compile(Globals::compiledScriptDir);
-	return Exec("builder.bat");
+	//if (ScriptManager::scriptList.size() < 1) return 0;
+	//Builder::objs.clear();
+	//Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
+	//for (std::map < std::string, std::string > ::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
+	//	//std::string root = "";
+	//	//std::string filename = "";
+	//	//GetFileName(iter->second, &filename, nullptr, &root);
+	//	Builder::IncludeDir.push_back(iter->second);
+	//	Builder::objs.push_back(iter->second + iter->first + ".cpp");
+	//}
+	//Builder::Compile(Globals::compiledScriptDir);
+	//return Exec("builder.bat");
+	return 0;
 }
 
 bool ScriptManager::CompileScript(std::string element) {
-	auto iter = ScriptManager::scriptList.find(element);
+	/*auto iter = ScriptManager::scriptList.find(element);
 	if (iter == ScriptManager::scriptList.end()) return 0;
 	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
 	Builder::IncludeDir.push_back(iter->second);
-	Builder::CompileInd(iter->second + iter->first + ".cpp", Globals::compiledScriptDir);
-	return Exec("builder.bat");
+	Builder::CompileInd(iter->second + iter->first + ".cpp", Globals::compiledScriptDir);*/
+	return 0; //Exec("builder.bat");
 }
 
 
 bool ScriptManager::CompileScriptManager() {
-	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
-	ScriptManager::SaveScriptList();
-	for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
-		Builder::objs.push_back(Globals::compiledScriptDir + iter->first + ".obj");
-	}
-	//Compile script manager
-	int size = Builder::objs.size();
-	Builder::InitScripts(Globals::scriptListPath, Globals::scriptManagerPath);
-	while (Builder::objs.size() > size)
-		Builder::objs.pop_back(); //Bad solution to refactor
-
-	Builder::CompileInd(Globals::scriptManagerPath, Globals::compiledScriptDir);
-	return Exec("builder.bat");
+//	Builder::IncludeDir = GetNWlist(Globals::compilationConfigDir + "Additional include.NWlist");
+//	ScriptManager::SaveScriptList();
+//	for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++) {
+//		Builder::objs.push_back(Globals::compiledScriptDir + iter->first + ".obj");
+//	}
+//	//Compile script manager
+//	int size = Builder::objs.size();
+//	Builder::InitScripts(Globals::scriptListPath, Globals::scriptManagerPath);
+//	while (Builder::objs.size() > size)
+//		Builder::objs.pop_back(); //Bad solution to refactor
+//
+//	Builder::CompileInd(Globals::scriptManagerPath, Globals::compiledScriptDir);
+//	return Exec("builder.bat");
+	return 0;
 }

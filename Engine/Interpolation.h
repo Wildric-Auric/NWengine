@@ -1,12 +1,11 @@
 #pragma once
 #include "Globals.h"
 #include "Serialized.h"
-#include "GuiObject.h"
 #include <vector>
 
 
 
-class Interpolator : public Serialized, public GuiObject {
+class Interpolator : public Serialized {
 public:
 	
 	struct {
@@ -22,7 +21,6 @@ public:
 	//Clock between 0 and 1
 	virtual float Evaluate(float clock);
 
-	OVERRIDE_GUI
 	int  Serialize(std::fstream* data, int offset)   override;
 	int  Deserialize(std::fstream* data, int offset) override;
 };
@@ -38,7 +36,7 @@ public:
 	void Linearize();
 
 	float Evaluate(float clock) override;
-	OVERRIDE_GUI
+
 	int  Serialize(std::fstream* data, int offset) override;
 	int  Deserialize(std::fstream* data, int offset) override;
 };

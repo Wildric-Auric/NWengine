@@ -10,7 +10,7 @@
 		this->goc = goc;                           \
 	};										       \
 
-class Scriptable : GuiObject {
+class Scriptable {
 public:
 	GameObject* goc = nullptr;
 	Scriptable(GameObject* goc = nullptr, void* nws = nullptr) {
@@ -38,7 +38,6 @@ public:
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;
 
-	OVERRIDE_GUI
 	static std::map<GameObject*, Script> componentList;
 };
 

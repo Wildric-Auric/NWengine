@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include "GuiObject.h"
 
 class Collider : public GameComponent {
 	//Base Collider class
@@ -20,8 +19,6 @@ public:
 
 	bool Sat(Collider* other, fVec2* depthBuffer		 = nullptr);
 	bool isColliding(Collider* other, fVec2* depthBuffer = nullptr);
-
-	OVERRIDE_GUI
 	void Start()  override;
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;

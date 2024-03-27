@@ -1,13 +1,12 @@
 #pragma once
 #include "Globals.h"
-#include "GuiObject.h"
 #include "Serialized.h"
 
 #include <map>
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
 
-class GameComponent: public GuiObject, public Serialized { //I've tried to do multiple inheritance on subclass of GameComponent 
+class GameComponent: public Serialized { //I've tried to do multiple inheritance on subclass of GameComponent 
 										//but casting from GameComponent* to GuiObject* messes up virtual functions, I will read more about it
 public:
 	static std::string GetType() { return "GameComponent"; }

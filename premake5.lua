@@ -31,15 +31,13 @@ workspace "NWengine"
                         "%{prj.location}/Engine/Context",
                         "%{prj.location}/Engine/Maths",
                         "%{prj.location}/Engine/Rendering",
-                        "%{prj.location}/Engine/STL",
+                        "%{prj.location}/Engine/Util",
                         "%{prj.location}/Engine/Reflection",
                         "%{prj.location}/Engine/Native Scripting",
-                        "%{prj.location}/Build"
-
                     }
                     files {
                         "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Build/Builder.cpp",
+                        "%{prj.location}/Engine/**.h",      
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp"
                     }
 
@@ -64,16 +62,14 @@ workspace "NWengine"
                         "%{prj.location}/Engine/Context",
                         "%{prj.location}/Engine/Maths",
                         "%{prj.location}/Engine/Rendering",
-                        "%{prj.location}/Engine/STL",
+                        "%{prj.location}/Engine/Util",
                         "%{prj.location}/Engine/Reflection",
                         "%{prj.location}/Engine/Native Scripting",
-                        "%{prj.location}/Build",
                         "%{prj.location}/Sandbox/src"
 
                     }
                     files {
                         "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Build/Builder.cpp",
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp",
                         "%{prj.location}/Sandbox/src/**.cpp"
                     }

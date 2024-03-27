@@ -42,6 +42,4 @@ public:
 
 	void  SetGameObject(void* go)  override;
 	void* GetGameObject()		   override;
-
-	OVERRIDE_GUI
 };

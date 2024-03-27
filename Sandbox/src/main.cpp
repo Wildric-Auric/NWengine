@@ -1,10 +1,41 @@
 #include "NWengine.h"
 #include "RuntimeManager.h"
+#include "ScriptManager.h"	
 #include "Scene.h"
 #include "nwin/window.h"
 #include "nwin/gl_context.h"
 
+#include "Rocket.h"
 
+void Rocket::Start() {
+	
+}
+
+void Rocket::Update() {
+	float dt = NWTime::GetDeltaTime();
+	NWin::Window& w = *(NWin::Window*)(Context::window);
+	NWin::GlContext::setCurCtxVSync(1);
+	auto kb = w._getKeyboard();
+	Transform* trans = Scene::currentScene->GetGameObject("BoxObj")->GetComponent<Transform>();
+	float F = Inputs::up * 6000.0f;
+	//Compute acceleration
+	data.lastAcc = data.acc;
+	data.acc = -300.0 + F / data.mass; //Newton Law of motion
+	//Compute speed.
+	data.lastVel = data.vel;
+	data.vel = dt * data.acc + data.lastVel;
+	//Compute position;
+	data.lastPos = data.pos;
+	data.pos = dt * data.vel + data.lastPos;
+	//----------------------------
+	trans->position.y = data.pos;
+	if (trans->position.y < 0.0) {
+		trans->position.y = 0.0;
+		data.vel = 0.0;
+		data.acc = 0.0;
+		data.pos = 0.0;
+	}
+}
 
 void Init() {
 	//The following line is a residue of the dark time when the core wasn't separated from the Editor; it is deprecated and will be removed soon
@@ -29,6 +60,8 @@ void Init() {
 	Sprite&  sprite = *box.AddComponent<Sprite>();
 	box.AddComponent<Transform>();
 	sprite.SetTexture("Ressources\\Images\\DefaultBox10x10.png");
+
+	box.AddComponent<Script>()->script = new Rocket(&box);
 	cam.Use();
 
 
@@ -40,48 +73,9 @@ void Render() {
 	renderer(true);
 }
 
-
-struct phyData {
-	float lastAcc = 0;
-	float lastVel = 0;
-	float vel     = 0;
-	float acc     = 0;
-	float mass    = 10.0;
-	float pos     = 0;
-	float lastPos = 0;
-};
-
-static phyData data{};
 static float   g  = 10;
 
 void Update() {
-	
-	float dt = NWTime::GetDeltaTime();
-	NWin::Window& w= *(NWin::Window*)(Context::window);
-	NWin::GlContext::setCurCtxVSync(1);
-	auto kb = w._getKeyboard();
-	Transform* trans = Scene::currentScene->GetGameObject("BoxObj")->GetComponent<Transform>();
-	float F        = Inputs::up * 6000.0f;
-	//Compute acceleration
-	data.lastAcc = data.acc;
-	data.acc	 = -300.0 + F/data.mass; //Newton Law of motion
-	//Compute speed.
-	data.lastVel = data.vel;
-	data.vel	 = dt * data.acc + data.lastVel;
-	//Compute position;
-	data.lastPos = data.pos;
-	data.pos     = dt * data.vel + data.lastPos;
-	//----------------------------
-
-
-	
-	trans->position.y = data.pos;
-	if (trans->position.y < 0.0) {
-		trans->position.y = 0.0;
-		data.vel          = 0.0;
-		data.acc          = 0.0;
-		data.pos          = 0.0;
-	}
 
 }
 
@@ -92,6 +86,7 @@ int main() {
 
 	NWengineInit();
 	NWengineLoop();
+	Scene::currentScene->Save();
 	NWengineShutdown();
 	return 0;
 }
