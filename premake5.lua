@@ -9,47 +9,13 @@ workspace "NWengine"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
     buildoptions { "/EHsc" }
-    --location "./"
-    project "NWengineProject"
-                    defines {"NW_GUI_APP"}
-                    targetname ("NWengine")
-                    location "./"
-                    kind "ConsoleApp"
-                    files {
-                        "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Gui/**.cpp",
-                        "%{prj.location}/Build/Builder.cpp",
-                        "%{prj.location}/dependencies/vendor/**.cpp"
-                    }
-
-                    includedirs {
-                        "%{prj.location}/",
-                        "%{prj.location}/dependencies/GLEW/include",
-                        "%{prj.location}/dependencies/GLFW/include",
-                        "%{prj.location}/dependencies/vendor",
-                        "%{prj.location}/dependencies/IRRKLANG/include",
-                        "%{prj.location}/dependencies/freetype/include",
-                        "%{prj.location}/dependencies/OPENAL/include",
-                        "%{prj.location}/Engine",
-                        "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/Engine/Components",
-                        "%{prj.location}/Engine/Audio",
-                        "%{prj.location}/Ressources",
-                        "%{prj.location}/Engine/Context",
-                        "%{prj.location}/Gui",
-                        "%{prj.location}/Engine/Maths",
-                        "%{prj.location}/Engine/Rendering",
-                        "%{prj.location}/Engine/STL",
-                        "%{prj.location}/Engine/Reflection",
-                        "%{prj.location}/Engine/Native Scripting",
-                        "%{prj.location}/Build",
-                    }
+    --location "./
     project "NWEngineCore" 
                       kind "StaticLib"
                       defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
                       targetname ("NWengineCore")
                       location "./"
-                      includedirs {
+                       includedirs {
                         "%{prj.location}/",
                         "%{prj.location}/dependencies/GLEW/include",
                         "%{prj.location}/dependencies/GLFW/include",
@@ -75,6 +41,44 @@ workspace "NWengine"
                         "%{prj.location}/Engine/**.cpp",
                         "%{prj.location}/Build/Builder.cpp",
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp"
+                    }
+
+    project "Sandbox" 
+                      kind "ConsoleApp"
+                      defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
+                      targetname ("Sandbox")
+                      location "./"
+                      includedirs {
+                        "%{prj.location}/",
+                        "%{prj.location}/dependencies/GLEW/include",
+                        "%{prj.location}/dependencies/GLFW/include",
+                        "%{prj.location}/dependencies/vendor",
+                        "%{prj.location}/dependencies/IRRKLANG/include",
+                        "%{prj.location}/dependencies/freetype/include",
+                        "%{prj.location}/dependencies/OPENAL/include",
+                        "%{prj.location}/Engine",
+                        "%{prj.location}/dependencies/SND/include",
+                        "%{prj.location}/Engine/Components",
+                        "%{prj.location}/Engine/Audio",
+                        "%{prj.location}/Ressources",
+                        "%{prj.location}/Engine/Context",
+                        "%{prj.location}/Engine/Maths",
+                        "%{prj.location}/Engine/Rendering",
+                        "%{prj.location}/Engine/STL",
+                        "%{prj.location}/Engine/Reflection",
+                        "%{prj.location}/Engine/Native Scripting",
+                        "%{prj.location}/Build",
+                        "%{prj.location}/Sandbox/src"
+
+                    }
+                    files {
+                        "%{prj.location}/Engine/**.cpp",
+                        "%{prj.location}/Build/Builder.cpp",
+                        "%{prj.location}/dependencies/vendor/nwin/*.cpp",
+                        "%{prj.location}/Sandbox/src/**.cpp"
+                    }
+                    links {
+                        "dwmapi.lib"
                     }
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
 
