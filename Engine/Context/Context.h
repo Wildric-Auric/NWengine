@@ -14,7 +14,6 @@ public:
 	static void SetFullscreen(bool state = 1);
 	static void SetTitle(const char* title);
 	static void Destroy();
-	static int  dllFlag;
 	static int vSync;
 	static int  NATIVE_WIDTH;
 	static int NATIVE_HEIGHT;

@@ -16,8 +16,6 @@ int Context::WINDOW_HEIGHT = 720;
 int Context::NATIVE_WIDTH = 1080;
 int Context::NATIVE_HEIGHT = 720;
 
-int Context::dllFlag = NW_KEEP_DLL_RUNNING;
-
 int Context::vSync	 = 1;
 
 void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size)

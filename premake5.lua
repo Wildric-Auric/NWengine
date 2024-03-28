@@ -23,21 +23,12 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/IRRKLANG/include",
                         "%{prj.location}/dependencies/freetype/include",
                         "%{prj.location}/dependencies/OPENAL/include",
-                        "%{prj.location}/Engine",
-                        "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/Engine/Components",
-                        "%{prj.location}/Engine/Audio",
-                        "%{prj.location}/Ressources",
-                        "%{prj.location}/Engine/Context",
-                        "%{prj.location}/Engine/Maths",
-                        "%{prj.location}/Engine/Rendering",
-                        "%{prj.location}/Engine/Util",
-                        "%{prj.location}/Engine/Reflection",
-                        "%{prj.location}/Engine/Native Scripting",
+                        "%{prj.location}/Engine/**",
+                        "%{prj.location}/Engine/"
                     }
                     files {
                         "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Engine/**.h",      
+                        "%{prj.location}/Engine/**.h",  
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp"
                     }
 
@@ -54,19 +45,11 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/IRRKLANG/include",
                         "%{prj.location}/dependencies/freetype/include",
                         "%{prj.location}/dependencies/OPENAL/include",
-                        "%{prj.location}/Engine",
                         "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/Engine/Components",
-                        "%{prj.location}/Engine/Audio",
-                        "%{prj.location}/Ressources",
-                        "%{prj.location}/Engine/Context",
-                        "%{prj.location}/Engine/Maths",
-                        "%{prj.location}/Engine/Rendering",
-                        "%{prj.location}/Engine/Util",
-                        "%{prj.location}/Engine/Reflection",
-                        "%{prj.location}/Engine/Native Scripting",
-                        "%{prj.location}/Sandbox/src"
+                        "%{prj.location}/Engine/**",
+                        "%{prj.location}/Engine/",
 
+                        "%{prj.location}/Sandbox/src"
                     }
                     files {
                         "%{prj.location}/Engine/**.cpp",

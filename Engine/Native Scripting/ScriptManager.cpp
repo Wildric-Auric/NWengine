@@ -35,22 +35,22 @@ Scriptable* ScriptManager::CreateScript(std::string name, GameObject* go) {
 }
 
 void ScriptManager::SaveScriptList() {
-	std::fstream file(Globals::scriptListPath, std::ios::out, std::ios::trunc);
-	if (!file) return;
-	for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++)
-		file << iter->second << iter->first << ".h" << "\n";
+	//std::fstream file(Globals::scriptListPath, std::ios::out, std::ios::trunc);
+	//if (!file) return;
+	//for (std::map<std::string, std::string>::iterator iter = ScriptManager::scriptList.begin(); iter != ScriptManager::scriptList.end(); iter++)
+	//	file << iter->second << iter->first << ".h" << "\n";
 }
 
 void ScriptManager::LoadScriptList() {
-	std::fstream file(Globals::scriptListPath, std::ios::in);
-	if (!file) return;
-	scriptList.clear();
-	for (std::string line = ""; std::getline(file, line);) {
-		std::string fileName = "";
-		std::string root	 = "";
-		GetFileName(line, &fileName, nullptr, &root);
-		scriptList.insert(std::make_pair(fileName, root));
-	}
+	//std::fstream file(Globals::scriptListPath, std::ios::in);
+	//if (!file) return;
+	//scriptList.clear();
+	//for (std::string line = ""; std::getline(file, line);) {
+	//	std::string fileName = "";
+	//	std::string root	 = "";
+	//	GetFileName(line, &fileName, nullptr, &root);
+	//	scriptList.insert(std::make_pair(fileName, root));
+	//}
 }
 
 std::map<std::string, std::string> ScriptManager::scriptList = {};

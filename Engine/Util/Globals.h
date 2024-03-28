@@ -9,11 +9,6 @@
 #define NW_LOG_WARNING(str) printf(str)
 #define NW_LOG(str)			printf(str)
 
-//#define NW_DLL_ENGINE       //comment this line if you want either dll or independent exe as output
-#define NW_KEEP_DLL_RUNNING  1
-#define NW_RELOAD_DLL        2
-#define NW_SHUTDOWN_DLL      0
-#define PROJECT_DIRECTORY    Globals::projectDir
 
 //arch is always an integer type with size of pointer of the architecture
 typedef long     arch;
@@ -74,17 +69,4 @@ public:
 	//Consts
 	static const float SCREENRATIO;
 	//Paths
-	static std::string scriptListPath;
-	static std::string scriptManagerPath;
-	static std::string installationDir;
-	static std::string projDir;
-	static std::string dllDir;
-	static std::string compilationConfigDir;
-	static std::string compiledScriptDir;
-	static std::string engineLibDir;
-	static std::string gamePath;
-	static std::string gameLibDir;
-
-	static void SetProjDir(std::string dir);
-	static void SetInstallationDir(std::string dir);
 };
