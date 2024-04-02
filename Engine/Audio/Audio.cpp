@@ -75,13 +75,16 @@ Asset* Sound::LoadFromBuffer(void* alBuffer, void* id) {
 NW_IMPL_RES_LIST(SoundIdentifier, Sound)
 
 
-void Sound::Delete() {
+void Sound::Clean() {
+	--_usageCounter;
+	if (_usageCounter > 0)
+		return;
 	SoundIdentifier id = GetIDWithAsset<Sound*,SoundIdentifier>(this);
 	this->Stop();
 	alSourcei(this->_source, AL_BUFFER, 0);
 	alDeleteSources(1, &this->_source);
 	alDeleteBuffers(1, &this->_buffID);
-	resList.erase(id);
+	EraseRes<Sound>(id);
 }
 
 void Sound::Play() {

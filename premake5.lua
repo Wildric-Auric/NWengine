@@ -29,7 +29,8 @@ workspace "NWengine"
                     files {
                         "%{prj.location}/Engine/**.cpp",
                         "%{prj.location}/Engine/**.h",  
-                        "%{prj.location}/dependencies/vendor/nwin/*.cpp"
+                        "%{prj.location}/dependencies/vendor/nwin/*.cpp",
+                        "%{prj.location}/premake5.lua"
                     }
 
     project "Sandbox" 
@@ -54,7 +55,9 @@ workspace "NWengine"
                     files {
                         "%{prj.location}/Engine/**.cpp",
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp",
-                        "%{prj.location}/Sandbox/src/**.cpp"
+                        "%{prj.location}/Sandbox/src/**.cpp",
+                        "%{prj.location}/Engine/**.h", 
+                        "%{prj.location}/premake5.lua"
                     }
                     links {
                         "dwmapi.lib"

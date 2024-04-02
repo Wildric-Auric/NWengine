@@ -68,12 +68,16 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 }
 
 void Glyph::Delete() {
-	this->texture.Delete();
+	this->texture.Clean();
 }	
 
-void Font::Delete() {
+void Font::Clean() {
+	--_usageCounter;
+	if (_usageCounter > 0)
+		return;
 	for (auto iter = charactersMap.begin(); iter != charactersMap.end(); ++iter) {
 		iter->second.Delete();
 	}
 	FT_Done_Face((FT_Face)face);
+	EraseRes<Font>(GetIDWithAsset<Font*, FontIdentifier>(this));
 }

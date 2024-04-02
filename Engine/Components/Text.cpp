@@ -73,7 +73,7 @@ void Text::SetFont(const std::string& path) {
 	if (path == "")
 		return;
 	if (this->font != nullptr)
-		this->font->Delete();
+		this->font->Clean();
 	Font loader;
 	FontIdentifier fid = path;
 	font = (Font*)loader.LoadFromFile(path.c_str(), &fid);
@@ -136,7 +136,8 @@ Text::~Text() {
 		sprite->_isRendered = 0;
 	}
 	Scene::currentScene->ForceRenderStop();
-	font->Delete(); //Temporary
+	if (font)
+		font->Clean();
 }
 
 

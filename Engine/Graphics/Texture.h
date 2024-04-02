@@ -65,7 +65,7 @@ public:
 	bool         _hasMipMap;
 
 	Texture() = default;
-	void Delete();
+	void Clean()				override;
 	void Bind(uint32 slot = 0);
 
 	void _GPUGen(uint8*,TexChannelInfo);

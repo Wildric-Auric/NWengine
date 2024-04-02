@@ -35,6 +35,10 @@ void Rocket::Update() {
 		data.acc = 0.0;
 		data.pos = 0.0;
 	}
+	if (Inputs::down) {
+		goc->GetComponent<Sprite>()->UnBatch();
+		goc->GetComponent<Sprite>()->SetShader("Ressources/Shaders/Textured.shader");
+	}
 }
 
 void Init() {
@@ -55,16 +59,27 @@ void Init() {
 
 	Camera&     cam   = *tmp.AddComponent<Camera>();
 	cam.clearColor = fVec3(0.3, 0.35, 0.4);
-	cam.ChangeOrtho(300,300);
+	cam.ChangeOrtho(1080, 720);
 
 	Sprite&  sprite = *box.AddComponent<Sprite>();
 	box.AddComponent<Transform>();
 	sprite.SetTexture("Ressources\\Images\\DefaultBox10x10.png");
-
+	sprite.Batch();
+	sprite.SetShader("Ressources/Shaders/TexturedBatched.shader");
 	box.AddComponent<Script>()->script = new Rocket(&box);
+	auto t = box.AddComponent<Text>();
+	auto e = box.AddComponent<AudioEmitter>();
+	auto l = box.AddComponent<AudioListener>();
+
+	//t->shader = "Ressources/Shaders/Textured.shader";
+	t->text   = "69";
+	//t->SetFont(FONT_DEFAULT);
+	//t->UpdateGlyphs();
+
+	//e->SetSound("Ressources/Sounds/Wallpaper.wav");
+	//e->sound->Play();
+
 	cam.Use();
-
-
 	scene.Start();
 }
 
@@ -86,7 +101,6 @@ int main() {
 
 	NWengineInit();
 	NWengineLoop();
-	Scene::currentScene->Save();
 	NWengineShutdown();
 	return 0;
 }

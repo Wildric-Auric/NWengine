@@ -30,7 +30,7 @@ public:
 	Font()  = default;
 	bool LoadFont(std::string path);
 
-	void Delete();
+	void Clean()  override;
 	
 	Asset* GetFromCache(void* identifier)											  override;
 	Asset* LoadFromFile(const char* path, void* data)		                          override;

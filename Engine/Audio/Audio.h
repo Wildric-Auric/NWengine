@@ -53,7 +53,7 @@ public:
 	void Stop();
 	bool HasFinished();
 
-	void Delete();
+	void Clean() override;
 
 	Asset* GetFromCache(void* id);
 	Asset* LoadFromFile(const char* path, void* id);

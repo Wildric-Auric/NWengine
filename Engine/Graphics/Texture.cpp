@@ -84,9 +84,13 @@ Asset* Texture::LoadFromBuffer(void* buffer, void* data) {
 	return result;
 }
 
-void Texture::Delete() {
+void Texture::Clean() {
+	--_usageCounter;
+	if (_usageCounter > 0) 
+		return;
 	glDeleteTextures(1, &this->_glID);
 	this->_glID = 0;
+	EraseRes<Texture,TextureIdentifier>(GetIDWithAsset<Texture*, TextureIdentifier>(this));
 }
 
 NW_IMPL_RES_LIST(TextureIdentifier, Texture)

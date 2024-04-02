@@ -10,16 +10,14 @@ AudioEmitter::AudioEmitter(GameObject* attachedObj) {
 
 AudioEmitter::~AudioEmitter() {
 	if (sound != nullptr) {
-		sound->Delete();
-		sound = nullptr;
+		sound->Clean();
 	}
 	AudioEmitter::componentList.erase(this->attachedObj);
 }
 
 void AudioEmitter::SetSound(const std::string& path) {
 	if (sound != nullptr) {
-		sound->Delete();
-		sound = nullptr;
+		sound->Clean();
 	}
 	Sound loader;
 	SoundIdentifier id = {path, (uint64)this};
@@ -28,8 +26,7 @@ void AudioEmitter::SetSound(const std::string& path) {
 
 void AudioEmitter::SetSound(const Sound* snd) {
 	if (sound != nullptr) {
-		sound->Delete();
-		sound = nullptr;
+		sound->Clean();
 	}
 	Sound loader;
 	SoundIdentifier id = { "", (uint64)this};

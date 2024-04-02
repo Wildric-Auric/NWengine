@@ -33,5 +33,5 @@ void FrameBuffer::Unbind() {
 void FrameBuffer::Delete() {
 	glDeleteRenderbuffers(1, &this->_renderbuffer);
 	glDeleteFramebuffers(1,  &this->_framebuffer);
-	textureBuffer.Delete();
+	textureBuffer.Clean();
 }
