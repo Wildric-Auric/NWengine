@@ -7,6 +7,7 @@ public:
 	static int    _frameCount;
 	static NWin::timeMl _currentTime;
 	static NWin::timeMl _lastTime;
+	static NWin::timeMl _lastTime2;
 	static double _deltaTimeSum;
 	static void  Init();
 	static void  Update();
