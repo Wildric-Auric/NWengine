@@ -102,7 +102,7 @@ void ParticleSystem::Init() {
 		pool.back().prop = prop;
 		disabled.push_back(pool.size() - 1);
 		pool.back().transform = pool.back().go.AddComponent<Transform>();
-		(pool.back().sprite = pool.back().go.AddComponent<Sprite>())->isBatched = 1;	 //TODO::Add batch control
+		(pool.back().sprite = pool.back().go.AddComponent<Sprite>())->Batch();
 	}
 }
 

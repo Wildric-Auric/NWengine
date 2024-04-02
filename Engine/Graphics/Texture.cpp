@@ -1,110 +1,92 @@
 #include "Texture.h"
-#include "RessourcesLoader.h"
+#include "Image.h"
 #include "GL/glew.h"
 
 
-
-std::map<std::string, Texture> Texture::resList;
-
-
-Texture::Texture(const uint8* texRes, const iVec2& size, const TextureData& texData) {
-
-	this->alpha =  texData.alpha;
-	this->repeat = texData.repeat;
-	this->name   = texData.name;
-	this->size   = size;
-
-	this->_texData = texData;
-
-	int32 filter = GL_LINEAR;
-	if (!this->_texData.linear)
-		filter = GL_NEAREST;
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-
-	//Downscaling parameter
-	if (this->_texData.genMipMap)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	else
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-	//Upscaling parameter
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-	if (this->_texData.repeat) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
-	else {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	}
-	if (this->_texData.alpha == 1)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
-	else if (this->_texData.alpha == 0)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
-	else if (this->_texData.alpha == 2) {
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->size.x, this->size.y, 0, GL_RED, GL_UNSIGNED_BYTE, texRes);
-	}
-
-	if (this->_texData.genMipMap)
-		glGenerateMipmap(GL_TEXTURE_2D);
-}
-
-Texture::Texture(std::string name, int width, int height, uint8* texRes, uint8 alpha, uint8 repeat, uint8 genMipMap, uint8 linear) :
-Texture(texRes, iVec2(width, height), TextureData{ name, alpha, repeat, genMipMap, linear }) {}
-
-void Texture::Bind(unsigned int slot = 0) {
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-}
-void Texture::UpdateTexture(int width, int height, uint8* texRes, unsigned int slot, bool alpha) {
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	if (alpha)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texRes);
-	else
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texRes);
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-}
-
-void Texture::UpdateTextureData(const TextureDataUpdate& texData) {
+void Texture::_GPUGen(uint8* pixelBuffer, TexChannelInfo info) {
+	glGenTextures(1, &_glID);
 	Bind();
-	if (texData.genMipMap != _texData.genMipMap) {
-		_texData.genMipMap = texData.genMipMap;
+	//Upscaling parameter
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	if (info == TexChannelInfo::NW_R)
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, _size.x, _size.y, 0, info, GL_UNSIGNED_BYTE, pixelBuffer);
+	
+	if (this->_hasMipMap) {
 		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		return;
 	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
 
-	if (texData.linear != _texData.linear) {
-		_texData.linear = texData.linear;
-		int32 filter = GL_LINEAR;
-		if (!this->_texData.linear)
-			filter = GL_NEAREST;
-		if (this->_texData.genMipMap)
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		else
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-	}
+void Texture::GenMipMap() {
+	Bind();
+	_hasMipMap = 1;
+	glGenerateMipmap(GL_TEXTURE_2D);
+}
 
-	if (texData.repeat != _texData.repeat) {
-		_texData.repeat = texData.repeat;
-		if (this->_texData.repeat) {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		}
-		else {
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+void Texture::SetMinFilter(TexMinFilter value) {
+	Bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, value);
+}
 
-		}
-	}
+void Texture::SetMaxFilter(TexMaxFilter value) {
+	Bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, value);
+}
+
+void Texture::SetEdgesBehaviour(TexEdge value) {
+	Bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, value);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, value);
+}
+
+void Texture::Bind(uint32 slot) {
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, _glID);
+}
+
+
+Asset* Texture::GetFromCache(void* identifier) {
+	auto iter = Texture::resList.find(*(TextureIdentifier*)(identifier));
+	if (iter == Texture::resList.end()) return nullptr;
+	return &iter->second;
+}
+
+Asset* Texture::LoadFromFile(const char* path, TextureIdentifierPtr identifier) {
+	if (!path)
+		return nullptr;
+	Image im;
+	im.alpha = ((TextureIdentifier*)identifier)->alpha;
+	im.LoadFromFile(path,nullptr);	
+	return LoadFromBuffer((void*)&im, identifier);
+}
+
+Asset* Texture::LoadFromBuffer(void* buffer, void* data) {
+	if (buffer == nullptr)
+		return nullptr;
+	Texture* result;
+	TexChannelInfo inf;
+	Image& im = *(Image*)buffer;
+	int num       = im.channels + im.alpha;
+	inf           = num == 1 ? NW_R : ( num == 3 ? NW_RGB : NW_RGBA );
+	TextureIdentifierPtr identifier = (TextureIdentifierPtr)data;
+
+	result = &(Texture::resList.emplace(*(TextureIdentifier*)identifier, Texture())).first->second;
+	result->_size = { im.width, im.height };
+	result->_hasMipMap = this->_hasMipMap;
+	result->_GPUGen(im.pixelBuffer, inf);
+	return result;
 }
 
 void Texture::Delete() {
-	glDeleteTextures(1, &this->texture);
+	glDeleteTextures(1, &this->_glID);
+	this->_glID = 0;
 }
+
+NW_IMPL_RES_LIST(TextureIdentifier, Texture)

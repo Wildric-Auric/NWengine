@@ -16,17 +16,15 @@ public:
 	fVec3 clearColor = fVec3(0.0,0.0, 0.0);
 	float alpha      = 1.0f;
 	bool isActive = 0;
+	GameObject* attachedObj = nullptr;
 
-	Camera() {};
+	Camera() = default;
 	Camera(GameObject* go);
 	~Camera();
-	GameObject* attachedObj;
 
 	void Capture();
 	void Update();
-	void ChangeOrtho(float minX, float maxX, float minY, float maxY);
 	void ChangeOrtho(float sizeX, float sizeY);
-	void SetFilteringData(const TextureDataUpdate& texData);
 	void MoveTo(Vector2<int> target, float interpolationTime);
 	void Use();
 	fVec2 position = fVec2(0.0f,0.0f);

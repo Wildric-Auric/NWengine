@@ -1,15 +1,15 @@
-#include "TextHandler.h"
+#include "Text.h"
 #include "Transform.h"
 #include "Sprite.h"
 #include "Utilities.h"
 #include "Scene.h"
 
 #define MAX_BIT_10 1023.0
-TextHandler::TextHandler(GameObject* go) {
+Text::Text(GameObject* go) {
 	this->attachedObj = go;
 };
 
-void TextHandler::Update() {
+void Text::Update() {
 	float x = this->position.x;
 	uint32 temp  = (uint32)(this->colors.g * MAX_BIT_10) | ((uint32)(this->colors.r * MAX_BIT_10) << 0xA);
 	uint32 temp0 = (uint32)(this->colors.a * MAX_BIT_10) | ((uint32)(this->colors.b * MAX_BIT_10) << 0xA);
@@ -26,13 +26,13 @@ void TextHandler::Update() {
 		transform->scale.y = this->scale.y;
 		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2) * transform->scale.x;
 		transform->position.y = this->position.y - (chr->glyph->size.y - chr->glyph->bearing.y - chr->glyph->size.y / 2) * transform->scale.y;
-		sprite->isBatched = this->isBatched;
+			
 		sprite->Update(); 
 		x += (chr->glyph->advance / 64 ) * transform->scale.x;
 	}
 }
 
-void TextHandler::UpdateGlyphs() {
+void Text::UpdateGlyphs() {
 	if (characters.size() < 1) 
 		characters.push_back(Character());
 
@@ -45,9 +45,10 @@ void TextHandler::UpdateGlyphs() {
 		iter->go.AddComponent<Transform>();
 		Sprite* sprite = iter->go.AddComponent<Sprite>();
 
-		iter->glyph = &this->font.charactersMap.find(c)->second;
+		iter->glyph = &this->font->charactersMap.find(c)->second;
 		sprite->SetShader(this->shader); //TODO::AddFunction to set shader by its pointer
-		sprite->isBatched = this->isBatched;
+		if (this->isBatched)
+			sprite->Batch();
 		sprite->SetTexture(&iter->glyph->texture);
 		sprite->container.UpdateSize(iter->glyph->size.x, iter->glyph->size.y);
 		++iter;
@@ -61,25 +62,30 @@ void TextHandler::UpdateGlyphs() {
 
 
 
-void* TextHandler::GetGameObject(){
+void* Text::GetGameObject(){
 	return (void*)this->attachedObj;
 }
-void  TextHandler::SetGameObject(void* go) {
+void  Text::SetGameObject(void* go) {
 	this->attachedObj = (GameObject*)go;
 }
 
-void TextHandler::SetFont(const std::string& path) {
+void Text::SetFont(const std::string& path) {
 	if (path == "")
 		return;
-	this->font.Delete();
-	this->font.LoadFont(path);
+	if (this->font != nullptr)
+		this->font->Delete();
+	Font loader;
+	FontIdentifier fid = path;
+	font = (Font*)loader.LoadFromFile(path.c_str(), &fid);
 	UpdateGlyphs();
 }
 
-int TextHandler::Serialize(std::fstream* data, int offset) {
+int Text::Serialize(std::fstream* data, int offset) {
+	FontIdentifier fid = GetIDWithAsset<Font*, FontIdentifier>(this->font);
+
 	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "TextHandler", 11, sizeBuffer);
-	WRITE_ON_BIN(data, &this->font.name[0], this->font.name.size(), sizeBuffer);
+	WRITE_ON_BIN(data, "Text", 11, sizeBuffer);
+	WRITE_ON_BIN(data, fid.c_str(),			fid.size(), sizeBuffer);
 	WRITE_ON_BIN(data, &this->shader[0] ,	this->shader.size(), sizeBuffer);
 	WRITE_ON_BIN(data, &this->isBatched,	sizeof(isBatched), sizeBuffer);
 	WRITE_ON_BIN(data, &position.x,			sizeof(position.x), sizeBuffer);
@@ -94,7 +100,7 @@ int TextHandler::Serialize(std::fstream* data, int offset) {
 	return 0;
 }
 //TODO::Make serialization functions for different basic datatypes?
-int TextHandler::Deserialize(std::fstream* data, int offset) {
+int Text::Deserialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0; 
 	char* fontTemp    = new char[512];
 	char* shaderTemp  = new char[512];
@@ -116,7 +122,7 @@ int TextHandler::Deserialize(std::fstream* data, int offset) {
 	std::string fontPath = std::string(fontTemp);
 	this->shader		 = std::string(shaderTemp);
 	this->text			 = std::string(textTemp);
-	this->SetFont(fontPath); //Calls implicitly UpdateGlyphs
+	this->SetFont(fontPath);
 
 	delete[] fontTemp;
 	delete[] shaderTemp;
@@ -124,13 +130,13 @@ int TextHandler::Deserialize(std::fstream* data, int offset) {
 	return 0;
 }
 
-TextHandler::~TextHandler() {
+Text::~Text() {
 	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
 		Sprite* sprite = chr->go.GetComponent<Sprite>();
-		sprite->isRendered = 0;
+		sprite->_isRendered = 0;
 	}
 	Scene::currentScene->ForceRenderStop();
-	this->font.Delete(); //Temporary
+	font->Delete(); //Temporary
 }
 
 

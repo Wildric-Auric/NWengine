@@ -21,31 +21,20 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 }
 
 Camera::Camera(GameObject* go) {
-	size = iVec2(Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
-	viewPortSize = size;
-	OrthorgraphicMat(projectionMatrix,  -(float)Context::NATIVE_WIDTH / 2.0f, (float)Context::NATIVE_WIDTH / 2.0f,
-									    -(float)Context::NATIVE_HEIGHT / 2.0f, (float)Context::NATIVE_HEIGHT / 2.0f);
-	position = Vector2<int>(0, 0);
-	fbo = FrameBuffer();
-
 	attachedObj = go;
+	position = Vector2<int>(0, 0);
 };
 
 void Camera::ChangeOrtho(float sizeX, float sizeY) {
 	if ((sizeX == size.x) && (sizeY == size.y)) return;
 	size.x         = sizeX;
 	size.y         = sizeY;
-
 	viewPortSize.x = sizeX;
 	viewPortSize.y = sizeY;
+
 	fbo.Delete();
-	fbo = FrameBuffer(sizeX, sizeY);
-
+	fbo.SetUp(size);
 	OrthorgraphicMat(projectionMatrix, -sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
-}
-
-void Camera::SetFilteringData(const TextureDataUpdate& texData) {
-		fbo.RenderedImage.UpdateTextureData(texData);
 }
 
 Camera* Camera::ActiveCamera = nullptr;

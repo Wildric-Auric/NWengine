@@ -1,18 +1,23 @@
-
 #pragma once
+
 #include <string>
-#include <map>
+#include <unordered_map>
+
 #include "Globals.h"
+#include "Asset.h"
 
-#define SHADER_DEFAULT		   "Ressources\\Shaders\\Textured.shader"
-#define SHADER_POST_PROCESSING "Ressources\\Shaders\\Textured.shader"
+struct ShaderText {
+	const char* vertex;
+	const char* fragment;
+};
 
-class Shader {
+
+typedef std::string ShaderIdentifier;
+
+class Shader : public Asset {
 	public:
-		unsigned int shaderProgram;
-		std::string name;
-
-		Shader(std::string path = SHADER_DEFAULT);
+		uint32            _glID         = 0;
+		ShaderIdentifier  _identifier;
 		void Use();
 		void SetMat4x4(const char* name, const float* value);
 		void SetUniform1f(const char* name, const float);
@@ -22,11 +27,17 @@ class Shader {
 		void SetUniformArrayf(const char* name, float* value, int size);
 		void SetUniformArrayi(const char* name, int* value, int size);
 
-		std::map<std::string, DataTypes> uniforms;
+		Asset* GetFromCache(void* identifier)											 override;
+		Asset* LoadFromFile(const char* path, void* identifier)						     override;
+		Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier)                     override;
 
-		static std::map<std::string, Shader> resList;
-		static std::pair<const char*, const char*> parseShader(const char* path);
 
 		void Delete();
+
+		void _GlGen(ShaderText*);
+
+		static ShaderText parseShader(const char* path);
+
+		NW_DECL_RES_LIST(ShaderIdentifier, Shader);
 };
 

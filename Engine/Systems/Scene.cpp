@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "GameObject.h"
-#include "RessourcesLoader.h"
 #include "ScriptManager.h"
 #include "Components.h"
 #include "Camera.h"
@@ -60,7 +59,7 @@ void Scene::Render(Sprite* sprite) {
 void Scene::ForceRenderStop() {
 	auto it = this->drawList.begin();
 	while (it != this->drawList.end()) {
-		if (((*it) == nullptr) || !(*it)->isRendered) {
+		if (((*it) == nullptr) || !(*it)->_isRendered) {
 			it = this->drawList.erase(it);
 			continue;
 		}
@@ -121,7 +120,7 @@ void Scene::Draw() {
 
 	while (it != drawList.begin()) {
 		--it;
-		if (!(*it)->isRendered) {
+		if (!(*it)->_isRendered) {
 			it = drawList.erase(it);
 			continue;
 		}

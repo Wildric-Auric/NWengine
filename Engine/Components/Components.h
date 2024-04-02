@@ -8,4 +8,4 @@
 #include "AudioEmitter.h"
 #include "AudioListener.h"
 #include "Animator.h"
-#include "TextHandler.h"
+#include "Text.h"

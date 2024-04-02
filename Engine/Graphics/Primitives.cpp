@@ -2,7 +2,6 @@
 #include "Primitives.h"
 #include "Shader.h"
 #include "Globals.h"
-#include "RessourcesLoader.h"
 #include "Camera.h"
 
 QuadInternal QuadInternal::quadInstance = QuadInternal(0);

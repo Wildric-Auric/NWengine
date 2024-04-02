@@ -18,7 +18,7 @@
 
 class Serialized {
 public:
-	Serialized(){};
+	Serialized() {};
 	int virtual Serialize(std::fstream* data, int offset) { return -1; }
 	int virtual Deserialize(std::fstream* data, int offset) { return -1; }
 };

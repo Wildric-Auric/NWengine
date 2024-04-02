@@ -1,38 +1,54 @@
 
 #pragma once
 #include "GameObject.h"
-#include "RessourcesLoader.h"
+#include "Shader.h"
+#include "Texture.h"
+
+
+
 
 #include "Primitives.h"
 
+enum BatchType {
+	UNBATCHED,
+	STATIC_BATCH  = 1,
+	DYNAMIC_BATCH = 2
+};
+
+
 class Sprite : public GameComponent {
 private:
-	uint32 lastSortingLayer = 0;
-	bool   shouldDraw		= 1;
 public:
 	static std::string GetType() { return "Sprite"; };
-	Texture* texture = &Texture::resList[TEXTURE_DEFAULT];
+	TextureIdentifier _texId{};
+	Texture* texture  = nullptr;
 
-	bool isBatched   = 0;
-	bool isRendered	 = 1;
+	BatchType _isBatched        = BatchType::UNBATCHED;
+	uint32    _lastSortingLayer = 0;
+	bool      _shouldDraw		= 1;
+	bool      _isRendered	    = 1;
 
 	fVec3 vertexAttributes; //TODO::Find better place for these variabels
-	Sprite() {};
+	Shader* shader         = nullptr;
+	Quad container; //Readonly
+	GameObject* attachedObj = nullptr;
+	uint32 sortingLayer		= 0; //ReadOnly
+	double zbuffer			= 1.0; //ReadOnly
+
+	Sprite()                = default;
 	Sprite(GameObject* go);
 	~Sprite();
-	Shader* shader = &Shader::resList[SHADER_DEFAULT];
-	Quad container = Quad(Texture::resList[TEXTURE_DEFAULT].size.x, Texture::resList[TEXTURE_DEFAULT].size.y); //ReadOnly
-	GameObject* attachedObj;
-	uint32 sortingLayer = 0; //ReadOnly
-	double zbuffer = 1.0; //ReadOnly
 
-	void SetTexture(std::string path, bool alpha = 1, bool repeat = 0);
+	void SetTexture(std::string path, bool alpha = 1);
 	void SetTexture(Texture* tex);
 	void SetShader(std::string path);
 	void SetSortingLayer(uint32 order);
 
 	void Render();
 	void StopRendering();
+
+	void Batch(BatchType type = BatchType::DYNAMIC_BATCH);
+	void UnBatch();
 
 	void Update() override;
 	static std::map<GameObject*, Sprite> componentList;
@@ -42,4 +58,6 @@ public:
 
 	void  SetGameObject(void* go)  override;
 	void* GetGameObject()		   override;
+
+	static unsigned int DefaultSpriteDrawCallback(void*);
 };

@@ -1,8 +1,6 @@
 #include "NWengine.h"
 
 #define NW_CALL_EX(locatinon) for (void(*func)() : functionMap[locatinon]) func();
-
-
 std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
 
 
@@ -15,9 +13,9 @@ NW_PREFIX int NWengineInit() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitBegin)
 	
 	//init InitSoundSystem
-	if (!SoundSystem::InitOpenAL()) { NW_LOG_ERROR("Could not init audio engine");return -1; }
+	if (!Sound::Init()) { NW_LOG_ERROR("Could not init audio engine");return -1; }
 	//init Text System
-	if (!TextSystem::Init())
+	if (!Font::Init())
 		return -1;
 	Primitives::Init();
 	//Context settings
@@ -56,12 +54,12 @@ NW_PREFIX void NWengineLoop() {
 
 NW_PREFIX void NWengineShutdown() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::Destroy)
-	SoundSystem::DestroyOpenAL();
+	Scene::Destroy();
+	Sound::Destroy();
 	Renderer::Destroy();
-	TextSystem::Destroy();
 	Primitives::Destroy();
 	Context::Destroy();
-	Scene::Destroy();
+	Font::Destroy();
 }
 
 NW_PREFIX bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {

@@ -6,7 +6,7 @@
 
 class Renderer {
 public:
-	Renderer(const std::string& shaderPath = SHADER_POST_PROCESSING);
+	Renderer(const std::string& shaderPath);
 	~Renderer();
 
 	std::string shaderName;

@@ -13,8 +13,6 @@ Script::Script(GameObject* attachedObj) {
 	this->attachedObj = attachedObj;
 }
 
-
-
 void Script::Start() {
 	if (this->script == nullptr) return;
 	this->script->Start();

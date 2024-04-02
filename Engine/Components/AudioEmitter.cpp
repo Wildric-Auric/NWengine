@@ -9,18 +9,42 @@ AudioEmitter::AudioEmitter(GameObject* attachedObj) {
 }
 
 AudioEmitter::~AudioEmitter() {
-	delete this->sound;
-	this->sound = nullptr;
+	if (sound != nullptr) {
+		sound->Delete();
+		sound = nullptr;
+	}
 	AudioEmitter::componentList.erase(this->attachedObj);
+}
+
+void AudioEmitter::SetSound(const std::string& path) {
+	if (sound != nullptr) {
+		sound->Delete();
+		sound = nullptr;
+	}
+	Sound loader;
+	SoundIdentifier id = {path, (uint64)this};
+	sound = (Sound*)loader.LoadFromFile(path.c_str(), &id); //TODO::Make buffer shared across multiple 'sounds'
+}
+
+void AudioEmitter::SetSound(const Sound* snd) {
+	if (sound != nullptr) {
+		sound->Delete();
+		sound = nullptr;
+	}
+	Sound loader;
+	SoundIdentifier id = { "", (uint64)this};
+	sound = (Sound*)loader.LoadFromBuffer((void*)&snd->_buffID, &id);
 }
 
 
 int AudioEmitter::Serialize(std::fstream* data, int offset)	{
+	SoundIdentifier id = GetIDWithAsset<Sound*, SoundIdentifier>(sound);
+
 	int sizeBuffer = 0;
 	WRITE_ON_BIN(data, "AudioEmitter", 12, sizeBuffer);
 
-	if (this->sound == nullptr) { WRITE_ON_BIN(data, "", 0, sizeBuffer);}
-	else { WRITE_ON_BIN(data, this->sound->name.c_str(), this->sound->name.size(), sizeBuffer); }
+	if (this->sound == nullptr ) { WRITE_ON_BIN(data, "", 0, sizeBuffer);}
+	else { WRITE_ON_BIN(data, id.path.c_str(), id.path.size(), sizeBuffer); }
 
 	WRITE_ON_BIN(data, &this->volume,    sizeof(this->volume)  , sizeBuffer);
 	WRITE_ON_BIN(data, &this->frequency, sizeof(this->frequency), sizeBuffer);
@@ -30,13 +54,14 @@ int AudioEmitter::Serialize(std::fstream* data, int offset)	{
 
 int AudioEmitter::Deserialize(std::fstream* data, int offset) {
 	int  sizeBuffer = 0;
-
 	//Deserializing sound
 	char* temp = new char[512];
 	READ_FROM_BIN(data, temp, sizeBuffer);
 	temp[sizeBuffer] = '\0';
 	if (strlen(temp) != 0) {
-		this->sound = new Sound(temp);
+		Sound loader;
+		SoundIdentifier sndID{ temp, (uint64)this};
+		this->sound = (Sound*)loader.LoadFromFile(temp, &sndID);
 	}
 	delete[] temp;
 

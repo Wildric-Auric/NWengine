@@ -20,7 +20,7 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/GLEW/include",
                         "%{prj.location}/dependencies/GLFW/include",
                         "%{prj.location}/dependencies/vendor",
-                        "%{prj.location}/dependencies/IRRKLANG/include",
+                        "%{prj.location}/dependencies/SND/include",
                         "%{prj.location}/dependencies/freetype/include",
                         "%{prj.location}/dependencies/OPENAL/include",
                         "%{prj.location}/Engine/**",
@@ -42,7 +42,7 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/GLEW/include",
                         "%{prj.location}/dependencies/GLFW/include",
                         "%{prj.location}/dependencies/vendor",
-                        "%{prj.location}/dependencies/IRRKLANG/include",
+                        "%{prj.location}/dependencies/SND/include",
                         "%{prj.location}/dependencies/freetype/include",
                         "%{prj.location}/dependencies/OPENAL/include",
                         "%{prj.location}/dependencies/SND/include",
@@ -60,12 +60,12 @@ workspace "NWengine"
                         "dwmapi.lib"
                     }
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
-
+                    
     workspace "*"
         libdirs { 
                         "%{wks.location}/dependencies/GLFW/lib-vc2019",
                         "%{wks.location}/dependencies/GLEW/lib/Release/Win32",
-                        "%{wks.location}/dependencies/IRRKLANG/lib/Win32-visualStudio",
+
                         "%{wks.location}/dependencies/freetype/lib/win32",
                         "%{wks.location}/dependencies/SND/lib",
                         "%{wks.location}/dependencies/OPENAL/win32"

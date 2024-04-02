@@ -1,10 +1,12 @@
 #pragma once
 #include "Globals.h"
-#include "Serialized.h"
+#include "Serialization.h"
 
 #include <map>
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
+
+typedef unsigned int (*DrawCallback)(void*);
 
 class GameComponent: public Serialized { //I've tried to do multiple inheritance on subclass of GameComponent 
 										//but casting from GameComponent* to GuiObject* messes up virtual functions, I will read more about it
@@ -23,13 +25,19 @@ private:
 public:
 	std::map<std::string, GameComponent*> components;
 	//int id;  //ReadOnly
-	std::string name  = "new GameObject"; //Read only see Rename function;
+	std::string name	   = "new GameObject"; //Read only see Rename function;
 	//identifier
-	uint32 id = 0;
-	uint32 Draw(int8 textureSlot = 0);  //Returns layer in which it has been drawn
+	uint32 id			   = 0;
+	//Draw callback, will be called at each Draw call
+	DrawCallback _drawProc = nullptr;
+	//Constructors
     GameObject();
 	GameObject(const GameObject& other);
 	~GameObject();
+
+	//Functions
+	uint32 Draw();  //Returns layer in which it has been drawn
+	void SetDrawCallback(DrawCallback);
 	void DeleteComponent(std::string typeName);
 	void DeleteComponents();
 

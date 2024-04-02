@@ -5,17 +5,21 @@
 #ifndef NW_GAME_BUILD
 #include "Utilities.h"
 #endif
+//TODO::Change this to use only embeded shaders
+#define DEFAULT_RENDERER_SHADER "Ressources/Shaders/Textured.shader"
 
 //TODO::Default constructor creates the gameobject
-
 Renderer::Renderer(const std::string& shaderPath) {
 	this->shaderName = shaderPath;
 }
 
 void Renderer::SetUp() {
+	Sprite* spr;
+	spr = componentContainer.AddComponent<Sprite>();
 	componentContainer.AddComponent<Transform>();
-	componentContainer.AddComponent<Sprite>();
 	componentContainer.AddComponent<Camera>();
+
+	spr->SetShader(DEFAULT_RENDERER_SHADER);
 }
 
 void Renderer::SetShader(const std::string& shaderPath) {
@@ -36,7 +40,7 @@ void Renderer::DrawOnDefaultFrame() {
 	//Adding or getting components
 	
 	Camera* cam = componentContainer.AddComponent<Camera>();
-	Sprite* sprite = componentContainer.AddComponent<Sprite>();
+	Sprite* sprite = componentContainer.GetComponent<Sprite>();
 
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
@@ -45,13 +49,12 @@ void Renderer::DrawOnDefaultFrame() {
 	if (target == nullptr)
 		return; //TODO::Show Blank image instead
 
-	sprite->container.UpdateSize(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
-	cam->ChangeOrtho(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
+	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
+	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
 	cam->Update();
 	//Setting sprite texture
-	sprite->SetTexture(&target->fbo.RenderedImage);
-	if (sprite->shader->name != shaderName)
-		sprite->SetShader(shaderName);
+	sprite->SetTexture(&target->fbo.textureBuffer);
+	sprite->SetShader(shaderName);
 
 	cam->viewPortSize.x = cam->size.x * strechCoeff.x;
 	cam->viewPortSize.y = cam->size.y * strechCoeff.y;
@@ -78,13 +81,13 @@ void Renderer::CaptureOnCamFrame() {
 	if (target == nullptr)
 		return;
 	//TODO::Downscale the texture to which post processing shader is applied and then pass it to imgui
-	sprite->container.UpdateSize(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
-	cam->ChangeOrtho(target->fbo.RenderedImage.size.x, target->fbo.RenderedImage.size.y);
+	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
+	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
 	cam->Update();
 
 	//Setting srpite texture
-	sprite->SetTexture(&target->fbo.RenderedImage);
-	if (sprite->shader->name != shaderName)
+	sprite->SetTexture(&target->fbo.textureBuffer);
+	if (sprite->shader->_identifier != shaderName)
 		sprite->SetShader(shaderName);
 
 	Camera::ActiveCamera = cam;
@@ -128,8 +131,9 @@ Renderer* Renderer::operator()(bool captureOnDefaultFrame) {
 	return this;
 };
 
+
 void Renderer::Init() {
-	Renderer::defaultRenderer = new Renderer(); 
+	Renderer::defaultRenderer = new Renderer(DEFAULT_RENDERER_SHADER);
 	Renderer::defaultRenderer->SetUp();
 	Renderer::currentRenderer = Renderer::defaultRenderer;
 }
