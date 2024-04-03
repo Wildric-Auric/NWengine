@@ -23,13 +23,27 @@ void Sprite::SetTexture(std::string path, bool alpha) {
 
 void Sprite::SetTexture(Texture* tex) {
 	this->texture		 = tex;
-	this->texture->_size = tex->_size;
+}
+
+void Sprite::SetTexture(const Image* im, TextureIdentifierPtr id) {
+	Loader<Texture> l;
+	_texId = *(TextureIdentifier*)id;
+	texture = l.LoadFromBufferOrGetFromCache(id, (void*)im, id);
 	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
 void Sprite::SetShader(std::string path) {
-	Shader loader;
-	Sprite::shader = (Shader*)loader.LoadFromFileOrGetFromCache((void*)&path, path.c_str(), nullptr);
+	Loader<Shader> l;
+	Sprite::shader = l.LoadFromFileOrGetFromCache((void*)&path, path.c_str(), nullptr);
+}
+
+void Sprite::SetShader(const ShaderText& st, ShaderIdentifier* id) {
+		Loader<Shader> l;
+		shader = l.LoadFromBufferOrGetFromCache(id, (void*)&st, id);
+}
+
+void Sprite::SetShader(Shader* s) {
+	shader = s;
 }
 
 void Sprite::SetSortingLayer(uint32 order) {

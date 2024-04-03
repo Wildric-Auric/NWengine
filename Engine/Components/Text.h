@@ -1,10 +1,10 @@
 #pragma once
 #include "Font.h"
 #include "GameObject.h"
+#include "Shader.h"
 #include <list>
 
 #define FONT_DEFAULT			"Ressources\\Fonts\\arial.ttf"
-#define SHADER_TEXT_DEFAULT		"Ressources\\Shaders\\TextBasicBatched.shader"
 
 class Text : public GameComponent {
 public:
@@ -18,13 +18,14 @@ public:
 	void* GetGameObject()					override;
 	void  SetGameObject(void* go)			override;
 	void  UpdateGlyphs();
-	void  SetFont(const std::string& path);
+	void  SetFont(const std::string& path, Shader*);
+	void  SetShader(Shader*);
 	std::list<Character> characters;
 
+	Shader* _shader    = nullptr;
 	Font* font		   = nullptr;
 	std::string text   = "";
-	std::string shader = SHADER_TEXT_DEFAULT;
-	bool isBatched = 1;
+	bool isBatched     = 1;
 	Vector4<float> colors = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f); //Each color is 10 bits
 
 	fVec2 position = fVec2(0.0f, 0.0f);

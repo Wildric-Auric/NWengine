@@ -29,6 +29,11 @@ void Script::Update() {
 #endif
 }
 
+//void Script::SetScript(Scriptable* scr) {
+//	this->script = scr;
+//}
+
+
 int Script::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
 	WRITE_ON_BIN(data, "Script", 6, sizeBuffer);
@@ -75,7 +80,6 @@ void Scriptable::ShaderCode(void* sprite) {
 
 	sprite0->shader->Use();
 	sprite0->shader->SetUniform1i("uTex0", 0);
-	sprite0->shader->SetVector2("uResolution", (float)Context::NATIVE_WIDTH, (float)Context::NATIVE_HEIGHT);
 	Matrix4<float> model(1.0f);
 	ScaleMat(model, fVec3(scale.x * sprite0->container.width, scale.y * sprite0->container.height, 1.0f));
 	RotateMat(model, transform->rotation, fVec3(0.0f, 0.0f, 1.0f));

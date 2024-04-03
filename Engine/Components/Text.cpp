@@ -32,6 +32,10 @@ void Text::Update() {
 	}
 }
 
+void Text::SetShader(Shader* s) {
+	_shader = s;
+}
+
 void Text::UpdateGlyphs() {
 	if (characters.size() < 1) 
 		characters.push_back(Character());
@@ -46,7 +50,7 @@ void Text::UpdateGlyphs() {
 		Sprite* sprite = iter->go.AddComponent<Sprite>();
 
 		iter->glyph = &this->font->charactersMap.find(c)->second;
-		sprite->SetShader(this->shader); //TODO::AddFunction to set shader by its pointer
+		sprite->SetShader(_shader); //TODO::AddFunction to set shader by its pointer
 		if (this->isBatched)
 			sprite->Batch();
 		sprite->SetTexture(&iter->glyph->texture);
@@ -69,64 +73,65 @@ void  Text::SetGameObject(void* go) {
 	this->attachedObj = (GameObject*)go;
 }
 
-void Text::SetFont(const std::string& path) {
+void Text::SetFont(const std::string& path, Shader* shader) {
 	if (path == "")
 		return;
 	if (this->font != nullptr)
 		this->font->Clean();
 	Font loader;
 	FontIdentifier fid = path;
-	font = (Font*)loader.LoadFromFile(path.c_str(), &fid);
+	font = (Font*)loader.LoadFromFileOrGetFromCache(&fid, path.c_str(), &fid);
+	_shader = shader;
 	UpdateGlyphs();
 }
 
 int Text::Serialize(std::fstream* data, int offset) {
-	FontIdentifier fid = GetIDWithAsset<Font*, FontIdentifier>(this->font);
+	//FontIdentifier fid = GetIDWithAsset<Font*, FontIdentifier>(this->font);
 
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "Text", 11, sizeBuffer);
-	WRITE_ON_BIN(data, fid.c_str(),			fid.size(), sizeBuffer);
-	WRITE_ON_BIN(data, &this->shader[0] ,	this->shader.size(), sizeBuffer);
-	WRITE_ON_BIN(data, &this->isBatched,	sizeof(isBatched), sizeBuffer);
-	WRITE_ON_BIN(data, &position.x,			sizeof(position.x), sizeBuffer);
-	WRITE_ON_BIN(data, &position.y,			sizeof(position.x), sizeBuffer);
-	WRITE_ON_BIN(data, &scale.x,			sizeof(scale.x), sizeBuffer);
-	WRITE_ON_BIN(data, &scale.y,			sizeof(scale.y), sizeBuffer);
-	WRITE_ON_BIN(data, &colors.r,			sizeof(colors.r), sizeBuffer);
-	WRITE_ON_BIN(data, &colors.g,			sizeof(colors.g), sizeBuffer);
-	WRITE_ON_BIN(data, &colors.b,			sizeof(colors.b), sizeBuffer);
-	WRITE_ON_BIN(data, &colors.a,			sizeof(colors.a), sizeBuffer);
-	WRITE_ON_BIN(data, &this->text[0],		this->text.size(), sizeBuffer);
+	//int sizeBuffer = 0;
+	//WRITE_ON_BIN(data, "Text", 11, sizeBuffer);
+	//WRITE_ON_BIN(data, fid.c_str(),			fid.size(), sizeBuffer);
+	//WRITE_ON_BIN(data, &this->shader[0] ,	this->shader.size(), sizeBuffer);
+	//WRITE_ON_BIN(data, &this->isBatched,	sizeof(isBatched), sizeBuffer);
+	//WRITE_ON_BIN(data, &position.x,			sizeof(position.x), sizeBuffer);
+	//WRITE_ON_BIN(data, &position.y,			sizeof(position.x), sizeBuffer);
+	//WRITE_ON_BIN(data, &scale.x,			sizeof(scale.x), sizeBuffer);
+	//WRITE_ON_BIN(data, &scale.y,			sizeof(scale.y), sizeBuffer);
+	//WRITE_ON_BIN(data, &colors.r,			sizeof(colors.r), sizeBuffer);
+	//WRITE_ON_BIN(data, &colors.g,			sizeof(colors.g), sizeBuffer);
+	//WRITE_ON_BIN(data, &colors.b,			sizeof(colors.b), sizeBuffer);
+	//WRITE_ON_BIN(data, &colors.a,			sizeof(colors.a), sizeBuffer);
+	//WRITE_ON_BIN(data, &this->text[0],		this->text.size(), sizeBuffer);
 	return 0;
 }
 //TODO::Make serialization functions for different basic datatypes?
 int Text::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0; 
-	char* fontTemp    = new char[512];
-	char* shaderTemp  = new char[512];
-	char* textTemp    = new char[512];
+	//int sizeBuffer = 0; 
+	//char* fontTemp    = new char[512];
+	//char* shaderTemp  = new char[512];
+	//char* textTemp    = new char[512];
 
-	READ_FROM_BIN(data, fontTemp, sizeBuffer);				fontTemp[sizeBuffer]    = '\0';
-	READ_FROM_BIN(data, shaderTemp, sizeBuffer);			shaderTemp[sizeBuffer] =  '\0';
-	READ_FROM_BIN(data, &this->isBatched	, sizeBuffer);
-	READ_FROM_BIN(data, &position.x			, sizeBuffer);
-	READ_FROM_BIN(data, &position.y			, sizeBuffer);
-	READ_FROM_BIN(data, &scale.x     		, sizeBuffer);
-	READ_FROM_BIN(data, &scale.y			, sizeBuffer);
-	READ_FROM_BIN(data, &colors.r			, sizeBuffer);
-	READ_FROM_BIN(data, &colors.g			, sizeBuffer);
-	READ_FROM_BIN(data, &colors.b			, sizeBuffer);
-	READ_FROM_BIN(data, &colors.a			, sizeBuffer);
-	READ_FROM_BIN(data, textTemp			, sizeBuffer);  textTemp[sizeBuffer]  = '\0';
+	//READ_FROM_BIN(data, fontTemp, sizeBuffer);				fontTemp[sizeBuffer]    = '\0';
+	//READ_FROM_BIN(data, shaderTemp, sizeBuffer);			shaderTemp[sizeBuffer] =  '\0';
+	//READ_FROM_BIN(data, &this->isBatched	, sizeBuffer);
+	//READ_FROM_BIN(data, &position.x			, sizeBuffer);
+	//READ_FROM_BIN(data, &position.y			, sizeBuffer);
+	//READ_FROM_BIN(data, &scale.x     		, sizeBuffer);
+	//READ_FROM_BIN(data, &scale.y			, sizeBuffer);
+	//READ_FROM_BIN(data, &colors.r			, sizeBuffer);
+	//READ_FROM_BIN(data, &colors.g			, sizeBuffer);
+	//READ_FROM_BIN(data, &colors.b			, sizeBuffer);
+	//READ_FROM_BIN(data, &colors.a			, sizeBuffer);
+	//READ_FROM_BIN(data, textTemp			, sizeBuffer);  textTemp[sizeBuffer]  = '\0';
 
-	std::string fontPath = std::string(fontTemp);
-	this->shader		 = std::string(shaderTemp);
-	this->text			 = std::string(textTemp);
-	this->SetFont(fontPath);
+	//std::string fontPath = std::string(fontTemp);
+	//this->shader		 = std::string(shaderTemp);
+	//this->text			 = std::string(textTemp);
+	//this->SetFont(fontPath);
 
-	delete[] fontTemp;
-	delete[] shaderTemp;
-	delete[] textTemp;
+	//delete[] fontTemp;
+	//delete[] shaderTemp;
+	//delete[] textTemp;
 	return 0;
 }
 

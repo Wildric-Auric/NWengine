@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "image.h"
 
 
 
@@ -40,8 +41,11 @@ public:
 	~Sprite();
 
 	void SetTexture(std::string path, bool alpha = 1);
+	void SetTexture(const Image*, TextureIdentifierPtr);
 	void SetTexture(Texture* tex);
 	void SetShader(std::string path);
+	void SetShader(const ShaderText& st, ShaderIdentifier* id);
+	void SetShader(Shader* shader);
 	void SetSortingLayer(uint32 order);
 
 	void Render();

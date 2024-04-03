@@ -35,6 +35,12 @@ public:
 	Scriptable* script = nullptr;
 	void Start()  override;
 	void Update() override;
+
+	template<typename T>
+	void SetScript() {
+		delete script;
+		script = new T(this->attachedObj);
+	}
 	int Serialize(std::fstream* data, int offset) override;
 	int Deserialize(std::fstream* data, int offset) override;
 
