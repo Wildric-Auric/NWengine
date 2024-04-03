@@ -8,8 +8,15 @@ Asset* Asset::LoadFromFileOrGetFromCache(void* identifier,
 	Asset* ret = GetFromCache(identifier);
 	if (ret != nullptr)
 		return ret;
-	LoadFromFile(path, identifier);
+	return LoadFromFile(path, identifier);
 
+}
+
+Asset* Asset::LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void* data) {
+	Asset* ret = GetFromCache(identifier);
+	if (ret != nullptr)
+		return ret;
+	return LoadFromBuffer(buffer, data);
 }
 
 Asset*   Asset::LoadFromFile(const char* path, void* output) { return nullptr;}

@@ -11,7 +11,30 @@ public:
 	virtual Asset*  LoadFromFileOrGetFromCache(void* identifier, const char* path, void* data);
 	virtual Asset*  LoadFromFile(const char* path, void* data = nullptr);
 	virtual Asset*  LoadFromBuffer(void* buffer, void* data);
+	virtual Asset*  LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void* data);
 	virtual void    Clean();
+};
+
+template<typename T>
+class Loader {
+private: 
+	T _asset;
+public:
+	T* GetFromCache(void* identifier) { 
+		return (T*)_asset.GetFromCache(); 
+	}
+	T* LoadFromFileOrGetFromCache(void* identifier, const char* path, void* data) {
+		return (T*)_asset.LoadFromFileOrGetFromCache(identifier, path, data);
+	}
+	T* LoadFromFile(const char* path, void* data = nullptr) {
+		return (T*)_asset.LoadFromFile(path, data);
+	}
+	T* LoadFromBuffer(void* buffer, void* data) {
+		return (T*)_asset.LoadFromBuffer(buffer, data);
+	}	
+	T* LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void* data) {
+		return (T*)_asset.LoadFromBufferOrGetFromCache(identifier, buffer, data);
+	}
 };
 
 template<typename T, typename T_Identifier> 
@@ -52,3 +75,4 @@ void hashCombine(size_t& s, const T& v)
 	std::hash<T> h;
 	s ^= h(v) + 0x9e3779b9 + (s << 6) + (s >> 2);
 };
+
