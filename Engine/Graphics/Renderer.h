@@ -4,19 +4,21 @@
 #include "Maths.h"
 #include "Camera.h"
 
+
 class Renderer {
 public:
+	Renderer() = default;
 	Renderer(const std::string& shaderPath);
 	~Renderer();
 
-	std::string shaderName;
 	GameObject  componentContainer = GameObject();
 	Camera*     target			   = nullptr; 
-	fVec2 strechCoeff			   = fVec2(1.0f, 1.0f);
-	//Intended to be used as decorator; Sobel(Blur(), 1) would update renderer, called Blur, camera  and then use 
-	// its framebuffer to draw it using Sobel renderer
-	// captureOnDefaultFrame is a boolean indicating if we should draw on the the default framebuffer on camera framebuffer
-	//TODO::Test this
+	fVec2		stretchCoeff		   = fVec2(1.0f, 1.0f);
+	/*
+		Intended to be used as decorator; Sobel(Blur(), 1) would update renderer, called Blur, camera and then use
+		its framebuffer to draw it using Sobel renderer
+		captureOnDefaultFrame is a boolean indicating if we should draw on the the default framebuffer on camera framebuffer
+	*/
 	Renderer* operator()(Renderer* renderer, bool captureOnDefaultFrame = 0);
 	Renderer* operator()(bool captureOnDefaultFrame = 0);
 

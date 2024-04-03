@@ -25,7 +25,6 @@ private:
 	NW_FT_Face face  = nullptr;
 public:
 	std::unordered_map<char, Glyph> charactersMap;
-	std::string name = "";
 
 	Font()  = default;
 	bool LoadFont(std::string path);

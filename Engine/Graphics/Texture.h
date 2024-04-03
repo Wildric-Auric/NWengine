@@ -4,9 +4,6 @@
 
 #include<unordered_map>
 
-#define TEXTURE_DEFAULT "Ressources\\Images\\DefaultBox100x100.png"
-
-
 typedef void* TextureIdentifierPtr;
 //Input may be given by user in constructor
 struct TextureIdentifier {

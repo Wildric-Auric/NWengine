@@ -55,6 +55,8 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->texture._size.x = f->glyph->bitmap.width;
 		character->texture._size.y = f->glyph->bitmap.rows;
 		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R);
+		character->texture.SetMinFilter(NW_NEAREST_MIPMAP_LINEAR);
+		character->texture.SetMaxFilter(NW_LINEAR);
 
 		character->size.x = f->glyph->bitmap.width;
 		character->size.y = f->glyph->bitmap.rows;

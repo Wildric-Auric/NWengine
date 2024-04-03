@@ -5,27 +5,20 @@
 #ifndef NW_GAME_BUILD
 #include "Utilities.h"
 #endif
-//TODO::Change this to use only embeded shaders
-#define DEFAULT_RENDERER_SHADER "Ressources/Shaders/Textured.shader"
+#include "DefaultAssets.h"
+
 
 //TODO::Default constructor creates the gameobject
-Renderer::Renderer(const std::string& shaderPath) {
-	this->shaderName = shaderPath;
-}
-
 void Renderer::SetUp() {
 	Sprite* spr;
 	spr = componentContainer.AddComponent<Sprite>();
 	componentContainer.AddComponent<Transform>();
 	componentContainer.AddComponent<Camera>();
-
-	spr->SetShader(DEFAULT_RENDERER_SHADER);
+	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 }
 
 void Renderer::SetShader(const std::string& shaderPath) {
-	if (this->shaderName == shaderPath)
-		return;
-	this->shaderName = shaderPath;
+	this->componentContainer.GetComponent<Sprite>()->SetShader(shaderPath);
 }
 
 void Renderer::Use() {
@@ -54,10 +47,8 @@ void Renderer::DrawOnDefaultFrame() {
 	cam->Update();
 	//Setting sprite texture
 	sprite->SetTexture(&target->fbo.textureBuffer);
-	sprite->SetShader(shaderName);
-
-	cam->viewPortSize.x = cam->size.x * strechCoeff.x;
-	cam->viewPortSize.y = cam->size.y * strechCoeff.y;
+	cam->viewPortSize.x = cam->size.x * stretchCoeff.x;
+	cam->viewPortSize.y = cam->size.y * stretchCoeff.y;
 	Context::SetViewPort((Context::WINDOW_WIDTH  - cam->viewPortSize.x) * 0.5, 
 					     (Context::WINDOW_HEIGHT - cam->viewPortSize.y) * 0.5,
 				         cam->viewPortSize.x, cam->viewPortSize.y);
@@ -87,13 +78,11 @@ void Renderer::CaptureOnCamFrame() {
 
 	//Setting srpite texture
 	sprite->SetTexture(&target->fbo.textureBuffer);
-	if (sprite->shader->_identifier != shaderName)
-		sprite->SetShader(shaderName);
 
 	Camera::ActiveCamera = cam;
 
-	cam->viewPortSize.x = cam->size.x * strechCoeff.x;
-	cam->viewPortSize.y = cam->size.y * strechCoeff.y;
+	cam->viewPortSize.x = cam->size.x * stretchCoeff.x;
+	cam->viewPortSize.y = cam->size.y * stretchCoeff.y;
 
 	//Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	cam->fbo.Bind();
@@ -133,7 +122,7 @@ Renderer* Renderer::operator()(bool captureOnDefaultFrame) {
 
 
 void Renderer::Init() {
-	Renderer::defaultRenderer = new Renderer(DEFAULT_RENDERER_SHADER);
+	Renderer::defaultRenderer = new Renderer();
 	Renderer::defaultRenderer->SetUp();
 	Renderer::currentRenderer = Renderer::defaultRenderer;
 }
