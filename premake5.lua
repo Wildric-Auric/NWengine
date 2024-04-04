@@ -41,7 +41,6 @@ workspace "NWengine"
                       includedirs {
                         "%{prj.location}/",
                         "%{prj.location}/dependencies/GLEW/include",
-                        "%{prj.location}/dependencies/GLFW/include",
                         "%{prj.location}/dependencies/vendor",
                         "%{prj.location}/dependencies/SND/include",
                         "%{prj.location}/dependencies/freetype/include",
@@ -66,9 +65,7 @@ workspace "NWengine"
                     
     workspace "*"
         libdirs { 
-                        "%{wks.location}/dependencies/GLFW/lib-vc2019",
                         "%{wks.location}/dependencies/GLEW/lib/Release/Win32",
-
                         "%{wks.location}/dependencies/freetype/lib/win32",
                         "%{wks.location}/dependencies/SND/lib",
                         "%{wks.location}/dependencies/OPENAL/win32"
@@ -76,7 +73,6 @@ workspace "NWengine"
         filter "architecture:x86" 
             links {
                 "opengl32.lib",
-                "glfw3.lib",
                 "freetype.lib",
                 "OpenAL32.lib",
                 "libsndfile-1.lib",
