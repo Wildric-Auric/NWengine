@@ -1,7 +1,5 @@
 #include "Camera.h"
 #include "Scene.h"
-#include "imgui/imgui.h"
-
 
 void Camera::UpdateActiveCamera() {
 	if (Camera::ActiveCamera != nullptr) 

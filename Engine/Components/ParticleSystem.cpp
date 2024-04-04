@@ -3,7 +3,6 @@
 //However when particles start to be recycled the fps drops to 30, something wrong in cpu level; fix that
 #include "ParticleSystem.h"
 #include "Scene.h"
-#include "imgui/imgui.h"
 #include "Utilities.h"
 #include "NWTime.h"
 

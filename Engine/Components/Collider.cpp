@@ -1,7 +1,6 @@
 #include "Collider.h"
 #include "Maths.h"
 #include "Components.h"
-#include "imgui/imgui.h"
 
 Collider::Collider(GameObject* go) {
 	this->attachedObj = go;
