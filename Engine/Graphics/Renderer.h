@@ -4,40 +4,112 @@
 #include "Maths.h"
 #include "Camera.h"
 
-
+/**
+ * @brief The Renderer class is responsible for rendering GameObjects using a specified shader.
+ */
 class Renderer {
 public:
-	Renderer() = default;
-	Renderer(const std::string& shaderPath);
-	~Renderer();
+    /**
+     * @brief Default constructor for the Renderer class.
+     */
+    Renderer() = default;
 
-	GameObject  componentContainer = GameObject();
-	Camera*     target			   = nullptr; 
-	fVec2		stretchCoeff		   = fVec2(1.0f, 1.0f);
-	/*
-		Intended to be used as decorator; Sobel(Blur(), 1) would update renderer, called Blur, camera and then use
-		its framebuffer to draw it using Sobel renderer
-		captureOnDefaultFrame is a boolean indicating if we should draw on the the default framebuffer on camera framebuffer
-	*/
-	Renderer* operator()(Renderer* renderer, bool captureOnDefaultFrame = 0);
-	Renderer* operator()(bool captureOnDefaultFrame = 0);
+    /**
+     * @brief Constructor for the Renderer class that takes a shader path as input.
+     * @param shaderPath The path to the shader file.
+     */
+    Renderer(const std::string& shaderPath);
 
-	void DrawOnDefaultFrame();
-	void CaptureOnCamFrame();
-	//Make this renderer as current renderer
-	void Use();
-	//Make default renderer as current. Default renderer is managed by Core frontend or custom one
-	void Unuse();
-	void SetShader(const std::string& shaderPath);
-	//Add components to componentContainer
-	void SetUp();
+    /**
+     * @brief Destructor for the Renderer class.
+     */
+    ~Renderer();
 
-	//Sets up default renderer
-	static void Init();
-	static void Destroy();
+    /**
+     * @brief The container for the GameObject components.
+     */
+    GameObject componentContainer = GameObject();
 
-	static Renderer* defaultRenderer;
-	static Renderer* currentRenderer;
-	inline static std::string GetType() { return "Renderer"; }
+    /**
+     * @brief The target camera for rendering.
+     */
+    Camera* target = nullptr;
 
+    /**
+     * @brief The stretch coefficients for rendering.
+     */
+    fVec2 stretchCoeff = fVec2(1.0f, 1.0f);
+
+    /**
+     * @brief Operator overload for adding a renderer as a decorator.
+     * @param renderer The renderer to add as a decorator.
+     * @param captureOnDefaultFrame Boolean indicating if the renderer should capture on the default framebuffer.
+     * @return The modified renderer.
+     */
+    Renderer* operator()(Renderer* renderer, bool captureOnDefaultFrame = 0);
+
+    /**
+     * @brief Operator overload for adding a renderer as a decorator.
+     * @param captureOnDefaultFrame Boolean indicating if the renderer should capture on the default framebuffer.
+     * @return The modified renderer.
+     */
+    Renderer* operator()(bool captureOnDefaultFrame = 0);
+
+    /**
+     * @brief Draws on the default framebuffer.
+     */
+    void DrawOnDefaultFrame();
+
+    /**
+     * @brief Captures on the camera framebuffer.
+     */
+    void CaptureOnCamFrame();
+
+    /**
+     * @brief Sets this renderer as the current renderer.
+     */
+    void Use();
+
+    /**
+     * @brief Sets the default renderer as the current renderer.
+     *        The default renderer is managed by the Core frontend or a custom one.
+     */
+    void Unuse();
+
+    /**
+     * @brief Sets the shader for this renderer.
+     * @param shaderPath The path to the shader file.
+     */
+    void SetShader(const std::string& shaderPath);
+
+    /**
+     * @brief Adds components to the componentContainer.
+     */
+    void SetUp();
+
+    /**
+     * @brief Initializes the default renderer.
+     */
+    static void Init();
+
+    /**
+     * @brief Destroys the default renderer.
+     */
+    static void Destroy();
+
+    /**
+     * @brief The default renderer.
+     */
+    static Renderer* defaultRenderer;
+
+    /**
+     * @brief The current renderer.
+     */
+    static Renderer* currentRenderer;
+
+    /**
+     * @brief Gets the type of the Renderer class.
+     * @return The type of the Renderer class.
+     */
+    inline static std::string GetType() { return "Renderer"; }
 };

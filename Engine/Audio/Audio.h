@@ -1,67 +1,145 @@
+/**
+ * @file Audio.h
+ * @brief Contains the declaration of the Audio class and related structures.
+ */
+
 #pragma once
+
 #include <string>
 #include <unordered_map>
 #include "Globals.h"
 #include "Asset.h"
 
-
+/**
+ * @struct SoundIdentifier
+ * @brief Structure representing a sound identifier.
+ */
 struct SoundIdentifier {
-	std::string path;
-	uint64 runtimeID;	
+    std::string path; /**< The path of the sound file. */
+    uint64 runtimeID; /**< The runtime ID of the sound. */
 
-	bool operator==(const SoundIdentifier& other) const {
-		return path == other.path && runtimeID == other.runtimeID;
-	}
+    /**
+     * @brief Overloaded equality operator for comparing SoundIdentifier objects.
+     * @param other The SoundIdentifier object to compare with.
+     * @return True if the SoundIdentifier objects are equal, false otherwise.
+     */
+    bool operator==(const SoundIdentifier& other) const {
+        return path == other.path && runtimeID == other.runtimeID;
+    }
 };
 
-
+/**
+ * @struct std::hash<SoundIdentifier>
+ * @brief Hash function specialization for SoundIdentifier.
+ */
 template <>
-struct std::hash<SoundIdentifier>
-{
-	std::size_t operator()(const SoundIdentifier& t) const
-	{
-		std::size_t res = 0;
-		hashCombine(res, t.path);
-		hashCombine(res, t.runtimeID);
-		return res;
-	}
+struct std::hash<SoundIdentifier> {
+    /**
+     * @brief Calculates the hash value for a SoundIdentifier object.
+     * @param t The SoundIdentifier object to calculate the hash value for.
+     * @return The calculated hash value.
+     */
+    std::size_t operator()(const SoundIdentifier& t) const {
+        std::size_t res = 0;
+        hashCombine(res, t.path);
+        hashCombine(res, t.runtimeID);
+        return res;
+    }
 };
 
-//TODO::Make this to avoid duplicate buffers
-//struct SoundBuffer {
-//	
-//	counter;
-//};
-
-
-
+/**
+ * @class Sound
+ * @brief Represents a sound asset.
+ */
 class Sound : Asset {
 public:
-	uint32 _buffID = 0;
-	uint32 _source = 0;
-	
-	float volume    = 1.0f;
-	float frequency = 1.0f;
-	bool  isLooping = 0;
-	bool  isPlaying = 0;
+    uint32 _buffID = 0; /**< The buffer ID of the sound. */
+    uint32 _source = 0; /**< The source ID of the sound. */
+    float volume = 1.0f; /**< The volume of the sound. */
+    float frequency = 1.0f; /**< The frequency of the sound. */
+    bool isLooping = false; /**< Flag indicating if the sound is looping. */
+    bool isPlaying = false; /**< Flag indicating if the sound is currently playing. */
 
-	Sound() = default;
-	void Play();
-	void SetVolume(float volume);
-	void SetFrequency(float frequency);
-	void SetLoop(bool loop);
-	void Stop();
-	bool HasFinished();
+    /**
+     * @brief Default constructor for the Sound class.
+     */
+    Sound() = default;
 
-	void Clean() override;
+    /**
+     * @brief Plays the sound.
+     */
+    void Play();
 
-	Asset* GetFromCache(void* id);
-	Asset* LoadFromFile(const char* path, void* id);
-	Asset* LoadFromBuffer(void* alBuffer, void* id);
+    /**
+     * @brief Sets the volume of the sound.
+     * @param volume The volume value to set.
+     */
+    void SetVolume(float volume);
 
-	NW_DECL_RES_LIST(SoundIdentifier, Sound);
-	static bool Init();
-	static void Destroy();
+    /**
+     * @brief Sets the frequency of the sound.
+     * @param frequency The frequency value to set.
+     */
+    void SetFrequency(float frequency);
 
+    /**
+     * @brief Sets whether the sound should loop or not.
+     * @param loop True to enable looping, false otherwise.
+     */
+    void SetLoop(bool loop);
+
+    /**
+     * @brief Stops the sound.
+     */
+    void Stop();
+
+    /**
+     * @brief Checks if the sound has finished playing.
+     * @return True if the sound has finished playing, false otherwise.
+     */
+    bool HasFinished();
+
+    /**
+     * @brief Cleans up the sound.
+     */
+    void Clean() override;
+
+    /**
+     * @brief Gets the sound asset from the cache.
+     * @param id The ID of the sound asset.
+     * @return The sound asset if found, nullptr otherwise.
+     */
+    Asset* GetFromCache(void* id);
+
+    /**
+     * @brief Loads the sound asset from a file.
+     * @param path The path of the sound file.
+     * @param id The ID of the sound asset.
+     * @return The loaded sound asset if successful, nullptr otherwise.
+     */
+    Asset* LoadFromFile(const char* path, void* id);
+
+    /**
+     * @brief Loads the sound asset from a buffer.
+     * @param alBuffer The OpenAL buffer.
+     * @param id The ID of the sound asset.
+     * @return The loaded sound asset if successful, nullptr otherwise.
+     */
+    Asset* LoadFromBuffer(void* alBuffer, void* id);
+
+    /**
+     * @brief Declares the resource list for SoundIdentifier and Sound.
+     */
+    NW_DECL_RES_LIST(SoundIdentifier, Sound);
+
+    /**
+     * @brief Initializes the Sound class.
+     * @return True if initialization is successful, false otherwise.
+     */
+    static bool Init();
+
+    /**
+     * @brief Destroys the Sound class.
+     */
+    static void Destroy();
 };
-

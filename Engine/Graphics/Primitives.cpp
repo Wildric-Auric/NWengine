@@ -6,6 +6,8 @@
 
 QuadInternal QuadInternal::quadInstance = QuadInternal(0);
 
+QuadInternal::QuadInternal(int a) {}
+
 QuadInternal::QuadInternal()
 {
     float vertices[] = {

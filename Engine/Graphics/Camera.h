@@ -2,39 +2,90 @@
 #include "GameObject.h"
 #include "FrameBuffer.h"
 #include "Maths.h"
+
+/**
+ * @brief The Camera class represents a camera in the game world.
+ */
 class Camera : public GameComponent {
 public:
-	static std::string GetType() { return "Camera"; }; 
-	//This static method calls capture on ActiveCamera if not null
-	static void UpdateActiveCamera();
+    /**
+     * @brief Gets the type of the camera.
+     * @return The type of the camera.
+     */
+    static std::string GetType() { return "Camera"; };
 
-	Matrix4<float> projectionMatrix;
-	Matrix4<float> viewMatrix = Matrix4<float>(1.0f);
+    /**
+     * @brief Updates the active camera.
+     *
+     * This static method calls capture on ActiveCamera if not null.
+     */
+    static void UpdateActiveCamera();
 
-	fVec2 size;
-	fVec2 viewPortSize;
-	fVec3 clearColor = fVec3(0.0,0.0, 0.0);
-	float alpha      = 1.0f;
-	bool isActive = 0;
-	GameObject* attachedObj = nullptr;
+    Matrix4<float> projectionMatrix; /**< The projection matrix of the camera. */
+    Matrix4<float> viewMatrix = Matrix4<float>(1.0f); /**< The view matrix of the camera. */
 
-	Camera() = default;
-	Camera(GameObject* go);
-	~Camera();
+    fVec2 size; /**< The size of the camera. */
+    fVec2 viewPortSize; /**< The viewport size of the camera. */
+    fVec3 clearColor = fVec3(0.0,0.0, 0.0); /**< The clear color of the camera. */
+    float alpha = 1.0f; /**< The alpha value of the camera. */
+    bool isActive = 0; /**< Indicates whether the camera is active or not. */
+    GameObject* attachedObj = nullptr; /**< The attached game object of the camera. */
 
-	void Capture();
-	void Update();
-	void ChangeOrtho(float sizeX, float sizeY);
-	void MoveTo(Vector2<int> target, float interpolationTime);
-	void Use();
-	fVec2 position = fVec2(0.0f,0.0f);
-	float rotation = 0.0f;
-	float zoom = 1.0;
+    /**
+     * @brief Default constructor for the Camera class.
+     */
+    Camera() = default;
 
-	FrameBuffer fbo;
+    /**
+     * @brief Constructor for the Camera class.
+     * @param go The game object to attach the camera to.
+     */
+    Camera(GameObject* go);
 
-	static Camera* ActiveCamera;
+    /**
+     * @brief Destructor for the Camera class.
+     */
+    ~Camera();
 
-	int Serialize(std::fstream* data, int offset)    override; 
-	int Deserialize(std::fstream* data, int offset)  override;
+    /**
+     * @brief Captures the camera.
+     */
+    void Capture();
+
+    /**
+     * @brief Updates the camera.
+     */
+    void Update();
+
+    /**
+     * @brief Changes the orthographic size of the camera.
+     * @param sizeX The new size along the X-axis.
+     * @param sizeY The new size along the Y-axis.
+     */
+    void ChangeOrtho(float sizeX, float sizeY);
+
+    /**
+     * @brief Moves the camera to the target position with interpolation.
+     * @param target The target position to move the camera to.
+     * @param interpolationTime The time taken for the interpolation.
+     */
+    void MoveTo(Vector2<int> target, float interpolationTime);
+
+    /**
+     * @brief Uses the camera.
+     */
+    void Use();
+
+    fVec2 position = fVec2(0.0f,0.0f); /**< The position of the camera. */
+    float rotation = 0.0f; /**< The rotation of the camera. */
+    float zoom = 1.0; /**< The zoom level of the camera. */
+
+    FrameBuffer fbo; /**< The frame buffer object of the camera. */
+
+    static Camera* ActiveCamera; /**< The active camera. */
+
+
+    int Serialize(std::fstream* data, int offset) override;
+
+    int Deserialize(std::fstream* data, int offset) override;
 };

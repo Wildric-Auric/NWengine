@@ -196,7 +196,7 @@ static uint8 imageDefaultBuff[] =  {
      W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
      W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
      W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     R,R,R,R,R,R,R,R,R,W,W,W,W,W,W,W
+     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W
 };
 
 const Image ImageDefault {

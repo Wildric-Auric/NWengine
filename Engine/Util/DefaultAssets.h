@@ -3,15 +3,52 @@
 #include "image.h"
 #include "Shader.h"
 
+/**
+ * @brief The default textured shader text.
+ */
 extern const ShaderText ShaderTexturedDefaultStr;
-extern const ShaderText ShaderTexturedBatchedDefaultStr;
-extern const ShaderText ShaderTextDefaultStr;
-extern const ShaderText ShaderTextBatchedStr;
-extern const Image	    ImageDefault;
 
+/**
+ * @brief The default batched textured shader text.
+ */
+extern const ShaderText ShaderTexturedBatchedDefaultStr;
+
+/**
+ * @brief The default shader text.
+ */
+extern const ShaderText ShaderTextDefaultStr;
+
+/**
+ * @brief The default batched shader text.
+ */
+extern const ShaderText ShaderTextBatchedStr;
+
+/**
+ * @brief The default image.
+ */
+extern const Image ImageDefault;
+
+/**
+ * @brief The default texture identifier.
+ */
 extern TextureIdentifier TextureDefaultID;
 
-extern ShaderIdentifier  ShaderTexturedDefaultID;
-extern ShaderIdentifier  ShaderTexturedBatchedDefaultID;
-extern ShaderIdentifier  ShaderTextDefaultID;
-extern ShaderIdentifier  ShaderTextBatchedDefaultID;
+/**
+ * @brief The default textured shader identifier.
+ */
+extern ShaderIdentifier ShaderTexturedDefaultID;
+
+/**
+ * @brief The default batched textured shader identifier.
+ */
+extern ShaderIdentifier ShaderTexturedBatchedDefaultID;
+
+/**
+ * @brief The default shader identifier.
+ */
+extern ShaderIdentifier ShaderTextDefaultID;
+
+/**
+ * @brief The default batched shader identifier.
+ */
+extern ShaderIdentifier ShaderTextBatchedDefaultID;

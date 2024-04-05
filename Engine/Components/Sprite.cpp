@@ -9,8 +9,6 @@ Sprite::Sprite(GameObject* obj) {
 	obj->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);
 };
 
-std::map<GameObject*, Sprite> Sprite::componentList;
-
 
 
 void Sprite::SetTexture(std::string path, bool alpha) {

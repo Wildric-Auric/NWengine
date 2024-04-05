@@ -1,4 +1,10 @@
+/**
+ * @file ParticleSystem.h
+ * @brief Defines the ParticleSystem class and related structures.
+ */
+
 #pragma once
+
 #include "GameObject.h"
 #include "Sprite.h"
 #include "Transform.h"
@@ -6,84 +12,138 @@
 #include "Interpolation.h"
 #include <deque>
 
+/**
+ * @def SHADER_PARTICLES_DEFAULT
+ * @brief The default shader for particles.
+ */
 #define SHADER_PARTICLES_DEFAULT  "Ressources\\Shaders\\ParticleBatched.shader"
+
+/**
+ * @def TEXTURE_PARTICLES_DEFAULT
+ * @brief The default texture for particles.
+ */
 #define TEXTURE_PARTICLES_DEFAULT "Ressources\\Images\\DefaultBox10x10.png"
 
+/**
+ * @struct ParticleProperties
+ * @brief Structure that holds the properties of a particle.
+ */
 struct ParticleProperties {
-	fVec2 absoluteStartPosition = fVec2(0.0f, 0.0f); //Read only; buffer of position  used to pass beginning absolute position to particle
-
-	float lifetime = 1.0f;
-	int lifedistance = 1000; //in pixels
-	//s stands for start and e for end; notice that position is relative to particle system position
-	fVec2 sPosition = fVec2(0.0f,0.0f); 
-	
-	BezierInterpolator       directionX = BezierInterpolator(0.0f, 0.0f, 0.0f);
-	BezierInterpolator       directionY = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	BezierInterpolator       scaleX	    = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	BezierInterpolator       scaleY     = BezierInterpolator(1.0f, 1.0f, 0.0f);	
-
-	BezierInterpolator       colorX     = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	BezierInterpolator       colorY     = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	BezierInterpolator       colorZ     = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	BezierInterpolator       colorA     = BezierInterpolator(1.0f, 1.0f, 0.0f);
-	
-	BezierInterpolator       speed      = BezierInterpolator(100.0f, 0.0f, 0.0f);
+    fVec2 absoluteStartPosition = fVec2(0.0f, 0.0f); /**< Read only; buffer of position used to pass beginning absolute position to particle */
+    float lifetime = 1.0f; /**< The lifetime of the particle */
+    int lifedistance = 1000; /**< The distance the particle can travel in pixels */
+    fVec2 sPosition = fVec2(0.0f, 0.0f); /**< The starting position of the particle relative to the particle system position */
+    BezierInterpolator directionX = BezierInterpolator(0.0f, 0.0f, 0.0f); /**< The X direction of the particle */
+    BezierInterpolator directionY = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The Y direction of the particle */
+    BezierInterpolator scaleX = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The X scale of the particle */
+    BezierInterpolator scaleY = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The Y scale of the particle */
+    BezierInterpolator colorX = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The X color of the particle */
+    BezierInterpolator colorY = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The Y color of the particle */
+    BezierInterpolator colorZ = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The Z color of the particle */
+    BezierInterpolator colorA = BezierInterpolator(1.0f, 1.0f, 0.0f); /**< The alpha color of the particle */
+    BezierInterpolator speed = BezierInterpolator(100.0f, 0.0f, 0.0f); /**< The speed of the particle */
 };
 
-class Particle {	
+/**
+ * @class Particle
+ * @brief Represents a particle.
+ */
+class Particle {
 private:
 public:
-	GameObject go;
-	Sprite* sprite;
-	Transform* transform;
-	bool isActive = 0;
-	ParticleProperties prop;
-	fVec2 currentPosition;
-	fVec2 currentScale;
-	float currentSpeed;
-	fVec4 currentColor;
-	fVec2 currentDirection;
+    GameObject go; /**< The game object associated with the particle */
+    Sprite* sprite; /**< The sprite of the particle */
+    Transform* transform; /**< The transform of the particle */
+    bool isActive = 0; /**< Indicates if the particle is active */
+    ParticleProperties prop; /**< The properties of the particle */
+    fVec2 currentPosition; /**< The current position of the particle */
+    fVec2 currentScale; /**< The current scale of the particle */
+    float currentSpeed; /**< The current speed of the particle */
+    fVec4 currentColor; /**< The current color of the particle */
+    fVec2 currentDirection; /**< The current direction of the particle */
+    double clock = 0.0; /**< The clock of the particle */
+    float distance = 0.0; /**< The distance traveled by the particle */
 
-	double clock = 0.0;
-	float distance = 0.0;
+    /**
+     * @brief Disables the particle.
+     */
+    void Disable();
 
-	void Disable();
-	void Enable();
+    /**
+     * @brief Enables the particle.
+     */
+    void Enable();
 };
 
-
+/**
+ * @class ParticleSystem
+ * @brief Represents a particle system.
+ */
 class ParticleSystem : public GameComponent {
 private:
-	double clock = 0.0;
+    double clock = 0.0; /**< The clock of the particle system */
 public:
-	static std::string GetType() { return "ParticleSystem"; };
+    static std::string GetType() { return "ParticleSystem"; };
 
-	GameObject* attachedObj = nullptr;
-	ParticleSystem() {};
-	~ParticleSystem();
-	ParticleSystem(GameObject* attachedObj);
-    static std::map<GameObject*, ParticleSystem> componentList;
+    GameObject* attachedObj = nullptr; /**< The attached game object */
+    ParticleSystem() {};
+    ~ParticleSystem();
+    ParticleSystem(GameObject* attachedObj);
 
-	bool isActive = true;
-	std::deque<Particle> pool;
-	std::deque<int> disabled;
-	std::deque<int> enabled;
-	int maxParticles = 100;
+    static std::map<GameObject*, ParticleSystem> componentList; /**< The list of particle systems */
 
-	double emissionFrequency = 1.0; //every emissionf Emission is called
-	uint16 emissionQuantity =  1;
-	int initNum = 5;
-	ParticleProperties prop;
-	bool recycle = 1;
-	std::string shader  =	SHADER_PARTICLES_DEFAULT;
-	std::string texture =   TEXTURE_PARTICLES_DEFAULT;
+    bool isActive = true; /**< Indicates if the particle system is active */
+    std::deque<Particle> pool; /**< The pool of particles */
+    std::deque<int> disabled; /**< The disabled particles */
+    std::deque<int> enabled; /**< The enabled particles */
+    int maxParticles = 100; /**< The maximum number of particles */
+    double emissionFrequency = 1.0; /**< The emission frequency */
+    uint16 emissionQuantity = 1; /**< The emission quantity */
+    int initNum = 5; /**< The initial number of particles */
+    ParticleProperties prop; /**< The properties of the particle system */
+    bool recycle = 1; /**< Indicates if particles should be recycled */
+    std::string shader = SHADER_PARTICLES_DEFAULT; /**< The shader for the particle system */
+    std::string texture = TEXTURE_PARTICLES_DEFAULT; /**< The texture for the particle system */
 
-	void Update();
-	void UpdateParticle(int index);
-	void Emit();
-	void Init();
-	void InitParticle();
+    /**
+     * @brief Updates the particle system.
+     */
+    void Update();
 
-	int  Serialize(std::fstream* data, int offset)   override; 
-	int  Deserialize(std::fstream* data, int offset) override;
+    /**
+     * @brief Updates a particle.
+     * @param index The index of the particle to update.
+     */
+    void UpdateParticle(int index);
+
+    /**
+     * @brief Emits particles.
+     */
+    void Emit();
+
+    /**
+     * @brief Initializes the particle system.
+     */
+    void Init();
+
+    /**
+     * @brief Initializes a particle.
+     */
+    void InitParticle();
+
+    /**
+     * @brief Serializes the particle system.
+     * @param data The data stream to serialize to.
+     * @param offset The offset in the data stream.
+     * @return The serialized size.
+     */
+    int Serialize(std::fstream* data, int offset) override;
+
+    /**
+     * @brief Deserializes the particle system.
+     * @param data The data stream to deserialize from.
+     * @param offset The offset in the data stream.
+     * @return The deserialized size.
+     */
+    int Deserialize(std::fstream* data, int offset) override;
 };
