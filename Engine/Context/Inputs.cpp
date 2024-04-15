@@ -37,7 +37,11 @@ bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) {
 
 void Inputs::Process(void* window0) {
 	window = (NWin::Window*)window0;
-	//glfwGetCursorPos(window, &mousePosX, &mousePosY); //TODO::LATER Should be added to NWin
+	NWin::Vec2 pos;
+	window->getMousePosition(pos);
+	Inputs::mousePosX = pos.x;
+	Inputs::mousePosY = pos.y;
+
 	usingJoystick = 0;
 	/*const unsigned char* buttons = 0;
 		if (usingJoystick) {
