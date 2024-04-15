@@ -31,7 +31,7 @@ void Scene::Rearrange(Sprite* sprite) {
 void Scene::Render(Sprite* sprite) {
 	//TODO::Make drawList a list of sprities not gameobjects
 	std::list<Sprite*>::iterator iter = drawList.begin();
-	uint32 layer = sprite->sortingLayer;
+	int layer = sprite->sortingLayer;
 	//Insert at beginning
 	if (drawList.size() < 1 || layer <= (*iter)->sortingLayer) {
 		drawList.insert(drawList.begin(), sprite);
@@ -45,8 +45,8 @@ void Scene::Render(Sprite* sprite) {
 	while (iter != --drawList.end()) {
 		auto a	   = iter;
 		auto b	   = ++iter;
-		uint32 lA = (*a)->sortingLayer;
-		uint32 lB=  (*b)->sortingLayer;
+		int lA = (*a)->sortingLayer;
+		int lB=  (*b)->sortingLayer;
 		if (lA <= layer && lB >= layer) {
 			drawList.insert(b, sprite);
 			return;

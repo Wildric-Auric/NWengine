@@ -31,7 +31,7 @@ public:
     Texture* texture = nullptr;
 
     BatchType _isBatched = BatchType::UNBATCHED;
-    uint32 _lastSortingLayer = 0;
+    int  _lastSortingLayer = 0;
     bool _shouldDraw = 1;
     bool _isRendered = 1;
 
@@ -39,7 +39,7 @@ public:
     Shader* shader = nullptr;
     Quad container; /**< Container of the sprite */
     GameObject* attachedObj = nullptr;
-    uint32 sortingLayer = 0; /**< Sorting layer of the sprite */
+    int sortingLayer = 0; /**< Sorting layer of the sprite */
     double zbuffer = 1.0; /**< Z-buffer value of the sprite */
 
     /**
@@ -101,7 +101,7 @@ public:
      * @brief Sets the sorting layer of the sprite.
      * @param order The sorting order of the sprite.
      */
-    void SetSortingLayer(uint32 order);
+    void SetSortingLayer(int order);
 
     /**
      * @brief Renders the sprite.
