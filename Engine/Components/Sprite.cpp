@@ -21,6 +21,7 @@ void Sprite::SetTexture(std::string path, bool alpha) {
 
 void Sprite::SetTexture(Texture* tex) {
 	this->texture		 = tex;
+	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
 void Sprite::SetTexture(const Image* im, TextureIdentifierPtr id) {
@@ -44,10 +45,11 @@ void Sprite::SetShader(Shader* s) {
 	shader = s;
 }
 
-void Sprite::SetSortingLayer(uint32 order) {
+void Sprite::SetSortingLayer(int order) {
 	sortingLayer = order;
+	uint64 unsignedLayer = sortingLayer + 0xFFFFFFFF;
 	if (sortingLayer != _lastSortingLayer) {
-		zbuffer = 1.0 / ((double)(sortingLayer + 1));
+		zbuffer = 1.0 / ((double)(unsignedLayer + 1));
 		_lastSortingLayer = sortingLayer;
 		if (_isRendered)
 			Scene::currentScene->Rearrange(this);
