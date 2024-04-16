@@ -71,4 +71,4 @@ like big amounts of files and includes in their project.
 Once you have that, and you compile your the template compiles, you are ready to start programming yout first
 game powered by **NWengine** !
 
-Teleport to the [tutorial](Tutorial/FirstWindow.html) !
+Teleport to the [tutorial](https://nwengine-doc.vercel.app/index.html) !
