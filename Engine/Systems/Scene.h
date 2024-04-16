@@ -8,6 +8,8 @@
  */
 class Scene {
 public:
+    bool _shouldDelObj = 0; /**< Internal flag that holds if currently iterated on gameobject during update should be deleted. see DestroyCurrentObj() for details*/
+
     std::string name; /**< The name of the scene. */
     std::list<GameObject> sceneObjs; /**< The list of game objects in the scene. */
     std::list<Sprite*> drawList; /**< The list of sprites to be drawn in the scene. */
@@ -29,6 +31,20 @@ public:
      * @param name The name of the GameObject to delete.
      */
     void DeleteObject(std::string name);
+
+    /**
+     * @brief Deletes a GameObject from the scene objects container by iterator.
+     * @param it The iterator of the object to delete.
+     * @return Return value of std::list::erase()
+    */
+    std::list<GameObject>::iterator DeleteObject(std::list<GameObject>::iterator it);
+
+    /**
+     * @brief This function is intended to be called within object (to-delete) component (like scripts), as DeleteObject() will produce invalidation
+     * internally.
+     */
+    void DeleteCurrentObj();
+
 
     /**
      * @brief Gets a GameObject in the scene by name.

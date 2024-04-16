@@ -86,23 +86,35 @@ GameObject& const Scene::AddObject() {
 	return sceneObjs.back();
 }
 
-void Scene::DeleteObject(uint32 index) {
-	auto it1 = sceneObjs.begin();
-	std::advance(it1, index);
-	GameObject* ptr = &(*it1);
-	uint32 count = 0;
-
-
+std::list<GameObject>::iterator Scene::DeleteObject(std::list<GameObject>::iterator it) {
+	GameObject* ptr = &(*it);
 	for (auto pair : ptr->components) {
 		delete (GameComponent*)(pair.second);
 	}
+	return sceneObjs.erase(it);
+}
 
-	sceneObjs.erase(it1);
+void Scene::DeleteObject(uint32 index) {
+	auto it1 = sceneObjs.begin();
+	std::advance(it1, index);
+	DeleteObject(it1);
 };
 
 void Scene::DeleteObject(std::string name) {
-	return;
+	auto it1 = sceneObjs.begin();
+	while (it1 != sceneObjs.end()) {
+		if (it1->name == name) {
+			DeleteObject(it1);
+			return;
+		}
+		++it1;
+	}
 }
+
+void Scene::DeleteCurrentObj() {
+	_shouldDelObj = true;
+}
+
 
 GameObject* Scene::GetGameObject(std::string name) {
 	for (auto it = sceneObjs.begin(); it != sceneObjs.end(); ++it) {
@@ -210,11 +222,19 @@ void Scene::Start() {
 }
 
 void Scene::Update() {
-	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
-		for (std::map<std::string, GameComponent*>::iterator iter = obj->components.begin(); iter != obj->components.end(); iter++) {
+	std::list<GameObject>::iterator last;
+
+	for (auto obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+		for (auto iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Update();
 		}
+		if (_shouldDelObj) {
+			_shouldDelObj = 0;
+			obj = DeleteObject(obj);
+			--obj;
+		}
 	}
+	
 };
 
 const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
