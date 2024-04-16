@@ -13,9 +13,9 @@
 int GameObject::numberOfGameObjects = 0;
 
 
-uint32 GameObject::Draw() {
+int GameObject::Draw() {
 	if (_drawProc == nullptr) return 0;
-	_drawProc(this);
+	return _drawProc(this);
 };
 
 

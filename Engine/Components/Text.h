@@ -72,6 +72,13 @@ public:
     void SetShader(Shader* shader);
 
     /**
+     * @brief Gets total size in pixels sets the shader of the text 
+     * @return vector of size in pixels.
+     * @note Only horizontal size is tested.
+     */
+    fVec2 GetSize();
+
+    /**
      * @brief characters is a list of characters that make up the text.
      */
     std::list<Character> characters;
@@ -95,6 +102,11 @@ public:
      * @brief isBatched indicates whether the text is batched for rendering.
      */
     bool isBatched = true;
+
+    /**
+     * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
+     */
+    int layerOrder = 0;
 
     /**
      * @brief colors is the color of the text.

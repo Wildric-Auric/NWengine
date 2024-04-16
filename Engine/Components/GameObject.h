@@ -21,7 +21,7 @@
  * @param data The data to be passed to the draw callback.
  * @return The result of the draw callback.
  */
-typedef unsigned int (*DrawCallback)(void* data);
+typedef int (*DrawCallback)(void* data);
 
 /**
  * @brief Base class for game components.
@@ -95,7 +95,7 @@ public:
      * @brief Draw the game object.
      * @return The layer in which the game object has been drawn.
      */
-    uint32 Draw();
+    int Draw();
 
     /**
      * @brief Set the draw callback for the game object.

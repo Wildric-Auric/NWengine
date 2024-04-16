@@ -36,6 +36,16 @@ void Text::SetShader(Shader* s) {
 	_shader = s;
 }
 
+fVec2 Text::GetSize() {
+	fVec2 ret;
+	std::list<Character>::iterator iter = characters.begin();
+	for (auto& c = characters.begin(); c != characters.end(); ++c) {
+		ret.x += (c->glyph->advance / 64) * c->go.GetComponent<Transform>()->scale.x * scale.x;
+		ret.y = Max(c->glyph->size.y * c->go.GetComponent<Transform>()->scale.y * scale.y, ret.y);
+	}
+	return ret;
+}
+
 void Text::UpdateGlyphs() {
 	if (characters.size() < 1) 
 		characters.push_back(Character());
@@ -54,6 +64,7 @@ void Text::UpdateGlyphs() {
 		if (this->isBatched)
 			sprite->Batch();
 		sprite->SetTexture(&iter->glyph->texture);
+		sprite->SetSortingLayer(layerOrder);
 		sprite->container.UpdateSize(iter->glyph->size.x, iter->glyph->size.y);
 		++iter;
 	}

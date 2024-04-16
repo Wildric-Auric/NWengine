@@ -30,7 +30,7 @@ private:
 
 public:
 	std::string shader    = "";
-	uint32	    layer     = 0;
+	int		    layer     = 0;
 	bool		isDynamic = 1;
 
 	std::unordered_map<GameObject*, int> objs;       //The value is the offset in stride unit
@@ -72,7 +72,7 @@ public:
 	static uint32 batchMaxQuads;
 	static uint16 maxBatchTextures;
 
-	static std::unordered_map<uint32, std::vector<Batch*>> batchMap; //Batches are allocated dynamically and it's pointer is owned by this map which should be deleted with scene
+	static std::unordered_map<int, std::vector<Batch*>> batchMap; //Batches are allocated dynamically and it's pointer is owned by this map which should be deleted with scene
 
 	/**
   * @brief Computes the indices for the batch.
@@ -84,5 +84,5 @@ public:
   * @param data The data for the draw callback.
   * @return The result of the draw callback.
   */
-	static uint32 DefaultBatchDrawCallback(void* data);
+	static int DefaultBatchDrawCallback(void* data);
 };

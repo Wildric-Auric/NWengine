@@ -22,7 +22,7 @@ uint16 Batch::maxBatchTextures		 = 0;
 uint32* Batch::indices				 = nullptr;
 int		Batch::indicesSize			 = 0;
 
-std::unordered_map<uint32, std::vector<Batch*>> Batch::batchMap;
+std::unordered_map<int, std::vector<Batch*>> Batch::batchMap;
 
 Batch::Batch() {
 	glGenVertexArrays(1, &VAO);
@@ -184,7 +184,7 @@ void Batch::Delete() {
 	VAO = 0;
 }
 
-uint32 Batch::DefaultBatchDrawCallback(void* data) {
+int Batch::DefaultBatchDrawCallback(void* data) {
 	GameObject* obj      = (GameObject*)data;
 	Transform* transform = obj->AddComponent<Transform>();
 	Sprite*    sprite    = obj->AddComponent<Sprite>();
@@ -215,7 +215,7 @@ uint32 Batch::DefaultBatchDrawCallback(void* data) {
 	//First layer batch creation
 
 
-	std::unordered_map<uint32, std::vector<Batch*>>::iterator iter = Batch::batchMap.find(sprite->sortingLayer);
+	auto iter = Batch::batchMap.find(sprite->sortingLayer);
 	if (iter == Batch::batchMap.end()) {
 		Batch::batchMap.insert(Batch::batchMap.end(), std::make_pair(sprite->sortingLayer, std::vector<Batch*>{ new Batch() }))
 		->second.back()->Render(obj, stride);

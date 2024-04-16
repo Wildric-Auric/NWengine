@@ -162,5 +162,5 @@ public:
      * @param data The data to pass to the draw callback.
      * @return The result of the draw callback.
      */
-    static unsigned int DefaultSpriteDrawCallback(void* data);
+    static int DefaultSpriteDrawCallback(void* data);
 };

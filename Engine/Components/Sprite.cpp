@@ -140,7 +140,7 @@ Sprite::~Sprite() {
 }
 
 
-unsigned int Sprite::DefaultSpriteDrawCallback(void* data) {
+int Sprite::DefaultSpriteDrawCallback(void* data) {
 	GameObject* obj = (GameObject*)data;
 
 	Sprite* sprite = obj->GetComponent<Sprite>();

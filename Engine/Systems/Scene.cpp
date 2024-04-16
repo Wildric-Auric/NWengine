@@ -113,10 +113,10 @@ GameObject* Scene::GetGameObject(std::string name) {
 
 void Scene::Draw() {
 	std::list<Sprite*>::iterator it		  = drawList.end();
-	std::unordered_map<uint32, std::vector<Batch*>>::iterator it0;
+	std::unordered_map<int, std::vector<Batch*>>::iterator it0;
 
-	uint32 lastLayer							  = -1;
-	uint32 temp									  = 0;
+	int lastLayer							      = 0xFFFFFFFF - 1;
+	int temp									  = 0;
 
 	while (it != drawList.begin()) {
 		--it;
@@ -124,12 +124,13 @@ void Scene::Draw() {
 			it = drawList.erase(it);
 			continue;
 		}
-		temp  = (*it)->attachedObj->Draw();
 		//Drawing batches
+		temp = (*it)->sortingLayer;
 		if ( (temp != lastLayer) &&  ( (it0 = Batch::batchMap.find(lastLayer)) != Batch::batchMap.end() )) {
 			for (Batch* batch : it0->second)
 				batch->Draw();
 		}
+		(*it)->attachedObj->Draw();
 		lastLayer = temp;
 	}
 	//Drawing last layer batches
