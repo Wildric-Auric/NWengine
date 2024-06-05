@@ -11,11 +11,10 @@ workspace "NWengine"
     buildoptions { "/EHsc" }
     --location "./
     project "NWEngineCore" 
-                      kind "StaticLib"
-                      defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
-                      targetname ("NWengineCore")
-                      location "./"
-                       includedirs {
+                    kind "StaticLib"
+                    defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
+                    location "./"
+                    includedirs {
                         "%{prj.location}/",
                         "%{prj.location}/dependencies/GLEW/include",
                         "%{prj.location}/dependencies/GLFW/include",
@@ -32,6 +31,10 @@ workspace "NWengine"
                         "%{prj.location}/dependencies/vendor/nwin/*.cpp",
                         "%{prj.location}/premake5.lua"
                     }
+                    filter "configurations:*Debug*"
+                        targetname ("NWengineCore32d")
+                    filter "configurations:*Release*"
+                        targetname ("NWengineCore32")
 
     project "Sandbox" 
                       kind "ConsoleApp"
