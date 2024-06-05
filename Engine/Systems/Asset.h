@@ -68,7 +68,7 @@ public:
      * @return The asset from the cache.
      */
     T* GetFromCache(void* identifier) {
-        return (T*)_asset.GetFromCache();
+        return (T*)_asset.GetFromCache(identifier);
     }
 
     /**
