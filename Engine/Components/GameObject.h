@@ -1,6 +1,6 @@
 /**
  * @file GameObject.h
- * @brief Defines the GameObject class and its related components.
+ * @brief Defines the GameObject and GameComponent classes.
  */
 
 #pragma once
@@ -9,15 +9,10 @@
 
 #include <map>
 
-/**
- * @brief Macro to add a component to the GameObject.
- * @param str The name of the component.
- * @param type The type of the component.
- */
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
 
 /**
- * @brief Function pointer type for draw callbacks.
+ * @brief Function pointer type for draw callbacks. Mostly used internally.
  * @param data The data to be passed to the draw callback.
  * @return The result of the draw callback.
  */
@@ -35,12 +30,12 @@ public:
     static std::string GetType() { return "GameComponent"; }
 
     /**
-     * @brief Update the game component.
+     * @brief Update the game component. Does noting if not overriden.
      */
     virtual void Update() {};
 
     /**
-     * @brief Start the game component.
+     * @brief Start the game component. Does nothing if not overriden.
      */
     virtual void Start() {};
 
@@ -48,7 +43,7 @@ public:
      * @brief Set the GameObject associated with the game component.
      * @param go The GameObject to set.
      */
-    virtual void SetGameObject(void* go) {};
+    virtual void SetGameObject(void* go) {}; 
 
     /**
      * @brief Get the GameObject associated with the game component.
@@ -67,12 +62,12 @@ public:
  */
 class GameObject : public Serialized {
 private:
-    static int numberOfGameObjects;
+    static int numberOfGameObjects; //Unused.
 
 public:
-    std::map<std::string, GameComponent*> components; /**< Map of components attached to the game object. */
+    std::map<std::string, GameComponent*> components; /**< Map of components attached to the game object. Internal member */
     std::string name = "new GameObject"; /**< The name of the game object. */
-    uint32 id = 0; /**< The identifier of the game object. */
+    uint32 id = 0; /**< The identifier of the game object. Unused for now by the engine. */
     DrawCallback _drawProc = nullptr; /**< The draw callback for the game object. */
 
     /**
@@ -87,25 +82,26 @@ public:
     GameObject(const GameObject& other);
 
     /**
-     * @brief Destructor for GameObject.
+     * @brief Destructor for GameObject. Will deallocate component resources.
      */
     ~GameObject();
 
     /**
-     * @brief Draw the game object.
+     * @brief Will call the function callack set to draw on the current framebuffer.
      * @return The layer in which the game object has been drawn.
      */
-    int Draw();
+    int Draw(); 
 
     /**
-     * @brief Set the draw callback for the game object.
+     * @brief Set the draw callback which will be called by Draw()
      * @param callback The draw callback to set.
      */
     void SetDrawCallback(DrawCallback callback);
 
     /**
-     * @brief Delete a component from the game object.
-     * @param typeName The type name of the component to delete.
+     * @brief Delete a component attached to the gameobject,
+     * if no component component is found, nothing is done.
+     * @param typeName The type name of the component to delete. Example: "Sprite"
      */
     void DeleteComponent(std::string typeName);
 
@@ -114,20 +110,9 @@ public:
      */
     void DeleteComponents();
 
-    /**
-     * @brief Serialize the game object.
-     * @param data The file stream to serialize to.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes written.
-     */
+
     int Serialize(std::fstream* data, int offset);
 
-    /**
-     * @brief Deserialize the game object.
-     * @param data The file stream to deserialize from.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes read.
-     */
     int Deserialize(std::fstream* data, int offset);
 
     /**
@@ -158,6 +143,12 @@ public:
         return ptr;
     };
 
+    /**
+     * @brief Add a component of the secified type name to the game object.
+     * @tparam The component type name that should be attached; example: "Transform"
+     * @return A pointer to the component.
+     */
+
     GameComponent* AddComponent(std::string type);
     /**
      * @brief Get a component of the specified type.
@@ -165,9 +156,9 @@ public:
      * @return A pointer to the component, or nullptr if the component does not exist.
      */
     GameComponent* GetComponent(std::string type);
-
     /**
-     * @brief Delete a component of the specified type.
+     * @brief Delete a component of the specified type. 
+     * If it is not found, this function does nothing.
      * @tparam T The type of the component.
      */
     template<typename T>

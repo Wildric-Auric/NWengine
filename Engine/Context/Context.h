@@ -6,9 +6,9 @@
 class Context {
 public:
     /**
-     * @brief The window handle.
+     * @brief The window handle. Should be converted to NWin::Window* to be used
      */
-    static void* window;  //Should be converted to GLFWwindow* to be used
+    static void* window;  
 
     /**
      * @brief Initializes the application context.

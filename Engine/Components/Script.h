@@ -1,7 +1,18 @@
+/**
+ * @file Script.h
+ * @brief Defines native scripting utilities.
+ */
+
+
 #pragma once
 #include "GameObject.h"
 
 
+/**
+ * @brief A macro to to place in the beginning to every script that inherits
+ * from scriptable class, after public qualifier. 
+ * @param scr the script class token.
+ */
 #define	 SCRIPT_CONSTR(scr)						   \
 	GameObject* goc;                               \
 	std::string __nwname = #scr;                   \
@@ -16,7 +27,7 @@
  */
 class Scriptable {
 public:
-    GameObject* goc = nullptr; /**< The associated GameObject. */
+    GameObject* goc = nullptr; /**< The attached GameObject. */
     std::string __nwname = "None"; /**< The name of the script. */
     
     /**

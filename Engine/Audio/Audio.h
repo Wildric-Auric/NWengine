@@ -19,7 +19,8 @@ struct SoundIdentifier {
     uint64 runtimeID; /**< The runtime ID of the sound. */
 
     /**
-     * @brief Overloaded equality operator for comparing SoundIdentifier objects.
+     * @brief Internal. Overloaded equality operator for comparing SoundIdentifier objects. 
+     * This exists to hash SoundIdentifier.
      * @param other The SoundIdentifier object to compare with.
      * @return True if the SoundIdentifier objects are equal, false otherwise.
      */
@@ -35,7 +36,7 @@ struct SoundIdentifier {
 template <>
 struct std::hash<SoundIdentifier> {
     /**
-     * @brief Calculates the hash value for a SoundIdentifier object.
+     * @brief Internal. Calculates the hash value for a SoundIdentifier object.
      * @param t The SoundIdentifier object to calculate the hash value for.
      * @return The calculated hash value.
      */
@@ -51,12 +52,12 @@ struct std::hash<SoundIdentifier> {
  * @class Sound
  * @brief Represents a sound asset.
  */
-class Sound : Asset {
+class Sound : public Asset {
 public:
-    uint32 _buffID = 0; /**< The buffer ID of the sound. */
+    uint32 _buffID = 0; /**< The buffer ID of the sound. OpenAL ID if OpenAL is used as audio engine*/
     uint32 _source = 0; /**< The source ID of the sound. */
     float volume = 1.0f; /**< The volume of the sound. */
-    float frequency = 1.0f; /**< The frequency of the sound. */
+    float frequency = 1.0f; /**< The frequency of the sound. Positive and should not surpass 2 in SoftAL implementation. */
     bool isLooping = false; /**< Flag indicating if the sound is looping. */
     bool isPlaying = false; /**< Flag indicating if the sound is currently playing. */
 
@@ -121,14 +122,14 @@ public:
 
     /**
      * @brief Loads the sound asset from a buffer.
-     * @param alBuffer The OpenAL buffer.
+     * @param alBuffer Pointer to the OpenAL buffer which has the size of an int.
      * @param id The ID of the sound asset.
      * @return The loaded sound asset if successful, nullptr otherwise.
      */
     Asset* LoadFromBuffer(void* alBuffer, void* id);
 
     /**
-     * @brief Declares the resource list for SoundIdentifier and Sound.
+     * @brief Declares the resource list for Sound which is identified by SoundIdentifier.
      */
     NW_DECL_RES_LIST(SoundIdentifier, Sound);
 
@@ -139,7 +140,7 @@ public:
     static bool Init();
 
     /**
-     * @brief Destroys the Sound class.
+     * @brief Destroys the audio engine and liberates memory allocated during Init.
      */
     static void Destroy();
 };

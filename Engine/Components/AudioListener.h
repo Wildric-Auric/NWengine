@@ -40,23 +40,11 @@ public:
 	static std::map<GameObject*, AudioListener*> componentList;
 
 	/**
-  * @brief Updates the audio listener component.
-  */
+	* @brief Updates the AudioListener component. Mainly looks up for AudioEmitters and set their parameters
+	*/
 	void Update() override;
 
-	/**
-  * @brief Serializes the audio listener component data.
-  * @param data The file stream to write the serialized data to.
-  * @param offset The offset in the file stream to start writing the serialized data.
-  * @return The number of bytes written to the file stream.
-  */
 	int Serialize(std::fstream* data, int offset) override;
 
-	/**
-  * @brief Deserializes the audio listener component data.
-  * @param data The file stream to read the serialized data from.
-  * @param offset The offset in the file stream to start reading the serialized data.
-  * @return The number of bytes read from the file stream.
-  */
 	int Deserialize(std::fstream* data, int offset) override;
 };

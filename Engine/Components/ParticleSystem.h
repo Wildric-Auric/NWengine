@@ -131,19 +131,8 @@ public:
      */
     void InitParticle();
 
-    /**
-     * @brief Serializes the particle system.
-     * @param data The data stream to serialize to.
-     * @param offset The offset in the data stream.
-     * @return The serialized size.
-     */
+
     int Serialize(std::fstream* data, int offset) override;
 
-    /**
-     * @brief Deserializes the particle system.
-     * @param data The data stream to deserialize from.
-     * @param offset The offset in the data stream.
-     * @return The deserialized size.
-     */
     int Deserialize(std::fstream* data, int offset) override;
 };

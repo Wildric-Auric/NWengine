@@ -8,11 +8,13 @@
 #include "GameObject.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "image.h"
+#include "Image.h"
 #include "Primitives.h"
 
 /**
  * @brief Enumerates the batch types for sprites.
+ * @note static batching is to be handled manually, updating states related needed by
+ * a batch won't update those that were registered when the object was pushed.
  */
 enum BatchType {
     UNBATCHED,       /**< Unbatched sprite */
@@ -64,7 +66,7 @@ public:
      * @param alpha Flag indicating whether the texture has an alpha channel.
      */
     void SetTexture(std::string path, bool alpha = 1);
-
+        
     /**
      * @brief Sets the texture of the sprite from an Image object.
      * @param image The Image object representing the texture.

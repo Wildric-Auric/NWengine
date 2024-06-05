@@ -3,12 +3,13 @@
 #include "Audio.h"
 
 /**
- * @brief The AudioEmitter class represents a component that emits audio in a game object.
+ * @brief The AudioEmitter class represents a component that **owns** a Sound 
+ * and does manipulations on it.
  */
 class AudioEmitter : public GameComponent {
 public:
     /**
-     * @brief GetType returns the type of the AudioEmitter component.
+     * @brief GetType static function for simple component reflection.
      * @return The type of the AudioEmitter component.
      */
     static std::string GetType() { return "AudioEmitter"; };
@@ -16,11 +17,11 @@ public:
     /**
      * @brief AudioEmitter constructor.
      */
-    AudioEmitter() {};
+    AudioEmitter();
 
     /**
-     * @brief AudioEmitter constructor with attached game object.
-     * @param attachedObj The game object to attach the AudioEmitter to.
+     * @brief AudioEmitter constructor with attached GameObject.
+     * @param attachedObj The GameObject to attach the AudioEmitter to.
      */
     AudioEmitter(GameObject* attachedObj);
 
@@ -32,6 +33,8 @@ public:
     /**
      * @brief SetSound sets the sound path for the AudioEmitter.
      * @param path The path of the sound file.
+     * @note all SetSound methods clean the sound that is already played 
+     * and push another Sound to the asset container. Hence the **ownership**.
      */
     void SetSound(const std::string& path);
 
@@ -41,13 +44,10 @@ public:
      */
     void SetSound(const Sound* snd);
 
-    /**
-     * @brief attachedObj The game object that the AudioEmitter is attached to.
-     */
     GameObject* attachedObj = nullptr;
 
     /**
-     * @brief sound The sound object of the AudioEmitter.
+     * @brief sound The Sound of the AudioEmitter.
      */
     Sound* sound = nullptr;
 
@@ -57,7 +57,7 @@ public:
     int volume = 100;
 
     /**
-     * @brief frequency The frequency of the AudioEmitter.
+     * @brief frequency The frequency of the sound.
      */
     float frequency = 1.0f;
 
