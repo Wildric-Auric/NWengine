@@ -32,20 +32,20 @@ public:
 	Vector2 Project(Vector2 const& vec1);
 	Vector2 Rotate(float const& angle); //In degree
 
-	Vector2 operator + (Vector2 const& vec1);
-	Vector2 operator + (T const& num);
-	Vector2 operator - (Vector2 const& vec1);
-	Vector2 operator - (T const& num);
+	Vector2 operator + (Vector2 const& vec1) const;
+	Vector2 operator + (T const& num)        const;
+	Vector2 operator - (Vector2 const& vec1) const;
+	Vector2 operator - (T const& num)        const;
 	template<typename T1>
-	Vector2 operator * (T1 const& num);
-	Vector2 operator * (Vector2 const& vec1);
-	bool operator == (Vector2 const& vec1);
-	bool operator != (Vector2 const& vec1);
+	Vector2 operator * (T1 const& num)       const;
+	Vector2 operator * (Vector2 const& vec1) const;
+	bool operator == (Vector2 const& vec1)   const;
+	bool operator != (Vector2 const& vec1)   const;
 	
 	operator Vector2<int>() const { return Vector2<int>(x,y); }
 	operator Vector2<float>() const { return Vector2<float>(x, y); }
 
-	T* operator [] (int index);
+	T* operator [] (int index) const;
 };
 
 
@@ -85,14 +85,14 @@ Vector2<T>::Vector2(T x, T y) {
 	Vector2::y = y;
 }
 template<typename T>
-Vector2<T> Vector2<T>::operator + (Vector2 const& vec1) {
+Vector2<T> Vector2<T>::operator + (Vector2 const& vec1) const {
 	Vector2 sum;
 	sum.x = x + vec1.x;
 	sum.y = y + vec1.y;
 	return sum;
 }
 template<typename T>
-Vector2<T> Vector2<T>::operator - (Vector2 const& vec1) {
+Vector2<T> Vector2<T>::operator - (Vector2 const& vec1) const {
 	Vector2 sub;
 	sub.x = x - vec1.x;
 	sub.y = y - vec1.y;
@@ -100,21 +100,21 @@ Vector2<T> Vector2<T>::operator - (Vector2 const& vec1) {
 }
 
 template<class T>
-Vector2<T> Vector2<T>::operator * (Vector2 const& vec1) {
+Vector2<T> Vector2<T>::operator * (Vector2 const& vec1) const {
 	Vector2 newVec;
 	newVec.x = x * vec1.x;
 	newVec.y = y * vec1.y;
 	return newVec;
 }
 template<typename T> 
-Vector2<T> Vector2<T>::operator + (T const& num) {
+Vector2<T> Vector2<T>::operator + (T const& num) const {
 	Vector2 newVec;
 	newVec.x = x + num;
 	newVec.y = y + num;
 	return newVec;
 }
 template<typename T>
-Vector2<T> Vector2<T>::operator - (T const& num) {
+Vector2<T> Vector2<T>::operator - (T const& num) const {
 	Vector2 newVec;
 	newVec.x = x - num;
 	newVec.y = y - num;
@@ -123,7 +123,7 @@ Vector2<T> Vector2<T>::operator - (T const& num) {
 
 template<typename T>
 template<typename T1>
-Vector2<T> Vector2<T>::operator * (T1 const& num) {
+Vector2<T> Vector2<T>::operator * (T1 const& num) const {
 	Vector2 newVec;
 	newVec.x = x * num;
 	newVec.y = y * num;
@@ -131,17 +131,17 @@ Vector2<T> Vector2<T>::operator * (T1 const& num) {
 }
 			
 template<typename T>
-bool Vector2<T>::operator == (Vector2 const& vec1) {
+bool Vector2<T>::operator == (Vector2 const& vec1) const {
 	return (x == vec1.x) && (y == vec1.y);
 }
 
 template<typename T>
-bool Vector2<T>::operator != (Vector2 const& vec1) {
+bool Vector2<T>::operator != (Vector2 const& vec1) const {
 	return (x != vec1.x) && (y != vec1.y);
 }
 
 template<typename T> 
-T* Vector2<T>::operator [] (int index) {
+T* Vector2<T>::operator [] (int index) const {
 	return  index == 0 ? &x : &y;
 }
 
@@ -191,20 +191,26 @@ public:
 	Vector3<float> normalize() const;
 	float magnitude();
 	T Dot(Vector3 const& vec1);
+    Vector3<T> Cross(Vector3 const&);
 
 	Vector3 Project(Vector3 const& vec1);
 
-	Vector3 operator + (Vector3 const& vec1);
-	Vector3 operator + (T const& num);
-	Vector3 operator * (T const& num);
-	Vector3 operator * (Vector3 const& vec1);
-	bool operator == (Vector3 const& vec1);
-	bool operator != (Vector3 const& vec1);
+	Vector3 operator + (Vector3 const& vec1) const;
+	Vector3 operator + (T const& num)		 const;
+    Vector3 operator - (Vector3 const& vec1) const;
+    Vector3 operator - (T const& num)        const;
+	Vector3 operator * (T const& num)        const; 
+	Vector3 operator * (Vector3 const& vec1) const;
+	bool operator == (Vector3 const& vec1)   const;
+	bool operator != (Vector3 const& vec1)   const;
 };
 
 template<typename T>
 Vector3<float> Vector3<T>::normalize() const {
 	float magnitude = pow(x * x + y * y + z * z, 0.5);
+	if (magnitude == 0) {
+		return *this;
+	}
 	return Vector3<float>(x / magnitude, y / magnitude, z / magnitude);
 }
 template<typename T>
@@ -215,6 +221,15 @@ template<typename T>
 T Vector3<T>::Dot(Vector3 const& vec1) {
 	return x * vec1.x + y * vec1.y + z * vec1.z;
 };
+
+template<typename T> 
+Vector3<T> Vector3<T>::Cross(Vector3 const& vec1) {
+    return {
+      y * vec1.z - z * vec1.y,
+      z * vec1.x - x * vec1.z,
+      x * vec1.y - y * vec1.x
+    };
+}
 
 template<typename T>
 //Vec1 should be normalized
@@ -229,7 +244,7 @@ Vector3<T>::Vector3(T x, T y, T z) {
 	Vector3::z = z;
 }
 template<typename T>
-Vector3<T> Vector3<T>::operator + (Vector3 const& vec1) {
+Vector3<T> Vector3<T>::operator + (Vector3 const& vec1) const {
 	Vector3 sum;
 	sum.x = x + vec1.x;
 	sum.y = y + vec1.y;
@@ -237,7 +252,7 @@ Vector3<T> Vector3<T>::operator + (Vector3 const& vec1) {
 	return sum;
 }
 template<typename T>
-Vector3<T> Vector3<T>::operator * (Vector3 const& vec1) {
+Vector3<T> Vector3<T>::operator * (Vector3 const& vec1) const {
 	Vector3 newVec;
 	newVec.x = x * vec1.x;
 	newVec.y = y * vec1.y;
@@ -245,7 +260,7 @@ Vector3<T> Vector3<T>::operator * (Vector3 const& vec1) {
 	return newVec;
 }
 template<typename T>
-Vector3<T> Vector3<T>::operator + (T const& num) {
+Vector3<T> Vector3<T>::operator + (T const& num) const {
 	Vector3 newVec;
 	newVec.x = x + num;
 	newVec.y = y + num;
@@ -254,7 +269,25 @@ Vector3<T> Vector3<T>::operator + (T const& num) {
 }
 
 template<typename T>
-Vector3<T> Vector3<T>::operator * (T const& num) {
+Vector3<T> Vector3<T>::operator - (T const& num) const {
+	Vector3 newVec;
+	newVec.x = x - num;
+	newVec.y = y - num;
+	newVec.z = z - num;
+	return newVec;
+}
+
+template<typename T>
+Vector3<T> Vector3<T>::operator - (Vector3 const& vec1) const {
+	Vector3 newVec;
+	newVec.x = x - vec1.x;
+	newVec.y = y - vec1.y;
+	newVec.z = z - vec1.z;
+	return newVec;
+}
+
+template<typename T>
+Vector3<T> Vector3<T>::operator * (T const& num) const {
 	Vector3 newVec;
 	newVec.x = x * num;
 	newVec.y = y * num;
@@ -262,12 +295,12 @@ Vector3<T> Vector3<T>::operator * (T const& num) {
 	return newVec;
 }
 template<typename T>
-bool Vector3<T>::operator == (Vector3 const& vec1) {
+bool Vector3<T>::operator == (Vector3 const& vec1) const {
 	return (x == vec1.x) && (y == vec1.y) && (z == vec1.z);
 }
 
 template<typename T>
-bool Vector3<T>::operator != (Vector3 const& vec1) {
+bool Vector3<T>::operator != (Vector3 const& vec1) const {
 	return (x != vec1.x) && (y != vec1.y) && (z != vec1.z);
 }
 
@@ -414,15 +447,15 @@ class Matrix2 {
 	T operator ()(int i, int j); //Row major access
 };
 template<typename T>
-Matrix2<T>::Matrix2<T>(T diag) {
+Matrix2<T>::Matrix2(T diag) {
 	values[0] = diag; values[1] = 0;
-	values[2] = 0	; values[3] = diag:
+	values[2] = 0	; values[3] = diag;
 }
 template<typename T>
-Matrix2<T>::Matrix2<T>() : Matrix2<T>((T)1.0) {};
+Matrix2<T>::Matrix2() : Matrix2<T>((T)1.0) {};
 
 template<typename T>
-Matrix2<T>::Matrix2<T>(MATFLAG flag) {}
+Matrix2<T>::Matrix2(MATFLAG flag) {}
 
 template<typename T>
 Matrix2<T> Matrix2<T>::operator* (const Matrix2<T>& other) {
@@ -461,17 +494,17 @@ class Matrix3 {
 };
 
 template<typename T>
-Matrix3<T>::Matrix3<T>(T diag) {
+Matrix3<T>::Matrix3(T diag) {
 	values[0] = diag; values[1] = 0   ; values[2] = 0;
 	values[3] = 0   ; values[4] = diag; values[5] = 0;
 	values[6] = 0   ; values[7] = 0   ; values[8] = diag;
 }
 
 template<typename T>
-Matrix3<T>::Matrix3<T>() : Matrix2<T>((T)1.0) {};
+Matrix3<T>::Matrix3() : Matrix2<T>((T)1.0) {};
 
 template<typename T>
-Matrix3<T>::Matrix3<T>(MATFLAG flag) {}
+Matrix3<T>::Matrix3(MATFLAG flag) {}
 
 template<typename T>
 Matrix3<T> Matrix3<T>::operator* (const Matrix3<T>&other) {
@@ -500,7 +533,7 @@ void Matrix3<T>::operator *= (const Matrix3<T>& other) {
 	result.values[6] = other.values[6] * values[0] + other.values[7] * values[3] + other.values[8] * values[6];
 	result.values[7] = other.values[6] * values[1] + other.values[7] * values[4] + other.values[8] * values[7];
 	result.values[8] = other.values[6] * values[2] + other.values[7] * values[5] + other.values[8] * values[8];
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
@@ -510,9 +543,7 @@ T Matrix3<T>::operator()(int i, int j) {
 
 //4x4--------------------------
 template<typename T>
-class Matrix4 {
-public:
-	T values[16]; //Column major
+class Matrix4 { public: T values[16]; //Column major
 	Matrix4();
 	Matrix4(T diag);
 	Matrix4(MATFLAG flag);
@@ -523,17 +554,17 @@ public:
 };
 
 template<typename T>
-Matrix4<T>::Matrix4<T>(T diag) {
+Matrix4<T>::Matrix4(T diag) {
 	values[0] = diag; values[1] = 0;    values[2] = 0;		values[3] = 0;
 	values[4] = 0;    values[5] = diag; values[6] = 0;		values[7] = 0;
 	values[8] = 0;    values[9] = 0;    values[10] = diag;   values[11] = 0;
 	values[12] = 0;   values[13] = 0;   values[14] = 0;		values[15] = diag;
 }
 template<typename T>
-Matrix4<T>::Matrix4<T>() : Matrix4<T>((T)1.0) {};
+Matrix4<T>::Matrix4() : Matrix4<T>((T)1.0) {};
 
 template<typename T>
-Matrix4<T>::Matrix4<T>(MATFLAG flag) {}
+Matrix4<T>::Matrix4(MATFLAG flag) {}
 
 template<typename T>
 Matrix4<T> Matrix4<T>::operator* (const Matrix4<T>& other) {
@@ -564,7 +595,7 @@ template<typename T>
 void Matrix4<T>::operator *= (const Matrix4<T>& other) {
 	Matrix4<T> result = Matrix4(MATFLAG::NOINIT);
 	TMP_MAT_4x4_MUL
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
 }
 #undef TMP_MAT_4x4_MUL
 
@@ -597,6 +628,48 @@ inline void OrthorgraphicMat(Matrix4<float>& matrix, float left, float right, fl
 	matrix.values[12] = (-right - left)  * rml;
 	matrix.values[13] = (- top  - buttom)* tmb;
 	matrix.values[14] = (- far  - near)  * fmn;
+}
+//Matrix passed as reference to this function should be identity matrix
+inline void PerspectiveMat(Matrix4<float>& matrix, float degreeFovY,float aspect, float near, float far) {
+    float cotn  =     1.0f / tan(DegToRad(degreeFovY) / 2.0f);
+    float fmn   =     1.0f / (near - far);
+
+    matrix.values[0]   = (1.0f / aspect) * cotn;
+    matrix.values[5]   = cotn;
+    matrix.values[10]  = (far + near) * fmn;
+    matrix.values[11]  = -1.0f; //Left handed
+    matrix.values[14]  = 2.0f*far*near*fmn;
+    matrix.values[15]  = 0.0f;
+}
+//TODO::Add perspective matrix that takes width and height as args
+
+template<typename T> 
+void LookAt(Matrix4<T>&matrix, const Vector3<T>& camPos, const Vector3<T>& targetPos, const Vector3<T>& upVec) { 
+	//TODO::Test this
+	//TODO::const version
+	Vector3<T> up	  = upVec;
+	Vector3<T> target = targetPos;
+	Vector3<T> cameraPosition = camPos;
+    Vector3<T> dir   = (cameraPosition - target).normalize();
+  
+    Vector3<T> right  = up.Cross(dir);
+    Vector3<T> u      = dir.Cross(right);
+
+    matrix.values[0]  = right.x;
+    matrix.values[1]  = u.x;
+    matrix.values[2]  = dir.x;
+
+    matrix.values[4]  = right.y;
+    matrix.values[5]  = u.y ;
+    matrix.values[6]  = dir.y;
+
+    matrix.values[8]  = right.z ;
+    matrix.values[9]  = u.z;
+    matrix.values[10] = dir.z ;
+
+    matrix.values[12] =  -right.Dot(camPos);
+    matrix.values[13]  = -u.Dot(camPos);
+    matrix.values[14]  = -dir.Dot(camPos);
 }
 
 template<typename T>
