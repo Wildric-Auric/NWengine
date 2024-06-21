@@ -1,11 +1,9 @@
 
 #include "Context.h"
 #include "Globals.h"
-#include "GL/glew.h"
-
-#include "nwin/window.h"
 #include "nwin/gl_context.h"
 
+#include "GL/glew.h"
 #include <iostream>
 
 void* Context::window = nullptr;
@@ -17,6 +15,9 @@ int Context::NATIVE_WIDTH = 1080;
 int Context::NATIVE_HEIGHT = 720;
 
 int Context::vSync	 = 1;
+
+OpenGLInfo  Context::_glInfo;
+
 
 void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size)
 {
@@ -42,7 +43,6 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 {
 	NWin::Window* w;
 	NWin::WindowCrtInfo c{};
-	NWin::OpenGLInfo glInfo;
 	c.metrics.pos = { 0,0 };
 	c.description = "NWengine";
 	c.metrics.size = { scrWidth, scrHeight};
@@ -51,13 +51,14 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 	w = NWin::Window::stCreateWindow(c);
 
 	w->setResizeCallback(sizeCallBack);
-
 	w->dwmDarkModeFrame(1);
 	w->dwmDontRoundCorners(0);
 	//Context------------------
-	glInfo.minVersion = 3;
-	glInfo.maxVersion = 3;
-	context.create(w, glInfo);
+	NWin::OpenGLInfo gli;
+	gli.minVersion = _glInfo.minVersion;
+	gli.maxVersion = _glInfo.maxVersion;
+	gli.disableCompatibility = _glInfo.disableCompatibility;
+	context.create(w, gli);
 	context.makeCurrent();
 
 	window = w;

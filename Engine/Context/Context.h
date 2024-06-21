@@ -1,5 +1,13 @@
 #pragma once
 
+struct OpenGLInfo {
+    unsigned char minVersion = 3;
+    unsigned char maxVersion = 3;
+    //bool  profileCore = 1;
+    bool  disableCompatibility = 1;
+};
+
+
 /**
  * @brief The Context class represents the application context.
  */
@@ -106,4 +114,8 @@ public:
      * @brief The height of the application window.
      */
     static int WINDOW_HEIGHT;
+    /**
+     *@brief change to set OpenGL context creation parameters such as minor/major versions.
+	 */
+    static OpenGLInfo  _glInfo;
 };
