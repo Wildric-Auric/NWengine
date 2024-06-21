@@ -5,31 +5,30 @@ workspace "NWengine"
     cppdialect "C++11"
     targetdir "Bin/%{prj.name}/%{cfg.buildcfg}"
     objdir    "Bin/objs"
-    location "./"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
     buildoptions { "/EHsc" }
-    --location "./
+    location "Build" 
     project "NWEngineCore" 
                     kind "StaticLib"
                     defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
-                    location "./"
+
                     includedirs {
-                        "%{prj.location}/",
-                        "%{prj.location}/dependencies/GLEW/include",
-                        "%{prj.location}/dependencies/GLFW/include",
-                        "%{prj.location}/dependencies/vendor",
-                        "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/dependencies/freetype/include",
-                        "%{prj.location}/dependencies/OPENAL/include",
-                        "%{prj.location}/Engine/**",
-                        "%{prj.location}/Engine/"
+                        "./",
+                        "dependencies/GLEW/include",
+                        "dependencies/GLFW/include",
+                        "dependencies/vendor",
+                        "dependencies/SND/include",
+                        "dependencies/freetype/include",
+                        "dependencies/OPENAL/include",
+                        "Engine/**",
+                        "Engine/"
                     }
                     files {
-                        "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/Engine/**.h",  
-                        "%{prj.location}/dependencies/vendor/nwin/*.cpp",
-                        "%{prj.location}/premake5.lua"
+                        "Engine/**.cpp",
+                        "Engine/**.h",  
+                        "dependencies/vendor/nwin/*.cpp",
+                        "premake5.lua"
                     }
                     filter "configurations:*Debug*"
                         targetname ("NWengineCore32d")
@@ -40,26 +39,25 @@ workspace "NWengine"
                       kind "ConsoleApp"
                       defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
                       targetname ("Sandbox")
-                      location "./"
                       includedirs {
-                        "%{prj.location}/",
-                        "%{prj.location}/dependencies/GLEW/include",
-                        "%{prj.location}/dependencies/vendor",
-                        "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/dependencies/freetype/include",
-                        "%{prj.location}/dependencies/OPENAL/include",
-                        "%{prj.location}/dependencies/SND/include",
-                        "%{prj.location}/Engine/**",
-                        "%{prj.location}/Engine/",
+                        "./",
+                        "dependencies/GLEW/include",
+                        "dependencies/vendor",
+                        "dependencies/SND/include",
+                        "dependencies/freetype/include",
+                        "dependencies/OPENAL/include",
+                        "dependencies/SND/include",
+                        "Engine/**",
+                        "Engine/",
 
-                        "%{prj.location}/Sandbox/src"
+                        "Sandbox/src"
                     }
                     files {
-                        "%{prj.location}/Engine/**.cpp",
-                        "%{prj.location}/dependencies/vendor/nwin/*.cpp",
-                        "%{prj.location}/Sandbox/src/**.cpp",
-                        "%{prj.location}/Engine/**.h", 
-                        "%{prj.location}/premake5.lua"
+                        "Engine/**.cpp",
+                        "dependencies/vendor/nwin/*.cpp",
+                        "Sandbox/src/**.cpp",
+                        "Engine/**.h", 
+                        "premake5.lua"
                     }
                     links {
                         "dwmapi.lib"
@@ -68,10 +66,10 @@ workspace "NWengine"
                     
     workspace "*"
         libdirs { 
-                        "%{wks.location}/dependencies/GLEW/lib/Release/Win32",
-                        "%{wks.location}/dependencies/freetype/lib/win32",
-                        "%{wks.location}/dependencies/SND/lib",
-                        "%{wks.location}/dependencies/OPENAL/win32"
+                        "dependencies/GLEW/lib/Release/Win32",
+                        "dependencies/freetype/lib/win32",
+                        "dependencies/SND/lib",
+                        "dependencies/OPENAL/win32"
                 }
         filter "architecture:x86" 
             links {

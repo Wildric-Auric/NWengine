@@ -16,7 +16,9 @@ dependencies/
 GNUBuild/
 Build/Data
 Build/temp
+Engine/Doc
 Build/*.exe
+Sandbox/
 
 
 *.exe
