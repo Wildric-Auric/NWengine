@@ -26,7 +26,7 @@ bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
 		return window->_getKeyboard().isKeyPressed((NWin::Key)key);
 	}
 	if (mode == NWin::KeyEventEnum::NWIN_KeyReleased) {
-		return window->_getKeyboard().isKeyReleased((NWin::Key)key);
+		return window->_getKeyboard().onKeyRelease((NWin::Key)key);
 	}
 }
 
