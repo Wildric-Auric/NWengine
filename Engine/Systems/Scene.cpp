@@ -68,7 +68,7 @@ void Scene::ForceRenderStop() {
 }
 
 GameObject* Scene::GetGameObject(const uint32& position) {
-	if  (position <  this->sceneObjs.size())
+	if  (position >=  this->sceneObjs.size())
 		return nullptr;
 	std::list<GameObject>::iterator it = sceneObjs.begin();
 	std::advance(it, position);
