@@ -72,9 +72,8 @@ enum TexMaxFilter {
  */
 enum TexEdge {
     NW_REPEAT = 0x2901, /**< Repeat texture edge behavior. */
-    NW_CLAMP = 0x2900 /**< Clamp texture edge behavior. */
+    NW_CLAMP = 0x812F /**< Clamp texture edge behavior. */
 };
-
 /**
  * @brief Class representing a texture asset.
  */
