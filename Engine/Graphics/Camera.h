@@ -29,6 +29,7 @@ public:
     fVec3 clearColor = fVec3(0.0,0.0, 0.0); /**< The clear color of the camera. */
     float alpha = 1.0f; /**< The alpha value of the camera. */
     bool isActive = 0; /**< Indicates whether the camera is active or not. */
+    MSAAValue _msaa = NW_MSx1;
     GameObject* attachedObj = nullptr; /**< The attached game object of the camera. */
 
     /**
@@ -37,7 +38,8 @@ public:
     Camera() = default;
 
     /**
-     * @brief Constructor for the Camera class.
+     * @brief Constructor for the
+ Camera class.
      * @param go The game object to attach the camera to.
      */
     Camera(GameObject* go);
@@ -63,6 +65,10 @@ public:
      * @param sizeY The new size along the Y-axis.
      */
     void ChangeOrtho(float sizeX, float sizeY);
+
+    void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue);
+
+
 
     /**
      * @brief Moves the camera to the target position with interpolation.

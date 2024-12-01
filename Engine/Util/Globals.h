@@ -10,6 +10,20 @@
 #define NW_LOG(str)			printf(str)
 
 
+#ifdef NW_RELEASE
+#define NW_GL_TEST()
+#else 
+#define NW_GL_TEST() { \
+	auto a = glGetError(); \
+	if (a != GL_NO_ERROR) { \
+		std::cout << "\n---------------------\nOpenGL ERROR: "<< a << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
+	} \
+} while(0);
+#endif
+
+#define NW_GL_CALL(code) code; NW_GL_TEST()
+
+
 //arch is always an integer type with size of pointer of the architecture
 typedef long     arch;
 

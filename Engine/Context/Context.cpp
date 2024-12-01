@@ -26,7 +26,7 @@ void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size)
 }
 
 void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
-	glViewport(x, y, sizeX, sizeY);
+	NW_GL_CALL(glViewport(x, y, sizeX, sizeY));
 }
 
 void Context::SetFullscreen(bool state) {
@@ -68,7 +68,7 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 		std::cout << "Failed to init GLEW";
 		return nullptr;
 	}
-	glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT);
+	NW_GL_CALL(glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT));
 
 	return window;
 }
@@ -86,43 +86,44 @@ void Context::Update() {
 
 void Context::EnableBlend(bool status) {
 	if (status) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		NW_GL_CALL(glEnable(GL_BLEND));
+		NW_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		return;
 	}
 
-	glDisable(GL_BLEND);
+	NW_GL_CALL(glDisable(GL_BLEND));
 	
 }
 
 void Context::EnableDepthTest(bool status) {
 	if (status) {
-		glEnable(GL_DEPTH_TEST);
+		NW_GL_CALL(glEnable(GL_DEPTH_TEST));
 		return;
 	}
-	glDisable(GL_DEPTH_TEST);
+	NW_GL_CALL(glDisable(GL_DEPTH_TEST));
 }
 
 void Context::EnableWireframe(bool status) {
 	if (status) {
-		glDisable(GL_BLEND);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		NW_GL_CALL(glDisable(GL_BLEND));
+		NW_GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
 		return;
 	}
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	NW_GL_CALL(glEnable(GL_BLEND));
+	NW_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	NW_GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
 }
 
 void Context::Clear(float r, float g, float b, float a) { ///RGBA
-	glClearColor(r,g,b,a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	NW_GL_CALL(glClearColor(r,g,b,a));
+	NW_GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 
 void Context::SetTitle(const char* title) {
-	//TODO::Add title change function to NWin
+	((NWin::Window*)Context::window)->setTitle(title);
 }
+
 void Context::Destroy() {
 	NWin::Window::stDestroyWindow((NWin::Window*)(Context::window));
 	context.makeCurrent(1);

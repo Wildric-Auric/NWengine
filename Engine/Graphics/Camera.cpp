@@ -23,17 +23,23 @@ Camera::Camera(GameObject* go) {
 	position = Vector2<int>(0, 0);
 };
 
-void Camera::ChangeOrtho(float sizeX, float sizeY) {
-	if ((sizeX == size.x) && (sizeY == size.y)) return;
+void Camera::ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa) {
+	if ((sizeX == size.x) && (sizeY == size.y) && (this->_msaa == msaa)) return;
 	size.x         = sizeX;
 	size.y         = sizeY;
 	viewPortSize.x = sizeX;
 	viewPortSize.y = sizeY;
+	_msaa = msaa;
 
 	fbo.Delete();
-	fbo.SetUp(size);
+	fbo.SetUp(size, msaa);
 	OrthorgraphicMat(projectionMatrix, -sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
 }
+
+void Camera::ChangeOrtho(float sizeX, float sizeY) {
+	ChangeOrthoWithMSAA(sizeX, sizeY, this->_msaa);
+}
+
 
 Camera* Camera::ActiveCamera = nullptr;
 
@@ -65,6 +71,7 @@ Camera::~Camera() {
 		Camera::ActiveCamera = nullptr;
 }
 
+//TODO::Refactor serialization and add new members such as MSAA
 int Camera::Serialize(std::fstream* data, int offset) {
 	int sizeBuffer = 0;
 	WRITE_ON_BIN(data, "Camera", 6, sizeBuffer);

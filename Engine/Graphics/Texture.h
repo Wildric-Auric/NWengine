@@ -74,6 +74,14 @@ enum TexEdge {
     NW_REPEAT = 0x2901, /**< Repeat texture edge behavior. */
     NW_CLAMP = 0x812F /**< Clamp texture edge behavior. */
 };
+
+/**
+ * @brief Enumeration of supported texture target.
+ */
+enum TexTarget {
+    NW_TEX_2D    = 0x0DE1,    /**< 2D texture.*/
+    NW_TEX_2D_MS = 0x9100, /**< Multisample 2D texture, cannot be filtered nor be used to generate mipmaps .*/
+};
 /**
  * @brief Class representing a texture asset.
  */
@@ -81,7 +89,7 @@ class Texture : public Asset {
 public:
     uint32 _glID = 0; /**< The OpenGL ID of the texture. Public for the framebuffer. */
     Vector2<int> _size; /**< The size of the texture. */
-    bool _hasMipMap; /**< Flag indicating whether the texture has mipmaps. */
+    bool _hasMipMap = 0; /**< Flag indicating whether the texture has mipmaps. */
 
     Texture() = default;
 
@@ -151,3 +159,19 @@ public:
 
     NW_DECL_RES_LIST(TextureIdentifier, Texture)
 };
+
+/**
+ * @brief Class representing a mustisample, mostly used internally.
+ * @note undocumented
+ */
+class MSTexture {
+public:
+    uint32 _glID = 0; /**< The OpenGL ID of the texture. Public for the framebuffer. */
+    Vector2<int> _size; /**< The size of the texture. */
+    uint16 _samplesNum = 2; /**< Number of samples. */
+
+    void _GPUGen(TexChannelInfo channelInfo);
+    void MSTexture::Bind(bool unbind = 0);
+    void Clean();
+};
+     

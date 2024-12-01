@@ -4,51 +4,51 @@
 
 
 void Texture::_GPUGen(uint8* pixelBuffer, TexChannelInfo info) {
-	glGenTextures(1, &_glID);
+	NW_GL_CALL(glGenTextures(1, &_glID));
 	Bind();
 	//Upscaling parameter
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 	if (info == TexChannelInfo::NW_R)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, _size.x, _size.y, 0, info, GL_UNSIGNED_BYTE, pixelBuffer);
+	NW_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, _size.x, _size.y, 0, info, GL_UNSIGNED_BYTE, pixelBuffer));
 	
 	if (this->_hasMipMap) {
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		NW_GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
+		NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR));
 		return;
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 }
 
 void Texture::GenMipMap() {
 	Bind();
 	_hasMipMap = 1;
-	glGenerateMipmap(GL_TEXTURE_2D);
+	NW_GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
 }
 
 void Texture::SetMinFilter(TexMinFilter value) {
 	Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, value);
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, value));
 }
 
 void Texture::SetMaxFilter(TexMaxFilter value) {
 	Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, value);
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, value));
 }
 
 void Texture::SetEdgesBehaviour(TexEdge value) {
 	Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, value);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, value);
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, value));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, value));
 }
 
 void Texture::Bind(uint32 slot) {
-	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, _glID);
+	NW_GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
+	NW_GL_CALL(glBindTexture(GL_TEXTURE_2D, _glID));
 }
 
 
@@ -88,9 +88,27 @@ void Texture::Clean() {
 	--_usageCounter;
 	if (_usageCounter > 0) 
 		return;
-	glDeleteTextures(1, &this->_glID);
+	NW_GL_CALL(glDeleteTextures(1, &this->_glID));
 	this->_glID = 0;
 	EraseRes<Texture,TextureIdentifier>(GetIDWithAsset<Texture*, TextureIdentifier>(this));
 }
 
 NW_IMPL_RES_LIST(TextureIdentifier, Texture)
+
+
+void MSTexture::_GPUGen(TexChannelInfo channelInfo) {
+	NW_GL_CALL(glGenTextures(1, &_glID));
+	Bind();
+	NW_GL_CALL(glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samplesNum, channelInfo, _size.x, _size.y, GL_TRUE));
+	Bind(1);
+}
+
+void MSTexture::Bind(bool unbind) {
+	NW_GL_CALL(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, unbind ? 0 : _glID));
+}
+
+void MSTexture::Clean() {
+	if (_glID == 0) return;
+	NW_GL_CALL(glDeleteTextures(1, &this->_glID));
+	this->_glID = 0;
+}

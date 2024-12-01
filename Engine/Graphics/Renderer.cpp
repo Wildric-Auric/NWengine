@@ -40,7 +40,9 @@ void Renderer::DrawOnDefaultFrame() {
 	if (target == nullptr)
 		target = temp;
 	if (target == nullptr)
-		return; //TODO::Show Blank image instead
+		return;
+
+	target->fbo.Resolve();
 
 	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
 	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
@@ -71,7 +73,9 @@ void Renderer::CaptureOnCamFrame() {
 		target = temp;
 	if (target == nullptr)
 		return;
-	//TODO::Downscale the texture to which post processing shader is applied and then pass it to imgui
+
+	target->fbo.Resolve();
+
 	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
 	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
 	cam->Update();

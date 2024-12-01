@@ -25,30 +25,30 @@ int		Batch::indicesSize			 = 0;
 std::unordered_map<int, std::vector<Batch*>> Batch::batchMap;
 
 Batch::Batch() {
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	NW_GL_CALL(glGenVertexArrays(1, &VAO));
+	NW_GL_CALL(glGenBuffers(1, &VBO));
+	NW_GL_CALL(glGenBuffers(1, &EBO));
+	
+	NW_GL_CALL(glBindVertexArray(VAO));
+	NW_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+	NW_GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
 
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	glBufferData(GL_ARRAY_BUFFER, Batch::batchMaxQuads * strideSizeByte * 4, nullptr ,GL_DYNAMIC_DRAW); //4 is sizeof float
+	NW_GL_CALL(glBufferData(GL_ARRAY_BUFFER, Batch::batchMaxQuads * strideSizeByte * 4, nullptr ,GL_DYNAMIC_DRAW)); //4 is sizeof float
 	//TODO::Multiply per sizeof(uint32)?? DONE BUT UNTESTED)
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(uint32), Batch::indices, GL_DYNAMIC_DRAW);
+	NW_GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize * sizeof(uint32), Batch::indices, GL_DYNAMIC_DRAW));
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)0);
-	glEnableVertexAttribArray(0);
+	NW_GL_CALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)0));
+	NW_GL_CALL(glEnableVertexAttribArray(0));
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)12);
-	glEnableVertexAttribArray(1);
+	NW_GL_CALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)12));
+	NW_GL_CALL(glEnableVertexAttribArray(1));
 
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)20);
-	glEnableVertexAttribArray(2);
+	NW_GL_CALL(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)20));
+	NW_GL_CALL(glEnableVertexAttribArray(2));
 
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)32);
-	glEnableVertexAttribArray(3);
+	NW_GL_CALL(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, Batch::strideSizeByte, (const void*)32));
+	NW_GL_CALL(glEnableVertexAttribArray(3));
 }
 
 void Batch::BindTextures() {
@@ -158,27 +158,27 @@ void Batch::Draw() {
 
 	int size = offset / (4 * Batch::strideSize);
 
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	NW_GL_CALL(glBindVertexArray(VAO));
+	NW_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
    
 	if (isDynamic || _shouldDraw) {
-		glBufferSubData(GL_ARRAY_BUFFER, 0, offset * sizeof(float), &vertices[0]);
+		NW_GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, offset * sizeof(float), &vertices[0]));
 		_shouldDraw  = 0;
 	}
-	glDrawElements(GL_TRIANGLES, 6 * size, GL_UNSIGNED_INT, 0);
+	NW_GL_CALL(glDrawElements(GL_TRIANGLES, 6 * size, GL_UNSIGNED_INT, 0));
 	
 	if (isDynamic) {
 		offset				 = 0;
 		this->currentTexSlot = 0;
 	}
-	glBindVertexArray(0);
+	NW_GL_CALL(glBindVertexArray(0));
 };
 
 
 void Batch::Delete() {
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &VAO);
+	NW_GL_CALL(glDeleteBuffers(1, &VBO));
+	NW_GL_CALL(glDeleteBuffers(1, &EBO));
+	NW_GL_CALL(glDeleteVertexArrays(1, &VAO));
 	VBO = 0;
 	EBO = 0;
 	VAO = 0;
