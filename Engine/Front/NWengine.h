@@ -53,6 +53,20 @@ enum class ON_MAIN_CALL_LOCATION {
 	Destroy				//Called before destruction of engine systems
 };
 
+struct NWengineVersion {
+    int major;
+    int minor;
+    int day;
+    int month;
+    int year;
+};
+
+
+NW_PREFIX const char* NWengineGetVersionString();
+NW_PREFIX void  NWengineGetVersion(NWengineVersion* outVers);
+
+
+extern const char* NWVersionString;
 extern std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
 
 NW_PREFIX int  NWengineInit();

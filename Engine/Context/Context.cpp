@@ -43,7 +43,7 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 {
 	NWin::Window* w;
 	NWin::WindowCrtInfo c{};
-	c.metrics.pos = { 0,0 };
+	c.metrics.pos = { 100,100 };
 	c.description = "NWengine";
 	c.metrics.size = { scrWidth, scrHeight};
 	c.style = (NWin::Word)NWin::WindowStyle::Default;

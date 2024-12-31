@@ -1,6 +1,55 @@
 #include "NWengine.h"
 
 #define NW_CALL_EX(locatinon) for (void(*func)() : functionMap[locatinon]) func();
+
+/*Preprocessor Macro should as defined as follows :
+#define NW_VERSION "0.9.291224"
+*/
+#ifdef NW_VERSION
+const char* NWVersionString = NW_VERSION;
+#else
+const char* NWVersionString = "";
+#endif
+
+
+NW_PREFIX const char* NWengineGetVersionString() {
+    return NWVersionString;
+}
+
+NW_PREFIX void  NWengineGetVersion(NWengineVersion* outVers) {
+    const char* versionStr = NWengineGetVersionString(); 
+    const char* cur = versionStr;
+    if (cur == '\0') return;
+
+    std::string temp = "";
+    while (*cur != '.') {
+        temp += *cur; 
+        ++cur;
+    }
+    outVers->major = std::stoi(temp);
+    ++cur;
+
+    temp = "";
+    while (*cur != '.') {
+        temp += *cur; 
+        ++cur;
+    }
+    outVers->minor = std::stoi(temp);
+    ++cur;
+
+    temp = *cur; ++cur;
+    temp += *cur; ++cur;
+    outVers->day = std::stoi(temp);
+
+	temp = *cur; ++cur;
+	temp += *cur; ++cur;
+    outVers->month = std::stoi(temp);
+
+	temp = *cur; ++cur;
+	temp += *cur; ++cur;
+    outVers->year = std::stoi(temp);
+}
+
 std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
 
 
