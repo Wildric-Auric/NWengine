@@ -1,3 +1,5 @@
+Nw_version = '"0.9.311224"'
+
 workspace "NWengine"
     configurations {"Debug32", "Release32" }
     architecture "x86"
@@ -57,7 +59,8 @@ workspace "NWengine"
                         "dependencies/vendor/nwin/*.cpp",
                         "Sandbox/src/**.cpp",
                         "Engine/**.h", 
-                        "premake5.lua"
+                        "premake5.lua",
+                        "*.rc",
                     }
                     links {
                         "dwmapi.lib"
@@ -65,7 +68,7 @@ workspace "NWengine"
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
                     
     workspace "*"
-        libdirs { 
+        libdirs {
                         "dependencies/GLEW/lib/Release/Win32",
                         "dependencies/freetype/lib/win32",
                         "dependencies/SND/lib",
@@ -81,9 +84,9 @@ workspace "NWengine"
             }
 
         filter "configurations:*Debug*"
-            defines {"NW_DEBUG", "_DEBUG"}
+            defines {"NW_DEBUG", "_DEBUG", "NW_VERSION=%{Nw_version}"}
             symbols "On"
         filter "configurations:*Release*"
-            defines {"NW_NDEBUG", "NW_RELEASE"}
+            defines {"NW_NDEBUG", "NW_RELEASE", "NW_VERSION=%{Nw_version}"}
             optimize "On"
         filter {}
