@@ -80,7 +80,7 @@ GameObject* Scene::GetGameObject() {
 	return &this->sceneObjs.back();
 }
 
-GameObject& const Scene::AddObject() {
+GameObject& Scene::AddObject() {
 	sceneObjs.push_back(GameObject());
     Rename("new GameObject", &sceneObjs.back());
 	return sceneObjs.back();
