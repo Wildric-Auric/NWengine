@@ -44,6 +44,12 @@ public:
     static void EnableBlend(bool status = true);
 
     /**
+     * @brief Enables or disables vsync.
+     * @param status vsync status. 1 to enable vsync, 0 to disable.
+     */
+    static void EnableVSync(int status = 1);
+
+    /**
      * @brief Enables or disables wireframe rendering.
      * @param status The wireframe status. True to enable wireframe rendering, false to disable wireframe rendering.
      */
@@ -93,7 +99,7 @@ public:
     /**
      * @brief The vertical synchronization value.
      */
-    static int vSync;
+    static int _vSync;
 
     /**
      * @brief The native width of the application window.

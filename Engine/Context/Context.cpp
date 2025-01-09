@@ -14,7 +14,7 @@ int Context::WINDOW_HEIGHT = 720;
 int Context::NATIVE_WIDTH = 1080;
 int Context::NATIVE_HEIGHT = 720;
 
-int Context::vSync	 = 1;
+int Context::_vSync	 = 0;
 
 OpenGLInfo  Context::_glInfo;
 
@@ -82,6 +82,12 @@ void Context::Update() {
 		w->_getKeyboard().update();
 		w->update();
 		w->swapBuffers();
+}
+
+void Context::EnableVSync(int status) {
+    if (Context::_vSync == status) return;
+    _vSync = status;
+    NWin::GlContext::setCurCtxVSync(_vSync);
 }
 
 void Context::EnableBlend(bool status) {
