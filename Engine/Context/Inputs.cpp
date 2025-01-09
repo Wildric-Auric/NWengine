@@ -1,4 +1,5 @@
 #include "Inputs.h"
+#include "Context.h"
 #include "GL/glew.h"
 
 #include "nwin/keyboard.h"
@@ -6,8 +7,6 @@
 
 #include<iostream>
 #include <cstring>
-
-static NWin::Window* window = nullptr;
 
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d, Inputs::r, Inputs::s, Inputs::t,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,
@@ -22,6 +21,7 @@ double Inputs::mousePosY;
 float Inputs::joystickAxis[6] = {0.0f};
 
 bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
+    NWin::Window* window = (NWin::Window*)Context::window;
 	if (mode == NWin::KeyEventEnum::NWIN_KeyPressed) {
 		return window->_getKeyboard().isKeyPressed((NWin::Key)key);
 	}
@@ -36,6 +36,7 @@ bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) {
 }
 
 void Inputs::Process(void* window0) {
+    NWin::Window* window = (NWin::Window*)Context::window;
 	window = (NWin::Window*)window0;
 	NWin::Vec2 pos;
 	window->getMousePosition(pos);
