@@ -21,6 +21,19 @@ enum RWFrameBuffer {
 };
 
 /**
+ * @brief The FrameBufferAttachment class represents an attachment of the framebuffer.
+ * 
+ */
+class FrameBufferAttachment {
+    public:
+    void* owner; /**< The framebuffer owner of this attachment. */
+    MSTexture msTex;
+    Texture   tex;
+    void SetUp(iVec2 size, MSAAValue msVal, uint8 num);
+    void Clean();
+};
+
+/**
  * @brief The FrameBuffer class represents a framebuffer object.
  * 
  * This class provides functionality to create, bind, unbind, and delete a framebuffer object.
@@ -30,14 +43,11 @@ class FrameBuffer {
 private:
     uint32 _framebuffer  = 0; /**< The framebuffer ID. */
     uint32 _renderbuffer = 0; /**< The renderbuffer ID. */
-    FrameBuffer* resolveFbo = nullptr;
 public: 
-
-    MSTexture mstexure;    /**< The multisample texture associated with the framebuffer*/
+    FrameBuffer* resolveFbo = nullptr;
     MSAAValue _msaaVal = NW_MSx1;
-    Texture   textureBuffer; /**< The texture buffer associated with the framebuffer. */
+    std::vector<FrameBufferAttachment> attachments; /**< The framebuffer attachments*/     
 
-     
     /**
      * @brief Default constructor for the FrameBuffer class.
      */
@@ -51,7 +61,10 @@ public:
      * @note Calling this method multiple times without deleting the framebuffer may result in a memory leak.
      */
     void SetUp(Vector2<int> size, MSAAValue msVal = NW_MSx1);
+    
+    void AddAttachment(iVec2 size);
 
+    FrameBufferAttachment& GetAtt(int i = 0);
     /**
      * @brief Binds the framebuffer.
      */

@@ -44,11 +44,11 @@ void Renderer::DrawOnDefaultFrame() {
 
 	target->fbo.Resolve();
 
-	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
-	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
+	sprite->container.UpdateSize(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
+	cam->ChangeOrtho(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
 	cam->Update();
 	//Setting sprite texture
-	sprite->SetTexture(&target->fbo.textureBuffer);
+	sprite->SetTexture(&target->fbo.GetAtt(0).tex);
 	cam->viewPortSize.x = cam->size.x * stretchCoeff.x;
 	cam->viewPortSize.y = cam->size.y * stretchCoeff.y;
 	Context::SetViewPort((Context::WINDOW_WIDTH  - cam->viewPortSize.x) * 0.5, 
@@ -76,12 +76,12 @@ void Renderer::CaptureOnCamFrame() {
 
 	target->fbo.Resolve();
 
-	sprite->container.UpdateSize(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
-	cam->ChangeOrtho(target->fbo.textureBuffer._size.x, target->fbo.textureBuffer._size.y);
+	sprite->container.UpdateSize(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
+	cam->ChangeOrtho(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
 	cam->Update();
 
 	//Setting srpite texture
-	sprite->SetTexture(&target->fbo.textureBuffer);
+	sprite->SetTexture(&target->fbo.GetAtt(0).tex);
 
 	Camera::ActiveCamera = cam;
 

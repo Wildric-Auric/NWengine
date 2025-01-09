@@ -99,7 +99,7 @@ NW_IMPL_RES_LIST(TextureIdentifier, Texture)
 void MSTexture::_GPUGen(TexChannelInfo channelInfo) {
 	NW_GL_CALL(glGenTextures(1, &_glID));
 	Bind();
-	NW_GL_CALL(glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samplesNum, channelInfo, _size.x, _size.y, GL_TRUE));
+	NW_GL_CALL(glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samplesNum, GL_RGBA16F, _size.x, _size.y, GL_TRUE));
 	Bind(1);
 }
 

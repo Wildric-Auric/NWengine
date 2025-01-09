@@ -3,33 +3,64 @@
 #include "FrameBuffer.h"
 #include <string>
 
+void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
+	tex._size = size;
+	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB);
+	tex.SetEdgesBehaviour(TexEdge::NW_CLAMP);
+	tex.SetMinFilter(TexMinFilter::NW_MIN_LINEAR);
+	tex.SetMaxFilter(TexMaxFilter::NW_LINEAR);
+    if (msVal != NW_MSx1) {
+	    msTex._size = size;
+	    msTex._samplesNum = msVal;
+	    msTex._GPUGen(TexChannelInfo::NW_RGB);
+        tex.Clean();
+        tex._glID = ((FrameBuffer*)owner)->resolveFbo->GetAtt(num).tex._glID;
+	    NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + num, GL_TEXTURE_2D_MULTISAMPLE, msTex._glID, 0));
+        return;
+     }
+	 NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + num, GL_TEXTURE_2D, tex._glID, 0));
+}
+
+void FrameBufferAttachment::Clean() {
+    tex.Clean();
+	msTex.Clean();
+}
+
+
+FrameBufferAttachment& FrameBuffer::GetAtt(int i) {
+    return attachments[i];
+}
+
+void FrameBuffer::AddAttachment(iVec2 size) {
+    uint8 num = attachments.size();
+    if (_msaaVal != MSAAValue::NW_MSx1)
+        resolveFbo->AddAttachment(size);
+
+    Bind();
+    attachments.push_back({});
+	attachments.back().owner = this;
+    attachments.back().SetUp(size, _msaaVal, num);
+
+	std::vector<uint32> t(num + 1);
+	for (int i = 0; i < num + 1; i++) { t[i] = GL_COLOR_ATTACHMENT0 + i;}
+	glDrawBuffers(num + 1, t.data());
+
+    Unbind();
+}
+
 void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
 	if (Context::window == nullptr) return;
-	int colAtt = GL_COLOR_ATTACHMENT0;
-	textureBuffer._size = size;
-	textureBuffer._GPUGen(nullptr, TexChannelInfo::NW_RGB);
-	textureBuffer.SetEdgesBehaviour(TexEdge::NW_CLAMP);
-	textureBuffer.SetMinFilter(TexMinFilter::NW_MIN_LINEAR);
-	textureBuffer.SetMaxFilter(TexMaxFilter::NW_LINEAR);
-	
+    if (msVal != NW_MSx1) {
+	    resolveFbo = new FrameBuffer();
+	    resolveFbo->SetUp(size, NW_MSx1);
+	    NW_GL_CALL(glEnable(GL_MULTISAMPLE));
+    }
 	NW_GL_CALL(glGenFramebuffers(1, &_framebuffer));
-	Bind();
-	if (msVal == MSAAValue::NW_MSx1) {
-		NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, colAtt, GL_TEXTURE_2D, textureBuffer._glID, 0));
-		Unbind();
-		return;
-	}
-
-	NW_GL_CALL(glEnable(GL_MULTISAMPLE));
 	_msaaVal = msVal;
-	mstexure._size = size;
-	mstexure._samplesNum = msVal;
-	mstexure._GPUGen(TexChannelInfo::NW_RGB);
-	NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, colAtt, GL_TEXTURE_2D_MULTISAMPLE, mstexure._glID, 0));
-	resolveFbo = new FrameBuffer();
-	resolveFbo->SetUp(size, NW_MSx1);
-	textureBuffer.Clean();
-	textureBuffer._glID = resolveFbo->textureBuffer._glID;
+
+	Bind();
+    AddAttachment(size);
+    Unbind();
 }
 
 void FrameBuffer::Bind(RWFrameBuffer ro) {
@@ -42,8 +73,9 @@ void FrameBuffer::Unbind(RWFrameBuffer ro) {
 void FrameBuffer::Delete() {
 	NW_GL_CALL(glDeleteRenderbuffers(1, &this->_renderbuffer));
 	NW_GL_CALL(glDeleteFramebuffers(1,  &this->_framebuffer));
-	textureBuffer.Clean();
-	mstexure.Clean();
+    for (auto& att : attachments)
+       att.Clean(); 
+
 	if (resolveFbo) 
 		resolveFbo->Delete();	
 	delete resolveFbo;
@@ -55,8 +87,13 @@ void FrameBuffer::Blit(FrameBuffer* other) {
 	Bind(NW_READ);
 	if (other)
 		other->Bind(NW_WRT);
-
-	NW_GL_CALL(glBlitFramebuffer(0,0, textureBuffer._size.x, textureBuffer._size.y, 0,0, textureBuffer._size.x, textureBuffer._size.y, GL_COLOR_BUFFER_BIT, GL_NEAREST));
+    
+    for (int i = 0; i < attachments.size(); ++i) {
+        FrameBufferAttachment& att = GetAtt(i);
+        NW_GL_CALL(glReadBuffer(GL_COLOR_ATTACHMENT0 + i));
+        NW_GL_CALL(glDrawBuffer(GL_COLOR_ATTACHMENT0 + i));
+	    NW_GL_CALL(glBlitFramebuffer(0,0, att.tex._size.x, att.tex._size.y, 0,0, att.tex._size.x, att.tex._size.y, GL_COLOR_BUFFER_BIT, GL_NEAREST));
+    }
 	
 	Unbind();
 }
