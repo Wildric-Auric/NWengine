@@ -26,10 +26,10 @@ void NWTime::Update() {
 		_deltaTimeSum = 0;
 		_frameCount = 0;
 	}
-	_deltaTime   = (double)(_lastTime - _lastTime2) / 1000.0;
-	_lastTime2   = _lastTime;
-	_currentTime = _timer.getTime();
-	_lastTime    = _currentTime;
+	//_currentTime = _timer.getTime();
+	_deltaTime   = _timer.getTime() / 1000.0;
+	//_lastTime2   = _lastTime;
+	//_lastTime    = _currentTime;
 };
 
 const double& NWTime:: GetFPS() {

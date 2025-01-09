@@ -81,6 +81,7 @@ NW_PREFIX int NWengineInit() {
 
 NW_PREFIX void NWengineLoop() {
 	while (!Context::ShouldClose()) {
+		NWTime::Init();
 		//Initializing imgui here for example
 		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameBegin)
 		//Clearing the context
