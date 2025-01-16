@@ -14,6 +14,7 @@ public:
   */
 	static std::string GetType() { return "Collider"; }
 
+    uint32      tag;
 	GameObject* attachedObj;
 
 	/**
@@ -61,6 +62,19 @@ public:
   * @return True if the colliders are colliding, false otherwise.
   */
 	bool isColliding(Collider* other, fVec2* depthBuffer = nullptr);
+
+
+	/**
+  * @brief Sets edges according to rectangular shape.
+  * @param size The size of the rectangle.
+  * @param rotation The rotation of the box.
+  */
+    void SetEdgesRect(const fVec2& size, const float rotation); 
+
+	/**
+  * @brief Sets edges according to the sprite of the attached GameObject.
+  */
+    void SetEdgesSprite(); 
 
 	void Start() override;
 

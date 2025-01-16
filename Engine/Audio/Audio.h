@@ -54,6 +54,7 @@ struct std::hash<SoundIdentifier> {
  */
 class Sound : public Asset {
 public:
+    static void* _device;
     uint32 _buffID = 0; /**< The buffer ID of the sound. OpenAL ID if OpenAL is used as audio engine*/
     uint32 _source = 0; /**< The source ID of the sound. */
     float volume = 1.0f; /**< The volume of the sound. */

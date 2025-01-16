@@ -1,7 +1,11 @@
 #include "AudioEmitter.h"
-#include "Utilities.h"
 
 std::map<GameObject*, AudioEmitter*> AudioEmitter::componentList;
+
+bool AudioEmitter::ConditionHasAudioEmitter(GameObject* obj) {
+    AudioEmitter* ae = obj->GetComponent<AudioEmitter>();
+    return ae;
+}
 
 AudioEmitter::AudioEmitter() {}
 
@@ -26,15 +30,42 @@ void AudioEmitter::SetSound(const std::string& path) {
 	sound = (Sound*)loader.LoadFromFile(path.c_str(), &id); //TODO::Make buffer shared across multiple 'sounds'
 }
 
+void AudioEmitter::Play() {
+    sound->Play();
+}
+
+void AudioEmitter::Stop() {
+    sound->Stop();
+}
+
 void AudioEmitter::SetSound(const Sound* snd) {
-	if (sound != nullptr) {
+	if (sound != nullptr)
 		sound->Clean();
-	}
+
 	Sound loader;
 	SoundIdentifier id = { "", (uint64)this};
 	sound = (Sound*)loader.LoadFromBuffer((void*)&snd->_buffID, &id);
 }
 
+void AudioEmitter::StopIfHasFinished() {
+    if (sound->isPlaying && sound->HasFinished())
+        Stop();
+}
+
+void AudioEmitter::SetLooping(bool v) {
+    isLooping = v;
+    sound->SetLoop(v);
+}
+
+void AudioEmitter::SetFrequency(float v) {
+    frequency = v;
+    sound->SetFrequency(frequency);
+}
+
+void AudioEmitter::SetVolume(float v) {
+    volume = v;
+    sound->SetVolume(volume / 100.0f);
+}
 
 int AudioEmitter::Serialize(std::fstream* data, int offset)	{
 	SoundIdentifier id = GetIDWithAsset<Sound*, SoundIdentifier>(sound);

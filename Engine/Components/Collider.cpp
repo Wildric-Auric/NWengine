@@ -8,20 +8,33 @@ Collider::Collider(GameObject* go) {
 };
 
 
-void Collider::Start() {
-	Sprite* sprite = this->attachedObj->GetComponent<Sprite>();
-	Transform* transform = this->attachedObj->GetComponent<Transform>();
-	if (!sprite || !transform)
-		return;
-
-	fVec2 size = fVec2(sprite->container.width * 0.5f, sprite->container.height * 0.5) * transform->scale;
-		
+void Collider::SetEdgesRect(const fVec2& s, const float rot) {
+    fVec2 size = fVec2(s.x * 0.5f, s.y * 0.5);
 	this->edges = {
-		fVec2(size.x , size.y).Rotate(transform->rotation) ,
-		fVec2(-size.x, size.y).Rotate(transform->rotation) ,
-		fVec2(-size.x, -size.y).Rotate(transform->rotation),
-		fVec2(size.x , -size.y).Rotate(transform->rotation)
+		fVec2(size.x , size.y).Rotate(rot) ,
+		fVec2(-size.x, size.y).Rotate(rot) ,
+		fVec2(-size.x, -size.y).Rotate(rot),
+		fVec2(size.x , -size.y).Rotate(rot)
 	};
+}
+
+void Collider::SetEdgesSprite() {
+    Sprite* spr = attachedObj->GetComponent<Sprite>();
+    if (!spr) return;
+    Transform* tr = attachedObj->GetComponent<Transform>();
+    fVec2 s = fVec2(spr->container.width, spr->container.height);
+    fVec2 scale = fVec2(1.0f,1.0f);
+    float rot = 0;
+    if (tr) {
+        scale = tr->scale;
+        rot   = tr->rotation;
+    }
+    SetEdgesRect(scale * s, rot);
+}
+
+void Collider::Start() {
+	Transform* transform = this->attachedObj->GetComponent<Transform>();
+    SetEdgesSprite();
 }
 
 fVec2 Collider::GetPosition() {

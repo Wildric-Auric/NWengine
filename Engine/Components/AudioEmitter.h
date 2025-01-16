@@ -14,6 +14,8 @@ public:
      */
     static std::string GetType() { return "AudioEmitter"; };
 
+    static bool ConditionHasAudioEmitter(GameObject* obj);
+
     /**
      * @brief AudioEmitter constructor.
      */
@@ -31,6 +33,16 @@ public:
     ~AudioEmitter();
 
     /**
+     * @brief OnAdd responsible for adding the obejct to the cache for listener.
+     */
+    void OnAdd() override;
+
+    /**
+     * @brief OnDelete responsible for deleting the obejct from the cache for listener.
+     */
+    void OnDelete() override;
+
+    /**
      * @brief SetSound sets the sound path for the AudioEmitter.
      * @param path The path of the sound file.
      * @note all SetSound methods clean the sound that is already played 
@@ -43,6 +55,41 @@ public:
      * @param snd The sound object.
      */
     void SetSound(const Sound* snd);
+
+    /**
+     * @brief SetVolume sets sound volume.
+     * @param v the volume value, should be between 0 et 100.
+     */
+    void SetVolume(float v);
+
+    /**
+     * @brief Plays the sound. 
+     */
+    void Play();
+
+    /**
+     * @brief Stop the sound. 
+     */
+    void Stop();
+
+    /**
+     * @brief SetFrequency sets sound frequency.
+     * @param v the frequency value, should be between 0 et 2.
+     */
+    void SetFrequency(float v);
+
+    /**
+     * @brief SetLooping sets if the the sound should loop.
+     * @param v The looping value.
+     */
+    void SetLooping(bool v);
+
+    /**
+     * @brief StopIfHasFinished Stops the sound if it has finished automatically called
+     * by audio listener.
+     * @param snd The sound object.
+     */
+    void StopIfHasFinished();
 
     GameObject* attachedObj = nullptr;
 

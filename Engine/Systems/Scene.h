@@ -6,13 +6,122 @@
 /**
  * @brief Represents a scene in the game.
  */
+
+typedef bool (*cacheCondProc)(GameObject*);
+typedef int  (*mapProc)(GameObject*, void*);
+
 class Scene {
 public:
     bool _shouldDelObj = 0; /**< Internal flag that holds if currently iterated on gameobject during update should be deleted. see DestroyCurrentObj() for details*/
+    bool _autoCache    = 0;
 
     std::string name; /**< The name of the scene. */
     std::list<GameObject> sceneObjs; /**< The list of game objects in the scene. */
     std::list<Sprite*> drawList; /**< The list of sprites to be drawn in the scene. */
+    std::unordered_map<cacheCondProc, std::unordered_map<GameObject*, std::list<GameObject>::iterator> > cache;
+
+
+    /**
+     * @brief For each key condition in the object cache structure 
+     * iterates over all scene objects and adds them to cache if condition is true.
+     */
+    void FillCache();
+
+    /**
+     * @brief For the condition passed as parameter, if it exists on the cache, the function 
+     * iterates over all scene objects and adds them to cache if condition is true.
+     * @param key The key of which the cache is filled.
+     */
+    void FillCache(cacheCondProc key);
+
+    /**
+     * @brief For the condition passed as parameter, if it exists on the cache, the function 
+     * destroys the cache associated to it.
+     * @param key The key of which the cache is deleted.
+     */
+    void DestroyCache(cacheCondProc key);
+
+    /**
+     * @brief delete all cache.
+     */
+    void DestroyCache();
+    
+    /**
+     * @brief Refresh the cache using a GameObject.
+     * @param obj The object to add to the cache. 
+     */
+    void AddToCache(GameObject& obj); 
+
+    /**
+     * @brief Add GameObject to the cache.
+     * @param obj The object to add.
+     * @param the iterator to the object in the object original container; if no need to use it, 
+     * it can be set to the end of the container.
+     */
+    void AddToCache(GameObject& obj, std::list<GameObject>::iterator it); 
+
+    /**
+     * @brief Add GameObject to the cache.
+     * @param key The key of the cache.
+     * @param obj The object to add.
+     */
+    void AddToCache(cacheCondProc key, GameObject& obj); 
+
+    /**
+     * @brief Add new condition as key to the cache.
+     * @param key The key to add.
+     */
+    void AddToCache(cacheCondProc key);
+
+    /**
+     * @brief Deletes obj from cache.
+     * @param key The key of which the cache is deleted.
+     */
+    void DeleteFromCache(GameObject& obj);
+
+    /**
+     * @brief Deletes obj partially from the cache, given a key.
+     * @param key The key of which the cache is deleted.
+     * @param obj the object to delete.
+     */
+    void DeleteFromCache(cacheCondProc key,  GameObject& obj);
+
+    /**
+     * @brief Iterate on all objects of the cache of a certain key and apply a function on them.
+     * @param cond The condtion, key of the cache, note that the function should have the same adress as the one already registered.
+     * @param proc The procedure to be applied.
+     * @param data User data.
+     * @return The sum of returned values per each call.  
+     */
+    int CacheMap(cacheCondProc cond, mapProc proc, void* data);
+
+    /**
+     * @brief Apply a function on all objects of the scene.
+     * @param proc The procedure to be applied. 
+     * @param data Use data. 
+     * @return The sum of returned values per each call.  
+     */
+    int ObjMap(mapProc proc, void* data);
+
+    /**
+     * @brief For the condition passed as parameter, if it exists on the cache, the function 
+     * destroys the cache associated to it.
+     * @param key The key of which the cache is deleted.
+     */
+    void DeferredDeleteCurrentGameObject();
+
+    /**
+     * @brief Sets autocache which makes the scene internally refresh the cache after each deletion 
+     of a gameobject and after calling Start.
+     * @param val The value true or false to enable and disable.
+     */
+    void SetAutoCache(bool val);
+
+    /**
+     * @brief For the condition passed as parameter, if it exists on the cache, the function 
+     * @return the value of autocache
+     */
+    bool GetAutoCache();
 
     /**
      * @brief Adds a new empty GameObject to the scene objects container.

@@ -40,6 +40,15 @@ public:
     virtual void Start() {};
 
     /**
+     * @brief OnAdd calls this during the component addition. Does nothing if not overriden.
+     */
+    virtual void OnAdd() {};
+
+    /**
+     * @brief OnDelete calls this during component deletion. Does nothing if not overriden.
+     */
+    virtual void OnDelete() {};
+    /**
      * @brief Set the GameObject associated with the game component.
      * @param go The GameObject to set.
      */
@@ -67,7 +76,7 @@ private:
 public:
     std::map<std::string, GameComponent*> components; /**< Map of components attached to the game object. Internal member */
     std::string name = "new GameObject"; /**< The name of the game object. */
-    uint32 id = 0; /**< The identifier of the game object. Unused for now by the engine. */
+    uint32 tag = 0; /**< A tag of the game object. Can be used for different purposes. */
     DrawCallback _drawProc = nullptr; /**< The draw callback for the game object. */
 
     /**
@@ -140,6 +149,7 @@ public:
         if (temp != components.end()) return (T*)(*&temp)->second;
         T* ptr = new T(this);
         components.insert(std::pair<std::string, GameComponent*>( T::GetType(), ptr ));
+        ptr->OnAdd(); 
         return ptr;
     };
 
@@ -155,7 +165,7 @@ public:
      * @param type The type of the component.
      * @return A pointer to the component, or nullptr if the component does not exist.
      */
-    GameComponent* GetComponent(std::string type);
+    GameComponent* GetComponent(const std::string& type);
     /**
      * @brief Delete a component of the specified type. 
      * If it is not found, this function does nothing.
@@ -163,7 +173,9 @@ public:
      */
     template<typename T>
     void DeleteComponent() {
-        if (components.find(T::GetType()) == components.end()) return;
+        auto iter = components.find(T::GetType());
+        if (iter == components.end()) return;
+        iter->second->OnDelete();
         delete components[T::GetType()];
         components.erase(T::GetType());
     }

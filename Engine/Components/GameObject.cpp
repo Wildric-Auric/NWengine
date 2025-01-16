@@ -61,11 +61,11 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Camera			, type);
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
-	ADD_COMPONENT(Text       , type);
+	ADD_COMPONENT(Text              , type);
 	return nullptr;
 };
 
-GameComponent* GameObject::GetComponent(std::string type) {
+GameComponent* GameObject::GetComponent(const std::string& type) {
 	std::map<std::string, GameComponent*>::iterator pair = components.find(type);
 	if (pair == components.end()) return nullptr;
 	return pair->second;

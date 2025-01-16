@@ -24,8 +24,20 @@
 #define NW_GL_CALL(code) code; NW_GL_TEST()
 
 
+#ifdef NW_RELEASE
+#define NW_AL_TEST()
+#else
+#define NW_AL_TEST() { \
+	auto a = alcGetError((ALCdevice*)_device);\
+	if (a != ALC_NO_ERROR) { \
+		std::cout << "\n---------------------\nOpenAL ERROR: "<< a << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
+	} \
+} while(0);
+#endif
+
+#define NW_AL_CALL(code) code; NW_AL_TEST()
 //arch is always an integer type with size of pointer of the architecture
-typedef long     arch;
+typedef long arch;
 
 typedef int8_t   int8;
 typedef int32_t  int32;

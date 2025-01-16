@@ -91,6 +91,8 @@ std::list<GameObject>::iterator Scene::DeleteObject(std::list<GameObject>::itera
 	for (auto pair : ptr->components) {
 		delete (GameComponent*)(pair.second);
 	}
+    if (_autoCache)
+        DeleteFromCache(*ptr);
 	return sceneObjs.erase(it);
 }
 
@@ -218,6 +220,8 @@ void Scene::Start() {
 		for (std::map<std::string, GameComponent*>::iterator iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Start();
 		}
+        if (_autoCache)
+            AddToCache(*obj, obj);
 	}
 }
 
@@ -313,4 +317,94 @@ Scene* Scene::GetCurrent() {
 void Scene::UpdateActiveScene() {
 	if (Scene::currentScene != nullptr)
 		Scene::currentScene->Update();
+}
+
+
+void Scene::DeferredDeleteCurrentGameObject() {
+    _shouldDelObj = 1;
+}
+
+void Scene::FillCache() {
+    if (cache.size() <= 0) return;
+    for (auto obj = sceneObjs.begin(); obj != sceneObjs.end(); ++obj)  {
+        AddToCache(*obj, obj);
+    }
+}
+
+void Scene::FillCache(cacheCondProc proc) {
+    AddToCache(proc);
+    for (auto obj = sceneObjs.begin(); obj != sceneObjs.end(); ++obj) {
+        AddToCache(*obj);
+    }
+}
+
+void Scene::DestroyCache(cacheCondProc proc) {
+    cache.erase(proc);
+}
+
+void Scene::DestroyCache() {
+    cache.clear();
+}
+    
+void Scene::AddToCache(GameObject& obj, std::list<GameObject>::iterator iter) {
+    for (auto& key : cache) {
+        if (key.first(&obj))
+            key.second[&obj] = iter;
+    }
+}
+
+void Scene::AddToCache(cacheCondProc key, GameObject& obj) {
+    AddToCache(key);
+    if (key(&obj))
+        cache[key][&obj] = sceneObjs.end();
+}
+
+void Scene::DeleteFromCache(cacheCondProc key, GameObject& obj) {
+    auto iter = cache.find(key);
+    if (iter == cache.end()) return;
+    iter->second.erase(&obj);
+}
+
+void Scene::AddToCache(GameObject& obj) {
+    AddToCache(obj, sceneObjs.end()); 
+}
+
+void Scene::AddToCache(cacheCondProc proc) {
+    auto iter = cache.find(proc);
+    if (iter == cache.end()) 
+        cache[proc] =  {};
+}
+
+void Scene::DeleteFromCache(GameObject& obj) {
+    for (auto& key : cache) {
+        key.second.erase(&obj);
+    }
+}
+
+int Scene::CacheMap(cacheCondProc key, mapProc proc, void* data) {
+    auto iter = cache.find(key);
+    if ( iter == cache.end()) return 0;
+    int res = 1;
+    int val = 0;
+    for (auto pair: iter->second) {
+        res = res + proc(pair.first, data);
+    }
+    return res;
+}
+
+int Scene::ObjMap(mapProc proc, void* data) {
+    int res = 1;
+    int val = 0;
+    for (auto o = sceneObjs.begin(); o != sceneObjs.end(); ++o) {
+        res += proc(&*o, data);
+    }
+    return res;
+}
+
+void Scene::SetAutoCache(bool val) {
+    _autoCache = val;
+}
+
+bool Scene::GetAutoCache() {
+    return _autoCache;
 }

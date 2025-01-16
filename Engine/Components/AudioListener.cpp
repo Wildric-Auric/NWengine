@@ -13,27 +13,30 @@ AudioListener::~AudioListener() {
 	AudioListener::componentList.erase(this->attachedObj);
 }
 
+void AudioEmitter::OnAdd() {
+    Scene::GetCurrent()->AddToCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
+}
+
+void AudioEmitter::OnDelete() {
+    Scene::GetCurrent()->DeleteFromCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
+}
 
 //TODO::All calculation for distance and direction for sound fading etc
 void AudioListener::Update() {
-	for (auto iter = Scene::currentScene->sceneObjs.begin(); iter != Scene::currentScene->sceneObjs.end(); iter++) {
-		GameObject* go = &(*iter);
+    Scene* s = Scene::GetCurrent();
+
+    auto proc = [](GameObject* go, void* data) -> int {
 		AudioEmitter* audioEmitter = go->GetComponent<AudioEmitter>();
-		if (audioEmitter == nullptr) continue;
-		if (!audioEmitter->sound) continue;
-		float volume    = (float)(audioEmitter->volume)/100.0f;
+		float volume    = (float)(audioEmitter->volume);
 		float freq      = audioEmitter->frequency;	
+		audioEmitter->SetVolume(volume);
+		audioEmitter->SetFrequency(freq);
+		audioEmitter->SetLooping(audioEmitter->isLooping);
+        audioEmitter->StopIfHasFinished();
+        return 1;
+    };
 
-		audioEmitter->sound->SetVolume(volume);
-		audioEmitter->sound->SetFrequency(freq);
-		audioEmitter->sound->SetLoop(audioEmitter->isLooping);
-
-		if (audioEmitter->sound->isPlaying) {
-			if (audioEmitter->sound->HasFinished()) {
-				audioEmitter->sound->Stop();
-			}
-		}
-	}
+    s->CacheMap(AudioEmitter::ConditionHasAudioEmitter, proc, nullptr);
 }
 
 int AudioListener::Serialize(std::fstream* data, int offset) {
