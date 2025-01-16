@@ -5,9 +5,9 @@
 
 
 //For now using just printf, should output to console later
-#define NW_LOG_ERROR(str)	printf(str)
-#define NW_LOG_WARNING(str) printf(str)
-#define NW_LOG(str)			printf(str)
+#define NW_LOG_ERROR(str)	printf("%s\n", str)
+#define NW_LOG_WARNING(str) printf("%s\n", str)
+#define NW_LOG(str)			printf("%s\n", str)
 
 
 #ifdef NW_RELEASE

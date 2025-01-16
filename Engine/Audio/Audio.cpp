@@ -47,7 +47,7 @@ Asset* Sound::LoadFromFile(const char* path, void* id) {
 	ALsizei sampleRate = static_cast<ALsizei>(info.samplerate);
 	std::vector<ALshort> samples(sampleNumber);
 	if (sf_read_short(data, &samples[0], sampleNumber) < sampleNumber) {
-		printf("Need to read doc?");
+		printf("Need to read doc?\n");
 		return nullptr;
 	}
 	sf_close(data);
