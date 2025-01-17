@@ -36,3 +36,34 @@ public:
      */
     static const double& GetFPS();
 };
+
+
+//TODO::Document
+class NWTimer {
+public:
+    double _buff   = 0;
+    double _maxx   = 0;
+    bool _isPaused = 0;
+    bool _tick     = 0;
+    bool _loop     = 0;
+    void* _tickData = nullptr;
+    void (*_tickCallback)(void* data) = nullptr;
+    
+    inline NWTimer(double m) { _maxx = m;}
+    inline NWTimer(double m, bool loop) { _maxx = m; _loop = loop;}
+    inline bool   GetPaused() {return _isPaused;}
+    inline double GetVal() {return _buff;}
+    inline double GetMax() {return _maxx;}
+    inline void SetPaused(bool p = 1) {_isPaused = p;}
+    inline void SetMax(double m) {_maxx = m;}
+    inline void SetToZero() { _buff = 0; _tick = 0;}
+    inline void SetToMax()  { _buff = _maxx; _tick = 0;}   
+    inline void SetLoop(bool l = 1) { _loop = l;}
+    inline bool GetTick() { return _tick;}
+
+    bool HasFinished();
+    void SetTickCallback(void(*)(void*), void*);
+    bool Update();
+    bool Update(double t);
+    
+};

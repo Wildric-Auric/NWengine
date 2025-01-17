@@ -39,3 +39,26 @@ const double& NWTime:: GetFPS() {
 const double& NWTime::GetDeltaTime() {
 	return _deltaTime;
 }
+
+void NWTimer::SetTickCallback(void(*cbk)(void*), void* data) {
+    _tickData = data;
+    _tickCallback = cbk;
+}
+
+bool NWTimer::Update(double t) {
+    if (_isPaused) return 0;
+    double prev = _buff;
+    _buff = Min<double>(_buff + t, _maxx);
+    _tick  = (prev < _maxx) && (_buff >= _maxx);
+    (_tick && _tickCallback) ? _tickCallback(_tickData) : void() ;
+    ((prev >= _maxx) && _loop) ? SetToZero() : void(); 
+    return _tick;
+}
+
+bool NWTimer::Update() {
+    return Update(NWTime::GetDeltaTime());
+}
+
+bool NWTimer::HasFinished() {
+    return GetVal() >= _maxx;
+}
