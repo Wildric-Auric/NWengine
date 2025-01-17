@@ -91,38 +91,72 @@ void Shader::Use() {
 	glUseProgram(_glID);
 }
 
+
+void Shader::SetMat4x4(int loc, const float* value) {
+    glUniformMatrix4fv(loc, 1, GL_FALSE, value);
+}
+
+void Shader::SetUniform1f(int loc, float value) {
+    glUniform1f(loc, value);
+}
+
+void Shader::SetVector2(int loc, float value0, float value1) {
+    glUniform2f(loc, value0, value1);
+}
+
+void Shader::SetUniform1i(int loc, const int value) {
+    glUniform1i(loc, value);
+}
+
+void Shader::SetUniform3f(int loc, float x, float y, float z) {
+    glUniform3f(loc, x, y, z);
+}
+
+void Shader::SetUniform4f(int loc, float x, float y, float z, float w) {
+    glUniform4f(loc, x, y, z, w);
+}
+
+void Shader::SetUniformArrayf(int loc, float* value, int size) {
+    glUniform1fv(loc, size, value);
+}
+
+void Shader::SetUniformArrayi(int loc, int* value, int size) {
+    glUniform1iv(loc, size, value);
+}
+
 void Shader::SetMat4x4(const char* name, const float* value) {
-	glUniformMatrix4fv(glGetUniformLocation(_glID, name), 1, GL_FALSE, value);
+	SetMat4x4(glGetUniformLocation(_glID, name), value);
 }
 
 void Shader::SetUniform1f(const char* name, float value) {
-	glUniform1f(glGetUniformLocation(_glID, name), value);
+	SetUniform1f(glGetUniformLocation(_glID, name), value);
 }
 
 void Shader::SetVector2(const char* name, float value0, float value1) {
-	glUniform2f(glGetUniformLocation(_glID, name), value0, value1);
+	SetVector2(glGetUniformLocation(_glID, name), value0, value1);
 }
 
 void Shader::SetUniform1i(const char* name, const int value) {
-	glUniform1i(glGetUniformLocation(_glID, name), value);
+	SetUniform1i(glGetUniformLocation(_glID, name), value);
 }
 
 void Shader::SetUniform3f(const char* name, float x, float y, float z)
 {
-	glUniform3f(glGetUniformLocation(_glID, name), x, y, z);
+	SetUniform3f(glGetUniformLocation(_glID, name), x, y, z);
 };
 
+void Shader::SetUniform4f(const char* name, float x, float y, float z, float w) {
+	SetUniform4f(glGetUniformLocation(_glID, name), x, y, z, w);
+}
+
 void Shader::SetUniformArrayf(const char* name, float* value, int size) {
-	glUniform1fv(glGetUniformLocation(_glID, name), size, value);
+	SetUniformArrayf(glGetUniformLocation(_glID, name), value, size);
 }
 
 void Shader::SetUniformArrayi(const char* name, int* value, int size) {
-	glUniform1iv(glGetUniformLocation(_glID, name), size, value);
+	SetUniformArrayi(glGetUniformLocation(_glID, name), value, size);
 }
-
 
 void Shader::Delete() {
 	glDeleteProgram(this->_glID);
 }
-
-

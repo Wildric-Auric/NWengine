@@ -29,6 +29,28 @@ public:
      */
     void Use();
 
+    
+    /**
+     * @brief Set a 4x4 matrix uniform in the shader.
+     * @param location The location of the uniform.
+     * @param value The value of the uniform.
+     */
+    void SetMat4x4(int location, const float* value);
+
+    void SetUniform1f(int location, const float value);
+
+    void SetVector2(int loc, float value0, float value1);
+
+    void SetUniform1i(int loc, const int value);
+    
+    void SetUniform3f(int loc, float x, float y, float z);
+    
+    void SetUniform4f(int loc, float x, float y, float z, float w);
+    
+    void SetUniformArrayf(int loc, float* value, int size);
+    
+    void SetUniformArrayi(int loc, int* value, int size);
+
     /**
      * @brief Set a 4x4 matrix uniform in the shader.
      * @param name The name of the uniform.
@@ -51,6 +73,16 @@ public:
      * @param z The z component of the vector.
      */
     void SetUniform3f(const char* name, float x, float y, float z);
+
+    /**
+     * @brief Set a 4-component float vector uniform in the shader.
+     * @param name The name of the uniform.
+     * @param x The x component of the vector.
+     * @param y The y component of the vector.
+     * @param z The z component of the vector.
+     * @param w The w component of the vector.
+     */
+    void SetUniform4f(const char* name, float x, float y, float z, float w);
 
     /**
      * @brief Set a 2-component float vector uniform in the shader.
