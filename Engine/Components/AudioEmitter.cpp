@@ -101,3 +101,46 @@ int AudioEmitter::Deserialize(std::fstream* data, int offset) {
 	READ_FROM_BIN(data, &this->isLooping, sizeBuffer);
 	return 0;
 };
+
+
+GameObject* MultiAudioEmitter::AddEmitter() {
+    GameObject*   obj = new GameObject(); 
+    AudioEmitter* em  =obj->AddComponent<AudioEmitter>();
+    _container.emplace(obj, em);
+    return obj;
+}
+
+GameObject* MultiAudioEmitter::GetEmitterIf(bool(*cond)(GameObject*)) {
+    for (auto key : _container) {
+        if (cond(key.first)) return key.first;
+    }
+    return nullptr;
+}
+
+void MultiAudioEmitter::DeleteEmitter(GameObject* element) {
+    auto iter = _container.find(element);
+    if (iter == _container.end()) return;
+    iter->first->DeleteComponents();
+    delete iter->first;
+    _container.erase(iter);
+}
+
+AudioEmitter* MultiAudioEmitter::GetEmitterAudioIf(bool(*cond)(AudioEmitter*)) {
+    for (auto key : _container) {
+        if (cond(key.second)) return key.second;
+    }
+    return nullptr;
+}
+
+AudioEmitter* MultiAudioEmitter::GetEmitterAudio(GameObject* obj) {
+    auto iter = _container.find(obj);
+    if (iter == _container.end()) return nullptr;
+    return iter->second;
+}
+
+MultiAudioEmitter::~MultiAudioEmitter() {
+    for (auto key : _container) {
+        key.first->DeleteComponents();
+        delete key.first;
+    }
+}

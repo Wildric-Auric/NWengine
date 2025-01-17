@@ -60,7 +60,8 @@ Asset* Sound::LoadFromFile(const char* path, void* id) {
 	alBufferData(buffer, format, &samples[0], sampleNumber * sizeof(ALushort), sampleRate);
 	ALenum err = alGetError();
 	if (err != AL_NO_ERROR) {
-		NW_LOG_ERROR((std::string("OpenAL Error during loading: ") + std::to_string(err)).c_str()); //TODO::Delete buffers here
+		NW_LOG_ERROR((std::string("OpenAL Error during loading: ") + std::to_string(err) + " " + std::to_string(sampleNumber) + " " 
+                            + std::to_string(samples[0]) + " " + std::to_string(format)).c_str()); //TODO::Delete buffers here
 		return nullptr;
 	}
 	return LoadFromBuffer(&buffer, id);

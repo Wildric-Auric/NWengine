@@ -134,3 +134,22 @@ public:
      */
     static std::map<GameObject*, AudioEmitter*> componentList;
 };
+
+//TODO::Document
+class MultiAudioEmitter : public GameComponent {
+    public:
+        GameObject* goc = nullptr;
+        std::unordered_map<GameObject*, AudioEmitter*> _container;
+
+        static std::string GetType() { return "MultiAudioEmitter";}
+        inline MultiAudioEmitter() {}
+        inline MultiAudioEmitter(GameObject* obj) { goc = obj;}
+        ~MultiAudioEmitter();
+
+        GameObject* AddEmitter();
+        void  DeleteEmitter(GameObject*);
+        GameObject* GetEmitterIf(bool(*)(GameObject*));
+        GameObject* GetEmitterAudioIf(bool(*)(GameObject*));
+        AudioEmitter* GetEmitterAudioIf(bool(*)(AudioEmitter*));
+        AudioEmitter* GetEmitterAudio(GameObject*);
+};
