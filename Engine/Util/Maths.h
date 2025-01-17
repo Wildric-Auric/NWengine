@@ -474,7 +474,7 @@ void Matrix2<T>::operator *= (const Matrix2<T>& other) {
 	result.values[1] = other.values[0] * values[1] + other.values[1] * values[3];
 	result.values[2] = other.values[2] * values[0] + other.values[3] * values[2];
 	result.values[3] = other.values[2] * values[1] + other.values[3] * values[3];
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T))
+	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
