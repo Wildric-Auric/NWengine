@@ -55,16 +55,35 @@ public:
 
     /**
      * @brief Sets up the framebuffer with the specified size.
-     * 
      * @param size The size of the framebuffer.
-     * 
      * @note Calling this method multiple times without deleting the framebuffer may result in a memory leak.
      */
     void SetUp(Vector2<int> size, MSAAValue msVal = NW_MSx1);
-    
+
+    /**
+     * @brief Add an attachment to the the framebuffer.
+     * @param size The size of the new attachment.
+     * @note Multisample value is the same for all attachments.
+     */
     void AddAttachment(iVec2 size);
 
+    /**
+     * @brief Get an attachment from the previously added attachments.
+     * @param i The index of the attachment.
+     * @return a reference to the attachment.
+     */
     FrameBufferAttachment& GetAtt(int i = 0);
+
+    /**
+     * @brief Clears a specific attachement
+     * @param i The index of the attachment.
+     * @param clearColor The color which is used to clear the i'th attachment
+     * @note The framebuffer should be bound before this operation
+     * the result is otherwise undefined.
+    */
+    void ClearAttachment(int i, const fVec4& clearColor);
+
+    
     /**
      * @brief Binds the framebuffer.
      */

@@ -31,6 +31,10 @@ FrameBufferAttachment& FrameBuffer::GetAtt(int i) {
     return attachments[i];
 }
 
+void FrameBuffer::ClearAttachment(int i, const fVec4& clearColor) {
+    NW_GL_CALL(glClearBufferfv(GL_COLOR, i, &clearColor.x));
+}
+
 void FrameBuffer::AddAttachment(iVec2 size) {
     uint8 num = attachments.size();
     if (_msaaVal != MSAAValue::NW_MSx1)
@@ -82,7 +86,6 @@ void FrameBuffer::Delete() {
 	resolveFbo = nullptr;
 }
 
-//TODO::UNfinished untested
 void FrameBuffer::Blit(FrameBuffer* other) {
 	Bind(NW_READ);
 	if (other)

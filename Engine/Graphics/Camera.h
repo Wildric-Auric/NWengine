@@ -29,9 +29,11 @@ public:
     fVec3 clearColor = fVec3(0.0,0.0, 0.0); /**< The clear color of the camera. */
     float alpha = 1.0f; /**< The alpha value of the camera. */
     bool isActive = 0; /**< Indicates whether the camera is active or not. */
+    std::unordered_map<int, fVec4> clearCols;
     MSAAValue _msaa = NW_MSx1;
     GameObject* attachedObj = nullptr; /**< The attached game object of the camera. */
-
+    
+    void _ClearAtts();
     /**
      * @brief Default constructor for the Camera class.
      */
@@ -57,7 +59,7 @@ public:
     /**
      * @brief Updates the camera.
      */
-    void Update();
+    void Update() override;
 
     /**
      * @brief Changes the orthographic size of the camera.
@@ -66,9 +68,31 @@ public:
      */
     void ChangeOrtho(float sizeX, float sizeY);
 
-    void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue);
+    /**
+     * @brief Changes the orthographic size and multisample value of the camera.
+     * @param sizeX The new size along the X-axis.
+     * @param sizeY The new size along the Y-axis.
+     * @param msaa The multisample value.
+     */
+    void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa);
 
+    /**
+     * @brief Sets the general clear value.
+     * @param color RGBA color values.
+     */
+    void SetClearColor(const fVec4& color);
 
+    /**
+     * @brief Sets the clear value for a specific attachment.
+     * @param i The index of the attachment.
+     * @param color RGBA color values.
+     */
+    void SetClearColor(int i, const fVec4& color);
+
+    /**
+     * @brief Reset specific clear colors.
+     */
+    void ResetClearColors();
 
     /**
      * @brief Moves the camera to the target position with interpolation.

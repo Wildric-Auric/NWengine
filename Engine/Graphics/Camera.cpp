@@ -6,10 +6,19 @@ void Camera::UpdateActiveCamera() {
 		Camera::ActiveCamera->Capture();
 }
 
+
+void Camera::_ClearAtts() {
+    for (auto& p : clearCols) {
+        if (p.first < 0 || p.first >= fbo.attachments.size())  continue;
+        fbo.ClearAttachment(p.first, p.second);
+    }
+}
+
 void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
 	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
 		Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
+        _ClearAtts(); 
 		Camera* temp = ActiveCamera;
 		ActiveCamera = this;
 		if (Scene::currentScene != nullptr)
@@ -44,17 +53,29 @@ void Camera::ChangeOrtho(float sizeX, float sizeY) {
 Camera* Camera::ActiveCamera = nullptr;
 
 void Camera::Update() {
-		//TODO::Optimize this update
-		viewMatrix = Matrix4<float>(1.0);
-		ScaleMat(viewMatrix, fVec3(zoom, zoom, 1.0));
-		RotateMat(viewMatrix, rotation, fVec3(0.0f, 0.0f, 1.0f));
-		TranslateMat(viewMatrix, fVec3(-position.x, -position.y, 0.0f));
+    //TODO::Optimize this update
+    viewMatrix = Matrix4<float>(1.0);
+    ScaleMat(viewMatrix, fVec3(zoom, zoom, 1.0));
+    RotateMat(viewMatrix, rotation, fVec3(0.0f, 0.0f, 1.0f));
+    TranslateMat(viewMatrix, fVec3(-position.x, -position.y, 0.0f));
 }
 
 void Camera::MoveTo(Vector2<int> target, float targetTime) {
 	position = target; 
 }
 
+void Camera::SetClearColor(const fVec4& color) { 
+    clearColor = *((fVec3*)(&color.x));
+    alpha = color.a;
+}
+
+void Camera::SetClearColor(int i, const fVec4& color) {
+    clearCols[i] = color;
+}
+
+void Camera::ResetClearColors() {
+    clearCols.clear(); 
+}
 
 
 void Camera::Use() {
