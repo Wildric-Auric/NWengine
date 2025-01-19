@@ -41,14 +41,17 @@ GameObject::~GameObject() {};
 
 void GameObject::DeleteComponent(std::string typeName) {
 	if (components.find(typeName) == components.end()) return;
+	components[typeName]->OnDelete();
 	delete components[typeName];
 	components.erase(typeName);
 }
 
 void GameObject::DeleteComponents() {
 	for (std::map<std::string, GameComponent*>::iterator component = components.begin(); component != components.end(); component++) {
+		component->second->OnDelete();
 		delete component->second;
 	}
+	components.clear();
 }
 //std::map< GameObject*, GameComponent > GameComponent::componentList;
 

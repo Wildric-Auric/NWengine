@@ -39,7 +39,7 @@ void Text::SetShader(Shader* s) {
 fVec2 Text::GetSize() {
 	fVec2 ret;
 	std::list<Character>::iterator iter = characters.begin();
-	for (auto& c = characters.begin(); c != characters.end(); ++c) {
+	for (auto c = characters.begin(); c != characters.end(); ++c) {
 		ret.x += (c->glyph->advance / 64) * c->go.GetComponent<Transform>()->scale.x * scale.x;
 		ret.y = Max(c->glyph->size.y * c->go.GetComponent<Transform>()->scale.y * scale.y, ret.y);
 	}

@@ -39,6 +39,10 @@ public:
 	template<typename T1>
 	Vector2 operator * (T1 const& num)       const;
 	Vector2 operator * (Vector2 const& vec1) const;
+	template<typename T1>
+	Vector2 operator / (T1 const& num)       const;
+	Vector2 operator / (Vector2 const& vec1) const;
+    Vector2 operator - ()                    const;
 	bool operator == (Vector2 const& vec1)   const;
 	bool operator != (Vector2 const& vec1)   const;
 	
@@ -48,6 +52,15 @@ public:
 	T* operator [] (int index) const;
 };
 
+template<typename T>
+Vector2<T> Vector2<T>::operator - () const {
+    return Vector2<T>(-x, -y);
+}
+
+template<typename T,typename T1>
+Vector2<T> operator * (T1 const& num, Vector2<T> vec) {
+    return vec * num;
+}
 
 template<typename T>
 Vector2<float> Vector2<T>::normalize() {
@@ -129,6 +142,23 @@ Vector2<T> Vector2<T>::operator * (T1 const& num) const {
 	newVec.y = y * num;
 	return newVec;
 }
+
+template<typename T>
+template<typename T1>
+Vector2<T> Vector2<T>::operator / (T1 const& num) const {
+	Vector2 newVec;
+	newVec.x = x / num;
+	newVec.y = y / num;
+	return newVec;
+}
+
+template<class T>
+Vector2<T> Vector2<T>::operator / (Vector2 const& vec1) const {
+	Vector2 newVec;
+	newVec.x = x / vec1.x;
+	newVec.y = y / vec1.y;
+	return newVec;
+}
 			
 template<typename T>
 bool Vector2<T>::operator == (Vector2 const& vec1) const {
@@ -196,14 +226,37 @@ public:
 	Vector3 Project(Vector3 const& vec1);
 
 	Vector3 operator + (Vector3 const& vec1) const;
-	Vector3 operator + (T const& num)		 const;
+	Vector3 operator + (T const& num)		 const; 
     Vector3 operator - (Vector3 const& vec1) const;
     Vector3 operator - (T const& num)        const;
 	Vector3 operator * (T const& num)        const; 
 	Vector3 operator * (Vector3 const& vec1) const;
+	Vector3 operator / (T const& num)        const; 
+	Vector3 operator / (Vector3 const& vec1) const;
+	Vector3 operator - ()                    const;
 	bool operator == (Vector3 const& vec1)   const;
 	bool operator != (Vector3 const& vec1)   const;
 };
+
+template<typename T>
+Vector3<T> Vector3<T>::operator - () const {
+   return Vector3<T>(-x, -y, -z);
+}
+
+template<typename T>
+Vector3<T> operator * (T const& num, Vector3<T> vec) {
+    return vec * num;
+}
+
+template<typename T>
+Vector3<T> Vector3<T>::operator / (T const& num) const {
+    return Vector3<T>(this->x/num, this->y/num, this->z/num); 
+}
+
+template<typename T>
+Vector3<T> Vector3<T>::operator / (Vector3 const& vec1) const {
+    return Vector3<T>(x/vec1.x, y/vec1.y, z/vec1.z); 
+}
 
 template<typename T>
 Vector3<float> Vector3<T>::normalize() const {
@@ -785,7 +838,7 @@ Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point
 }
 
 template<typename T, typename T1>
-Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector2<T> point1, Vector2<T> point2, Vector3<T1> percent) {
+Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point1, Vector3<T> point2, Vector3<T1> percent) {
 	return Vector3<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
 					  Cbezier(source.y, target.y, point1.y, point2.y, percent.y),
 					  Cbezier(source.z, target.z, point1.z, point2.z, percent.z));

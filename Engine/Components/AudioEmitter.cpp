@@ -1,10 +1,19 @@
 #include "AudioEmitter.h"
+#include "Scene.h"
 
 std::map<GameObject*, AudioEmitter*> AudioEmitter::componentList;
 
 bool AudioEmitter::ConditionHasAudioEmitter(GameObject* obj) {
     AudioEmitter* ae = obj->GetComponent<AudioEmitter>();
     return ae;
+}
+
+void AudioEmitter::OnAdd() {
+	Scene::GetCurrent()->AddToCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
+}
+
+void AudioEmitter::OnDelete() {
+	Scene::GetCurrent()->DeleteFromCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
 }
 
 AudioEmitter::AudioEmitter() {}

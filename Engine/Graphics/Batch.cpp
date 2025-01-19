@@ -147,8 +147,8 @@ void Batch::Draw() {
 	Shader::resList[this->shader].Use();
 
 	if (!isDynamic) {
-		Shader::resList[this->shader].SetMat4x4(UNIFORM_VIEWxPROJ_STR, 
-												(const float*)&(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix));
+        Matrix4<float> mat = (Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix); 
+		Shader::resList[this->shader].SetMat4x4(UNIFORM_VIEWxPROJ_STR, (const float*)&mat);
 	}
 
 	BindTextures();

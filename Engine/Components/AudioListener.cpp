@@ -13,14 +13,6 @@ AudioListener::~AudioListener() {
 	AudioListener::componentList.erase(this->attachedObj);
 }
 
-void AudioEmitter::OnAdd() {
-    Scene::GetCurrent()->AddToCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
-}
-
-void AudioEmitter::OnDelete() {
-    Scene::GetCurrent()->DeleteFromCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
-}
-
 //TODO::All calculation for distance and direction for sound fading etc
 void AudioListener::Update() {
     Scene* s = Scene::GetCurrent();
