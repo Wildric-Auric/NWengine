@@ -44,9 +44,14 @@ private:
     uint32 _framebuffer  = 0; /**< The framebuffer ID. */
     uint32 _renderbuffer = 0; /**< The renderbuffer ID. */
 public: 
+    static FrameBuffer* _current;
     FrameBuffer* resolveFbo = nullptr;
     MSAAValue _msaaVal = NW_MSx1;
     std::vector<FrameBufferAttachment> attachments; /**< The framebuffer attachments*/     
+    /**
+      * @brief Get the currently bound framebuffer.
+      */
+    static FrameBuffer* GetCurrent();
 
     /**
      * @brief Default constructor for the FrameBuffer class.
@@ -66,6 +71,11 @@ public:
      * @note Multisample value is the same for all attachments.
      */
     void AddAttachment(iVec2 size);
+
+    /**
+      * @brief Get the number of attachments of the fbo.
+    */
+    uint32 GetAttNum();
 
     /**
      * @brief Get an attachment from the previously added attachments.

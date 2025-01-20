@@ -1,7 +1,11 @@
 #include "GL/glew.h"
-
 #include "FrameBuffer.h"
-#include <string>
+
+FrameBuffer* FrameBuffer::GetCurrent() {
+    return _current;
+}
+
+FrameBuffer* FrameBuffer::_current = 0;
 
 void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
 	tex._size = size;
@@ -52,6 +56,10 @@ void FrameBuffer::AddAttachment(iVec2 size) {
     Unbind();
 }
 
+uint32 FrameBuffer::GetAttNum() {
+   return this->attachments.size(); 
+}
+
 void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
 	if (Context::window == nullptr) return;
     if (msVal != NW_MSx1) {
@@ -69,9 +77,11 @@ void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
 
 void FrameBuffer::Bind(RWFrameBuffer ro) {
 	NW_GL_CALL(glBindFramebuffer(ro, _framebuffer));
+    _current = this;
 }
 void FrameBuffer::Unbind(RWFrameBuffer ro) {
 	NW_GL_CALL(glBindFramebuffer(ro, 0));
+    _current = 0;
 }
 
 void FrameBuffer::Delete() {
