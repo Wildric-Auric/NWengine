@@ -4,6 +4,7 @@
 #include <string.h>
 #include "Shader.h"
 #include "Globals.h"
+#include "FrameBuffer.h"
 
 
 ShaderText Shader::parseShader(const char* path)
@@ -88,7 +89,34 @@ NW_IMPL_RES_LIST(ShaderIdentifier, Shader)
 
 
 void Shader::Use() {
-	glUseProgram(_glID);
+	NW_GL_CALL(glUseProgram(_glID));
+    FrameBuffer* fbo = FrameBuffer::GetCurrent();
+    if (!fbo) return;
+    for (int i = 0; i < fbo->GetAttNum(); ++i) {
+        if (_enabledAtts.find(i) != _enabledAtts.end()) {
+		    NW_GL_CALL(glColorMaski(i,1,1,1,1));
+        }
+        else {
+            NW_GL_CALL(glColorMaski(i,0,0,0,0));
+        }
+    }
+}
+
+void Shader::Unuse() {
+	NW_GL_CALL(glUseProgram(0));
+    FrameBuffer* fbo = FrameBuffer::GetCurrent();
+    if (!fbo) return;
+    for (int i = 0; i < fbo->GetAttNum();++i) {
+		NW_GL_CALL(glColorMaski(i,1,1,1,1));
+    }
+}
+
+void Shader::_DisableAtt(int i) {
+    _enabledAtts.erase(i);
+}
+
+void Shader::_EnableAtt(int i) {
+    _enabledAtts[i] = i;
 }
 
 

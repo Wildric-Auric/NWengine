@@ -23,11 +23,19 @@ class Shader : public Asset {
 public:
     uint32 _glID = 0; /**< The OpenGL ID of the shader. */
     ShaderIdentifier _identifier; /**< The identifier of the shader. */
+    std::unordered_map<int,int> _enabledAtts{{0,0}};
 
+    void _EnableAtt(int i);
+
+    void _DisableAtt(int i);
+
+    
     /**
      * @brief Use this shader for rendering.
      */
     void Use();
+
+    void Unuse();
 
     
     /**

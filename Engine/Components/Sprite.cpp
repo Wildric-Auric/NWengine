@@ -161,6 +161,7 @@ int Sprite::DefaultSpriteDrawCallback(void* data) {
 	int textureSlot = 0;
 	sprite->texture->Bind(textureSlot);
 	sprite->container.Draw();
+	sprite->shader->Unuse();
 
 	return sprite->sortingLayer;
 }

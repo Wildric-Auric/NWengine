@@ -172,6 +172,7 @@ void Batch::Draw() {
 		this->currentTexSlot = 0;
 	}
 	NW_GL_CALL(glBindVertexArray(0));
+	Shader::resList[this->shader].Unuse();
 };
 
 
