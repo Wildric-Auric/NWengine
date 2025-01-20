@@ -1,4 +1,4 @@
-Nw_version = '"0.9.311224"'
+Nw_version = '"0.9.090125"'
 
 workspace "NWengine"
     configurations {"Debug32", "Release32" }
@@ -9,7 +9,7 @@ workspace "NWengine"
     objdir    "Bin/objs"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
-    buildoptions { "/EHsc" }
+    buildoptions { "/EHsc"}
     location "Build" 
     project "NWEngineCore" 
                     kind "StaticLib"
@@ -85,8 +85,12 @@ workspace "NWengine"
 
         filter "configurations:*Debug*"
             defines {"NW_DEBUG", "_DEBUG", "NW_VERSION=%{Nw_version}"}
+            staticruntime "off"
+            runtime "Debug"
             symbols "On"
         filter "configurations:*Release*"
+            staticruntime "on"
+            runtime "Release"
             defines {"NW_NDEBUG", "NW_RELEASE", "NW_VERSION=%{Nw_version}"}
             optimize "On"
         filter {}
