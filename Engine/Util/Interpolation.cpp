@@ -13,27 +13,6 @@ float Interpolator::Evaluate(float clock) {
 	return currentValue = lerp(this->source, this->target, clock);
 }
 
-int  Interpolator::Serialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-
-	WRITE_ON_BIN(data, &this->source, sizeof(this->source), sizeBuffer);
-	WRITE_ON_BIN(data, &this->target, sizeof(this->target), sizeBuffer);
-	WRITE_ON_BIN(data, &this->duration, sizeof(this->duration), sizeBuffer);
-	return 0;
-}
-
-int  Interpolator::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	READ_FROM_BIN(data, &this->source, sizeBuffer);
-	READ_FROM_BIN(data, &this->target, sizeBuffer);
-	READ_FROM_BIN(data, &this->duration, sizeBuffer);
-
-	this->currentValue = this->source;
-	return 0;
-}
-
-
-
 BezierInterpolator::BezierInterpolator(float source, float target, float duration)  : Interpolator(source, target, duration){
 	Linearize();
 }
@@ -52,37 +31,3 @@ float BezierInterpolator::Evaluate(float clock) {
 	fVec2 e = fVec2(1.0f, this->target);
 	return this->currentValue = CbezierVector2(s, e, controlPoints[0], controlPoints[1], fVec2(clock, clock)).y; //TODO::This in one dimension only
 }
-
-int  BezierInterpolator::Serialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, &this->source, sizeof(this->source), sizeBuffer);
-	WRITE_ON_BIN(data, &this->target, sizeof(this->target), sizeBuffer);
-
-	WRITE_ON_BIN(data, &this->controlPoints[0].x, sizeof(float), sizeBuffer); //TODO::Add serialization for vector
-	WRITE_ON_BIN(data, &this->controlPoints[0].y, sizeof(float), sizeBuffer);
-
-	WRITE_ON_BIN(data, &this->controlPoints[1].x, sizeof(float), sizeBuffer);
-	WRITE_ON_BIN(data, &this->controlPoints[1].y, sizeof(float), sizeBuffer);
-
-	WRITE_ON_BIN(data, &this->duration, sizeof(this->duration), sizeBuffer);
-	return 0;
-}
-
-int  BezierInterpolator::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	READ_FROM_BIN(data, &this->source, sizeBuffer);
-	READ_FROM_BIN(data, &this->target, sizeBuffer);
-
-	READ_FROM_BIN(data, &this->controlPoints[0].x, sizeBuffer);
-	READ_FROM_BIN(data, &this->controlPoints[0].y, sizeBuffer);
-
-	READ_FROM_BIN(data, &this->controlPoints[1].x, sizeBuffer);
-	READ_FROM_BIN(data, &this->controlPoints[1].y, sizeBuffer);
-
-	READ_FROM_BIN(data, &this->duration, sizeBuffer);
-
-	this->currentValue = this->source;
-	return 0;
-}
-
-

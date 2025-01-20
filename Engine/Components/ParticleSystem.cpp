@@ -6,15 +6,13 @@
 #include "Utilities.h"
 #include "NWTime.h"
 
-ParticleSystem::ParticleSystem(GameObject* attachedObj) {
-	this->attachedObj = attachedObj;
+ParticleSystem::ParticleSystem(GameObject* obj) {
+	this->attachedObject = obj;
 }
-
-std::map<GameObject*, ParticleSystem> ParticleSystem::componentList;
 
 void ParticleSystem::Update() {
 	clock += NWTime::GetDeltaTime();
-	prop.absoluteStartPosition = attachedObj->AddComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
+	prop.absoluteStartPosition = attachedObject->AddComponent<Transform>()->position; //TODO::Not using GetComponent only once and make sure transofrm exists
 	if ((clock >= emissionFrequency) && isActive) Emit();
 	auto it = enabled.begin();
 
@@ -106,7 +104,7 @@ void ParticleSystem::Init() {
 }
 
 void ParticleSystem::UpdateParticle(int index) {
-	Transform* transform = attachedObj->AddComponent<Transform>();
+	Transform* transform = attachedObject->AddComponent<Transform>();
 	pool[index].transform->position = pool[index].currentPosition + pool[index].prop.absoluteStartPosition;
 	pool[index].transform->scale = pool[index].currentScale;
 
@@ -137,80 +135,6 @@ void Particle::Enable() {
 
 	isActive = 1;
 	sprite->Render();
-}
-
-
-
-
-int ParticleSystem::Serialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-
-	WRITE_ON_BIN(data,"ParticleSystem", 14,sizeBuffer);
-	WRITE_ON_BIN(data, &(isActive), sizeof(isActive), sizeBuffer);
-	//serializes particles prop
-
-	WRITE_ON_BIN(data, &(prop.lifetime),     sizeof(prop.lifetime), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.lifedistance), sizeof(prop.lifedistance), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sPosition.x),  sizeof(prop.sPosition.x), sizeBuffer);
-	WRITE_ON_BIN(data, &(prop.sPosition.y),  sizeof(prop.sPosition.y), sizeBuffer);
-
-	prop.directionX.Serialize(data, offset);
-	prop.directionY.Serialize(data, offset);
-	prop.scaleX.Serialize(data, offset);
-	prop.scaleY.Serialize(data, offset);
-	prop.speed.Serialize(data, offset);
-	prop.colorX.Serialize(data, offset);
-	prop.colorY.Serialize(data, offset);
-	prop.colorZ.Serialize(data, offset);
-	prop.colorA.Serialize(data, offset);
-
-	//emitter prop
-	WRITE_ON_BIN(data, &this->shader[0],  this->shader.size(), sizeBuffer);
-	WRITE_ON_BIN(data, &this->texture[0], this->texture.size(), sizeBuffer);
-	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
-	WRITE_ON_BIN(data, &(emissionQuantity), sizeof(emissionQuantity), sizeBuffer);
-	WRITE_ON_BIN(data, &(recycle), sizeof(recycle), sizeBuffer);
-	WRITE_ON_BIN(data, &(emissionFrequency), sizeof(emissionFrequency), sizeBuffer);
-	WRITE_ON_BIN(data, &(maxParticles), sizeof(maxParticles), sizeBuffer);
-
-	return 0;
-}
-
-int ParticleSystem::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	READ_FROM_BIN(data, &(isActive), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.lifetime), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.lifedistance), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sPosition.x), sizeBuffer);
-	READ_FROM_BIN(data, &(prop.sPosition.y), sizeBuffer);
-
-	prop.directionX.Deserialize(data, offset);
-	prop.directionY.Deserialize(data, offset);
-	prop.scaleX.Deserialize(data, offset);
-	prop.scaleY.Deserialize(data, offset);
-	prop.speed.Deserialize(data, offset);
-
-	prop.colorX.Deserialize(data, offset);
-	prop.colorY.Deserialize(data, offset);
-	prop.colorZ.Deserialize(data, offset);
-	prop.colorA.Deserialize(data, offset);
-
-	char* texPath    = new char[512];
-	char* shaderPath = new char[512];
-	READ_FROM_BIN(data, shaderPath, sizeBuffer);	shaderPath[sizeBuffer] = '\0';
-	READ_FROM_BIN(data, texPath, sizeBuffer);		texPath[sizeBuffer]	   = '\0';
-	this->texture = texPath;
-	this->shader  = shaderPath;
-	delete[] texPath;
-	delete[] shaderPath;
-
-
-	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
-	READ_FROM_BIN(data, &(emissionQuantity), sizeBuffer);
-	READ_FROM_BIN(data, &(recycle), sizeBuffer);
-	READ_FROM_BIN(data, &(emissionFrequency), sizeBuffer);
-	READ_FROM_BIN(data, &(maxParticles), sizeBuffer);
-	return 0;
 }
 
 ParticleSystem::~ParticleSystem() {

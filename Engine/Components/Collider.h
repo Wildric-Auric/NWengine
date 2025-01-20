@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include <vector>
 
 /**
  * @brief The Collider class represents a base collider component.
@@ -14,9 +15,7 @@ public:
   */
 	static std::string GetType() { return "Collider"; }
 
-    uint32      tag;
-	GameObject* attachedObj;
-
+    uint32      tag = 0;
 	/**
      * @brief Position offset in pixels relaltive to Transform position
      */
@@ -77,8 +76,4 @@ public:
     void SetEdgesSprite(); 
 
 	void Start() override;
-
-	int Serialize(std::fstream* data, int offset) override;
-
-	int Deserialize(std::fstream* data, int offset) override;
 };

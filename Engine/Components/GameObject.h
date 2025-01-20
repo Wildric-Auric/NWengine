@@ -5,7 +5,6 @@
 
 #pragma once
 #include "Globals.h"
-#include "Serialization.h"
 
 #include <map>
 
@@ -21,55 +20,56 @@ typedef int (*DrawCallback)(void* data);
 /**
  * @brief Base class for game components.
  */
-class GameComponent: public Serialized {
+class GameObject;
+
+class GameComponent {
 public:
     /**
      * @brief Get the type of the game component.
      * @return The type of the game component.
      */
+    GameObject* attachedObject;
+
     static std::string GetType() { return "GameComponent"; }
 
     /**
      * @brief Update the game component. Does noting if not overriden.
      */
-    virtual void Update() {};
+    inline virtual void Update() {};
 
     /**
      * @brief Start the game component. Does nothing if not overriden.
      */
-    virtual void Start() {};
+    inline virtual void Start() {};
 
     /**
      * @brief OnAdd calls this during the component addition. Does nothing if not overriden.
      */
-    virtual void OnAdd() {};
+    inline virtual void OnAdd() {};
 
     /**
      * @brief OnDelete calls this during component deletion. Does nothing if not overriden.
      */
-    virtual void OnDelete() {};
-    /**
-     * @brief Set the GameObject associated with the game component.
-     * @param go The GameObject to set.
-     */
-    virtual void SetGameObject(void* go) {}; 
-
-    /**
-     * @brief Get the GameObject associated with the game component.
-     * @return The GameObject associated with the game component.
-     */
-    virtual void* GetGameObject() { return nullptr; };
+    inline virtual void OnDelete() {};
 
     /**
      * @brief Destructor for the game component.
      */
-    virtual ~GameComponent() {};
+    inline virtual ~GameComponent() {};
+
+    inline void SetGameObject(GameObject* obj) {
+        attachedObject = (GameObject*)obj;
+    }
+
+    inline GameObject* GetGameObject() {
+        return attachedObject;
+    }
 };
 
 /**
  * @brief Class representing a game object.
  */
-class GameObject : public Serialized {
+class GameObject {
 private:
     static int numberOfGameObjects; //Unused.
 
@@ -118,11 +118,6 @@ public:
      * @brief Delete all components from the game object.
      */
     void DeleteComponents();
-
-
-    int Serialize(std::fstream* data, int offset);
-
-    int Deserialize(std::fstream* data, int offset);
 
     /**
      * @brief Get a component of the specified type.

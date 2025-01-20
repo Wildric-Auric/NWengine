@@ -782,16 +782,16 @@ T lerp(T source, T target, T1 percent) {
 	return source + (target - source) * percent;
 }
 
-template<typename T, typename T1>
-Vector2<T> lerpVector2(Vector2<T> source, Vector2<T> target, Vector2<T1> percent) {
+template<typename T, typename T1> Vector2<T> lerpVector2(const Vector2<T>& source, const Vector2<T>& target, const Vector2<T1>& percent) {
 	return Vector2<T>(lerp(source.x, target.x, percent.x), lerp(source.y, target.y, percent.y));
 };
 
 template<typename T, typename T1>
-Vector3<T> lerpVector3(Vector3<T> source, Vector3<T> target, Vector3<T1> percent) {
+Vector3<T> lerpVector3(const Vector3<T>& source, const Vector3<T>& target, const Vector3<T1>& percent) {
 	return Vector3<T>(lerp(source.x, target.x, percent.x), lerp(source.y, target.y, percent.y), 
 					  lerp(source.z, target.z, percent.z));
 };
+
 //Quadratic Bezier
 template<typename T, typename T1>
 T Qbezier(T source, T target, T point, T1 percent) {
@@ -804,14 +804,14 @@ T Qbezier(T source, T target, T point, T1 percent) {
 }
 
 template<typename T, typename T1>
-Vector2<T> QbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point, Vector2<T1> percent) {
+Vector2<T> QbezierVector2(const Vector2<T>& source, const Vector2<T>& target, const Vector2<T>& point, const Vector2<T1>& percent) {
 	return Vector2<T>(Qbezier(source.x, target.x, point.x, percent.x),
 					  Qbezier(source.y, target.y, point.y, percent.y));
 	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
 }
 
 template<typename T, typename T1>
-Vector3<T> QbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point, Vector3<T1> percent) {
+Vector3<T> QbezierVector3(const Vector3<T>& source, const Vector3<T>& target, const Vector3<T>& point, const Vector3<T1>& percent) {
 	return Vector3<T>(Qbezier(source.x, target.x, point.x, percent.x),
 					  Qbezier(source.y, target.y, point.y, percent.y),
 					  Qbezier(source.z, target.z, point.z, percent.z));
@@ -831,23 +831,20 @@ T Cbezier(T source, T target, T point1, T point2, T1 percent) {
 }
 
 template<typename T, typename T1>
-Vector2<T> CbezierVector2(Vector2<T> source, Vector2<T> target, Vector2<T> point1, Vector2<T> point2, Vector2<T1> percent) {
+Vector2<T> CbezierVector2(const Vector2<T>& source, const Vector2<T>& target, const Vector2<T>& point1, const Vector2<T>& point2, const Vector2<T1>& percent) {
 	return Vector2<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
 					  Cbezier(source.y, target.y, point1.y, point2.y, percent.y));
 	//DevNote: Should maybe rewrite code for each so it's optimized, look at how many time calculation is redone
 }
 
 template<typename T, typename T1>
-Vector3<T> CbezierVector3(Vector3<T> source, Vector3<T> target, Vector3<T> point1, Vector3<T> point2, Vector3<T1> percent) {
+Vector3<T> CbezierVector3(const Vector3<T>& source, const Vector3<T>& target, const Vector3<T>& point1, const Vector3<T>& point2, const Vector3<T1>& percent) {
 	return Vector3<T>(Cbezier(source.x, target.x, point1.x, point2.x, percent.x),
 					  Cbezier(source.y, target.y, point1.y, point2.y, percent.y),
 					  Cbezier(source.z, target.z, point1.z, point2.z, percent.z));
 }
 
-
-
-
 template<typename T>
-T Det2(Vector2<T> a, Vector2<T> b) {
+T Det2(const Vector2<T>& a, const Vector2<T>& b) {
 	return a.x * b.y - a.y * b.x;
 }

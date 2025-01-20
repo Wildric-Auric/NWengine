@@ -31,7 +31,6 @@ public:
     bool isActive = 0; /**< Indicates whether the camera is active or not. */
     std::unordered_map<int, fVec4> clearCols;
     MSAAValue _msaa = NW_MSx1;
-    GameObject* attachedObj = nullptr; /**< The attached game object of the camera. */
     
     void _ClearAtts();
     /**
@@ -113,9 +112,4 @@ public:
     FrameBuffer fbo; /**< The frame buffer object of the camera. */
 
     static Camera* ActiveCamera; /**< The active camera. */
-
-
-    int Serialize(std::fstream* data, int offset) override;
-
-    int Deserialize(std::fstream* data, int offset) override;
 };

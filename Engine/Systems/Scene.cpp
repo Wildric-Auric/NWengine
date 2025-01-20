@@ -144,7 +144,7 @@ void Scene::Draw() {
 			for (Batch* batch : it0->second)
 				batch->Draw();
 		}
-		(*it)->attachedObj->Draw();
+		(*it)->attachedObject->Draw();
 		lastLayer = temp;
 	}
 	//Drawing last layer batches
@@ -153,50 +153,6 @@ void Scene::Draw() {
 			batch->Draw();
 	}
 }
-
-void Scene::Save() {
-	std::fstream data( this->name, std::ios::binary | std::ios::out | std::ios::trunc);
-	for (std::list<GameObject>::iterator iter = sceneObjs.begin(); iter != sceneObjs.end(); iter++) {
-		iter->Serialize(&data, 0);
-	}
-	int temp = 0;
-	data.write((const char*)&temp, 4);
-	data.close();
-}
-
-void Scene::LoadScene() {
-	sceneObjs.clear(); 
-	std::fstream data(this->name, std::ios::binary | std::ios::in);
-
-	data.seekg(0, std::ios::end);
-	if (data.tellg() < 1) {
-		data.close();
-		return;
-	}
-	data.seekg(0, std::ios::beg);
-
-	int sizeBuffer = 0;
-		
-	data.read((char*)&sizeBuffer, sizeof(int));
-	if (sizeBuffer < 1) {
-		data.close();
-		return;
-	}
-	char* name0 = new char[sizeBuffer+1];
-	data.read(name0, sizeBuffer);
-	name0[sizeBuffer] = '\0';
-
-	this->AddObject();
-	Rename(name0, &sceneObjs.back());
-	delete[] name0;
-
-	int flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
-	while (flag == 1) {
-		flag = Scene::currentScene->sceneObjs.back().Deserialize(&data, 0);
-		if (flag == 0) break;
-	}
-	data.close();
-};
 
 void Scene::MakeCurrent() {
 	currentScene = this;

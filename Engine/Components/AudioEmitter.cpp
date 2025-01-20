@@ -1,7 +1,6 @@
 #include "AudioEmitter.h"
 #include "Scene.h"
 
-std::map<GameObject*, AudioEmitter*> AudioEmitter::componentList;
 
 bool AudioEmitter::ConditionHasAudioEmitter(GameObject* obj) {
     AudioEmitter* ae = obj->GetComponent<AudioEmitter>();
@@ -9,25 +8,23 @@ bool AudioEmitter::ConditionHasAudioEmitter(GameObject* obj) {
 }
 
 void AudioEmitter::OnAdd() {
-	Scene::GetCurrent()->AddToCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
+	Scene::GetCurrent()->AddToCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObject);
 }
 
 void AudioEmitter::OnDelete() {
-	Scene::GetCurrent()->DeleteFromCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObj);
+	Scene::GetCurrent()->DeleteFromCache(AudioEmitter::ConditionHasAudioEmitter, *attachedObject);
 }
 
 AudioEmitter::AudioEmitter() {}
 
-AudioEmitter::AudioEmitter(GameObject* attachedObj) {
-	this->attachedObj = attachedObj;
-	AudioEmitter::componentList.insert(std::make_pair(attachedObj, this));
+AudioEmitter::AudioEmitter(GameObject* obj) {
+	this->attachedObject = obj;
 }
 
 AudioEmitter::~AudioEmitter() {
 	if (sound != nullptr) {
 		sound->Clean();
 	}
-	AudioEmitter::componentList.erase(this->attachedObj);
 }
 
 void AudioEmitter::SetSound(const std::string& path) {
@@ -75,42 +72,6 @@ void AudioEmitter::SetVolume(float v) {
     volume = v;
     sound->SetVolume(volume / 100.0f);
 }
-
-int AudioEmitter::Serialize(std::fstream* data, int offset)	{
-	SoundIdentifier id = GetIDWithAsset<Sound*, SoundIdentifier>(sound);
-
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "AudioEmitter", 12, sizeBuffer);
-
-	if (this->sound == nullptr ) { WRITE_ON_BIN(data, "", 0, sizeBuffer);}
-	else { WRITE_ON_BIN(data, id.path.c_str(), id.path.size(), sizeBuffer); }
-
-	WRITE_ON_BIN(data, &this->volume,    sizeof(this->volume)  , sizeBuffer);
-	WRITE_ON_BIN(data, &this->frequency, sizeof(this->frequency), sizeBuffer);
-	WRITE_ON_BIN(data, &this->isLooping, sizeof(this->isLooping), sizeBuffer);
-	return 0; //TODO::Serialize sound
-};
-
-int AudioEmitter::Deserialize(std::fstream* data, int offset) {
-	int  sizeBuffer = 0;
-	//Deserializing sound
-	char* temp = new char[512];
-	READ_FROM_BIN(data, temp, sizeBuffer);
-	temp[sizeBuffer] = '\0';
-	if (strlen(temp) != 0) {
-		Sound loader;
-		SoundIdentifier sndID{ temp, (uint64)this};
-		this->sound = (Sound*)loader.LoadFromFile(temp, &sndID);
-	}
-	delete[] temp;
-
-	//Deserializing sound parameters
-	READ_FROM_BIN(data, &this->volume, sizeBuffer);
-	READ_FROM_BIN(data, &this->frequency, sizeBuffer);
-	READ_FROM_BIN(data, &this->isLooping, sizeBuffer);
-	return 0;
-};
-
 
 GameObject* MultiAudioEmitter::AddEmitter() {
     GameObject*   obj = new GameObject(); 

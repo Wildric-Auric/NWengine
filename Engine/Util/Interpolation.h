@@ -1,12 +1,11 @@
 #pragma once
 #include "Globals.h"
-#include "Serialization.h"
 #include <vector>
 
 /**
  * @brief The Interpolator class represents a generic interpolator.
  */
-class Interpolator : public Serialized {
+class Interpolator {
 public:
 	
 	struct {
@@ -36,24 +35,7 @@ public:
   * @return The interpolated value at the given clock value.
   */
 	virtual float Evaluate(float clock);
-
-	/**
-  * @brief Serializes the Interpolator object to a file stream.
-  * @param data The file stream to serialize to.
-  * @param offset The offset in the file stream to start serializing from.
-  * @return The number of bytes written to the file stream.
-  */
-	int Serialize(std::fstream* data, int offset) override;
-	
-	/**
-  * @brief Deserializes the Interpolator object from a file stream.
-  * @param data The file stream to deserialize from.
-  * @param offset The offset in the file stream to start deserializing from.
-  * @return The number of bytes read from the file stream.
-  */
-	int Deserialize(std::fstream* data, int offset) override;
 };
-
 
 /**
  * @brief The BezierInterpolator class represents a Bezier curve interpolator.
@@ -86,9 +68,4 @@ public:
   * @return The interpolated value at the given clock value.
   */
 	float Evaluate(float clock) override;
-
-	int Serialize(std::fstream* data, int offset) override;
-	
-
-	int Deserialize(std::fstream* data, int offset) override;
 };

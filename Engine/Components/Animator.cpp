@@ -2,7 +2,7 @@
 #include "NWTime.h"
 
 Animator::Animator(GameObject* go) {
-	attachedObj = go;
+	attachedObject = go;
 }
 
 void Animator::Update() {
@@ -20,11 +20,3 @@ void Animator::Update() {
 	//	if (!animation.repeat && (currentFrame == animation.frames.size() - 1)) isActive = false;
 	//}
 }
-
-
-void Animator::SetGameObject(void* go) {
-	attachedObj = (GameObject*)go;
-};
-void* Animator::GetGameObject() {
-	return (void*)attachedObj;
-};

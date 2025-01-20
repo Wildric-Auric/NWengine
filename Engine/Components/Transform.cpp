@@ -1,36 +1,33 @@
 #include "Transform.h"
+#include "Maths.h"
 
 Transform::Transform(GameObject* go) {
-	this->attachedObj = go;
+	this->attachedObject = go;
 }
 
-int Transform::Serialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "Transform", 9, sizeBuffer);
-	WRITE_ON_BIN(data, &this->position.x, sizeof(this->position.x), sizeBuffer);
-	WRITE_ON_BIN(data, &this->position.y, sizeof(this->position.y), sizeBuffer);
-	WRITE_ON_BIN(data, &this->scale.x, sizeof(this->scale.x),       sizeBuffer);
-	WRITE_ON_BIN(data, &this->scale.y, sizeof(this->position.y),    sizeBuffer);
-	WRITE_ON_BIN(data, &this->rotation, sizeof(this->rotation),     sizeBuffer);
-	return offset + 25;  //Not updated
+fVec2& Transform::Translate(const fVec2& tr) {
+    position = position + tr;
+    return position;
 }
 
-int Transform::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	READ_FROM_BIN(data, &this->position.x, sizeBuffer);
-	READ_FROM_BIN(data, &this->position.y, sizeBuffer);
-	READ_FROM_BIN(data, &this->scale.x,  sizeBuffer);
-	READ_FROM_BIN(data, &this->scale.y,  sizeBuffer);
-	READ_FROM_BIN(data, &this->rotation, sizeBuffer)
-	return offset + 16; //Not updated
+fVec2& Transform::Scale(const fVec2& s) {
+    scale = scale + s;
+    return scale;
 }
 
-//TODO::The same for all GameComponents
-void  Transform::SetGameObject(void* go) {
-	attachedObj = (GameObject*)go;
+fVec2& Transform::Lerp(const fVec2& start, const fVec2& end, const fVec2& ratio) {
+    position = lerpVector2(start, end, ratio);
+    return position;
 }
-void* Transform::GetGameObject() {
-	return (void*)attachedObj;
+
+float Transform::Rotate(const float r) { 
+    rotation += r;
+    return r;
 }
-//-----
-std::map<GameObject*, Transform> Transform::componentList;
+
+void Transform::SetPosition(const fVec2& pos) {position = pos;}
+void Transform::SetScale(const fVec2& s) {scale = s;}
+void Transform::SetRotation(const float r) {rotation = r;}
+fVec2 Transform::GetPosition() {return position;}
+fVec2 Transform::GetScale() {return scale;}
+float Transform::GetRotation() {return rotation;}

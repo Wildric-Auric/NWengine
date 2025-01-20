@@ -17,7 +17,6 @@ public:
     fVec2 position = fVec2(0.0f,0.0f); /**< The position of the game object. */
     fVec2 scale    = fVec2(1.0f, 1.0f); /**< The scale of the game object. */
     float rotation = 0.0f; /**< The rotation of the game object. */
-    GameObject* attachedObj; /**< The game object attached to the Transform component. */
 
     /**
      * @brief Default constructor for the Transform class.
@@ -30,33 +29,23 @@ public:
      */
     Transform(GameObject* go);
 
-    /**
-     * @brief Serializes the Transform component data.
-     * @param data The file stream to write the serialized data to.
-     * @param offset The offset in the file stream to start writing the serialized data.
-     * @return The number of bytes written to the file stream.
-     */
-    int Serialize(std::fstream* data, int offset) override;
+    fVec2& Translate(const fVec2&);
 
-    /**
-     * @brief Deserializes the Transform component data.
-     * @param data The file stream to read the serialized data from.
-     * @param offset The offset in the file stream to start reading the serialized data.
-     * @return The number of bytes read from the file stream.
-     */
-    int Deserialize(std::fstream* data, int offset) override;
+    fVec2& Scale(const fVec2&);
 
-    /**
-     * @brief Sets the game object attached to the Transform component.
-     * @param go The game object to attach.
-     */
-    void SetGameObject(void* go) override;
+    fVec2& Lerp(const fVec2& start, const fVec2& end, const fVec2& ratio);
 
-    /**
-     * @brief Gets the game object attached to the Transform component.
-     * @return The game object attached to the Transform component.
-     */
-    void* GetGameObject() override;
+    float Rotate(const float);
 
-    static std::map<GameObject*, Transform> componentList; /**< The list of game objects with Transform components. */
+    void SetPosition(const fVec2&);
+
+    void SetScale(const fVec2&);
+
+    void SetRotation(const float);
+
+    fVec2 GetPosition();
+
+    fVec2 GetScale();
+
+    float GetRotation();
 };

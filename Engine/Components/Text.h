@@ -32,26 +32,9 @@ public:
     Text(GameObject* go);
 
     /**
-     * @brief attachedObj is a pointer to the GameObject that the Text component is attached to.
-     */
-    GameObject* attachedObj = nullptr;
-
-    /**
      * @brief Update is called every frame to update the Text component.
      */
     void Update() override;
-
-    /**
-     * @brief GetGameObject returns the GameObject that the Text component is attached to.
-     * @return The GameObject that the Text component is attached to.
-     */
-    void* GetGameObject() override;
-
-    /**
-     * @brief SetGameObject sets the GameObject that the Text component is attached to.
-     * @param go The GameObject to attach the Text component to.
-     */
-    void SetGameObject(void* go) override;
 
     /**
      * @brief UpdateGlyphs updates the glyphs of the Text component.
@@ -122,20 +105,4 @@ public:
      * @brief scale is the scale of the text.
      */
     fVec2 scale = fVec2(1.0f, 1.0f);
-
-    /**
-     * @brief Serialize serializes the Text component data.
-     * @param data The file stream to write the serialized data to.
-     * @param offset The offset in the file stream to start writing the serialized data.
-     * @return The offset in the file stream after writing the serialized data.
-     */
-    int Serialize(std::fstream* data, int offset) override;
-
-    /**
-     * @brief Deserialize deserializes the Text component data.
-     * @param data The file stream to read the serialized data from.
-     * @param offset The offset in the file stream to start reading the serialized data.
-     * @return The offset in the file stream after reading the serialized data.
-     */
-    int Deserialize(std::fstream* data, int offset) override;
 };

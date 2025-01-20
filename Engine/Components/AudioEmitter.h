@@ -25,7 +25,7 @@ public:
      * @brief AudioEmitter constructor with attached GameObject.
      * @param attachedObj The GameObject to attach the AudioEmitter to.
      */
-    AudioEmitter(GameObject* attachedObj);
+    AudioEmitter(GameObject* obj);
 
     /**
      * @brief AudioEmitter destructor.
@@ -91,8 +91,6 @@ public:
      */
     void StopIfHasFinished();
 
-    GameObject* attachedObj = nullptr;
-
     /**
      * @brief sound The Sound of the AudioEmitter.
      */
@@ -112,38 +110,16 @@ public:
      * @brief isLooping Indicates whether the AudioEmitter is looping or not.
      */
     bool isLooping = false;
-
-    /**
-     * @brief Serialize serializes the AudioEmitter data.
-     * @param data The file stream to write the serialized data to.
-     * @param offset The offset in the file stream to start writing the serialized data.
-     * @return The number of bytes written.
-     */
-    int Serialize(std::fstream* data, int offset) override;
-
-    /**
-     * @brief Deserialize deserializes the AudioEmitter data.
-     * @param data The file stream to read the serialized data from.
-     * @param offset The offset in the file stream to start reading the serialized data.
-     * @return The number of bytes read.
-     */
-    int Deserialize(std::fstream* data, int offset) override;
-
-    /**
-     * @brief componentList A map of game objects and their corresponding AudioEmitter components.
-     */
-    static std::map<GameObject*, AudioEmitter*> componentList;
 };
 
 //TODO::Document
 class MultiAudioEmitter : public GameComponent {
     public:
-        GameObject* goc = nullptr;
         std::unordered_map<GameObject*, AudioEmitter*> _container;
 
         static std::string GetType() { return "MultiAudioEmitter";}
         inline MultiAudioEmitter() {}
-        inline MultiAudioEmitter(GameObject* obj) { goc = obj;}
+        inline MultiAudioEmitter(GameObject* obj) { attachedObject = obj;}
         ~MultiAudioEmitter();
 
         GameObject* AddEmitter();

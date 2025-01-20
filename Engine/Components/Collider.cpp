@@ -3,7 +3,7 @@
 #include "Components.h"
 
 Collider::Collider(GameObject* go) {
-	this->attachedObj = go;
+	this->attachedObject = go;
 	Start();
 };
 
@@ -19,9 +19,9 @@ void Collider::SetEdgesRect(const fVec2& s, const float rot) {
 }
 
 void Collider::SetEdgesSprite() {
-    Sprite* spr = attachedObj->GetComponent<Sprite>();
+    Sprite* spr = attachedObject->GetComponent<Sprite>();
     if (!spr) return;
-    Transform* tr = attachedObj->GetComponent<Transform>();
+    Transform* tr = attachedObject->GetComponent<Transform>();
     fVec2 s = fVec2(spr->container.width, spr->container.height);
     fVec2 scale = fVec2(1.0f,1.0f);
     float rot = 0;
@@ -33,12 +33,12 @@ void Collider::SetEdgesSprite() {
 }
 
 void Collider::Start() {
-	Transform* transform = this->attachedObj->GetComponent<Transform>();
+	Transform* transform = this->attachedObject->GetComponent<Transform>();
     SetEdgesSprite();
 }
 
 fVec2 Collider::GetPosition() {
-	Transform* trans = this->attachedObj->GetComponent<Transform>();
+	Transform* trans = this->attachedObject->GetComponent<Transform>();
 	return trans->position + offset;
 }
 
@@ -108,14 +108,4 @@ bool Collider::isColliding(Collider* other, fVec2* depthBuffer) {
 	else
 		*depthBuffer = b1 * Sign<float>(dir.Dot(b1));
 	return true;
-}
-
-int Collider::Serialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "Collider", 8, sizeBuffer);
-	return 0;
-}
-
-int Collider::Deserialize(std::fstream* data, int offset) {
-	return 0;
 }

@@ -40,7 +40,6 @@ public:
     fVec3 vertexAttributes; /**< Vertex attributes of the sprite */
     Shader* shader = nullptr;
     Quad container; /**< Container of the sprite */
-    GameObject* attachedObj = nullptr;
     int sortingLayer = 0; /**< Sorting layer of the sprite */
     double zbuffer = 1.0; /**< Z-buffer value of the sprite */
 
@@ -130,34 +129,6 @@ public:
      * @brief Updates the sprite.
      */
     void Update() override;
-
-    /**
-     * @brief Serializes the sprite data.
-     * @param data The file stream to write the data to.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes written.
-     */
-    int Serialize(std::fstream* data, int offset) override;
-
-    /**
-     * @brief Deserializes the sprite data.
-     * @param data The file stream to read the data from.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes read.
-     */
-    int Deserialize(std::fstream* data, int offset) override;
-
-    /**
-     * @brief Sets the GameObject that the sprite is attached to.
-     * @param go The GameObject to set.
-     */
-    void SetGameObject(void* go) override;
-
-    /**
-     * @brief Gets the GameObject that the sprite is attached to.
-     * @return The GameObject that the sprite is attached to.
-     */
-    void* GetGameObject() override;
 
     /**
      * @brief Default draw callback for sprites.

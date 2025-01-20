@@ -85,12 +85,9 @@ private:
 public:
     static std::string GetType() { return "ParticleSystem"; };
 
-    GameObject* attachedObj = nullptr; /**< The attached game object */
     ParticleSystem() {};
     ~ParticleSystem();
     ParticleSystem(GameObject* attachedObj);
-
-    static std::map<GameObject*, ParticleSystem> componentList; /**< The list of particle systems */
 
     bool isActive = true; /**< Indicates if the particle system is active */
     std::deque<Particle> pool; /**< The pool of particles */
@@ -130,9 +127,4 @@ public:
      * @brief Initializes a particle.
      */
     void InitParticle();
-
-
-    int Serialize(std::fstream* data, int offset) override;
-
-    int Deserialize(std::fstream* data, int offset) override;
 };

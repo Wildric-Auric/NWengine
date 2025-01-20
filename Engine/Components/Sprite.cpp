@@ -5,7 +5,7 @@
 #include "Batch.h"
 
 Sprite::Sprite(GameObject* obj) {
-	this->attachedObj = obj;
+	attachedObject = obj;
 	obj->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);
 };
 
@@ -58,12 +58,12 @@ void Sprite::SetSortingLayer(int order) {
 
 void Sprite::Batch(BatchType type) {
 	if (type == BatchType::UNBATCHED) return;
-	attachedObj->SetDrawCallback(Batch::DefaultBatchDrawCallback);
+	attachedObject->SetDrawCallback(Batch::DefaultBatchDrawCallback);
 	this->_isBatched = type; //TODO::Callsomething in Batch class maybe???
 }
 
 void Sprite::UnBatch() {
-	attachedObj->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);
+	attachedObject->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);
 	this->_isBatched = BatchType::UNBATCHED;
 }
 
@@ -80,52 +80,6 @@ void Sprite::Update() {
 	if (!_shouldDraw) return;
 	Scene::currentScene->Rearrange(this);
 	_shouldDraw = 0;
-}
-
-int Sprite::Serialize(std::fstream* data, int offset) {
-	TextureIdentifier texId;
-
-	int sizeBuffer = 0;
-	WRITE_ON_BIN(data, "Sprite", 6, sizeBuffer);
-
-	WRITE_ON_BIN(data, &sortingLayer, sizeof(sortingLayer), sizeBuffer);
-
-
-	const char* temp0 = texId.name.c_str();
-	WRITE_ON_BIN(data, temp0, texId.name.size(), sizeBuffer); //TODO::Save transparency too
-
-	const char* temp = shader->_identifier.c_str();
-	WRITE_ON_BIN(data, temp, shader->_identifier.size(), sizeBuffer);
-
-	return 0;
-};
-
-int Sprite::Deserialize(std::fstream* data, int offset) {
-	int sizeBuffer = 0;
-	//loads layer order
-	READ_FROM_BIN(data, &sortingLayer, sizeBuffer);
-	SetSortingLayer(sortingLayer);
-	//loads texture
-	char* buffer = new char[512]; //TODO::Macro
-	READ_FROM_BIN(data, buffer, sizeBuffer);
-	buffer[sizeBuffer] = '\0';
-	SetTexture(std::string(buffer), 1); //TODO::Serialize alpha
-
-	//loads shader
-	buffer = new char[512];
-	READ_FROM_BIN(data, buffer, sizeBuffer);
-	buffer[sizeBuffer] = '\0';
-	SetShader(std::string(buffer));
-	delete[] buffer;
-
-	return 0;
-};
-
-void  Sprite::SetGameObject(void* go) {
-	this->attachedObj = (GameObject*)go;
-}
-void* Sprite::GetGameObject() {
-	return (void*)attachedObj;
 }
 
 Sprite::~Sprite() { 

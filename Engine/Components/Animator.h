@@ -9,14 +9,10 @@ private:
 public:
 	static std::string GetType() { return "Animator"; };
 	Animator() {};
-	Animator(GameObject* attachedObj);
-	GameObject* attachedObj = nullptr;
+	Animator(GameObject* obj);
 	uint16 currentFrame = 0;
 	bool isActive = 1;
 
 	Animation animation;
 	void Update();
-
-	void  SetGameObject(void* go) override;
-	void* GetGameObject()		  override;
 };

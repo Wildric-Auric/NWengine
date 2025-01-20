@@ -86,11 +86,10 @@ public:
     
     /**
      * @brief Constructs a Script object.
-     * @param attachedObj The GameObject to attach the script to.
+     * @param obj The GameObject to attach the script to.
      */
-    Script(GameObject* attachedObj);
+    Script(GameObject* obj);
     
-    GameObject* attachedObj = nullptr; /**< The attached GameObject. */
     Scriptable* script = nullptr; /**< The script object. */
     
     /**
@@ -110,24 +109,7 @@ public:
     template<typename T>
     void SetScript() {
         delete script;
-        script = new T(this->attachedObj);
+        script = new T(this->attachedObject);
     }
-    
-    /**
-     * @brief Serializes the script data.
-     * @param data The file stream to write the data to.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes written.
-     */
-    int Serialize(std::fstream* data, int offset) override;
-    
-    /**
-     * @brief Deserializes the script data.
-     * @param data The file stream to read the data from.
-     * @param offset The offset in the file stream.
-     * @return The number of bytes read.
-     */
-    int Deserialize(std::fstream* data, int offset) override;
-    
-    static std::map<GameObject*, Script> componentList; /**< The list of script components. */
+  
 };

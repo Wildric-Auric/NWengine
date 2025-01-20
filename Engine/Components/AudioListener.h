@@ -30,21 +30,7 @@ public:
 	AudioListener(GameObject* attachedObj);
 
 	/**
-  * @brief The game object that the audio listener is attached to.
-  */
-	GameObject* attachedObj = nullptr;
-
-	/**
-  * @brief A map of game objects to their corresponding audio listener components.
-  */
-	static std::map<GameObject*, AudioListener*> componentList;
-
-	/**
 	* @brief Updates the AudioListener component. Mainly looks up for AudioEmitters and set their parameters
 	*/
 	void Update() override;
-
-	int Serialize(std::fstream* data, int offset) override;
-
-	int Deserialize(std::fstream* data, int offset) override;
 };
