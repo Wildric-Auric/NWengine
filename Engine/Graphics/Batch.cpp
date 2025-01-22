@@ -15,14 +15,16 @@
 * Texture slot : X     ----> 4  byte
 */
 
-const uint32 Batch::strideSizeByte   = 36;
-const uint32 Batch::strideSize       = 9;
-uint32 Batch::batchMaxQuads			 = 2048; 
-uint16 Batch::maxBatchTextures		 = 0;
-uint32* Batch::indices				 = nullptr;
-int		Batch::indicesSize			 = 0;
+uint32       Batch::strideSizeByte   = 36;
+uint32       Batch::strideSize       = 9;
+uint32       Batch::batchMaxQuads	 = 2048; 
+uint16       Batch::maxBatchTextures = 0;
+uint32*      Batch::indices			 = nullptr;
+int		     Batch::indicesSize		 = 0;
 
 std::unordered_map<int, std::vector<Batch*>> Batch::batchMap;
+
+int* Batch::uniformTexArr = nullptr;
 
 Batch::Batch() {
 	NW_GL_CALL(glGenVertexArrays(1, &VAO));
@@ -67,6 +69,35 @@ void Batch::BindTextures() {
 	}
 }
 
+void Batch::Init() {
+    int maxUnits = 16;
+    Batch::ComputeIndices();
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
+    Batch::maxBatchTextures = maxUnits;
+    delete[] uniformTexArr;
+    uniformTexArr = new int[Batch::maxBatchTextures];
+    for (int i = 0; i < Batch::maxBatchTextures; ++i) uniformTexArr[i] = i;
+}
+
+
+void Batch::Clear() {
+    for (auto p : Batch::batchMap) {
+        for (Batch* b : p.second) {
+            delete b;
+        }
+    }
+    batchMap.clear();
+}
+
+Batch::~Batch() {
+    Delete();
+}
+
+void Batch::Destroy() {
+    Clear();
+    delete[] uniformTexArr;
+    delete[] indices;
+}
 
 void Batch::ComputeIndices() {
 	delete[] indices;
@@ -177,9 +208,9 @@ void Batch::Draw() {
 
 
 void Batch::Delete() {
+	NW_GL_CALL(glDeleteVertexArrays(1, &VAO));
 	NW_GL_CALL(glDeleteBuffers(1, &VBO));
 	NW_GL_CALL(glDeleteBuffers(1, &EBO));
-	NW_GL_CALL(glDeleteVertexArrays(1, &VAO));
 	VBO = 0;
 	EBO = 0;
 	VAO = 0;

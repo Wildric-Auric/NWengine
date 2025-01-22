@@ -52,7 +52,6 @@ NW_PREFIX void  NWengineGetVersion(NWengineVersion* outVers) {
 
 std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void(*)()>> functionMap;
 
-
 NW_PREFIX int NWengineInit() {
 	//Opens a window and init openGL context
 	void* window = Context::InitContext(Context::WINDOW_WIDTH, Context::WINDOW_HEIGHT);
@@ -69,8 +68,8 @@ NW_PREFIX int NWengineInit() {
 	Primitives::Init();
 	//Context settings
 	Context::EnableBlend();
-	Batch::ComputeIndices();
-	Batch::maxBatchTextures = 32; //TODO::Make a function that uses glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS...
+    //Init batch system
+    Batch::Init();
 	//Init Renderer
 	Renderer::Init();
 
@@ -105,11 +104,13 @@ NW_PREFIX void NWengineLoop() {
 NW_PREFIX void NWengineShutdown() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::Destroy)
 	Scene::Destroy();
-	Sound::Destroy();
 	Renderer::Destroy();
 	Primitives::Destroy();
+    Batch::Destroy();
 	Context::Destroy();
 	Font::Destroy();
+	Sound::Destroy();
+
 }
 
 NW_PREFIX bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {

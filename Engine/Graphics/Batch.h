@@ -27,6 +27,9 @@ private:
 	bool _shouldDraw   = 1; //Used for static batch only
 	int currentTexSlot = 0;
 	int offset         = 0;
+    
+    static int* uniformTexArr;
+
 
 public:
 	std::string shader    = "";
@@ -41,6 +44,7 @@ public:
   * @brief Default constructor for the Batch class.
   */
 	Batch();
+	~Batch();
 
 	/**
   * @brief Renders a game object using the batch.
@@ -65,8 +69,8 @@ public:
   */
 	void Delete();
 
-	static const uint32 strideSize;
-	static const uint32 strideSizeByte;
+	static uint32 strideSize;
+	static uint32 strideSizeByte;
 	static uint32* indices;
 	static int indicesSize;
 	static uint32 batchMaxQuads;
@@ -74,6 +78,11 @@ public:
 
 	static std::unordered_map<int, std::vector<Batch*>> batchMap; //Batches are allocated dynamically and it's pointer is owned by this map which should be deleted with scene
 
+    static void Init();
+
+    static void Clear();
+    
+    static void Destroy();
 	/**
   * @brief Computes the indices for the batch.
   */
