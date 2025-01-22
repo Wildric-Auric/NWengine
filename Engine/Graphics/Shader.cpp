@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-#include <iostream>
 #include <fstream>
 #include <string.h>
 #include "Shader.h"
@@ -27,39 +26,39 @@ ShaderText Shader::parseShader(const char* path)
 void Shader::_GlGen(ShaderText* src) {
 
 	uint32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &(src->vertex), NULL);
+	NW_GL_CALL(glShaderSource(vertexShader, 1, &(src->vertex), NULL));
 	glCompileShader(vertexShader);
 	int successInfo;
 	char log[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &successInfo);
 	if (!successInfo) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, log);
+		NW_GL_CALL(glGetShaderInfoLog(vertexShader, 512, NULL, log));
 		NW_LOG_ERROR((std::string("SHADER::VERTEX::COMPILATION FAILED AT: ") + src->vertex).c_str());
 		NW_LOG_ERROR(log);
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &(src->fragment), NULL);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successInfo);
+	NW_GL_CALL(glShaderSource(fragmentShader, 1, &(src->fragment), NULL));
+	NW_GL_CALL(glCompileShader(fragmentShader));
+	NW_GL_CALL(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successInfo));
 	if (!successInfo) {
-		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
+		NW_GL_CALL(glGetShaderInfoLog(fragmentShader, 512, NULL, log));
 		NW_LOG_ERROR((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + src->fragment).c_str());
 		NW_LOG_ERROR(log);
 	}
 	_glID = glCreateProgram();
-	glAttachShader(_glID, vertexShader);
-	glAttachShader(_glID, fragmentShader);
-	glLinkProgram(_glID);
+	NW_GL_CALL(glAttachShader(_glID, vertexShader));
+	NW_GL_CALL(glAttachShader(_glID, fragmentShader));
+	NW_GL_CALL(glLinkProgram(_glID));
 
 	glGetProgramiv(_glID, GL_LINK_STATUS, &successInfo);
 	if (!successInfo) {
-		glGetProgramInfoLog(_glID, 512, NULL, log);
+		NW_GL_CALL(glGetProgramInfoLog(_glID, 512, NULL, log));
 		NW_LOG_ERROR((std::string("SHADER::LINKAGE FAILED")).c_str());
 		NW_LOG_ERROR(log);
 	}
 
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	NW_GL_CALL(glDeleteShader(vertexShader));
+	NW_GL_CALL(glDeleteShader(fragmentShader));
 };
 
 Asset* Shader::GetFromCache(void* identifier) {
@@ -121,35 +120,35 @@ void Shader::_EnableAtt(int i) {
 
 
 void Shader::SetMat4x4(int loc, const float* value) {
-    glUniformMatrix4fv(loc, 1, GL_FALSE, value);
+    NW_GL_CALL(glUniformMatrix4fv(loc, 1, GL_FALSE, value));
 }
 
 void Shader::SetUniform1f(int loc, float value) {
-    glUniform1f(loc, value);
+    NW_GL_CALL(glUniform1f(loc, value));
 }
 
 void Shader::SetVector2(int loc, float value0, float value1) {
-    glUniform2f(loc, value0, value1);
+    NW_GL_CALL(glUniform2f(loc, value0, value1));
 }
 
 void Shader::SetUniform1i(int loc, const int value) {
-    glUniform1i(loc, value);
+    NW_GL_CALL(glUniform1i(loc, value));
 }
 
 void Shader::SetUniform3f(int loc, float x, float y, float z) {
-    glUniform3f(loc, x, y, z);
+    NW_GL_CALL(glUniform3f(loc, x, y, z));
 }
 
 void Shader::SetUniform4f(int loc, float x, float y, float z, float w) {
-    glUniform4f(loc, x, y, z, w);
+    NW_GL_CALL(glUniform4f(loc, x, y, z, w));
 }
 
 void Shader::SetUniformArrayf(int loc, float* value, int size) {
-    glUniform1fv(loc, size, value);
+    NW_GL_CALL(glUniform1fv(loc, size, value));
 }
 
 void Shader::SetUniformArrayi(int loc, int* value, int size) {
-    glUniform1iv(loc, size, value);
+    NW_GL_CALL(glUniform1iv(loc, size, value));
 }
 
 void Shader::SetMat4x4(const char* name, const float* value) {
@@ -186,5 +185,5 @@ void Shader::SetUniformArrayi(const char* name, int* value, int size) {
 }
 
 void Shader::Delete() {
-	glDeleteProgram(this->_glID);
+	NW_GL_CALL(glDeleteProgram(this->_glID));
 }
