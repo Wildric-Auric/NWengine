@@ -1,17 +1,25 @@
 Nw_version = '"0.9.090125"'
 
 workspace "NWengine"
-    configurations {"Debug32", "Release32" }
-    architecture "x86"
+    configurations {"Debug", "Release"}
+    platforms {"x86","x64"}
+    filter "platforms:*86*"
+        architecture "x86"
+        pltrm = "32"
+    filter "platforms:*64*"
+        architecture "x64"
+        pltrm = "64"
+    filter {}
+    location "Build"
     language   "C++"
     cppdialect "C++11"
-    targetdir "Bin/%{prj.name}/%{cfg.buildcfg}"
-    objdir    "Bin/objs"
+    targetdir "%{wks.location}/Bin/%{prj.name}/%{cfg.buildcfg}%{pltrm}"
+    objdir    "%{wks.location}/Bin/objs"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
     buildoptions { "/EHsc"}
-    location "Build" 
-    project "NWEngineCore" 
+
+    project "NWEngineCore"
                     kind "StaticLib"
                     defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
 
@@ -33,9 +41,9 @@ workspace "NWengine"
                         "premake5.lua"
                     }
                     filter "configurations:*Debug*"
-                        targetname ("NWengineCore32d")
+                        targetname ("NWengineCore%{pltrm}d")
                     filter "configurations:*Release*"
-                        targetname ("NWengineCore32")
+                        targetname ("NWengineCore%{pltrm}")
 
     project "Sandbox" 
                       kind "ConsoleApp"
@@ -68,18 +76,33 @@ workspace "NWengine"
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
                     
     workspace "*"
-        libdirs {
+        filter "architecture:x86" 
+            libdirs {
                         "dependencies/GLEW/lib/Release/Win32",
                         "dependencies/freetype/lib/win32",
-                        "dependencies/SND/lib",
+                        "dependencies/SND/lib/win32",
                         "dependencies/OPENAL/win32"
-                }
-        filter "architecture:x86" 
+            }
             links {
                 "opengl32.lib",
                 "freetype.lib",
                 "OpenAL32.lib",
-                "libsndfile-1.lib",
+                "sndfile.lib",
+                "glew32s.lib"
+            }
+        
+        filter "architecture:x64"
+            libdirs {
+                        "dependencies/GLEW/lib/Release/x64",
+                        "dependencies/freetype/lib/win64",
+                        "dependencies/SND/lib/win64",
+                        "dependencies/OPENAL/win64"
+            }
+            links {
+                "opengl32.lib",
+                "freetype.lib",
+                "OpenAL32.lib",
+                "sndfile.lib",
                 "glew32s.lib"
             }
 

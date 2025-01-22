@@ -36,21 +36,21 @@ def genHdrs():
 def buildBin():
     version = '"1.0.234567"'
     mac = f';PreprocessorDefinitions="NW_VERSION={version};$(PreprocessorDefinitions)"'
-    dbg = "msbuild ..\\Build\\NWengineCore.vcxproj -p:Configuration=Debug32"
-    rls = "msbuild ..\\Build\\NWengineCore.vcxproj -p:Configuration=Release32"
+    dbg = "msbuild ..\\Build\\NWengineCore.vcxproj -p:Configuration=Debug;Platform=x64"
+    rls = "msbuild ..\\Build\\NWengineCore.vcxproj -p:Configuration=Release;Platform=x64"
     dbg += mac
     rls += mac
     os.system(dbg)
     os.system(rls)
 
-    os.system("copy ..\\Bin\\NWengineCore\\Debug32\\NWengineCore32d.idb "
-              + libDir + "NWengineCore32d.idb")
-    os.system("copy ..\\Bin\\NWengineCore\\Debug32\\NWengineCore32d.lib "
-              + libDir + "NWengineCore32d.lib")
-    os.system("copy ..\\Bin\\NWengineCore\\Debug32\\NWengineCore32d.pdb "
-              + libDir + "NWengineCore32d.pdb")
-    os.system("copy ..\\Bin\\NWengineCore\\Release32\\NWengineCore32.lib "
-              + libDir + "NWengineCore32.lib")
+    os.system("copy ..\\Build\\Bin\\NWengineCore\\Debug64\\NWengineCore64d.idb "
+              + libDir + "NWengineCore64d.idb")
+    os.system("copy ..\\Build\\Bin\\NWengineCore\\Debug64\\NWengineCore64d.lib "
+              + libDir + "NWengineCore64d.lib")
+    os.system("copy ..\\Build\\Bin\\NWengineCore\\Debug64\\NWengineCore64d.pdb "
+              + libDir + "NWengineCore64d.pdb")
+    os.system("copy ..\\Build\\Bin\\NWengineCore\\Release64\\NWengineCore64.lib "
+              + libDir + "NWengineCore64.lib")
 
 
 makeDir()
