@@ -34,7 +34,7 @@ void Sound::Destroy() {
 
 Asset* Sound::GetFromCache(void* id) {
 	auto iter = resList.find(*(SoundIdentifier*)id);
-	if (iter == resList.end()) 
+	if (iter == resList.end())
 		return nullptr;
 	return &iter->second;
 }

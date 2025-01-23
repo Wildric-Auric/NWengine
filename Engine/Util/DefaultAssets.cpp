@@ -2,7 +2,7 @@
 
 const ShaderText ShaderTexturedDefaultStr = {
 R"V0G0N( 
-        //vertex shader
+        #pragma vertex
         #version 330 core
         
         layout(location = 0) in vec3 attribPos;
@@ -21,7 +21,7 @@ R"V0G0N(
         };
 )V0G0N",
 R"V0G0N(        
-        //fragment shader
+        #pragma fragment
         #version 330 core
         
         uniform float uTime;
@@ -44,7 +44,7 @@ R"V0G0N(
 
 const ShaderText ShaderTexturedBatchedDefaultStr = {
 R"V0G0N( 
-        //vertex shader
+        #pragma vertex 
         #version 330 core
         
         layout(location = 0) in vec3  attribPos;
@@ -66,10 +66,11 @@ R"V0G0N(
         };
 )V0G0N",
 R"V0G0N(
-        //fragment shader
+        #pragma fragment 
         #version 330 core
-        
-        uniform sampler2D uTex[32];
+        #pragma def MAX_TEX MaxTexNum
+
+        uniform sampler2D uTex[MAX_TEX];
         in vec2  uv;
         in vec4  screenPos;
         in vec3  test;
@@ -85,7 +86,7 @@ R"V0G0N(
 };
 
 const ShaderText ShaderTextDefaultStr = {R"V0G0N( 
-        //vertex shader
+        #pragma vertex 
         #version 330 core
 
         layout (location = 0) in vec3 attribPos;
@@ -104,7 +105,7 @@ const ShaderText ShaderTextDefaultStr = {R"V0G0N(
         };
 )V0G0N",
 R"V0G0N(
-        //fragment shader
+        #pragma fragment 
         #version 330 core
 
         uniform sampler2D uTex0;
@@ -124,7 +125,7 @@ R"V0G0N(
 
 const ShaderText ShaderTextBatchedStr = {
     R"V0G0N( 
-        //vertex shader
+        #pragma vertex
         #version 330 core
         #define MAXUINT10 1023.0
 
@@ -152,10 +153,11 @@ const ShaderText ShaderTextBatchedStr = {
         };
 )V0G0N",
 R"V0G0N(
-        //fragment shader
+        #pragma fragment 
         #version 330 core
+        #pragma def MAX_TEX MaxTexNum
 
-        uniform sampler2D uTex[32];
+        uniform sampler2D uTex[MAX_TEX];
         in vec2  uv;
         in vec4  screenPos;
         in vec4  color10bit;

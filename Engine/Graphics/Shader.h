@@ -2,9 +2,9 @@
 
 #include <string>
 #include <unordered_map>
-
 #include "Globals.h"
 #include "Asset.h"
+#include "ShaderParser.h"
 
 /**
  * @brief Struct representing the text of a shader.
@@ -16,20 +16,29 @@ struct ShaderText {
 
 typedef std::string ShaderIdentifier; /**< The type for shader identifiers. */
 
+
+
+
+
+
 /**
  * @brief Class representing a shader asset.
  */
 class Shader : public Asset {
 public:
+    static ShaderParser parser;
+
     uint32 _glID = 0; /**< The OpenGL ID of the shader. */
     ShaderIdentifier _identifier; /**< The identifier of the shader. */
     std::unordered_map<int,int> _enabledAtts{{0,0}};
+    std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
 
     void _EnableAtt(int i);
-
     void _DisableAtt(int i);
 
-    
+    void SetReflectedUniforms(const ShaderParser&); 
+    void SetEnabledAtts(const ShaderParser&);
+
     /**
      * @brief Use this shader for rendering.
      */
@@ -146,6 +155,9 @@ public:
      */
     Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier) override;
 
+    Asset* _LoadDirect(void* shaderTextPtr, void* identifier);
+
+    void Move(Asset* other) override;
     /**
      * @brief Delete the shader.
      */
@@ -162,7 +174,7 @@ public:
      * @param path The path to the shader file.
      * @return The parsed shader text.
      */
-    static ShaderText parseShader(const char* path);
+    static ShaderText fastParseShader(const char* path);
 
     NW_DECL_RES_LIST(ShaderIdentifier, Shader);
 };

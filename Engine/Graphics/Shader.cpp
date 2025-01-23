@@ -6,16 +6,18 @@
 #include "FrameBuffer.h"
 
 
-ShaderText Shader::parseShader(const char* path)
+ShaderParser Shader::parser;
+
+ShaderText Shader::fastParseShader(const char* path)
 {
 	std::string frag, vert = "";    //TODO:: Make it directly in the heap
 	uint8 current = 0;
 	std::ifstream file(path);
 	for (std::string line; std::getline(file, line);)
 	{
-		if (line.find("//fragment shader") != -1)
+		if (line.find("#fragment") != -1)
 			current = 1;
-		else if (line.find("//vertex shader") != -1) current = 2;
+		else if (line.find("#vertex") != -1) current = 2;
 		if (current == 1) frag += line + '\n';
 		else if (current == 2) vert += line + '\n';
 	}
@@ -70,22 +72,61 @@ Asset* Shader::GetFromCache(void* identifier) {
 	return &iter->second;
 }
 
-Asset* Shader::LoadFromFile(const char* path, void* identifier) {
-	ShaderText res = Shader::parseShader(path);
-	return LoadFromBuffer(&res, identifier);
-}
-
-Asset* Shader::LoadFromBuffer(void* shaderTextPtr, void* identifier) {
-	Shader* shader = &resList.emplace(*(ShaderIdentifier*)identifier, Shader()).first->second;
+Asset* Shader::_LoadDirect(void* shaderTextPtr, void* identifier) {
+    Shader* shader = &resList.emplace(*(ShaderIdentifier*)identifier, Shader()).first->second;
 	shader->_identifier = *(ShaderIdentifier*)identifier;
 	shader->_GlGen((ShaderText*)shaderTextPtr);
+    Move(shader);
 	return shader;
 }
 
+Asset* Shader::LoadFromFile(const char* path, void* identifier) {
+    parser.Reset();
+	ShaderText res;
+    parser.ParseFromPath(path);
+    res.vertex = parser.GetVertTxt().c_str();
+    res.fragment = parser.GetFragTxt().c_str();
+    SetReflectedUniforms(parser);
+    SetEnabledAtts(parser);
+	return _LoadDirect(&res, identifier); //LoadFromBuffer(&res, identifier);
+}
+
+Asset* Shader::LoadFromBuffer(void* shaderTextPtr, void* identifier) {
+    ShaderIdentifier* idd = (ShaderIdentifier*)identifier;
+    ShaderText* raw = (ShaderText*)shaderTextPtr;
+    ShaderText  parsed;
+	ShaderParser vertParser;
+    vertParser.constants = parser.constants;
+    vertParser.Parse(raw->vertex);
+    parsed.vertex = vertParser.vert.c_str();
+    parser.Parse(raw->fragment);
+    parsed.fragment = parser.frag.c_str();
+    SetReflectedUniforms(parser);
+    SetReflectedUniforms(vertParser);
+    SetEnabledAtts(parser);
+	return _LoadDirect(&parsed, idd);
+}
+
+void Shader::Move(Asset* other) {
+    Shader& otherS = *(Shader*)other;
+    otherS._enabledAtts = std::move(_enabledAtts);
+    otherS.reflectedUniforms = std::move(reflectedUniforms);
+}
+
+void Shader::SetReflectedUniforms(const ShaderParser& p) {
+    for (auto pp : p.GetUniforms()) {
+        reflectedUniforms.insert(pp);
+    }
+}
+
+void Shader::SetEnabledAtts(const ShaderParser& p) {
+    _enabledAtts.clear();
+    for (int i = 0; i < p.GetAttNum(); ++i) {
+        _EnableAtt(i);
+    }
+}
+
 NW_IMPL_RES_LIST(ShaderIdentifier, Shader)
-
-
-
 
 void Shader::Use() {
 	NW_GL_CALL(glUseProgram(_glID));
@@ -117,7 +158,6 @@ void Shader::_DisableAtt(int i) {
 void Shader::_EnableAtt(int i) {
     _enabledAtts[i] = i;
 }
-
 
 void Shader::SetMat4x4(int loc, const float* value) {
     NW_GL_CALL(glUniformMatrix4fv(loc, 1, GL_FALSE, value));

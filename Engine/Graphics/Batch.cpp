@@ -77,6 +77,7 @@ void Batch::Init() {
     delete[] uniformTexArr;
     uniformTexArr = new int[Batch::maxBatchTextures];
     for (int i = 0; i < Batch::maxBatchTextures; ++i) uniformTexArr[i] = i;
+    Shader::parser.AddCnst("MaxTexNum", std::to_string(maxUnits).c_str());
 }
 
 

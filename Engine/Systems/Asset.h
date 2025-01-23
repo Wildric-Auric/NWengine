@@ -51,6 +51,7 @@ public:
      */
     virtual Asset* LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void* data);
 
+    virtual void Move(Asset* other) {};
     /**
      * @brief Clean up the asset.
      */
@@ -111,7 +112,7 @@ public:
      */
     T* LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void* data) {
         return (T*)_asset.LoadFromBufferOrGetFromCache(identifier, buffer, data);
-    }
+    } 
 };
 
 template<typename T, typename T_Identifier>
