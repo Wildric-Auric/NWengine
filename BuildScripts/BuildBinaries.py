@@ -27,7 +27,7 @@ def genHdrs():
 #    os.system(f"xcopy ..\\dependencies\\SND\\include {hdrDir}\\temp /s /e /i")
 #    os.system(f"xcopy ..\\dependencies\\vendor\\stb {hdrDir}\\temp  /s /e /i")
 
-    asm = f'hdrasm "{hdrDir}temp\\\\" "{hdrDir}" NWengineCore.h'
+    asm = f'hdrasm "{hdrDir}temp\\\\" "{hdrDir}" NWengineCore.h NWengine.h'
     os.system(asm)
     os.system(f"rm -rf {hdrDir}\\temp")
 
