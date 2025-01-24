@@ -142,9 +142,9 @@ T* InsertRes(IDType id) {
 }
 
 template<typename T>
-T LoadAssetFromFile(const char* path, void* data = nullptr) {
+T* LoadAssetFromFile(const char* path, void* data = nullptr) {
     T loader l;
-    return = (T*)l.LoadFromFile(path, data);
+    return (T*)l.LoadFromFile(path, data);
 }
 
 template <typename T>
