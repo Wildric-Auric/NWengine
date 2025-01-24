@@ -1,7 +1,7 @@
 
 #include "Context.h"
 #include "Globals.h"
-#include "nwin/gl_context.h"
+#include "gl_context.h"
 
 #include "GL/glew.h"
 #include <iostream>

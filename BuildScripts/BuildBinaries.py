@@ -13,7 +13,6 @@ def makeDir():
 
 
 def genHdrs():
-    os.system(f"xcopy ..\\dependencies\\vendor\\nwin {hdrDir}\\nwin /s /e /i")
     os.system(f"mkdir {hdrDir}\\temp")
     for root, dirs, files in os.walk("..\\Engine"):
         for file in files:

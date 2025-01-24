@@ -1,5 +1,5 @@
 #pragma once
-#include "nwin/timer.h"
+#include "timer.h"
 
 /**
  * @brief The NWTime class represents the time-related functionality.

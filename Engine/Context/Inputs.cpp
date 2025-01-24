@@ -2,8 +2,8 @@
 #include "Context.h"
 #include "GL/glew.h"
 
-#include "nwin/keyboard.h"
-#include "nwin/window.h"
+#include "keyboard.h"
+#include "window.h"
 
 #include<iostream>
 #include <cstring>

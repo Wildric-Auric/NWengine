@@ -1,6 +1,5 @@
 #include "Script.h"
 #include "Utilities.h"
-#include "ScriptManager.h"
 
 #include "Context.h"
 #include "Camera.h"

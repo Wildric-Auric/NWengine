@@ -1,7 +1,7 @@
 #pragma once
 #include "NWTime.h"
 #include "Globals.h"
-#include "nwin/timer.h"
+#include "timer.h"
 
 
 double NWTime::_deltaTime    = 0.0;

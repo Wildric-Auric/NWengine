@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "GameObject.h"
-#include "ScriptManager.h"
 #include "Components.h"
 #include "Camera.h"
 #include "Batch.h"
