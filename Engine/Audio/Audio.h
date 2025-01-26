@@ -60,6 +60,7 @@ public:
     float frequency = 1.0f; /**< The frequency of the sound. Positive and should not surpass 2 in SoftAL implementation. */
     bool isLooping = false; /**< Flag indicating if the sound is looping. */
     bool isPlaying = false; /**< Flag indicating if the sound is currently playing. */
+    bool _isPaused = false;
 
     /**
      * @brief Default constructor for the Sound class.
@@ -70,6 +71,10 @@ public:
      * @brief Plays the sound.
      */
     void Play();
+
+    void Pause();
+
+    void Resume();
 
     /**
      * @brief Sets the volume of the sound.

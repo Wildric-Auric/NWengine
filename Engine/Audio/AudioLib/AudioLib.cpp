@@ -58,19 +58,27 @@ namespace AudioLib {
     int stopSrc(Source src) {
         auto s = CAST(IXAudio2SourceVoice*, src);
         NW_AUD_WIN_CHECK(s->Stop(), NW_AUD_ERROR);
+        NW_AUD_WIN_CHECK(s->FlushSourceBuffers(), NW_AUD_ERROR);
         return 0;
     }
 
-    void setSrcVol(Source src, float i) {
+    int pauseSrc(Source src) {
         auto s = CAST(IXAudio2SourceVoice*, src);
-        s->SetVolume(i);
+        NW_AUD_WIN_CHECK(s->Stop(), NW_AUD_ERROR);
+        return 0;
     }
 
-    void setSrcPitch(Source src, float i) {
+    int setSrcVol(Source src, float i) {
         auto s = CAST(IXAudio2SourceVoice*, src);
-        s->SetFrequencyRatio(i);
+        NW_AUD_WIN_CHECK(s->SetVolume(i), NW_AUD_ERROR);
+        return 0;
     }
 
+    int setSrcPitch(Source src, float i) {
+        auto s = CAST(IXAudio2SourceVoice*, src);
+        NW_AUD_WIN_CHECK(s->SetFrequencyRatio(i), NW_AUD_ERROR);
+        return 0;
+    }
 
     void querySrcInfo(Source src, SourceInfo* info) {
         auto s = CAST(IXAudio2SourceVoice*, src);

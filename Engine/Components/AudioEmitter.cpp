@@ -44,6 +44,14 @@ void AudioEmitter::Stop() {
     sound->Stop();
 }
 
+void AudioEmitter::Pause() {
+	sound->Pause();
+}
+
+void AudioEmitter::Resume() {
+	sound->Resume();
+}
+
 void AudioEmitter::SetSound(const Sound* snd) {
 	if (sound != nullptr)
 		sound->Clean();

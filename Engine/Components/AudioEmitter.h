@@ -72,6 +72,10 @@ public:
      */
     void Stop();
 
+    void Pause();
+
+    void Resume();
+
     /**
      * @brief SetFrequency sets sound frequency.
      * @param v the frequency value, should be between 0 et 2.

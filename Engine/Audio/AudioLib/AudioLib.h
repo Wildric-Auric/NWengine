@@ -50,9 +50,11 @@ int playSrc(Source);
 
 int stopSrc(Source);
 
-void setSrcVol(Source, float);
+int pauseSrc(Source);
 
-void setSrcPitch(Source, float i);
+int setSrcVol(Source, float);
+
+int setSrcPitch(Source, float i);
 
 void querySrcInfo(Source, SourceInfo*);
 /*

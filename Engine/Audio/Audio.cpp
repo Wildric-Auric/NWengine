@@ -56,16 +56,28 @@ void Sound::Play() {
 	this->isPlaying		= 1;
 }
 
+void Sound::Pause() {
+    if (!isPlaying) return;
+    _isPaused = 1;
+    NW_AL_CALL(AudioLib::pauseSrc(_source));
+}
+
+void Sound::Resume() {
+    if (!_isPaused)  return;
+    _isPaused = 0;
+    NW_AL_CALL(AudioLib::playSrc(_source));
+}
+
 void Sound::Stop() {
 	if (!this->isPlaying) return;
-    AudioLib::stopSrc(_source);
+    NW_AL_CALL(AudioLib::stopSrc(_source));
 	this->isPlaying = 0;
 }
 
 void Sound::SetVolume(float volume) {
 	if (volume == this->volume) return;
 	this->volume = volume; 
-    AudioLib::setSrcVol(_source, this->volume); //TODO::Add error report if this fails
+    NW_AL_CALL(AudioLib::setSrcVol(_source, this->volume)); //TODO::Add error report if this fails
 }
 
 bool Sound::HasFinished() {
