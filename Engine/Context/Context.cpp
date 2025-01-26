@@ -80,8 +80,8 @@ bool Context::ShouldClose() {
 void Context::Update() {
 		NWin::Window* w = ((NWin::Window*)(Context::window));
 		w->_getKeyboard().update();
-		w->update();
 		w->swapBuffers();
+		w->update();
 }
 
 void Context::EnableVSync(int status) {
