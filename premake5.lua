@@ -25,19 +25,15 @@ workspace "NWengine"
 
                     includedirs {
                         "./",
-                        "dependencies/GLEW/include",
-                        "dependencies/GLFW/include",
-                        "dependencies/vendor",
-                        "dependencies/SND/include",
-                        "dependencies/freetype/include",
-                        "dependencies/OPENAL/include",
+                        "Dependencies/GLEW/include",
+                        "Dependencies/vendor",
+                        "Dependencies/freetype/include",
                         "Engine/**",
                         "Engine/"
                     }
                     files {
                         "Engine/**.cpp",
                         "Engine/**.h",  
-                        "dependencies/vendor/nwin/*.cpp",
                         "premake5.lua"
                     }
                     filter "configurations:*Debug*"
@@ -51,20 +47,15 @@ workspace "NWengine"
                       targetname ("Sandbox")
                       includedirs {
                         "./",
-                        "dependencies/GLEW/include",
-                        "dependencies/vendor",
-                        "dependencies/SND/include",
-                        "dependencies/freetype/include",
-                        "dependencies/OPENAL/include",
-                        "dependencies/SND/include",
+                        "Dependencies/GLEW/include",
+                        "Dependencies/vendor",
+                        "Dependencies/freetype/include",
                         "Engine/**",
                         "Engine/",
-
                         "Sandbox/src"
                     }
                     files {
                         "Engine/**.cpp",
-                        "dependencies/vendor/nwin/*.cpp",
                         "Sandbox/src/**.cpp",
                         "Engine/**.h", 
                         "premake5.lua",
@@ -78,31 +69,23 @@ workspace "NWengine"
     workspace "*"
         filter "architecture:x86" 
             libdirs {
-                        "dependencies/GLEW/lib/Release/Win32",
-                        "dependencies/freetype/lib/win32",
-                        "dependencies/SND/lib/win32",
-                        "dependencies/OPENAL/win32"
+                        "Dependencies/GLEW/lib/Release/Win32",
+                        "Dependencies/freetype/lib/win32",
             }
             links {
                 "opengl32.lib",
                 "freetype.lib",
-                "OpenAL32.lib",
-                "sndfile.lib",
                 "glew32s.lib"
             }
         
         filter "architecture:x64"
             libdirs {
-                        "dependencies/GLEW/lib/Release/x64",
-                        "dependencies/freetype/lib/win64",
-                        "dependencies/SND/lib/win64",
-                        "dependencies/OPENAL/win64"
+                        "Dependencies/GLEW/lib/Release/x64",
+                        "Dependencies/freetype/lib/win64",
             }
             links {
                 "opengl32.lib",
                 "freetype.lib",
-                "OpenAL32.lib",
-                "sndfile.lib",
                 "glew32s.lib"
             }
 

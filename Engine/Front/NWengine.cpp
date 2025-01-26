@@ -89,13 +89,14 @@ NW_PREFIX void NWengineLoop() {
 		Scene::UpdateActiveScene();
 		//Any rendering should be done here
 		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameIntermediate)
-
-		//Update window and capturing inputs
-		Context::Update();
-		Inputs::Process(Context::window);
-	
 		//Updating imgui for example
 		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameEnd)
+
+
+		Inputs::Process(Context::window);
+		Context::Update();
+
+		
 		//Calculate fps
 		NWTime::Update();
 	}
@@ -110,7 +111,6 @@ NW_PREFIX void NWengineShutdown() {
 	Context::Destroy();
 	Font::Destroy();
 	Sound::Destroy();
-
 }
 
 NW_PREFIX bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void(*func)()) {

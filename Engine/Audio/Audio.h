@@ -54,9 +54,8 @@ struct std::hash<SoundIdentifier> {
  */
 class Sound : public Asset {
 public:
-    static void* _device;
-    uint32 _buffID = 0; /**< The buffer ID of the sound. OpenAL ID if OpenAL is used as audio engine*/
-    uint32 _source = 0; /**< The source ID of the sound. */
+    void*  _buffID = 0; /**< The buffer ID of the sound. OpenAL ID if OpenAL is used as audio engine*/
+    void*  _source = 0; /**< The source ID of the sound. */
     float volume = 1.0f; /**< The volume of the sound. */
     float frequency = 1.0f; /**< The frequency of the sound. Positive and should not surpass 2 in SoftAL implementation. */
     bool isLooping = false; /**< Flag indicating if the sound is looping. */
@@ -111,7 +110,7 @@ public:
      * @param id The ID of the sound asset.
      * @return The sound asset if found, nullptr otherwise.
      */
-    Asset* GetFromCache(void* id);
+    Asset* GetFromCache(void* id) override;
 
     /**
      * @brief Loads the sound asset from a file.
@@ -119,7 +118,7 @@ public:
      * @param id The ID of the sound asset.
      * @return The loaded sound asset if successful, nullptr otherwise.
      */
-    Asset* LoadFromFile(const char* path, void* id);
+    Asset* LoadFromFile(const char* path, void* id) override;
 
     /**
      * @brief Loads the sound asset from a buffer.
@@ -127,7 +126,7 @@ public:
      * @param id The ID of the sound asset.
      * @return The loaded sound asset if successful, nullptr otherwise.
      */
-    Asset* LoadFromBuffer(void* alBuffer, void* id);
+    Asset* LoadFromBuffer(void* alBuffer, void* id) override;
 
     /**
      * @brief Declares the resource list for Sound which is identified by SoundIdentifier.

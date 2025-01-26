@@ -14,28 +14,30 @@
 #define NW_GL_TEST()
 #else 
 #define NW_GL_TEST() { \
-	auto a = glGetError(); \
+	int a; \
+    do {\
+	a = glGetError(); \
 	if (a != GL_NO_ERROR) { \
 		std::cout << "\n---------------------\nOpenGL ERROR: "<< a << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
-	} \
-} while(0);
+	}} \
+    while(a != GL_NO_ERROR);\
+} 
 #endif
 
 #define NW_GL_CALL(code) code; NW_GL_TEST()
 
 
 #ifdef NW_RELEASE
-#define NW_AL_TEST()
+#define NW_AL_TEST(c) c;
 #else
-#define NW_AL_TEST() { \
-	auto a = alcGetError((ALCdevice*)_device);\
-	if (a != ALC_NO_ERROR) { \
-		std::cout << "\n---------------------\nOpenAL ERROR: "<< a << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
+#define NW_AL_TEST(c) { \
+	if ((c) != 0) { \
+		std::cout << "\n---------------------\nOpenAL ERROR: "<< #c << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
 	} \
-} while(0);
+} 
 #endif
 
-#define NW_AL_CALL(code) code; NW_AL_TEST()
+#define NW_AL_CALL(code) NW_AL_TEST(code)
 //arch is always an integer type with size of pointer of the architecture
 typedef long arch;
 

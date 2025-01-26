@@ -81,6 +81,8 @@ public:
     /**
      * @brief SetLooping sets if the the sound should loop.
      * @param v The looping value.
+     * @note This function has no effect after the sound has been loaded, if you want to set looping
+     * value you should do it before that.
      */
     void SetLooping(bool v);
 
