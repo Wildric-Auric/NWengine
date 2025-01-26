@@ -61,6 +61,7 @@ public:
     bool isLooping = false; /**< Flag indicating if the sound is looping. */
     bool isPlaying = false; /**< Flag indicating if the sound is currently playing. */
     bool _isPaused = false;
+    bool _hasFinished = false;
 
     /**
      * @brief Default constructor for the Sound class.
@@ -95,15 +96,23 @@ public:
     void SetLoop(bool loop);
 
     /**
-     * @brief Stops the sound.
+	 * @brief Stops the sound, calling HasFinished will return true after this.
      */
     void Stop();
+
+	/**
+	 * @brief Stops the sound and resets finish flag. Calling HasFinished will return false after this.
+	 */
+    void Sound::Reset();
 
     /**
      * @brief Checks if the sound has finished playing.
      * @return True if the sound has finished playing, false otherwise.
      */
     bool HasFinished();
+
+    bool _HasFinished();
+
 
     /**
      * @brief Cleans up the sound.

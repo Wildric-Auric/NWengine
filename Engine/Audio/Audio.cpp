@@ -54,6 +54,7 @@ void Sound::Play() {
     NW_AL_CALL(AudioLib::initSrc(_source, initData));
     NW_AL_CALL(AudioLib::playSrc(_source));
 	this->isPlaying		= 1;
+	_hasFinished        = 0;
 }
 
 void Sound::Pause() {
@@ -72,6 +73,12 @@ void Sound::Stop() {
 	if (!this->isPlaying) return;
     NW_AL_CALL(AudioLib::stopSrc(_source));
 	this->isPlaying = 0;
+	this->_hasFinished = 1;
+}
+
+void Sound::Reset() {
+	Stop();
+	_hasFinished = 0;
 }
 
 void Sound::SetVolume(float volume) {
@@ -81,11 +88,13 @@ void Sound::SetVolume(float volume) {
 }
 
 bool Sound::HasFinished() {
-	if (!isPlaying) return 0;
-	int state = 0;
+	return _hasFinished;
+}
+
+bool Sound::_HasFinished() {
     AudioLib::SourceInfo info;
 	AudioLib::querySrcInfo(_source, &info);
-	return (!info.isPlaying);
+	return !info.isPlaying;
 }
 
 void Sound::SetFrequency(float frequency) {

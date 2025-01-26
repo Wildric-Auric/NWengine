@@ -62,7 +62,7 @@ void AudioEmitter::SetSound(const Sound* snd) {
 }
 
 void AudioEmitter::StopIfHasFinished() {
-    if (sound->isPlaying && sound->HasFinished())
+    if (sound->isPlaying && sound->_HasFinished())
         Stop();
 }
 
