@@ -4,7 +4,6 @@
 #include <vector>
 #include <fstream>
 
-#include <iostream> //TODO::Delete
 namespace AudioLib {
     #define CAST(type, var) (type)var
     IXAudio2MasteringVoice* defaultMasterVoice = 0;
@@ -76,7 +75,6 @@ namespace AudioLib {
     void querySrcInfo(Source src, SourceInfo* info) {
         auto s = CAST(IXAudio2SourceVoice*, src);
         XAUDIO2_VOICE_STATE state;
-        std::cout << (long long)src << std::endl;
         s->GetState(&state);
         info->isPlaying = state.BuffersQueued > 0;
     }
