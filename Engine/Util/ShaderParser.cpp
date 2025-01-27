@@ -132,7 +132,7 @@ void ShaderParser::Reset() {
     shaderVersion = "";
     tokens.clear();
     uniformsData.clear();
-    fragAttNum  = 0;
+    enabledAtts.clear();
 }
 
 ShaderParser::ShaderParser() {
@@ -286,7 +286,13 @@ void TokenGeneral(void* ptr) {
         TokenUniform(ptr);
     }
     else if (*p.tokenIter == "out" && p.curType == ShaderType::FRAG && p.scope == 0 && p.scope2 == 0) {
-        p.fragAttNum += 1;
+        uint16_t loc = p.enabledAtts.empty() ? 0 : p.enabledAtts.back()+1;
+        std::list<std::string>::iterator otherIt = p.tokenIter; 
+        if (*(--otherIt) == ")") {
+            --otherIt;
+            loc = stoi(*otherIt);
+        }
+        p.enabledAtts.push_back(loc);
     }
 
     p.scope  += (*p.tokenIter == "{") - (*p.tokenIter == "}");     
@@ -362,7 +368,11 @@ void ShaderParser::OutputData() {
     std::cout << "--------Fragment--------"<< std::endl;
     std::cout << frag<<std::endl;
 
-    std::cout << "-------\nAtts Num: " << GetAttNum() << std::endl;
+    std::cout << "-------\nAtts Num: " << GetEnabledAtts().size() << std::endl;
+    std::cout << "-------Used Atts---------- " <<std::endl;
+    for (auto& i : GetEnabledAtts()) {
+        std::cout << i << std::endl;
+    }
     std::cout << "-------\nShader Vers: " << GetShaderVersion() << std::endl;
 
     std::cout << "--------Uniforms--------"<< std::endl;

@@ -49,7 +49,8 @@ class ShaderParser {
     std::string vert = "";
     std::string frag = "";
     std::string shaderVersion = "";
-    int fragAttNum;
+    std::vector<uint16_t> enabledAtts;
+
 
     ShaderParser();
     bool PushToken(); 
@@ -67,7 +68,7 @@ class ShaderParser {
 
     inline const std::string& GetVertTxt() const { return vert;}
     inline const std::string& GetFragTxt() const { return frag;}
-    inline const int GetAttNum() const { return fragAttNum;}
+    inline const std::vector<uint16_t>& GetEnabledAtts() const { return enabledAtts;}
     inline const std::unordered_map<std::string, ShaderParserUniformData>& GetUniforms() const { return uniformsData;}
     inline const std::string& GetShaderVersion() const { return shaderVersion;}
 };

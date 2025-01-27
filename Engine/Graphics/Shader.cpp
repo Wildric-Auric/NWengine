@@ -121,7 +121,7 @@ void Shader::SetReflectedUniforms(const ShaderParser& p) {
 
 void Shader::SetEnabledAtts(const ShaderParser& p) {
     _enabledAtts.clear();
-    for (int i = 0; i < p.GetAttNum(); ++i) {
+    for (uint16 i : p.enabledAtts) {
         _EnableAtt(i);
     }
 }
