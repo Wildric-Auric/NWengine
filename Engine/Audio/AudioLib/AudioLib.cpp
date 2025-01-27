@@ -34,7 +34,7 @@ namespace AudioLib {
     int initSrc(Source src, const SourceInitData& data) {
         auto s = CAST(IXAudio2SourceVoice*, src);
         auto d = CAST(WaveData*, data.buff);
-        XAUDIO2_BUFFER& audBuff = *(new XAUDIO2_BUFFER{});
+        XAUDIO2_BUFFER audBuff{};
         audBuff.pAudioData = (BYTE*)d->data.data();
         audBuff.AudioBytes = d->data.size();
         audBuff.LoopCount  = (data.loopTimes == NW_AUD_LOOP_DONT) ? 0: 
