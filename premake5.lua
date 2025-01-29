@@ -5,19 +5,18 @@ workspace "NWengine"
     platforms {"x86","x64"}
     filter "platforms:*86*"
         architecture "x86"
-        pltrm = "32"
     filter "platforms:*64*"
         architecture "x64"
-        pltrm = "64"
     filter {}
     location "Build"
     language   "C++"
     cppdialect "C++11"
-    targetdir "%{wks.location}/Bin/%{prj.name}/%{cfg.buildcfg}%{pltrm}"
+    targetdir "%{wks.location}/Bin/%{prj.name}/%{cfg.buildcfg}%{cfg.platform:sub(2)}"
     objdir    "%{wks.location}/Bin/objs"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
     buildoptions { "/EHsc"}
+    warnings "Off"
 
     project "NWEngineCore"
                     kind "StaticLib"
@@ -25,7 +24,7 @@ workspace "NWengine"
 
                     includedirs {
                         "./",
-                        "Dependencies/GLEW/include",
+                        "Dependencies/glew/include",
                         "Dependencies/vendor",
                         "Dependencies/freetype/include",
                         "Engine/**",
@@ -37,23 +36,22 @@ workspace "NWengine"
                         "premake5.lua"
                     }
                     filter "configurations:*Debug*"
-                        targetname ("NWengineCore%{pltrm}d")
+                        targetname ("NWengineCore%{cfg.platform:sub(2)}d")
                     filter "configurations:*Release*"
-                        targetname ("NWengineCore%{pltrm}")
+                        targetname ("NWengineCore%{cfg.platform:sub(2)}")
 
     project "Sandbox" 
                       kind "ConsoleApp"
-                      defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
                       targetname ("Sandbox")
                       includedirs {
                         "./",
-                        "Dependencies/GLEW/include",
+                        "Dependencies/glew/include",
                         "Dependencies/vendor",
                         "Dependencies/freetype/include",
                         "Engine/**",
                         "Engine/",
                         "Sandbox/src"
-                    }
+                       }
                     files {
                         "Engine/**.cpp",
                         "Sandbox/src/**.cpp",
@@ -67,28 +65,22 @@ workspace "NWengine"
                     --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
                     
     workspace "*"
-        filter "architecture:x86" 
-            libdirs {
-                        "Dependencies/GLEW/lib/Release/Win32",
-                        "Dependencies/freetype/lib/win32",
-            }
-            links {
-                "opengl32.lib",
-                "freetype.lib",
-                "glew32s.lib"
-            }
-        
-        filter "architecture:x64"
-            libdirs {
-                        "Dependencies/GLEW/lib/Release/x64",
-                        "Dependencies/freetype/lib/win64",
-            }
-            links {
-                "opengl32.lib",
-                "freetype.lib",
-                "glew32s.lib"
-            }
+        links {
+            "opengl32.lib",
+            "freetype.lib",
+            "glew32s.lib"
+        }
 
+        filter "configurations:*Debug*"
+            libdirs {
+                 "Dependencies/glew/lib/debug/win%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/win%{cfg.platform:sub(2)}",
+            }
+        filter "configurations:*Release*"
+            libdirs {
+                 "Dependencies/glew/lib/release/win%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/win%{cfg.platform:sub(2)}",
+            } 
         filter "configurations:*Debug*"
             defines {"NW_DEBUG", "_DEBUG", "NW_VERSION=%{Nw_version}"}
             staticruntime "off"
