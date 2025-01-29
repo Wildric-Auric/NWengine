@@ -1,4 +1,4 @@
-//vertex shader
+#pragma vertex
 #version 330 core
 
 layout(location = 0) in vec3  attribPos;
@@ -19,7 +19,7 @@ void main() {
     test      = usrData;
 };
 
-//fragment shader
+#pragma fragment 
 #version 330 core
 
 uniform sampler2D uTex[32];

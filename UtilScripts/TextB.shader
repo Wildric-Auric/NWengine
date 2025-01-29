@@ -1,4 +1,4 @@
-//vertex shader
+#pragma vertex
 #version 330 core
 #define MAXUINT10 1023.0
 
@@ -24,7 +24,7 @@ void main() {
                       (float((0x000003FF & floatBitsToInt(usrData.y))))       / MAXUINT10
                      );
 };
-//fragment shader
+#pragma fragment 
 #version 330 core
 
 uniform sampler2D uTex[32];

@@ -1,4 +1,4 @@
-//vertex shader
+#pragma vertex
 #version 330 core
 
 layout (location = 0) in vec3 attribPos;
@@ -16,7 +16,7 @@ void main() {
     screenPos = gl_Position;
 };
 
-//fragment shader
+#pragma fragment
 #version 330 core
 
 uniform float uTime;
