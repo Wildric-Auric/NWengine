@@ -309,7 +309,7 @@ void ShaderParser::ProcessTokens() {
         }
 
         if (&*tokenIter != ltoken && curType != ShaderType::NONE) { 
-                if (*tokenIter == ";") {
+                if (*tokenIter == ";" || *tokenIter == "}") {
                     *curShaderTxt += *tokenIter + "\n";
                 }
                 else if (IsOp((*tokenIter)[0]) || noWhiteSpace) {
