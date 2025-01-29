@@ -99,6 +99,16 @@ namespace AudioLib {
         return (void*)ctx;
     }
 
+    void* getDefMaster() {
+        return defaultMasterVoice;
+    }
+
+    int setDefMasterVol(float vol) {
+        auto s = CAST(IXAudio2MasteringVoice*, defaultMasterVoice);
+        NW_AUD_WIN_CHECK(s->SetVolume(vol), NW_AUD_ERROR);
+        return 0; 
+    }
+
     void destroyCtx() {
         defaultMasterVoice->DestroyVoice();
         ctx->StopEngine();

@@ -1,5 +1,6 @@
 #pragma once
 #include <typeinfo>
+#include <assert.h>
 
 #define SWAP_ENDIAN_16(v)  (v << 8  | v >> 8)
 #define SWAP_ENDIAN_32(v)  (v << 24 | v >> 24 | (v << 8 & 0x00FF0000) | (v >> 8 & 0x0000FF00))
@@ -44,7 +45,11 @@ void  destroyCtx();
 
 void* getCtx();
 
-int  initSrc(Source, const SourceInitData&);
+void* getDefMaster();
+
+int setDefMasterVol(float);
+
+int initSrc(Source, const SourceInitData&);
 
 int playSrc(Source);
 
