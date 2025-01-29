@@ -314,7 +314,10 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	}
 	//Find room in batch
 	for (Batch* batchGroup : iter->second) {
-		if (batchGroup->Render(obj, stride)) return sprite->sortingLayer;
+		if (!batchGroup->Render(obj, stride))
+			continue;
+		delete[] stride;
+		return sprite->sortingLayer;
 	}
 	//Room not found->creation of another batch;
 	iter->second.push_back(new Batch(desc));
