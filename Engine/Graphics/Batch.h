@@ -15,6 +15,15 @@
 #define UNIFORM_VIEWxPROJ_STR		"uVP"
 #define UNIFORM_TEXTURE_ARRAY_STR	"uTex"
 
+
+typedef int BatchChannelNum;
+
+struct BatchDescriptor {
+    BatchChannelNum* unitNum; 
+    uint32 size;
+    uint32 rawNum;
+};
+
 /**
  * @class Batch
  * @brief The Batch class represents a batch of game objects to be rendered together.
@@ -32,6 +41,8 @@ private:
 
 
 public:
+	const static uint32 defaultStrideSize = 9;
+
 	std::string shader    = "";
 	int		    layer     = 0;
 	bool		isDynamic = 1;
@@ -39,11 +50,15 @@ public:
 	std::unordered_map<GameObject*, int> objs;       //The value is the offset in stride unit
 	std::vector<float>					 vertices;
 	std::unordered_map<Texture*, int>    textures;   //value  is a texure slot
+    std::vector<BatchChannelNum> additionalData;
+	uint32 strideSize = defaultStrideSize;
+	uint32 strideSizeByte = defaultStrideSize * 4;
 
 	/**
   * @brief Default constructor for the Batch class.
   */
-	Batch();
+	Batch(uint32 stride);
+    Batch(const BatchDescriptor&);
 	~Batch();
 
 	/**
@@ -69,8 +84,6 @@ public:
   */
 	void Delete();
 
-	static uint32 strideSize;
-	static uint32 strideSizeByte;
 	static uint32* indices;
 	static int indicesSize;
 	static uint32 batchMaxQuads;

@@ -137,3 +137,27 @@ public:
      */
     static int DefaultSpriteDrawCallback(void* data);
 };
+
+class BatchExtra : public GameComponent {
+    public:
+    std::vector<float> rawData;
+    std::vector<int> relativeIndex;
+	inline BatchExtra(GameObject* go) {
+		attachedObject = go;
+	}
+    //void Start();
+    //void Update();  
+    void AddAttribute(int numOfFloat);
+    void SetAttribute(int index, void* data);
+    void* GetData(int num);
+    bool IsCompatible(BatchExtra* other);
+    bool IsCompatible(int* container, int size);
+    template<typename T>
+    void SetAttribute(int index, const T& data) {
+        SetAttribute(index,(void*)&data);
+    }
+    template<typename T>
+    T GetData(int num) {
+        return *(T*)GetData(num);
+    }
+};

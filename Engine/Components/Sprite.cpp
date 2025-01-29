@@ -119,3 +119,36 @@ int Sprite::DefaultSpriteDrawCallback(void* data) {
 
 	return sprite->sortingLayer;
 }
+
+void BatchExtra::AddAttribute(int num) {
+    rawData.resize(rawData.size() + num);
+    relativeIndex.push_back(num);
+}
+
+void BatchExtra::SetAttribute(int index, void* data) {
+    int acc = 0;
+    for (int i = 0; i < index; ++i) {
+        acc += relativeIndex[i];
+    }
+    std::memcpy(&rawData[acc], data, sizeof(float) * relativeIndex[index]);
+}
+
+void* BatchExtra::GetData(int num) {
+    int acc = 0;
+    for (int i = 0; i < num; ++i) {
+        acc += relativeIndex[i];
+    }
+    return &rawData[acc];
+}
+
+bool BatchExtra::IsCompatible(BatchExtra* other) {
+    return IsCompatible(other->relativeIndex.data(), other->relativeIndex.size());
+}
+
+bool BatchExtra::IsCompatible(int* container, int size) {
+    if (this->relativeIndex.size() != size) return 0;
+    for (int i = 0; i < size; ++i) {
+        if (this->relativeIndex[i] != container[i]) return 0;
+    }
+    return 1;
+}
