@@ -5,9 +5,13 @@
 #include "Inputs.h"
 #include "NWTime.h"
 #include "Asset.h"
+#include "DllScripting.h"
+#include "ScriptingComp.h"
+#include "Keyboard.h"
 
 #define ADD_OBJ(scenePtr,name, variable) GameObject& variable =  s->AddObject(); s->Rename(name, &variable)
 
+DynamicScript* dynScr; 
 void bg(int offset) {
 	Scene* s = Scene::GetCurrent();
 	ADD_OBJ(s, "Bg0", bg);
@@ -34,10 +38,8 @@ inline bool cond(GameObject* obj) {
 
 void GameManager::Start() {
 	Scene* s = Scene::GetCurrent();
-
 	s->SetAutoCache(1);
 	s->AddToCache(cond);
-
 	
 	ADD_OBJ(s, "CameraObj",   cam);
 	ADD_OBJ(s, "WaterObj",	  water);
@@ -96,7 +98,16 @@ void GameManager::Start() {
 	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 	spr->SetTexture(&ImageDefault,&TextureDefaultID);
 	tr->scale = tr->scale * 10.0;
+
+	//dynamic Script debugging
+	DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+	dynScr = sq.AddComponent<DynamicScript>();	
+	dynScr->Load("DllPath/test.dll");
 	
+	//dynScr->Unload();
+	//dynScr->Load("DllPath/test.dll");
+	const char* (*f)()  = (const char* (*)())dynScr->dllScript->GetDllFunc("helloWorld");
+	printf(f());
 }
 
 static float t = 0.0;
@@ -111,7 +122,14 @@ void GameManager::Update() {
 	tree->GetComponent<Sprite>()->shader->Use();
 	tree->GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	tree->GetComponent<Sprite>()->shader->Unuse();
+	static float a = 5.0;
+	if (Inputs::GetInputKey('D', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+		dynScr->Unload();
+		DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+		dynScr->Reload("DllPath/test.dll");
+	}
 
-	Scene::GetCurrent()->GetGameObject("Square")->GetComponent<Transform>()->rotation = t * 5.0;
-
+	float(*f)()  = (float(*)())dynScr->dllScript->GetDllFunc("getFloat");
+	a = f();
+	Scene::GetCurrent()->GetGameObject("Square")->GetComponent<Transform>()->rotation = t * a;
 }

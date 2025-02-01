@@ -1,8 +1,6 @@
 #include "NWengine.h"
 #include "Scripts.h"	
 #include "Scene.h"
-#include "DefaultAssets.h"
-#include "windows.h"
 
 Renderer CRT;
 
@@ -18,7 +16,7 @@ void Init() {
 	manager.DeleteComponent<MultiAudioEmitter>();
 
 	CRT.SetUp();
-	//CRT.SetShader("../Sandbox/assets/Shaders/MattiasCRT.shader");
+	CRT.SetShader("../Sandbox/assets/Shaders/MattiasCRT.shader");
 	CRT.Use();
 	CRT.stretchCoeff.x = 1.3;
 	CRT.stretchCoeff.y = 1.3;
@@ -31,7 +29,6 @@ static float t = 0.0;
 void Render() {
 	t += NWTime::GetDeltaTime();
 	Renderer& renderer = (*Renderer::currentRenderer);
-	Shader::resList;
 	renderer.componentContainer.GetComponent<Sprite>()->shader->Use();
     renderer.componentContainer.GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	renderer.componentContainer.GetComponent<Sprite>()->shader->Unuse();
