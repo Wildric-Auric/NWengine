@@ -9,6 +9,7 @@
 #include "Primitives.h"
 #include "Batch.h"
 #include "Renderer.h"
+#include "ScriptingComp.h"
 
 int GameObject::numberOfGameObjects = 0;
 
@@ -65,6 +66,8 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Script            , type);
 	ADD_COMPONENT(Collider			, type);
 	ADD_COMPONENT(Text              , type);
+	ADD_COMPONENT(DynamicScript     , type);
+	ADD_COMPONENT(BatchExtra        , type);
 	return nullptr;
 };
 

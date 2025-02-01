@@ -12,22 +12,23 @@ std::vector<std::string> GetNWlist(std::string path) {
 	return vec;
 }
 
-
-DllHandle::DllHandle(const char* filename) {
-	HINSTANCE temp = LoadLibrary(filename);
-	h = temp;
-	if (!temp || temp == INVALID_HANDLE_VALUE) {
+void DllHandle::Load(const char* filename) {
+	int a = sizeof(HMODULE);
+	h = LoadLibrary(filename);
+	if (!h || h == INVALID_HANDLE_VALUE) {
 		h = nullptr;
 		printf("Cannot load DLL\n");
 	}
 }
 
-DllHandle::~DllHandle() { if (h) FreeLibrary((HINSTANCE)h); }
+void* DllHandle::Get() {
+    return h;
+}
 
-const void* DllHandle::Get() const { return h; }
-
-
-
+void DllHandle::Free() {
+    if (h) 
+        FreeLibrary((HINSTANCE)h);
+}
 
 void* GetDllFunction(DllHandle* dll, const char* functionName) {
 	return GetProcAddress((HINSTANCE)dll->Get(), functionName);
@@ -267,7 +268,7 @@ bool MakeFile(const std::string& path) {
 }
 
 //Returns filename + extension
-std::string GetFileName(std::string path, std::string* bFilename, std::string* bExtension, std::string* bRoot) {
+std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot) {
 	std::string filename = "";
 	std::string extension = "";
 	std::string root = "";
@@ -299,11 +300,11 @@ std::string GetFileName(std::string path, std::string* bFilename, std::string* b
 }
 
 
-bool FileCopy(std::string dest, std::string src, bool failIfExists) {
+bool FileCopy(const std::string& dest, const std::string& src, bool failIfExists) {
 	return CopyFile(src.c_str(), dest.c_str(), failIfExists);
 }
 
-bool FileExists(std::string dir) {
+bool FileExists(const std::string& dir) {
 	DWORD attrib = GetFileAttributes(dir.c_str());
 	if ((attrib != INVALID_FILE_ATTRIBUTES) && !(attrib & FILE_ATTRIBUTE_DIRECTORY))
 		return 1;
@@ -311,32 +312,88 @@ bool FileExists(std::string dir) {
 
 }
 
-bool Exec(std::string cmd) {
+bool Exec(const std::string& cmd, char* env) {
 	STARTUPINFO			sInfo;
 	PROCESS_INFORMATION pInfo;
 	ZeroMemory(&sInfo, sizeof(sInfo));
 	ZeroMemory(&pInfo, sizeof(pInfo));
 
 	if (!CreateProcess(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0,
-		NULL, NULL, &sInfo, &pInfo))
+		env, NULL, &sInfo, &pInfo)) { 
 		return 0;
+	}
 
 	WaitForSingleObject(pInfo.hProcess, INFINITE);
 	DWORD exitCode;
 	GetExitCodeProcess(pInfo.hProcess, &exitCode);
-
 	CloseHandle(pInfo.hProcess);
 	CloseHandle(pInfo.hThread);
 	return !exitCode;
 }
 
-bool FileDelete(std::string name) {
+bool GetVcVarsEnv(std::vector<char>& env) {
+    STARTUPINFO sInfo;
+    PROCESS_INFORMATION pInfo;
+    ZeroMemory(&sInfo, sizeof(sInfo));
+    ZeroMemory(&pInfo, sizeof(pInfo));
+    #ifdef _WIN64 
+    char cmd[] = "cmd.exe /C \"vcvars64.bat > nul & set\""; 
+    #else
+    char cmd[] = "cmd.exe /C \"vcvars32.bat > nul & set\""; 
+    #endif
+    SECURITY_ATTRIBUTES sa;
+    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sa.lpSecurityDescriptor = 0;
+    sa.bInheritHandle= TRUE;
+    HANDLE rdPipe, wrtPipe;
+    CreatePipe(&rdPipe, &wrtPipe, &sa, 0);
+    SetHandleInformation(rdPipe, HANDLE_FLAG_INHERIT, 0);
+    sInfo.dwFlags = STARTF_USESTDHANDLES;
+    sInfo.hStdOutput = wrtPipe;
+    sInfo.hStdError = wrtPipe;
+    
+    bool success = CreateProcess(NULL,cmd,NULL,NULL,TRUE,CREATE_NO_WINDOW, nullptr, 
+                nullptr, &sInfo, &pInfo);
+    if (!success) return 0;
+    CloseHandle(wrtPipe);
+    env.clear();
+    int buffSize = 4096;
+    env.resize(buffSize);
+    DWORD bytes = 0;
+    DWORD ptr = 0;
+    int resizeFactor;
+    while (ReadFile(rdPipe, env.data() + ptr, buffSize-1, &bytes, nullptr) && bytes > 0) {
+        ptr   += bytes;
+        resizeFactor = buffSize + ptr;
+        if (resizeFactor <= env.size())
+            continue;
+        env.resize(buffSize + ptr);
+    }
+    env[ptr] = '\0';
+    int i = 0;
+    int j = 0;
+    for (int j = 0; j < env.size(); ++j) {
+        if (env[j] == '\r' && env[j+1] == '\n') {
+            env[i] = '\0';
+            j+=1;
+        }
+        else env[i] = env[j];
+        i++;
+    }
+    WaitForSingleObject(pInfo.hProcess, INFINITE);
+    CloseHandle(pInfo.hProcess);
+    CloseHandle(pInfo.hThread);
+    
+    return 1;
+}
+
+bool FileDelete(const std::string& name) {
 	return DeleteFile(name.c_str());
 };
 
-bool FileMove(std::string dest, std::string source, bool failIfExists) {
+bool FileMove(const std::string& dest, const std::string& source, bool failIfExists) {
 	if (!FileExists(source))
-		return 0;
+		return 0; 
 	if (!failIfExists)
 		FileDelete(dest);
 	return MoveFile(source.c_str(), dest.c_str());

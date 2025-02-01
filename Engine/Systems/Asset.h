@@ -117,7 +117,7 @@ public:
 
 template<typename T, typename T_Identifier>
 T_Identifier GetIDWithAsset(T assetChildInstancePtr) {
-    auto list = assetChildInstancePtr->resList;
+    auto& list = assetChildInstancePtr->resList;
     auto iter = list.begin();
     for (iter; iter != list.end(); ++iter) {
         if (&iter->second == assetChildInstancePtr) {

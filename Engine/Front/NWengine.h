@@ -31,6 +31,7 @@
 #include "Utilities.h"
 #include "Globals.h"
 #include "NWTime.h"
+#include "DllScripting.h"
 
 
 

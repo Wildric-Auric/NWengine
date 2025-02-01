@@ -49,24 +49,18 @@ std::vector<std::string> GetNWlist(std::string path);
  * @brief A handle to a dynamic-link library (DLL)
  * 
  */
-struct DllHandle {
+class DllHandle {
+    public:
     /**
      * @brief Construct a new DllHandle object and load the specified DLL
      * 
      * @param filename The name of the DLL file
      */
-    DllHandle(const char* filename);
     DllHandle() {};
-    ~DllHandle();
-
-    /**
-     * @brief Get the pointer to the loaded DLL
-     * 
-     * @return The pointer to the loaded DLL
-     */
-    const void* Get() const;
-
-private:
+    void Load(const char* filename);
+    void Free();
+    
+    void* Get(); 
     void* h = nullptr;
 };
 
@@ -169,7 +163,7 @@ std::string ToDoubleBackSlash(const std::string& dir);
  * @param bRoot The output parameter to store the root directory (optional)
  * @return The filename and extension
  */
-std::string GetFileName(std::string path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr);
+std::string GetFileName(const std::string& path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr);
 
 /**
  * @brief Copy a directory and its contents to the specified destination
@@ -204,7 +198,7 @@ bool MakeFile(const std::string& path);
  * @param failIfExists Flag indicating whether to fail if the destination file already exists (default is false)
  * @return True if the copy operation is successful, false otherwise
  */
-bool FileCopy(std::string dest, std::string src, bool failIfExists = false);
+bool FileCopy(const std::string& dest, const std::string& src, bool failIfExists = false);
 
 /**
  * @brief Check if a file exists at the specified path
@@ -212,7 +206,7 @@ bool FileCopy(std::string dest, std::string src, bool failIfExists = false);
  * @param dir The file path
  * @return True if the file exists, false otherwise
  */
-bool FileExists(std::string dir);
+bool FileExists(const std::string& dir);
 
 /**
  * @brief Execute a command in the system shell
@@ -220,15 +214,16 @@ bool FileExists(std::string dir);
  * @param cmd The command to execute
  * @return True if the command is executed successfully, false otherwise
  */
-bool Exec(std::string cmd);
+bool Exec(const std::string& cmd, char* env = 0);
 
+bool GetVcVarsEnv(std::vector<char>&);
 /**
  * @brief Delete a file at the specified path
  * 
  * @param name The file path
  * @return True if the file is deleted successfully, false otherwise
  */
-bool FileDelete(std::string name);
+bool FileDelete(const std::string& name);
 
 /**
  * @brief Move a file from the source path to the destination path
@@ -238,4 +233,4 @@ bool FileDelete(std::string name);
  * @param failIfExists Flag indicating whether to fail if the destination file already exists (default is false)
  * @return True if the move operation is successful, false otherwise
  */
-bool FileMove(std::string dest, std::string source, bool failIfExists = false);
+bool FileMove(const std::string& dest, const std::string& source, bool failIfExists = false);

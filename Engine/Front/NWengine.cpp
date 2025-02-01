@@ -65,13 +65,13 @@ NW_PREFIX int NWengineInit() {
 	//init Text System
 	if (!Font::Init())
 		return -1;
-	Primitives::Init();
 	//Context settings
 	Context::EnableBlend();
-    //Init batch system
+    
+	Primitives::Init();
     Batch::Init();
-	//Init Renderer
 	Renderer::Init();
+    DllScripting::Init();
 
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitEnd)
 
