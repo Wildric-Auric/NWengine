@@ -105,6 +105,7 @@ NW_PREFIX void NWengineLoop() {
 NW_PREFIX void NWengineShutdown() {
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::Destroy)
 	Scene::Destroy();
+    Asset::Destroy();
 	Renderer::Destroy();
 	Primitives::Destroy();
     Batch::Destroy();

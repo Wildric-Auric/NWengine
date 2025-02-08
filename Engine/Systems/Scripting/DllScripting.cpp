@@ -36,6 +36,7 @@ void DllScript::Clean() {
     ((DllHandle*)(handle))->Free();
     delete ((DllHandle*)handle);
     handle = 0;
+    EraseRes<DllScript, DllScriptIdentifier>(GetIDWithAsset<DllScript*, DllScriptIdentifier>(this));
 }
     
 void* DllScript::GetDllFunc(const char* name) {

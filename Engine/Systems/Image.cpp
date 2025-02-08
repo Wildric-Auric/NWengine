@@ -8,7 +8,6 @@
 #include "Image.h"
 
 
-
 Asset* Image::LoadFromFile(const char* path, void* unused) {
 	stbi_set_flip_vertically_on_load(1);
 	pixelBuffer = stbi_load(path, &width, &height, &channels, 3 + alpha);

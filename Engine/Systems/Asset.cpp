@@ -1,5 +1,6 @@
 #include "Asset.h"
-#include "Texture.h"
+#include "AssetList.h"
+
 Asset* Asset::GetFromCache(void* identifier)			   { return nullptr;}
 Asset* Asset::LoadFromFileOrGetFromCache(void* identifier, 
 								 const char* path = nullptr, 
@@ -22,5 +23,15 @@ Asset* Asset::LoadFromBufferOrGetFromCache(void* identifier, void* buffer, void*
 Asset*   Asset::LoadFromFile(const char* path, void* output) { return nullptr;}
 Asset*   Asset::LoadFromBuffer(void* buffer, void* data)	 { return nullptr;}
 void	 Asset::Clean()									     {}
+
+void Asset::Destroy() {
+#define CLN_RES(type)\
+    while (type::resList.size() != 0)\
+        type::resList.begin()->second.Clean();
+    CLN_RES(Texture);
+    CLN_RES(Sound);
+    CLN_RES(DllScript);
+    CLN_RES(Font);
+}
 
 

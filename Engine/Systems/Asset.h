@@ -10,6 +10,7 @@ class Asset {
 public:
     int _usageCounter = 0;
 
+    static void Destroy();
     /**
      * @brief Get the asset from the cache based on the identifier.
      * @param identifier The identifier of the asset.
