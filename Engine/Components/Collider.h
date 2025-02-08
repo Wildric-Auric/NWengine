@@ -62,6 +62,11 @@ public:
   */
 	bool isColliding(Collider* other, fVec2* depthBuffer = nullptr);
 
+    /**
+    * @brief checks if a point is inside the polygon
+    */
+    bool isInside(const fVec2& point);
+
 
 	/**
   * @brief Sets edges according to rectangular shape.
@@ -76,4 +81,21 @@ public:
     void SetEdgesSprite(); 
 
 	void Start() override;
+};
+
+
+class CircleCollider: public GameComponent {
+    public:
+        float radius = 32.0f;
+	    static std::string GetType() { return "CircleCollider"; }
+        CircleCollider() {};
+        CircleCollider(GameObject* obj) {attachedObject = obj;}
+        float Sat(const fVec2& axis, const fVec2& origin, Collider*);
+        bool isColliding(Collider* other, fVec2* depthBuffer = nullptr);
+        bool isColliding(CircleCollider* other, fVec2* depthBuffer = nullptr);
+        bool isInside(const fVec2&);
+
+        void SetRadius(float);
+        fVec2 GetPosition();
+        void Start();
 };

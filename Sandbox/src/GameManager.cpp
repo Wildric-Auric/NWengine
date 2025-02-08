@@ -48,7 +48,9 @@ void GameManager::Start() {
 	ADD_OBJ(s, "TextObj",     text);
 	ADD_OBJ(s, "SpawnerObj",  spawner);
 	ADD_OBJ(s, "Square", sq);
-	
+    ADD_OBJ(s, "Circle0", c0);
+    ADD_OBJ(s, "Circle1", c1);
+
 	cam.AddComponent<Script>()->SetScript<CameraScript>();
 	water.AddComponent<Script>()->SetScript<WaterScript>();
 	ground.AddComponent<Transform>();
@@ -61,7 +63,23 @@ void GameManager::Start() {
 	spr->SetSortingLayer(GROUND_LAYER);
 	tr->scale = fVec2(1.3, 1.3);
 	tr->position.y  = -56.0;
-	
+
+    tr = c0.AddComponent<Transform>();
+    spr=c0.AddComponent<Sprite>();
+    spr->SetSortingLayer(GROUND_LAYER);
+	spr->SetTexture(&ImageDefault, &TextureDefaultID);
+    spr->SetShader("../Sandbox/assets/Shaders/Circle.shader");
+    tr->Translate({-200.0,0.0});
+    spr->container.UpdateSize(128, 128);
+
+    tr =c1.AddComponent<Transform>();
+    spr=c1.AddComponent<Sprite>();
+    spr->SetSortingLayer(GROUND_LAYER);
+	spr->SetTexture(&ImageDefault, &TextureDefaultID);
+    spr->SetShader("../Sandbox/assets/Shaders/Circle.shader");
+    tr->Translate({16.0,0.0});
+    tr->Translate({-200.0,0.0});
+
 
 	spr  = tree.AddComponent<Sprite>();
 	tr   = tree.AddComponent<Transform>();
@@ -97,8 +115,9 @@ void GameManager::Start() {
 	spr = sq.AddComponent<Sprite>();
 	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 	spr->SetTexture(&ImageDefault,&TextureDefaultID);
-	tr->scale = tr->scale * 10.0;
-
+	tr->scale = tr->scale * 5.0;
+    sq.AddComponent<Collider>();
+    //spr->StopRendering();
 	//dynamic Script debugging
 	DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
 	dynScr = sq.AddComponent<DynamicScript>();	
@@ -107,13 +126,31 @@ void GameManager::Start() {
 	//dynScr->Unload();
 	//dynScr->Load("DllPath/test.dll");
 	const char* (*f)()  = (const char* (*)())dynScr->dllScript->GetDllFunc("helloWorld");
-	printf(f());
+	printf("%s\n", f());
 }
 
 static float t = 0.0;
 
 void GameManager::Update() {
+    GameObject* sq = Scene::currentScene->GetGameObject("Square");
+    sq->GetComponent<Collider>()->SetEdgesSprite();
+
 	t += NWTime::GetDeltaTime();
+    GameObject* c = Scene::currentScene->GetGameObject("Circle0");
+    GameObject* c1 = Scene::currentScene->GetGameObject("Circle1");
+    Transform* tr = c->GetComponent<Transform>();
+    CircleCollider* col0 = c->AddComponent<CircleCollider>();
+    CircleCollider* col1 = c1->AddComponent<CircleCollider>();
+    col0->SetRadius(64.0); col1->SetRadius(8.0);
+    tr->Translate(fVec2(Inputs::right - Inputs::left, Inputs::up - Inputs::down).normalize() * 200.0 * NWTime::GetDeltaTime());
+    fVec2 depthBuff = fVec2(0.0,0.0);
+    col0->isColliding(col1, &depthBuff);
+    tr->Translate(depthBuff);
+    depthBuff = {0.0,0.0};
+    Collider* sqCol = sq->GetComponent<Collider>();
+    col0->isColliding(sqCol, &depthBuff);
+    tr->Translate(depthBuff);
+
 
 	float hw = Context::WINDOW_WIDTH  * 0.5f;
 	float hh = Context::WINDOW_HEIGHT * 0.5f;
