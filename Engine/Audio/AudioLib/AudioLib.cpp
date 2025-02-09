@@ -3,6 +3,7 @@
 #include <xaudio2.h>
 #include <vector>
 #include <fstream>
+#include <xaudio2fx.h>
 
 namespace AudioLib {
     #define CAST(type, var) (type)var
@@ -87,11 +88,22 @@ namespace AudioLib {
         info->isPlaying = state.BuffersQueued > 0;
     }
 
-    int createCtx() {
+    int createCtx(bool enableLog) {
         HRESULT hr  = CoInitializeEx(0, COINIT_MULTITHREADED);
         NW_AUD_WIN_CHECK(hr, NW_AUD_ERROR_INITIALIZATION_FAILED);
         NW_AUD_WIN_CHECK(XAudio2Create(&ctx, 0, XAUDIO2_DEFAULT_PROCESSOR),NW_AUD_ERROR_INITIALIZATION_FAILED);
         NW_AUD_WIN_CHECK(ctx->CreateMasteringVoice(&defaultMasterVoice), NW_AUD_ERROR_INITIALIZATION_FAILED);
+    
+        if (!enableLog)
+            return 0;
+
+        XAUDIO2_DEBUG_CONFIGURATION debugConfig{};
+        debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
+        debugConfig.BreakMask = 0;
+        debugConfig.LogFileline = 1;
+        debugConfig.LogFunctionName = 1;
+        ((IXAudio2*)AudioLib::getCtx())->SetDebugConfiguration(&debugConfig);
+
         return 0;
     }
 
@@ -116,6 +128,64 @@ namespace AudioLib {
         defaultMasterVoice = 0;
         ctx = 0;
     };
+
+    int addReverb(Source src, const AudioLib_REVERB_PARAMETERS& params) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        IUnknown* xapo;
+        NW_AUD_WIN_CHECK(XAudio2CreateReverb(&xapo), NW_AUD_ERROR);
+        XAUDIO2_EFFECT_DESCRIPTOR desc{};
+        desc.InitialState   = true;
+        desc.pEffect        = xapo;
+        desc.OutputChannels = 2;
+        XAUDIO2_EFFECT_CHAIN chain{};
+        chain.EffectCount = 1;
+        chain.pEffectDescriptors = &desc;
+        NW_AUD_WIN_CHECK(s->SetEffectChain(&chain), -2);
+        setReverbParams(src, params);
+        enableReverb(src);
+        xapo->Release();
+
+        return 0;
+    }
+
+    int addReverb(Source src, const AudioLib_REVERB_I3DL2_PARAMETERS& params) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        AudioLib_REVERB_PARAMETERS native;
+        i3dl2Native(params, &native);
+        NW_AUD_WIN_CHECK(addReverb(src, native), NW_AUD_ERROR);
+        return 0;
+    }
+
+    int setReverbParams(Source src, const AudioLib_REVERB_PARAMETERS& params) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        NW_AUD_WIN_CHECK(s->SetEffectParameters(0, &params, sizeof(params)), NW_AUD_ERROR);
+        return 0;
+    }
+
+    int setReverbParams(Source src, const AudioLib_REVERB_I3DL2_PARAMETERS& params) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        AudioLib_REVERB_PARAMETERS native;
+        i3dl2Native(params, &native);
+        setReverbParams(src, native);
+        return 0;
+    }
+
+    int enableReverb(Source src) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        NW_AUD_WIN_CHECK(s->EnableEffect(0), NW_AUD_ERROR);
+        return 0;
+    }
+
+    int disableReverb(Source src) {
+        auto s = CAST(IXAudio2SourceVoice*,src);
+        NW_AUD_WIN_CHECK(s->DisableEffect(0), NW_AUD_ERROR);
+        return 0;
+    }
+
+    int i3dl2Native(const AudioLib_REVERB_I3DL2_PARAMETERS& in, AudioLib_REVERB_PARAMETERS* outVal) {
+        ReverbConvertI3DL2ToNative(CAST(XAUDIO2FX_REVERB_I3DL2_PARAMETERS*, &in), CAST(XAUDIO2FX_REVERB_PARAMETERS*,outVal));
+        return 0;
+    }
 
 /*
 Courtesy of http://www.topherlee.com/software/pcm-tut-wavformat.html

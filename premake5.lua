@@ -68,7 +68,8 @@ workspace "NWengine"
         links {
             "opengl32.lib",
             "freetype.lib",
-            "glew32s.lib"
+            "glew32s.lib",
+            "xaudio2.lib"
         }
 
         filter "configurations:*Debug*"
