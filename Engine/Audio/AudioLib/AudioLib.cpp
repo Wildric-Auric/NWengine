@@ -131,12 +131,14 @@ namespace AudioLib {
 
     int addReverb(Source src, const AudioLib_REVERB_PARAMETERS& params) {
         auto s = CAST(IXAudio2SourceVoice*,src);
+        XAUDIO2_VOICE_DETAILS det;
+        s->GetVoiceDetails(&det);
         IUnknown* xapo;
         NW_AUD_WIN_CHECK(XAudio2CreateReverb(&xapo), NW_AUD_ERROR);
         XAUDIO2_EFFECT_DESCRIPTOR desc{};
         desc.InitialState   = true;
         desc.pEffect        = xapo;
-        desc.OutputChannels = 2;
+        desc.OutputChannels = det.InputChannels;
         XAUDIO2_EFFECT_CHAIN chain{};
         chain.EffectCount = 1;
         chain.pEffectDescriptors = &desc;
