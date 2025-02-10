@@ -4,7 +4,9 @@
 #include "RenderingPipeline.h"
 
 RenderingPipeline rpline;
+
 NWPPFX::Bloom bloomTst;
+NWPPFX::Tonemapper tm;
 
 
 Renderer* CRT;
@@ -27,6 +29,10 @@ void Init() {
 
 	bloomTst.SetUp();
 
+    NWPPFX::EffectIO io;
+    io.SetInput(bloomTst._fxio.GetOutput());
+    tm.SetUp(&io);
+
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
@@ -37,10 +43,12 @@ void Render() {
 	CRT->componentContainer.GetComponent<Sprite>()->shader->Use();
     CRT->componentContainer.GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	CRT->componentContainer.GetComponent<Sprite>()->shader->Unuse();
-//	rpline.Capture();
-//    rpline.DrawLast();
+   //	rpline.Capture();
+   //    rpline.DrawLast();
     bloomTst.Capture();
-    bloomTst.DrawLast();
+    //bloomTst.DrawLast();
+    tm.Capture();
+    tm.DrawLast();
 }
 
 int main() {

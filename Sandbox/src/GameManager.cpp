@@ -8,6 +8,7 @@
 #include "DllScripting.h"
 #include "ScriptingComp.h"
 #include "Keyboard.h"
+#include "RenderingPipeline.h"
 
 #define ADD_OBJ(scenePtr,name, variable) GameObject& variable =  s->AddObject(); s->Rename(name, &variable)
 
@@ -131,6 +132,8 @@ void GameManager::Start() {
 
 static float t = 0.0;
 
+extern NWPPFX::Bloom bloomTst;
+
 void GameManager::Update() {
     GameObject* sq = Scene::currentScene->GetGameObject("Square");
     sq->GetComponent<Collider>()->SetEdgesSprite();
@@ -150,6 +153,20 @@ void GameManager::Update() {
     Collider* sqCol = sq->GetComponent<Collider>();
     col0->isColliding(sqCol, &depthBuff);
     tr->Translate(depthBuff);
+
+    if (Inputs::GetInputKey('X', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+//        Camera::GetActiveCamera()->ChangeOrtho(Camera::ActiveCamera->size.x * 2.0, 
+//                Camera::ActiveCamera->size.y * 2.0);
+        //tm.whitePoint -= 0.1;
+        bloomTst.luminanceThreshold -= 0.5;
+    }
+
+    if (Inputs::GetInputKey('C', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+//        Camera::GetActiveCamera()->ChangeOrtho(Camera::ActiveCamera->size.x * 0.5, 
+//                Camera::ActiveCamera->size.y * 0.5);
+        //tm.whitePoint += 0.1;
+        bloomTst.luminanceThreshold += 0.5;
+    }
 
 
 	float hw = Context::WINDOW_WIDTH  * 0.5f;
