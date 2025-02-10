@@ -2,9 +2,6 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "Transform.h"
-#ifndef NW_GAME_BUILD
-#include "Utilities.h"
-#endif
 #include "DefaultAssets.h"
 
 
@@ -17,8 +14,16 @@ void Renderer::SetUp() {
 	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 }
 
+void Renderer::Clean() {
+    componentContainer.DeleteComponents();
+}
+
 void Renderer::SetShader(const std::string& shaderPath) {
-	this->componentContainer.GetComponent<Sprite>()->SetShader(shaderPath);
+	componentContainer.GetComponent<Sprite>()->SetShader(shaderPath);
+}
+
+void Renderer::SetShader(const ShaderText& st, ShaderIdentifier* id) { 
+	componentContainer.GetComponent<Sprite>()->SetShader(st,id);
 }
 
 void Renderer::Use() {
@@ -29,10 +34,25 @@ void Renderer::Unuse() {
 	Renderer::currentRenderer = Renderer::defaultRenderer;
 }
 
-void Renderer::DrawOnDefaultFrame() {
-	//Adding or getting components
-	
-	Camera* cam = componentContainer.AddComponent<Camera>();
+Camera* Renderer::GetCamera() {
+    return componentContainer.GetComponent<Camera>();
+}
+
+void Renderer::SetOffScreenSizeMultiplier(const fVec2& val) {
+    _offscreenCoeff = val;
+}
+
+void Renderer::SetOnScreenSizeMultiplier(const fVec2& val) {
+    stretchCoeff = val; 
+}
+
+void Renderer::SetTexParams(const TexMinFilter mi, const TexMaxFilter ma) {
+    _minFilter = mi;
+    _magFilter = ma;
+}
+
+bool Renderer::_DrawPrep() {
+    Camera* cam = componentContainer.AddComponent<Camera>();
 	Sprite* sprite = componentContainer.GetComponent<Sprite>();
 
 	//set up renderer quad 
@@ -40,15 +60,31 @@ void Renderer::DrawOnDefaultFrame() {
 	if (target == nullptr)
 		target = temp;
 	if (target == nullptr)
-		return;
+		return 0;
 
 	target->fbo.Resolve();
 
-	sprite->container.UpdateSize(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
-	cam->ChangeOrtho(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
+    fVec2 nativeSize = fVec2(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y) * _offscreenCoeff;
+	sprite->container.UpdateSize(nativeSize.x, nativeSize.y);
+	cam->ChangeOrtho(nativeSize.x, nativeSize.y);
 	cam->Update();
-	//Setting sprite texture
+
 	sprite->SetTexture(&target->fbo.GetAtt(0).tex);
+    sprite->texture->SetMaxFilter(_magFilter);
+    sprite->texture->SetMinFilter(_minFilter);
+	cam->viewPortSize.x = cam->size.x;
+	cam->viewPortSize.y = cam->size.y;
+    return 1;
+}
+
+void Renderer::DrawOnDefaultFrame() {
+	Camera* cam = componentContainer.AddComponent<Camera>();
+    Camera* temp = Camera::ActiveCamera;
+
+    bool ready = _DrawPrep();
+    if (!ready) return;
+
+
 	cam->viewPortSize.x = cam->size.x * stretchCoeff.x;
 	cam->viewPortSize.y = cam->size.y * stretchCoeff.y;
 	Context::SetViewPort((Context::WINDOW_WIDTH  - cam->viewPortSize.x) * 0.5, 
@@ -65,32 +101,16 @@ void Renderer::DrawOnDefaultFrame() {
 void Renderer::CaptureOnCamFrame() {
 	//Adding or getting components
 	Camera* cam			  = componentContainer.AddComponent<Camera>();
-	Sprite* sprite		  = componentContainer.AddComponent<Sprite>();
 	Transform* transform  = componentContainer.AddComponent<Transform>();
 	//set up renderer quad 
 	Camera* temp = Camera::ActiveCamera;
-	if (target == nullptr)
-		target = temp;
-	if (target == nullptr)
-		return;
+    
+    bool ready = _DrawPrep();
+    if (!ready) return;
 
-	target->fbo.Resolve();
-
-	sprite->container.UpdateSize(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
-	cam->ChangeOrtho(target->fbo.GetAtt(0).tex._size.x, target->fbo.GetAtt(0).tex._size.y);
-	cam->Update();
-
-	//Setting srpite texture
-	sprite->SetTexture(&target->fbo.GetAtt(0).tex);
-
-	Camera::ActiveCamera = cam;
-
-	cam->viewPortSize.x = cam->size.x * stretchCoeff.x;
-	cam->viewPortSize.y = cam->size.y * stretchCoeff.y;
-
-	//Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
+	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	cam->fbo.Bind();
-		Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
+		//Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
 		componentContainer.Draw();
 	cam->fbo.Unbind();
 

@@ -3,6 +3,7 @@
 #include "Script.h"
 #include "Maths.h"
 #include "Camera.h"
+#include "Shader.h"
 
 /**
  * @brief The Renderer class is responsible for rendering GameObjects using a specified shader.
@@ -39,6 +40,20 @@ public:
      * @brief The stretch coefficients for rendering.
      */
     fVec2 stretchCoeff = fVec2(1.0f, 1.0f);
+
+    fVec2 _offscreenCoeff = fVec2(1.0f, 1.0f);
+
+    TexMinFilter _minFilter = TexMinFilter::NW_MIN_LINEAR; 
+
+    TexMaxFilter _magFilter = TexMaxFilter::NW_LINEAR; 
+
+    void SetOffScreenSizeMultiplier(const fVec2&);
+
+    void SetOnScreenSizeMultiplier(const fVec2&);
+
+    void SetTexParams(const TexMinFilter, const TexMaxFilter);
+
+    bool _DrawPrep();
 
     /**
      * @brief Operator overload for adding a renderer as a decorator.
@@ -82,10 +97,17 @@ public:
      */
     void SetShader(const std::string& shaderPath);
 
+    void SetShader(const ShaderText& st, ShaderIdentifier* id);
+
     /**
      * @brief Adds components to the componentContainer.
      */
     void SetUp();
+
+    void Clean();
+
+    Camera* GetCamera();
+    
 
     /**
      * @brief Initializes the default renderer.
