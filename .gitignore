@@ -7,4 +7,6 @@ Engine/Doc/
 *.aps
 *.ico
 *.rc
+*.log
+*.exe
 .clangd
