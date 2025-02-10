@@ -56,7 +56,7 @@ R"V0G0N(
         #version 330 core
         
         uniform sampler2D uTex0;
-        uniform float uThresh = 0.8;
+        uniform float uThresh;
         in vec2 uv;
         
         out vec4 FragColor;
@@ -94,12 +94,34 @@ R"V0G0N(
                 c += (1.0 -0.5 * contrib) * texture(uTex[i], uv).xyz;
                 contrib -= 0.5*contrib;
             }
-            vec3 cw = vec3(2.0,2.0,2.0); 
-            //TODO::Remove this, tonemapping should be separate and correct
-            vec3 f = c / (cw*cw) + vec3(1.0);
-            FragColor = vec4(c*f/(vec3(1.0)+c),1.0);
+            FragColor = vec4(c,1.0);
         }
     
+)V0G0N";
+
+std::string tonemappingShaderSrc = 
+R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        #pragma def MAX_TEX MaxTexNum 
+
+        uniform sampler2D uTex0;
+        uniform float uWhitePt;
+
+        in vec2 uv; 
+        out vec4 FragColor;
+        
+        float luminance(inout vec3 col) {
+            return dot(col, vec3(0.2125, 0.7154, 0.0721));
+        }
+
+        void main() {
+            vec3 c = texture(uTex0,uv).xyz;
+            float inl = luminance(c);
+            float tmp = inl / (uWhitePt*uWhitePt) + 1.0;
+            float outl = inl * tmp / (1.0 + inl);
+            FragColor = vec4(c * outl / inl, 1.0);
+        } 
 )V0G0N";
 
 Renderer& RenderingPipeline::AddRenderer(int index) {
@@ -116,8 +138,9 @@ Renderer& RenderingPipeline::AddRenderer(int index) {
 }
 
 void RenderingPipeline::Clean() {
-    for (auto iter = _renderers.begin(); iter != _renderers.end(); ++iter) {
+    for (auto iter = _renderers.begin(); iter != _renderers.end();) {
         iter->Clean();
+        iter = _renderers.erase(iter);
     }
 }
 
@@ -131,13 +154,16 @@ void RenderingPipeline::SetUp() {
 
 }
 
-void RenderingPipeline::Capture() {
+void RenderingPipeline::Capture(int end) {
     Renderer* r = (*_renderers.begin())(false);
     auto iter = ++_renderers.begin();
-    for (int i = 1; i < _renderers.size(); ++i) {
+    for (int i = 1; i < end; ++i) {
         r = (*iter)(r);
         ++iter;
     }
+}
+void RenderingPipeline::Capture() {
+    Capture(_renderers.size());
 }
 
 void RenderingPipeline::DrawLast() {
@@ -183,14 +209,30 @@ namespace NWPPFX {
         return 0;
     }
 
+    void Effect::Clean() {_pline.Clean();}
+    void Effect::Capture() {_pline.Capture();}
+    void Effect::DrawLast() {_pline.DrawLast();}
+    bool EffectIO::operator== (const EffectIO& s) {
+       return this->_cam == s._cam && this->_inpSize == s._inpSize &&
+           this->_rnd == s._rnd;
+    }
+
+    int  EffectIO::Cmp(const EffectIO* other) {
+        if (*this == *other) return 0;
+        return 1;
+    }
+
     void Bloom::SetUp(const EffectIO* input) {
-        if (input) 
+        if (input) {
             _fxio = *input;  
-        else 
-            _fxio.SetInput(Camera::ActiveCamera);
+        }
+        else {
+            _fxio.SetInput(Camera::GetActiveCamera());
+            _fxio._inpSize = Camera::GetActiveCamera()->size;
+            _fxio._autoInput = 1;
+        }
         
-        fVec2 curSize = _fxio.GetTex()->_size; 
-        int csNum = (int)Min<float>(std::log2(curSize.x) ,std::log2(curSize.y)) - 3;
+        int csNum = (int)Min<float>(std::log2(_fxio._inpSize.x) ,std::log2(_fxio._inpSize.y)) - 3;
         Renderer* rnd;
 
         ShaderIdentifier sidBlur = "NWPPFXBlur";
@@ -238,26 +280,56 @@ namespace NWPPFX {
         _fxio.SetOutput(rnd);
     } 
     
-    void Bloom::Clean() {
-        _pline.Clean();
+    Shader* Bloom::_GetThresholdSh() {
+        return _pline._renderers.begin()->componentContainer.GetComponent<Sprite>()->shader;
+    }
+
+    void Bloom::_Refresh() {
+        EffectIO  tmp = _fxio;
+        int flag = 0;
+        if (_fxio._cam != nullptr) {
+            tmp.SetInput(Camera::GetActiveCamera());
+            tmp._inpSize = Camera::GetActiveCamera()->size; 
+            flag = _fxio.Cmp(&tmp);
+        }
+        else if (_fxio._rnd != nullptr) {
+            tmp.SetInput(_fxio._rnd);
+            tmp._inpSize = _fxio.GetTex()->_size; 
+            flag = _fxio.Cmp(&tmp);
+        }
+        if (!flag) return;
+        _fxio = tmp;
+        Clean();
+        SetUp();
     }
 
     void Bloom::_SetUpCombine() {
-        Shader* sh = _fxio.GetOutput()->componentContainer.GetComponent<Sprite>()->shader;
-        sh->Use();
-        sh->SetUniform1i("uCascadeNum", _cascade.size());
         std::vector<int> v(_cascade.size() + 1);
-
         for (int i = 0; i < _cascade.size();++i ) {
             v[i] = i+1;
             Camera* cam = _cascade[i]->GetCamera();
             cam->fbo.GetAtt(0).tex.Bind(i+1);
         }
+        Shader* sh = _fxio.GetOutput()->componentContainer.GetComponent<Sprite>()->shader;
+        sh->Use();
+        sh->SetUniform1i("uCascadeNum", _cascade.size());
         sh->SetUniformArrayi("uTex",v.data(), _cascade.size());
+        sh = _pline._renderers.begin()->componentContainer.GetComponent<Sprite>()->shader;
+        sh->Use();
+        sh->SetUniform1f("uThresh", luminanceThreshold);
     }
 
     void Bloom::Capture() {
-        Renderer* r = (*_pline._renderers.begin())(false);
+        if (_fxio._autoInput) 
+            _Refresh();
+        Renderer* r;
+        Camera* temp = Camera::GetActiveCamera();
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+            r = (*_pline._renderers.begin())(false);
+        }
+        else 
+            r = (*_pline._renderers.begin())(_fxio._rnd, false);
         auto iter = ++_pline._renderers.begin();
         for (int i = 1; i < _pline._renderers.size() - 1; ++i) {
             r = (*iter)(r);
@@ -265,10 +337,74 @@ namespace NWPPFX {
         }
         _SetUpCombine();
         (*_fxio.GetOutput())(false); 
+        temp->Use();
     }
 
     void Bloom::DrawLast() {
+        Camera* temp = Camera::GetActiveCamera();
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+        }
         _SetUpCombine();
         (*_fxio.GetOutput())(true); 
+        temp->Use();
+    }
+
+    void Tonemapper::SetUp(const EffectIO* input) {
+        if (input) {
+            _fxio = *input;  
+        }
+        else {
+            _fxio.SetInput(Camera::GetActiveCamera());
+            _fxio._inpSize = Camera::GetActiveCamera()->size;
+            _fxio._autoInput = 1;
+        }
+        Renderer& r = _pline.AddRenderer();  
+        r.SetUp();
+
+        ShaderIdentifier sidTm= "NWPPFXTonemapping";
+        ShaderText stTm;
+        stTm.vertex = vertexShaderSrc.c_str();
+        stTm.fragment = tonemappingShaderSrc.c_str(); 
+        r.SetShader(stTm, &sidTm);
+    }
+
+    void Tonemapper::Capture() {
+        Camera* temp = Camera::GetActiveCamera();
+        Renderer* r;
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+        }
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+            r = (*_pline._renderers.begin())(false);
+        }
+        else 
+            r = (*_pline._renderers.begin())(_fxio._rnd, false);
+        
+        Shader* sh = _pline._renderers.begin()->componentContainer.GetComponent<Sprite>()->shader;
+        sh->Use();
+        sh->SetUniform1f("uWhitePt", whitePoint);
+
+        temp->Use();
+    }
+
+    void Tonemapper::DrawLast() {
+        Camera* temp = Camera::GetActiveCamera();
+        Renderer* r;
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+        }
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+            r = (*_pline._renderers.begin())(1);
+        }
+        else 
+            r = (*_pline._renderers.begin())(_fxio._rnd, 1);
+        temp->Use();
+    }
+
+    void Tonemapper::_Refresh() {
+
     }
 };
