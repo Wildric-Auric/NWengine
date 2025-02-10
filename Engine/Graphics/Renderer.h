@@ -80,6 +80,8 @@ public:
      */
     void CaptureOnCamFrame();
 
+    void Clear();
+
     /**
      * @brief Sets this renderer as the current renderer.
      */

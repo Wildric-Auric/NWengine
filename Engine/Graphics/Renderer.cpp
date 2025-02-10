@@ -10,8 +10,16 @@ void Renderer::SetUp() {
 	Sprite* spr;
 	spr = componentContainer.AddComponent<Sprite>();
 	componentContainer.AddComponent<Transform>();
-	componentContainer.AddComponent<Camera>();
 	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
+	componentContainer.AddComponent<Camera>();
+    Clear();
+}
+
+void Renderer::Clear() {
+	Camera* cam = componentContainer.GetComponent<Camera>();
+    cam->fbo.Bind();
+		Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
+	cam->fbo.Unbind();
 }
 
 void Renderer::Clean() {
@@ -110,7 +118,7 @@ void Renderer::CaptureOnCamFrame() {
 
 	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	cam->fbo.Bind();
-		//Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
+		Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
 		componentContainer.Draw();
 	cam->fbo.Unbind();
 
