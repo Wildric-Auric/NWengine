@@ -94,6 +94,7 @@ void FrameBuffer::Delete() {
 		resolveFbo->Delete();	
 	delete resolveFbo;
 	resolveFbo = nullptr;
+	*this = {};
 }
 
 void FrameBuffer::Blit(FrameBuffer* other) {
