@@ -111,5 +111,7 @@ public:
 
     FrameBuffer fbo; /**< The frame buffer object of the camera. */
 
+    static Camera* GetActiveCamera();
+
     static Camera* ActiveCamera; /**< The active camera. */
 };

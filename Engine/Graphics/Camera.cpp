@@ -1,6 +1,10 @@
 #include "Camera.h"
 #include "Scene.h"
 
+Camera* Camera::GetActiveCamera() {
+    return Camera::ActiveCamera;
+}
+
 void Camera::UpdateActiveCamera() {
 	if (Camera::ActiveCamera != nullptr) 
 		Camera::ActiveCamera->Capture();
