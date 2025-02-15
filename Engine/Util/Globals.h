@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Maths.h"  
-#include <iostream>
+#include "Maths.h"
 
 
 //For now using just printf, should output to console later
-#define NW_LOG_ERROR(str)	printf("%s\n", str)
-#define NW_LOG_WARNING(str) printf("%s\n", str)
-#define NW_LOG(str)			printf("%s\n", str)
+#define NW_LOG_ERROR(str)	printf("%s", str)
+#define NW_LOG_ERRORI(str)	printf("%d", str)
+#define NW_LOG_WARNING(str) printf("%s", str)
+#define NW_LOG(str)			printf("%s", str)
 
 
 #ifdef NW_RELEASE
@@ -18,7 +18,8 @@
     do {\
 	a = glGetError(); \
 	if (a != GL_NO_ERROR) { \
-		std::cout << "\n---------------------\nOpenGL ERROR: "<< a << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
+		NW_LOG_ERROR("\n---------------------\nOpenGL ERROR: "); NW_LOG_ERRORI(a);  NW_LOG_ERROR("; at line: "); NW_LOG_ERRORI(__LINE__); \
+        NW_LOG_ERROR("; at file: "); NW_LOG_ERROR(__FILE__); NW_LOG_ERROR("\n---------------------\n"); \
 	}} \
     while(a != GL_NO_ERROR);\
 } 
@@ -32,7 +33,13 @@
 #else
 #define NW_AL_TEST(c) { \
 	if ((c) != 0) { \
-		std::cout << "\n---------------------\nOpenAL ERROR: "<< #c << ";" << "at line: " << __LINE__ <<  "; at file: " << __FILE__ << "\n---------------------\n"<< std::endl; \
+		NW_LOG_ERROR("\n---------------------\nOpenAL ERROR: "); \
+        NW_LOG_ERROR(#c);\
+        NW_LOG_ERROR("; at line: ");\
+        NW_LOG_ERRORI(__LINE__);\
+        NW_LOG_ERROR("; at file: ");\
+        NW_LOG_ERROR(__FILE__);\
+        NW_LOG_ERROR("\n---------------------\n");\
 	} \
 } 
 #endif
