@@ -40,7 +40,28 @@ workspace "NWengine"
                     filter "configurations:*Release*"
                         targetname ("NWengineCore%{cfg.platform:sub(2)}")
 
-    project "Sandbox" 
+    project "NWEngineCoreUnityBuild"
+                    kind "StaticLib"
+                    defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
+
+                    includedirs {
+                        "./",
+                        "Dependencies/glew/include",
+                        "Dependencies/vendor",
+                        "Dependencies/freetype/include",
+                        "Engine/**",
+                        "Engine/"
+                    }
+                    files {
+                        "UnityBuild/*.cpp",
+                        "premake5.lua"
+                    }
+                    filter "configurations:*Debug*"
+                        targetname ("NWengineCore%{cfg.platform:sub(2)}d")
+                    filter "configurations:*Release*"
+                        targetname ("NWengineCore%{cfg.platform:sub(2)}")
+
+    project "Sandbox"
                       kind "ConsoleApp"
                       targetname ("Sandbox")
                       includedirs {
@@ -53,7 +74,8 @@ workspace "NWengine"
                         "Sandbox/src"
                        }
                     files {
-                        "Engine/**.cpp",
+                        --"Engine/**.cpp",
+                        "UnityBuild/*.cpp",
                         "Sandbox/src/**.cpp",
                         "Engine/**.h", 
                         "premake5.lua",
