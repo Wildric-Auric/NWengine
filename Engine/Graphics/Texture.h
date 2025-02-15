@@ -3,6 +3,7 @@
 #include"Asset.h"
 
 #include<unordered_map>
+#include<string>
 
 typedef void* TextureIdentifierPtr;
 

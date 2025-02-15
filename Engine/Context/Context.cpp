@@ -4,7 +4,6 @@
 #include "gl_context.h"
 
 #include "GL/glew.h"
-#include <iostream>
 
 void* Context::window = nullptr;
 
@@ -65,7 +64,7 @@ void* Context::InitContext(int scrWidth, int scrHeight)
 
 	if (glewInit() != GLEW_OK)
 	{
-		std::cout << "Failed to init GLEW";
+		NW_LOG_ERROR("Failed to init GLEW");
 		return nullptr;
 	}
 	NW_GL_CALL(glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT));

@@ -5,7 +5,6 @@
 #include "keyboard.h"
 #include "window.h"
 
-#include<iostream>
 #include <cstring>
 
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d, Inputs::r, Inputs::s, Inputs::t,

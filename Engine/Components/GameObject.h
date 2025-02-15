@@ -5,8 +5,8 @@
 
 #pragma once
 #include "Globals.h"
-
 #include <map>
+#include <string>
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
 

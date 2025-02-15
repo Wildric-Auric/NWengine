@@ -7,7 +7,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 Scene::Scene(const std::string& name) {
 	this->name = name;
