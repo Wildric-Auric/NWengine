@@ -43,12 +43,13 @@ void Render() {
 	CRT->componentContainer.GetComponent<Sprite>()->shader->Use();
     CRT->componentContainer.GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	CRT->componentContainer.GetComponent<Sprite>()->shader->Unuse();
-   //	rpline.Capture();
-   //    rpline.DrawLast();
+   //rpline.Capture();
+   //rpline.DrawLast();
+
     bloomTst.Capture();
-    //bloomTst.DrawLast();
     tm.Capture();
     tm.DrawLast();
+    //(*CRT)(bloomTst._fxio.GetOutput(), true);
 }
 
 int main() {

@@ -106,8 +106,11 @@ R"V0G0N(
         #pragma def MAX_TEX MaxTexNum 
 
         uniform sampler2D uTex0;
-        uniform float uWhitePt;
 
+        uniform int uSpec = 0;
+        uniform float uWhitePt;
+        uniform float uExposure = 2.0;
+ 
         in vec2 uv; 
         out vec4 FragColor;
         
@@ -115,12 +118,56 @@ R"V0G0N(
             return dot(col, vec3(0.2125, 0.7154, 0.0721));
         }
 
-        void main() {
-            vec3 c = texture(uTex0,uv).xyz;
+        void reinhard(inout vec3 c, inout vec4 oCol) {
             float inl = luminance(c);
             float tmp = inl / (uWhitePt*uWhitePt) + 1.0;
             float outl = inl * tmp / (1.0 + inl);
-            FragColor = vec4(c * outl / inl, 1.0);
+            oCol = vec4(c * outl / inl, 1.0);
+        }
+
+        void uncharted(inout vec3 c, inout vec4 oCol) {
+            float A = 0.15;
+            float B = 0.50;
+            float C = 0.10;
+            float D = 0.20;
+            float E = 0.02;
+            float F = 0.30;
+            float W = 11.2;
+            oCol.xyz = c * uExposure;
+            oCol.xyz = ((oCol.xyz * (A * oCol.xyz + C * B) + D * E) / (oCol.xyz * (A * oCol.xyz + B) + D * F)) - E / F;
+            float white = ((W * (A * W + C * B) + D * E) / (W * (A * W + B) + D * F)) - E / F;
+            oCol /= white;
+            oCol.w = 1.0;
+        }
+
+        void filmicNrkzACES(inout vec3 x, inout vec4 oCol) {
+            float a = 2.51f;
+            float b = 0.03f;
+            float c = 2.43f;
+            float d = 0.59f;
+            float e = 0.14f;
+            oCol.xyz = clamp((x*(a*x+b))/(x*(c*x+d)+e),0.0,1.0);
+            oCol.w = 1.0;
+        }
+
+        void main() {
+            vec3 c = texture(uTex0,uv).xyz;
+            if (uSpec == 0) {
+                FragColor = vec4(c,1.0);
+                return;
+            }
+            if (uSpec == 1) {
+                reinhard(c, FragColor);
+                return;
+            }
+            if (uSpec == 2) {
+                uncharted(c, FragColor);
+                return;
+            }
+            if (uSpec == 3) {
+                filmicNrkzACES(c, FragColor);
+                return;
+            }
         } 
 )V0G0N";
 
@@ -384,7 +431,9 @@ namespace NWPPFX {
         
         Shader* sh = _pline._renderers.begin()->componentContainer.GetComponent<Sprite>()->shader;
         sh->Use();
-        sh->SetUniform1f("uWhitePt", whitePoint);
+        sh->SetUniform1f("uWhitePt", spec.whitePoint);
+        sh->SetUniform1i("uSpec", (int)spec.type);
+        sh->SetUniform1f("uExposure", spec.exposure);
 
         temp->Use();
     }

@@ -58,13 +58,26 @@ namespace NWPPFX {
         Shader* _GetThresholdSh();
     };
 
+    enum class TonemapperType {
+        None = 0,
+        Reinhard = 1,
+        Uncharted = 2,
+        ACESNrkz = 3
+    };
+
+    struct TonemapperSpec {
+        TonemapperType type = TonemapperType::Uncharted;
+        float whitePoint = 2.0;
+        float exposure = 2.0;
+    };
+
     class Tonemapper : public Effect {
         public:
         void SetUp(const EffectIO* input = 0);
         void Capture() override;
         void DrawLast() override;
         void _Refresh(); 
-        float whitePoint = 2.0;
+        TonemapperSpec spec;
     };
 
 };

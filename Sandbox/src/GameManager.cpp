@@ -133,6 +133,7 @@ void GameManager::Start() {
 static float t = 0.0;
 
 extern NWPPFX::Bloom bloomTst;
+extern NWPPFX::Tonemapper tm;
 
 void GameManager::Update() {
     GameObject* sq = Scene::currentScene->GetGameObject("Square");
@@ -157,15 +158,17 @@ void GameManager::Update() {
     if (Inputs::GetInputKey('X', NWin::KeyEventEnum::NWIN_KeyReleased)) {
 //        Camera::GetActiveCamera()->ChangeOrtho(Camera::ActiveCamera->size.x * 2.0, 
 //                Camera::ActiveCamera->size.y * 2.0);
-        //tm.whitePoint -= 0.1;
-        bloomTst.luminanceThreshold -= 0.5;
+        tm.spec.type = NWPPFX::TonemapperType::Reinhard;
     }
 
     if (Inputs::GetInputKey('C', NWin::KeyEventEnum::NWIN_KeyReleased)) {
 //        Camera::GetActiveCamera()->ChangeOrtho(Camera::ActiveCamera->size.x * 0.5, 
 //                Camera::ActiveCamera->size.y * 0.5);
-        //tm.whitePoint += 0.1;
-        bloomTst.luminanceThreshold += 0.5;
+        tm.spec.type = NWPPFX::TonemapperType::Uncharted;
+    }
+
+    if (Inputs::GetInputKey('V', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+        tm.spec.type = NWPPFX::TonemapperType::ACESNrkz;
     }
 
 
