@@ -171,6 +171,61 @@ R"V0G0N(
         } 
 )V0G0N";
 
+std::string colorCorrectionShaderSrc = 
+R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+
+        in vec2 uv; 
+        out vec4 FragColor;
+        uniform sampler2D uTex0;
+
+        uniform float uTemperature = 6500.0;
+        uniform float uTint = 0.0;
+        uniform float uContrast = 1.0;
+        uniform float uBrightness = 0.0;
+        uniform float uHiLights = 0.0;
+        uniform float uShadows  = 0.0;
+        uniform float uHiThresh = 0.6;
+        uniform float uShadowThresh = 0.4;
+        uniform float uVibrance = 0.0;
+        uniform float uSaturation = 1.0;
+
+
+        float luminance(inout vec3 col) {
+            return dot(col, vec3(0.2125, 0.7154, 0.0721));
+        }
+
+        void main() {
+            vec3 c = texture(uTex0,uv).xyz;
+            //------White balance-------
+            float tpr = (uTemperature - 6500.0) / 1000.0;
+            vec3 tempFilter = vec3(1.0 + 0.1 * tpr, 1.0, 1.0 - 0.1 * tpr);
+            vec3 tintFilter = vec3(1.0, 1.0 + uTint, 1.0);
+            c *= tempFilter * tintFilter;
+            //------Contrast-------
+            c = (c - 0.5) * uContrast + 0.5;
+            c += uBrightness;
+            //------Shadows and Highlights------- 
+            float lum = luminance(c);
+            float hFactor = smoothstep(uHiThresh, 1.0 - uHiThresh, lum);
+            float sFactor = 1.0 - smoothstep(0.0, uShadowThresh, lum);
+            c += uHiLights * hFactor;
+            c += uShadows  * sFactor;
+            //------Vibrance------- 
+            float m = max(c.r, max(c.g, c.b));
+            float intensity = 1.0 - m;
+            c = mix(c, c * (1.0 + uVibrance), intensity);
+            //------Saturation--------
+            c = mix(vec3(lum), c, uSaturation);
+
+            //------Return---------
+            c = vec3(max(c.x,0.0),max(c.y,0.0),max(c.z,0.0));
+            FragColor = vec4(c,1.0);
+        }
+    
+)V0G0N";
+
 Renderer& RenderingPipeline::AddRenderer(int index) {
     if (index < 0)  {
         _renderers.push_back({});
@@ -413,6 +468,7 @@ namespace NWPPFX {
         ShaderText stTm;
         stTm.vertex = vertexShaderSrc.c_str();
         stTm.fragment = tonemappingShaderSrc.c_str(); 
+        _fxio.SetOutput(&r);
         r.SetShader(stTm, &sidTm);
     }
 
@@ -434,7 +490,6 @@ namespace NWPPFX {
         sh->SetUniform1f("uWhitePt", spec.whitePoint);
         sh->SetUniform1i("uSpec", (int)spec.type);
         sh->SetUniform1f("uExposure", spec.exposure);
-
         temp->Use();
     }
 
@@ -456,4 +511,66 @@ namespace NWPPFX {
     void Tonemapper::_Refresh() {
 
     }
+    void ColorCorrection::SetUp(const EffectIO* input) {
+        if (input) {
+            _fxio = *input;
+        }
+        else {
+            _fxio.SetInput(Camera::GetActiveCamera());
+            _fxio._inpSize  = Camera::GetActiveCamera()->size;
+            _fxio._autoInput = 1;
+        }
+        _fxio._outp = &this->_pline.AddRenderer();
+        Renderer& r = *_fxio._outp;
+        ShaderIdentifier sidColorCor= "NWPPFXColorCorrection";
+        ShaderText stColorCor;
+        stColorCor.vertex = vertexShaderSrc.c_str();
+        stColorCor.fragment = colorCorrectionShaderSrc.c_str();
+        r.SetUp();
+        r.SetOffScreenSizeMultiplier(fVec2(1.0,1.0));
+        r.SetTexParams(TexMinFilter::NW_MIN_LINEAR, TexMaxFilter::NW_LINEAR);
+        r.SetShader(stColorCor, &sidColorCor);
+    }
+
+    //TODO::Refresh
+    void ColorCorrection::Capture() {
+        Renderer* r;
+        Camera* temp = Camera::GetActiveCamera();
+        _SetParams();
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+            r = (*_pline._renderers.begin())(false);
+        }
+        else 
+            r = (*_pline._renderers.begin())(_fxio._rnd, false);
+        temp->ActiveCamera->Use();
+    }
+
+    void ColorCorrection::_SetParams() {
+        Shader* s = _pline._renderers.begin()->componentContainer.GetComponent<Sprite>()->shader; 
+        s->Use();
+        s->SetUniform1f("uTemperature", spec.temperature);
+        s->SetUniform1f("uTint", spec.tint);
+        s->SetUniform1f("uContrast", spec.contrast);
+        s->SetUniform1f("uBrightness", spec.brightness);
+        s->SetUniform1f("uHiLights", spec.hiLights);
+        s->SetUniform1f("uShadows", spec.shadows);
+        s->SetUniform1f("uHiThresh", spec.hiThresh);
+        s->SetUniform1f("uShadowThresh", spec.shadowThresh);
+        s->SetUniform1f("uVibrance", spec.vibrance);
+        s->SetUniform1f("uSaturation", spec.saturation);;
+    }
+
+    void ColorCorrection::DrawLast() {
+        Camera* temp = Camera::GetActiveCamera();
+        _SetParams();
+        if (_fxio._cam) {
+            _fxio._cam->Use();
+        }
+        (*_fxio.GetOutput())(true); 
+        temp->Use();
+
+    }
 };
+
+

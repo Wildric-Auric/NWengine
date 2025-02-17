@@ -80,4 +80,27 @@ namespace NWPPFX {
         TonemapperSpec spec;
     };
 
+    struct ColorCorrectionSpec {
+        float temperature = 6500.0;
+        float tint = 0.0;
+        float contrast = 1.0;
+        float brightness = 0.0f;
+        float hiLights = 0.0;
+        float shadows  = 0.0;
+        float hiThresh = 0.6;
+        float shadowThresh = 0.4;
+        float vibrance = 0.0;
+        float saturation = 1.0;
+    };
+
+    class ColorCorrection : public Effect {
+        public:
+        EffectIO* io;
+        void SetUp(const EffectIO* input = 0);
+        void Capture() override;
+        void DrawLast() override;
+        void _SetParams();
+        ColorCorrectionSpec spec;
+    };
+
 };

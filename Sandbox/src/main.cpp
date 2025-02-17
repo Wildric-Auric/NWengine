@@ -6,6 +6,7 @@
 RenderingPipeline rpline;
 
 NWPPFX::Bloom bloomTst;
+NWPPFX::ColorCorrection cc;
 NWPPFX::Tonemapper tm;
 
 
@@ -29,14 +30,21 @@ void Init() {
 
 	bloomTst.SetUp();
 
+ 
     NWPPFX::EffectIO io;
     io.SetInput(bloomTst._fxio.GetOutput());
+    cc.SetUp(&io);
+
+    io = {};
+    io.SetInput(cc._fxio.GetOutput());
     tm.SetUp(&io);
 
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
 static float t = 0.0;
+
+extern FrameBuffer waterFbo;
 
 void Render() {
 	t += NWTime::GetDeltaTime();
@@ -45,11 +53,13 @@ void Render() {
 	CRT->componentContainer.GetComponent<Sprite>()->shader->Unuse();
    //rpline.Capture();
    //rpline.DrawLast();
+    Camera::GetActiveCamera()->fbo.Blit(&waterFbo);
 
     bloomTst.Capture();
+    cc.Capture();
     tm.Capture();
     tm.DrawLast();
-    //(*CRT)(bloomTst._fxio.GetOutput(), true);
+    //(*CRT)(tm._fxio.GetOutput(), true);
 }
 
 int main() {
