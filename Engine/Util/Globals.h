@@ -61,15 +61,30 @@ typedef uint16_t  uint16;
 typedef uint32_t  uint32;
 typedef uint64_t  uint64;
 
+extern template class Vector2<int>    ;
+extern template class Vector3<int>	  ;
+extern template class Vector4<int>	  ;
+extern template class Vector2<float>  ;
+extern template class Vector3<float>  ;
+extern template class Vector4<float>  ;
+extern template class Vector2<double> ;
+extern template class Vector3<double> ;
+extern template class Vector4<double> ;
+extern template class Matrix2<int>    ;
+extern template class Matrix3<int>    ;
+extern template class Matrix2<float>  ;
+extern template class Matrix3<float>  ;
+extern template class Matrix4<int>    ;
+extern template class Matrix4<float>  ;
 
 typedef Vector2<int>	iVec2;
+typedef Vector3<int>	iVec3;
+typedef Vector4<int>	iVec4;
 typedef Vector2<float>	fVec2;
 typedef Vector3<float>	fVec3;
-typedef Vector3<int>	iVec3;
+typedef Vector4<float>  fVec4;
 typedef Vector2<double> dVec2;
 typedef Vector3<double> dVec3;
-typedef Vector4<int>	iVec4;
-typedef Vector4<float>  fVec4;
 typedef Vector4<double> dVec4;
 
 typedef Matrix2<int>    iMat2;
