@@ -49,7 +49,7 @@ public:
 	operator Vector2<int>() const { return Vector2<int>(x,y); }
 	operator Vector2<float>() const { return Vector2<float>(x, y); }
 
-	T* operator [] (int index) const;
+	T* operator [] (int index);
 };
 
 template<typename T>
@@ -171,7 +171,7 @@ bool Vector2<T>::operator != (Vector2 const& vec1) const {
 }
 
 template<typename T> 
-T* Vector2<T>::operator [] (int index) const {
+T* Vector2<T>::operator [] (int index) {
 	return  index == 0 ? &x : &y;
 }
 
@@ -262,7 +262,7 @@ template<typename T>
 Vector3<float> Vector3<T>::normalize() const {
 	float magnitude = pow(x * x + y * y + z * z, 0.5);
 	if (magnitude == 0) {
-		return *this;
+		return Vector3<float>(x,y,z);
 	}
 	return Vector3<float>(x / magnitude, y / magnitude, z / magnitude);
 }
@@ -527,7 +527,7 @@ void Matrix2<T>::operator *= (const Matrix2<T>& other) {
 	result.values[1] = other.values[0] * values[1] + other.values[1] * values[3];
 	result.values[2] = other.values[2] * values[0] + other.values[3] * values[2];
 	result.values[3] = other.values[2] * values[1] + other.values[3] * values[3];
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
+	memcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
@@ -554,7 +554,7 @@ Matrix3<T>::Matrix3(T diag) {
 }
 
 template<typename T>
-Matrix3<T>::Matrix3() : Matrix2<T>((T)1.0) {};
+Matrix3<T>::Matrix3() : Matrix3<T>((T)1.0) {};
 
 template<typename T>
 Matrix3<T>::Matrix3(MATFLAG flag) {}
@@ -586,7 +586,7 @@ void Matrix3<T>::operator *= (const Matrix3<T>& other) {
 	result.values[6] = other.values[6] * values[0] + other.values[7] * values[3] + other.values[8] * values[6];
 	result.values[7] = other.values[6] * values[1] + other.values[7] * values[4] + other.values[8] * values[7];
 	result.values[8] = other.values[6] * values[2] + other.values[7] * values[5] + other.values[8] * values[8];
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
+	memcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
@@ -648,7 +648,7 @@ template<typename T>
 void Matrix4<T>::operator *= (const Matrix4<T>& other) {
 	Matrix4<T> result = Matrix4(MATFLAG::NOINIT);
 	TMP_MAT_4x4_MUL
-	this->values = memcpy(this->values, result.values, 4 * sizeof(T));
+	memcpy(this->values, result.values, 4 * sizeof(T));
 }
 #undef TMP_MAT_4x4_MUL
 
