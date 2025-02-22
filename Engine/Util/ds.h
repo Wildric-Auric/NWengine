@@ -37,7 +37,6 @@ public:
     bool IsCompatible(MemoryRegion&);
     bool IsSubOpt();
 
-    addr _Alloc(ui32 idx);
     ui32 _PopStack();
     void _PushStack(ui32 index);
     void _AttachNext();
