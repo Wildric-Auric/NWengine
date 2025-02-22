@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 
 #pragma warning(disable: 4244) 
 

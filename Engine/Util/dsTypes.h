@@ -7,7 +7,7 @@ typedef uint8_t  ui8;
 typedef int8_t   i8;
 typedef uint64_t ui64;
 typedef int64_t  i64;
-//typedef int8_t   byte;
+typedef int8_t   byte;
 typedef void*    gen;
 typedef void*    addr;
 
