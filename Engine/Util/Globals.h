@@ -48,18 +48,29 @@
 //arch is always an integer type with size of pointer of the architecture
 typedef long arch;
 
-typedef int8_t   int8;
-typedef int32_t  int32;
-typedef int16_t  int16;
-typedef int32_t  int32;
-typedef int64_t  int64;
+#ifdef _MSC_VER
 
+typedef __int8  int8;
+typedef __int16 t16;
+typedef __int32 int32;
+typedef __int64 int64;
 
-typedef uint8_t   uint8;
-typedef uint32_t  uint32;
-typedef uint16_t  uint16;
-typedef uint32_t  uint32;
-typedef uint64_t  uint64;
+typedef unsigned __int8   uint8;
+typedef unsigned __int16  uint16;
+typedef unsigned __int32  uint32;
+typedef unsigned __int64  uint64;
+
+#else
+typedef __INT8_TYPE__   int8;
+typedef __INT16_TYPE__  int16;
+typedef __INT32_TYPE__  int32;
+typedef __INT64_TYPE__  int64;
+
+typedef __UINT8_TYPE__   uint8;
+typedef __UINT16_TYPE__  uint16;
+typedef __UINT32_TYPE__  uint32;
+typedef __UINT64_TYPE__  uint64;
+#endif
 
 extern template class Vector2<int>    ;
 extern template class Vector3<int>	  ;
@@ -93,30 +104,3 @@ typedef Matrix2<float>  fMat2;
 typedef Matrix3<float>  fMat3;
 typedef Matrix4<int>    iMat4;
 typedef Matrix4<float>  fMat4;
-
-
-enum DataTypes {
-	NW_INT,
-	NW_FLOAT,
-	NW_DOUBLE,
-	NW_VEC2,    //For shaders
-	NW_VEC3,  
-	NW_IVEC2,
-	NW_IVEC3,
-	NW_FVEC2,
-	NW_FVEC3
-};
-
-
-enum EngineMode {
-	PLAY_MODE,
-	EDIT_MODE
-};
-
-
-class Globals {
-public:
-	//Consts
-	static const float SCREENRATIO;
-	//Paths
-};

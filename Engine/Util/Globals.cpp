@@ -1,3 +1,4 @@
+#include "stdf.h"
 #include "Globals.h"
 
 template class Vector2<int>    ;

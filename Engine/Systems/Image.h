@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Globals.h>
 #include <string>
+#include <Globals.h>
 
 #include "Asset.h"
 

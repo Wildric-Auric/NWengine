@@ -1,3 +1,8 @@
+//These must be included first, and order matters here
+#include "TemplatesInst.cpp"
+#include "stdf.cpp"
+#include "Utilities.cpp"
+//-----------------------
 #include "Audio.cpp"
 #include "AudioLib.cpp"
 #include "Animator.cpp"
@@ -35,8 +40,7 @@
 #include "Scene.cpp"
 #include "DllScripting.cpp"
 #include "DefaultAssets.cpp"
-#include "Globals.cpp"
 #include "Interpolation.cpp"
 #include "ShaderParser.cpp"
-#include "Utilities.cpp"
 #include "ds.cpp"
+#include "Globals.cpp"

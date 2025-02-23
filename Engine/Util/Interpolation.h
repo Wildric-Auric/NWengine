@@ -1,6 +1,6 @@
 #pragma once
-#include "Globals.h"
 #include <vector>
+#include "Globals.h"
 
 
 #define NW_INPTLR_PRESET_LINEAR          {0.250, 0.250}, {0.750, 0.750}

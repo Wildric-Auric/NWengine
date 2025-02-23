@@ -1,8 +1,7 @@
 #pragma once
-#include <cmath>
-#include <cstdint>
-#include <cstring>
+#include "stdf.h"
 
+#define UI8 unsigned char
 #pragma warning(disable: 4244) 
 
 #define PI 3.14159265359
@@ -65,7 +64,7 @@ Vector2<T> operator * (T1 const& num, Vector2<T> vec) {
 
 template<typename T>
 Vector2<float> Vector2<T>::normalize() {
-	float magnitude = pow(x * x + y * y, 0.5);
+	float magnitude = NWpow(x * x + y * y, 0.5);
 	if (magnitude == 0) {
 		return Vector2<float>(0, 0);
 	}
@@ -73,7 +72,7 @@ Vector2<float> Vector2<T>::normalize() {
 }
 template<typename T>
 float Vector2<T>::magnitude() {
-	return pow(x * x + y * y, 0.5);
+	return NWpow(x * x + y * y, 0.5);
 }
 
 template<typename T>
@@ -90,8 +89,8 @@ Vector2<T> Vector2<T>::Project(Vector2 const& vec1) {
 template<typename T> 
 Vector2<T> Vector2<T>::Rotate(float const& angle) {
 	float angle0 = DegToRad(angle);
-	return Vector2<T>(cos(angle0) * x - sin(angle0) * y, 
-					  sin(angle0) * x + cos(angle0) * y);
+	return Vector2<T>(NWcos(angle0) * x - NWsin(angle0) * y, 
+					  NWsin(angle0) * x + NWcos(angle0) * y);
 }
 template<typename T>
 Vector2<T>::Vector2(T x, T y) {
@@ -261,7 +260,7 @@ Vector3<T> Vector3<T>::operator / (Vector3 const& vec1) const {
 
 template<typename T>
 Vector3<float> Vector3<T>::normalize() const {
-	float magnitude = pow(x * x + y * y + z * z, 0.5);
+	float magnitude = NWpow(x * x + y * y + z * z, 0.5);
 	if (magnitude == 0) {
 		return Vector3<float>(x,y,z);
 	}
@@ -269,7 +268,7 @@ Vector3<float> Vector3<T>::normalize() const {
 }
 template<typename T>
 float Vector3<T>::magnitude() {
-	return pow(x * x + y * y + z * z,0.5);
+	return NWpow(x * x + y * y + z * z,0.5);
 }
 template<typename T>
 T Vector3<T>::Dot(Vector3 const& vec1) {
@@ -389,7 +388,7 @@ Vector4<T>::Vector4(T x, T y, T z, T w) {
 }
 
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 class Matrix {
 public:
 	Vector2<int> dimension;
@@ -401,18 +400,18 @@ public:
 	void operator += (T const& num);
 	void operator *= (T const& num);
 	void operator += (Matrix* const& matrix);
-	template<uint8_t b>
+	template<UI8 b>
 	Matrix<n, b, T> operator * (Matrix<m, b, T>* const& matrix);
 	//void operator *= (Matrix<m, b, T>* const& matrix); Can you do it without creating another matrix??
 
 };
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 Matrix<n, m, T>::Matrix(T* data) {
 	dimension.x = n;
 	dimension.y = m;
 	int size = sizeof(T) * n * m;
-	if (data!=nullptr) memcpy(coeff, data, size);
+	if (data!=nullptr) NWmemcpy(coeff, data, size);
 	else {
 		for (int i = 0; i < n * m; i++) {
 			coeff[i] = (T)0;
@@ -421,62 +420,62 @@ Matrix<n, m, T>::Matrix(T* data) {
 
 };
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 Matrix<n, m, T> Matrix<n, m, T>::operator + (T const& num) {
 	Matrix<n, m, T> result = Matrix<n, m, T>(coeff);
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		result.coeff[i] += num;
 	};
 	return result;
 }
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 void Matrix<n, m, T>::operator += (T const& num) {
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		coeff[i] += num;
 	};
 }
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 Matrix<n,m,T> Matrix<n, m, T>::operator * (T const& num) {
 	Matrix<n,m,T> result = Matrix<n,m,T>(coeff);
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		result.coeff[i] *= num;
 	};
 	return result;
 }
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 void Matrix<n, m, T>::operator *= (T const& num) {
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		coeff[i] *= num;
 	};
 }
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 Matrix<n, m, T> Matrix<n, m, T>::operator + (Matrix* const& matrix) {
 	Matrix<n, m, T> result = Matrix<n, m, T>(coeff);
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		result.coeff[i] += coeff[i] + matrix->coeff[i];
 	}
 	return result;
 }
 
-template<uint8_t n, uint8_t m, typename T>
+template<UI8 n, UI8 m, typename T>
 void Matrix<n, m, T>::operator += (Matrix* const& matrix) {
-	for (uint8_t i = 0; i < n * m; i++) {
+	for (UI8 i = 0; i < n * m; i++) {
 		coeff[i] += matrix->coeff[i];
 	}
 }
 
-template<uint8_t n, uint8_t m, typename T>
-template<uint8_t b>
+template<UI8 n, UI8 m, typename T>
+template<UI8 b>
 Matrix<n,b,T> Matrix<n,m,T>::operator * (Matrix<m,b,T>* const& matrix) {
 	Matrix<n, b, T> result = Matrix<n, b, T>(nullptr);
-	for (uint8_t i = 0; i < n; i++) {
-		for (uint8_t j = 0; j < b; j++) {
+	for (UI8 i = 0; i < n; i++) {
+		for (UI8 j = 0; j < b; j++) {
 			T sum = 0;
-			for (uint8_t cur = 0; cur < m; cur++) {
+			for (UI8 cur = 0; cur < m; cur++) {
 				sum += coeff[m * i + cur] * matrix->coeff[j + cur*b];
 			};
 			result.coeff[i * b + j] = sum;
@@ -528,7 +527,7 @@ void Matrix2<T>::operator *= (const Matrix2<T>& other) {
 	result.values[1] = other.values[0] * values[1] + other.values[1] * values[3];
 	result.values[2] = other.values[2] * values[0] + other.values[3] * values[2];
 	result.values[3] = other.values[2] * values[1] + other.values[3] * values[3];
-	memcpy(this->values, result.values, 4 * sizeof(T));
+	NWmemcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
@@ -587,7 +586,7 @@ void Matrix3<T>::operator *= (const Matrix3<T>& other) {
 	result.values[6] = other.values[6] * values[0] + other.values[7] * values[3] + other.values[8] * values[6];
 	result.values[7] = other.values[6] * values[1] + other.values[7] * values[4] + other.values[8] * values[7];
 	result.values[8] = other.values[6] * values[2] + other.values[7] * values[5] + other.values[8] * values[8];
-	memcpy(this->values, result.values, 4 * sizeof(T));
+	NWmemcpy(this->values, result.values, 4 * sizeof(T));
 }
 
 template<typename T>
@@ -649,7 +648,7 @@ template<typename T>
 void Matrix4<T>::operator *= (const Matrix4<T>& other) {
 	Matrix4<T> result = Matrix4(MATFLAG::NOINIT);
 	TMP_MAT_4x4_MUL
-	memcpy(this->values, result.values, 4 * sizeof(T));
+	NWmemcpy(this->values, result.values, 4 * sizeof(T));
 }
 #undef TMP_MAT_4x4_MUL
 
@@ -685,7 +684,7 @@ inline void OrthorgraphicMat(Matrix4<float>& matrix, float left, float right, fl
 }
 //Matrix passed as reference to this function should be identity matrix
 inline void PerspectiveMat(Matrix4<float>& matrix, float degreeFovY,float aspect, float near, float far) {
-    float cotn  =     1.0f / tan(DegToRad(degreeFovY) / 2.0f);
+    float cotn  =     1.0f / NWtan(DegToRad(degreeFovY) / 2.0f);
     float fmn   =     1.0f / (near - far);
 
     matrix.values[0]   = (1.0f / aspect) * cotn;
@@ -745,9 +744,9 @@ template<typename T>
 void RotateMat(Matrix4<T>& matrix, float degAngle, const Vector3<T>& axis) {
 	Matrix4<T> newMat(MATFLAG::NOINIT);
 	degAngle	   = DegToRad(degAngle);
-	float   c	   = cos(degAngle);
+	float   c	   = NWcos(degAngle);
 	float   cmpC   = 1.0f - c;  // NAME: Complementary of cos
-	float   s      = sin(degAngle);
+	float   s      = NWsin(degAngle);
 
 	Vector3<float> n = axis.normalize();
 
@@ -849,3 +848,5 @@ template<typename T>
 T Det2(const Vector2<T>& a, const Vector2<T>& b) {
 	return a.x * b.y - a.y * b.x;
 }
+
+#undef UI8 

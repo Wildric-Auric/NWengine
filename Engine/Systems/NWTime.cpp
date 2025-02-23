@@ -1,8 +1,7 @@
 #pragma once
 #include "NWTime.h"
-#include "Globals.h"
 #include "timer.h"
-
+#include "Maths.h"
 
 double NWTime::_deltaTime    = 0.0;
 double NWTime::_FPS          = 15;

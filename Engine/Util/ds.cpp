@@ -1,13 +1,12 @@
 #include "ds.h"
-#include <stdlib.h>
-#include <cstring>
+#include "stdf.h"
 
-#define CPY(dst, src, type) memcpy(dst, src, sizeof(type))
+#define CPY(dst, src, type) NWmemcpy(dst, src, sizeof(type))
 
 void MemoryRegion::SetUp(ui32 u, ui32 s) {
     _size             = s;
     _unitSizeInByte   = u;
-    _data             = malloc(u * s + s*sizeof(ui32));
+    _data             = NWmalloc(u * s + s*sizeof(ui32));
     ui32* ptr = (ui32*)_data;
     ui32 i;
     for (i = 0; i < s; ++i)
@@ -31,7 +30,7 @@ bool MemoryRegion::IsSubOpt() {
 void MemoryRegion::CopyFrom(MemoryRegion& other) {
     for (int i = 0; i < other._size; ++i) {
         addr adr = Alloc();
-        memcpy(adr,other.Get(i), _unitSizeInByte);
+        NWmemcpy(adr,other.Get(i), _unitSizeInByte);
     }
     for (int i = 0; i <= other._sp; ++i) {
         Dealloc(Get(0x0 + i));
@@ -43,7 +42,7 @@ bool MemoryRegion::IsCompatible(MemoryRegion& other) {
 }
 
 void MemoryRegion::Clean() {
-    free(_data);
+    NWfree(_data);
     _CleanNext();
 }
 
@@ -58,7 +57,7 @@ addr MemoryRegion::Alloc() {
         return _next->Alloc();
     }
     ui32 index = _PopStack();
-    return ((byte*)_data + _size * sizeof(ui32) + index * _unitSizeInByte);
+    return ((ds_byte*)_data + _size * sizeof(ui32) + index * _unitSizeInByte);
 }
 
 void MemoryRegion::Dealloc(addr ad) {
@@ -101,7 +100,7 @@ ui32 MemoryRegion::_PopStack() {
 
 addr MemoryRegion::Get(ui32 index) {
     if (index < _size) {
-        return ((byte*)_data + _size * sizeof(ui32) + index * _unitSizeInByte); 
+        return ((ds_byte*)_data + _size * sizeof(ui32) + index * _unitSizeInByte); 
     }
     if (_next == nullptr) 
         return 0;
@@ -143,14 +142,14 @@ void Deque::PushFront(void* val) {
     --_front;
     ++_size;
     _front == _back ? ++_back: 0;
-    memcpy(rgn->Get(_front), val, rgn->_unitSizeInByte);
+    NWmemcpy(rgn->Get(_front), val, rgn->_unitSizeInByte);
 }
 
 void Deque::PushBack(void* val) {
     ++_back;
     ++_size;
     _front == _back ? --_front : 0;
-    memcpy(rgn->Get(_back), val, rgn->_unitSizeInByte);
+    NWmemcpy(rgn->Get(_back), val, rgn->_unitSizeInByte);
 }
 
 void Deque::PopFront() {
@@ -194,7 +193,7 @@ void Stack::SetUp(ui32 unitSize, ui32 cap) {
 
 void Stack::PushBack(void* val) {
     ++_back;
-    memcpy(rgn->Get(_back), val, rgn->_unitSizeInByte);
+    NWmemcpy(rgn->Get(_back), val, rgn->_unitSizeInByte);
 }
 
 void Stack::PopBack() {
@@ -236,11 +235,11 @@ ui32 DList::GetPrevIdx(addr e) {
 }
 
 ui32 DList::GetNextIdx(addr e) {
-    return *((ui32*)(CAST(byte*,e)+4+rgn->_unitSizeInByte-8));
+    return *((ui32*)(CAST(ds_byte*,e)+4+rgn->_unitSizeInByte-8));
 }
 
 void* DList::GetContent(addr ad) {
-    return CAST(byte*,ad) + 4 ;
+    return CAST(ds_byte*,ad) + 4 ;
 }
 
 addr DList::_AddDetachedNode(const DlistNode* n, addr loc) {
@@ -269,11 +268,11 @@ void DList::_AttachPrev(addr ad, ui32 p) {
 }
 
 void DList::_AttachNext(addr ad, ui32 p) { 
-    *((ui32*)(CAST(byte*, ad) + rgn->_unitSizeInByte - 4))= p;
+    *((ui32*)(CAST(ds_byte*, ad) + rgn->_unitSizeInByte - 4))= p;
 }
     
 void DList::_SetContent(addr ad, void* v) {
-    memcpy(CAST(byte*,ad) + 4, v, rgn->_unitSizeInByte - 8);
+    NWmemcpy(CAST(ds_byte*,ad) + 4, v, rgn->_unitSizeInByte - 8);
 }
 
 addr DList::AddFirst(void* e) {
@@ -364,7 +363,7 @@ addr DList::GetNext(addr a) {
 }
 
 addr DList::DirectGetNext(addr a) {
-    ui32 v = READ(ui32, (CAST(byte*, a) + rgn->_unitSizeInByte - 4));
+    ui32 v = READ(ui32, (CAST(ds_byte*, a) + rgn->_unitSizeInByte - 4));
     return rgn->Get(v);
 }
 
@@ -413,13 +412,13 @@ void HashMap::SetUp(ui32 keySizeInBytes, ui32 valueSizeInBytes, ui32 collisionCa
     _keySizeInBytes  = keySizeInBytes;
     _valueSizeInBytes= valueSizeInBytes;
     for (int i = 0; i < cap; ++i) {
-        *((ui32*)(CAST(byte*,_ownedRgn._data) + 4*i)) = 0;
+        *((ui32*)(CAST(ds_byte*,_ownedRgn._data) + 4*i)) = 0;
     }
 }
 
 
 
-static bool CmpBytes(byte* b0, byte* b1, ui32 s) {
+static bool CmpBytes(ds_byte* b0, ds_byte* b1, ui32 s) {
     for (ui32 i = 0; i < s; ++i) {
         if (b0[i] != b1[i])
             return 0;
@@ -444,36 +443,36 @@ addr HashMap::_Add(const HashData& d) {
     ui32 idx = d.processedHash;
     ui32 n = _GetPtr(idx);
     addr adr = rgn->Get(idx);
-    byte* buff = (byte*)malloc(MAP_UNIT_SIZE);
-    memcpy(buff, d.key, _keySizeInBytes);
-    memcpy(buff + _keySizeInBytes, d.data, _valueSizeInBytes);
+    ds_byte* buff = (ds_byte*)NWmalloc(MAP_UNIT_SIZE);
+    NWmemcpy(buff, d.key, _keySizeInBytes);
+    NWmemcpy(buff + _keySizeInBytes, d.data, _valueSizeInBytes);
     if (n == 0) {
         //Key not found
         DList* lp = &(*((DList*)(adr)) = DList());
         lp->SetUp(MAP_UNIT_SIZE, _collisionCap);
         ret = lp->AddFirst(buff);
         _IncPtr(idx);
-        free(buff);
+        NWfree(buff);
         return ret;
     }
     DList* lp = CAST(DList*, adr);
-    byte* iterKey  = (byte*)malloc(_keySizeInBytes);
+    ds_byte* iterKey  = (ds_byte*)NWmalloc(_keySizeInBytes);
     addr iter = lp->GetFirst();
     while (iter) {
-        memcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
-        bool cmp = CmpBytes(iterKey, (byte*)d.key, _keySizeInBytes);
+        NWmemcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
+        bool cmp = CmpBytes(iterKey, (ds_byte*)d.key, _keySizeInBytes);
         if (cmp) {
-            memcpy((byte*)lp->GetContent(iter)+_keySizeInBytes, d.data, _valueSizeInBytes);  
-            free(buff);
-            free(iterKey);
+            NWmemcpy((ds_byte*)lp->GetContent(iter)+_keySizeInBytes, d.data, _valueSizeInBytes);  
+            NWfree(buff);
+            NWfree(iterKey);
             return iter;
         }
         iter = lp->GetNext(iter);
     }
     ret = lp->AddLast(buff);
     _IncPtr(idx);
-    free(buff);
-    free(iterKey);
+    NWfree(buff);
+    NWfree(iterKey);
     return ret;
 }
 
@@ -488,32 +487,32 @@ addr HashMap::_Set(const HashData& d) {
     ui32 idx = d.processedHash;
     ui32 n = _GetPtr(idx);
     addr adr = rgn->Get(idx);
-    byte* buff = (byte*)malloc(MAP_UNIT_SIZE);
-    memcpy(buff, d.key, _keySizeInBytes);
-    memcpy(buff + _keySizeInBytes, d.data, _valueSizeInBytes);
+    ds_byte* buff = (ds_byte*)NWmalloc(MAP_UNIT_SIZE);
+    NWmemcpy(buff, d.key, _keySizeInBytes);
+    NWmemcpy(buff + _keySizeInBytes, d.data, _valueSizeInBytes);
     if (n == 0) {
-        free(buff);
+        NWfree(buff);
         return 0;
     }
     DList* lp = CAST(DList*, adr);
     addr iter = lp->GetFirst();
-    byte* iterKey  = (byte*)malloc(_keySizeInBytes);
+    ds_byte* iterKey  = (ds_byte*)NWmalloc(_keySizeInBytes);
 
     while (iter) {
-        memcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
-        bool cmp = CmpBytes(iterKey, (byte*)d.key, _keySizeInBytes);
+        NWmemcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
+        bool cmp = CmpBytes(iterKey, (ds_byte*)d.key, _keySizeInBytes);
         //We found the key
         if (cmp) {
-            memcpy((byte*)lp->GetContent(iter)+_keySizeInBytes, d.data, _valueSizeInBytes);  
-            free(buff);
-            free(iterKey);
+            NWmemcpy((ds_byte*)lp->GetContent(iter)+_keySizeInBytes, d.data, _valueSizeInBytes);  
+            NWfree(buff);
+            NWfree(iterKey);
             return iter;
         }
         //If we dont find we continue the loop
         iter = lp->GetNext(iter);
     }
-    free(buff);
-    free(iterKey);
+    NWfree(buff);
+    NWfree(iterKey);
     return 0;
 }
 
@@ -524,16 +523,16 @@ bool HashMap::_Erase(const HashData& d) {
         return 0; 
     addr adr = rgn->Get(idx);
     DList* lp = CAST(DList*, adr);
-    byte* iterKey  = (byte*)malloc(_keySizeInBytes);
+    ds_byte* iterKey  = (ds_byte*)NWmalloc(_keySizeInBytes);
     addr iter = lp->GetFirst();
     while (iter) {
-        memcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
-        bool cmp = CmpBytes(iterKey, (byte*)d.key, _keySizeInBytes);
+        NWmemcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
+        bool cmp = CmpBytes(iterKey, (ds_byte*)d.key, _keySizeInBytes);
         //We found the key
         if (cmp) {
             lp->Erase(iter);
             _DecPtr(idx);
-            free(iterKey);
+            NWfree(iterKey);
             return 1;
         }
         //If we dont find we continue the loop
@@ -555,13 +554,13 @@ addr HashMap::Get(void* key) {
         return 0; 
     addr adr = rgn->Get(idx);
     DList* lp = CAST(DList*, adr);
-    byte* iterKey  = (byte*)malloc(_keySizeInBytes);
+    ds_byte* iterKey  = (ds_byte*)NWmalloc(_keySizeInBytes);
     addr iter = lp->GetFirst();
     while (iter) {
-        memcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
-        bool cmp = CmpBytes(iterKey, (byte*)key, _keySizeInBytes);
+        NWmemcpy(iterKey, lp->GetContent(iter), _keySizeInBytes);
+        bool cmp = CmpBytes(iterKey, (ds_byte*)key, _keySizeInBytes);
         if (cmp) {
-            free(iterKey);
+            NWfree(iterKey);
             return iter;
         }
         iter = lp->GetNext(iter);
@@ -570,11 +569,11 @@ addr HashMap::Get(void* key) {
 }
 
 void* HashMap::ReadKey(addr ad) {
-    return (void*)(CAST(byte*,ad) + sizeof(int));
+    return (void*)(CAST(ds_byte*,ad) + sizeof(int));
 }
 
 void* HashMap::ReadValue(addr ad) {
-    return (void*)(CAST(byte*,ad) + _keySizeInBytes + sizeof(int));//WARNING:: list padding for index is Hardcoded here
+    return (void*)(CAST(ds_byte*,ad) + _keySizeInBytes + sizeof(int));//WARNING:: list padding for index is Hardcoded here
 }
 
 void* HashMap::GetValue(void* key) {
