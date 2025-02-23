@@ -71,7 +71,6 @@ NW_PREFIX int NWengineInit() {
 	Primitives::Init();
     Batch::Init();
 	Renderer::Init();
-    DllScripting::Init();
 
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitEnd)
 

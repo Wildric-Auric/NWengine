@@ -120,14 +120,15 @@ void GameManager::Start() {
     sq.AddComponent<Collider>();
     //spr->StopRendering();
 	//dynamic Script debugging
-	DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
-	dynScr = sq.AddComponent<DynamicScript>();	
-	dynScr->Load("DllPath/test.dll");
+//  DllScripting::Init();
+//	DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+//  dynScr = sq.AddComponent<DynamicScript>();	
+//	dynScr->Load("DllPath/test.dll");
 	
 	//dynScr->Unload();
 	//dynScr->Load("DllPath/test.dll");
-	const char* (*f)()  = (const char* (*)())dynScr->dllScript->GetDllFunc("helloWorld");
-	printf("%s\n", f());
+//	const char* (*f)()  = (const char* (*)())dynScr->dllScript->GetDllFunc("helloWorld");
+//	printf("%s\n", f());
 }
 
 static float t = 0.0;
@@ -185,13 +186,13 @@ void GameManager::Update() {
 	tree->GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	tree->GetComponent<Sprite>()->shader->Unuse();
 	static float a = 5.0;
-	if (Inputs::GetInputKey('D', NWin::KeyEventEnum::NWIN_KeyReleased)) {
-		dynScr->Unload();
-		DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
-		dynScr->Reload("DllPath/test.dll");
-	}
+//	if (Inputs::GetInputKey('D', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+//		dynScr->Unload();
+//		DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+//		dynScr->Reload("DllPath/test.dll");
+//	}
 
-	float(*f)()  = (float(*)())dynScr->dllScript->GetDllFunc("getFloat");
-	a = f();
+//	float(*f)()  = (float(*)())dynScr->dllScript->GetDllFunc("getFloat");
+//	a = f();
 	Scene::GetCurrent()->GetGameObject("Square")->GetComponent<Transform>()->rotation = t * a;
 }
