@@ -1,10 +1,7 @@
 #include "Scene.h"
 #include "GameObject.h"
-#include "Components.h"
 #include "Camera.h"
 #include "Batch.h"
-
-#include <fstream>
 #include <string>
 #include <vector>
 
