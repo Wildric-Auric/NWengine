@@ -4,11 +4,31 @@
 #include "Shader.h"
 #include <list>
 
+enum class TextHorizontalAlignment {
+    LEFT   = 0,
+    RIGHT  = 1,
+    CENTER = 1
+};
+
+struct TextConstraint {
+    float boxHorizontalWrap = 0.0;
+    float fixedLineSpacing = 0.0f; 
+    TextHorizontalAlignment halign  = TextHorizontalAlignment::LEFT;
+};
+
+struct TextIterData {
+    int chrNum   = 0;
+    int chrIndex = 0;
+    void* other = 0;
+};
+
+typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
+
 /**
  * @brief The Text class represents a text component that can be attached to a GameObject.
  */
 class Text : public GameComponent {
-public:
+public: 
     /**
      * @brief GetType returns the type of the Text component.
      * @return The type of the Text component.
@@ -48,11 +68,21 @@ public:
      */
     void SetFont(const std::string& path, Shader* shader);
 
+    void SetContent(const char*);
+
+    void SetConstraint(const TextConstraint&);
+
+    void SetChrCallback(CharacterUpdateCallback);
+
     /**
      * @brief SetShader sets the shader of the Text component.
      * @param shader The shader to use for rendering the text.
      */
     void SetShader(Shader* shader);
+
+    void SetShader(const ShaderText& st, ShaderIdentifier* id);
+
+    void SetShader(std::string path);
 
     /**
      * @brief Gets total size in pixels sets the shader of the text 
@@ -61,6 +91,7 @@ public:
      */
     fVec2 GetSize();
 
+    CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
      * @brief characters is a list of characters that make up the text.
      */
@@ -76,6 +107,7 @@ public:
      */
     Font* font = nullptr;
 
+    TextConstraint constraints; 
     /**
      * @brief text is the string of text to be rendered.
      */
