@@ -40,7 +40,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 	font.face = (FT_Face)buffer;
 	FT_Face f = (FT_Face)font.face;
 
-	FT_Set_Pixel_Sizes(f, 0, 64);
+	FT_Set_Pixel_Sizes(f, 0, nativeSize);
 	for (uint8 i = 0; i < 128; ++i) {
 		if (FT_Load_Char(f, i, FT_LOAD_RENDER)) {
 			printf("Error loading character");
@@ -55,6 +55,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->texture._size.x = f->glyph->bitmap.width;
 		character->texture._size.y = f->glyph->bitmap.rows;
 		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R);
+        character->texture.GenMipMap();
 		character->texture.SetMinFilter(NW_NEAREST_MIPMAP_LINEAR);
 		character->texture.SetMaxFilter(NW_LINEAR);
 
@@ -64,9 +65,30 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->bearing.x = f->glyph->bitmap_left;
 		character->bearing.y = f->glyph->bitmap_top;
 
-		character->advance = f->glyph->advance.x;
+		character->advance.x = f->glyph->advance.x;
+		character->advance.y = f->glyph->advance.x;
 	}
 	return (Asset*)&font;
+}
+
+
+float Glyph::GetAdvanceX() {
+    return advance.x / 64.0f;
+}
+
+float Glyph::GetAdvanceY() {
+    return advance.y / 64.0f;
+}
+
+void Glyph::GetBearing(fVec2* outp) {
+    //TODO::Check if it is in pixel units
+    outp->x = bearing.x; 
+    outp->y = bearing.y; 
+}
+
+void  Glyph::GetSize(fVec2* s) {
+    s->x = size.x;
+    s->y = size.y;
 }
 
 void Glyph::Delete() {
