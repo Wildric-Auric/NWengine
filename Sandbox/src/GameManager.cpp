@@ -37,6 +37,7 @@ inline bool cond(GameObject* obj) {
 	return obj->name[0] == 'S';
 }
 
+static float tt =0.0; //TODO::DELETE
 void GameManager::Start() {
 	Scene* s = Scene::GetCurrent();
 	s->SetAutoCache(1);
@@ -51,6 +52,7 @@ void GameManager::Start() {
 	ADD_OBJ(s, "Square", sq);
     ADD_OBJ(s, "Circle0", c0);
     ADD_OBJ(s, "Circle1", c1);
+    ADD_OBJ(s, "TextBox",  textBox);
 
 	cam.AddComponent<Script>()->SetScript<CameraScript>();
 	water.AddComponent<Script>()->SetScript<WaterScript>();
@@ -90,7 +92,7 @@ void GameManager::Start() {
 	tr->scale = fVec2(2.0, 2.0);
 	tr->position.y += 39.0;
 	tr->position.x += 270.0;
-	
+
 	//Adds background---
 	Background();
 	
@@ -102,13 +104,28 @@ void GameManager::Start() {
 	
 	te->text = "NWengine 0.9!";
 	te->layerOrder = TEXT_LAYER;
-	te->colors       = fVec4(0.94,0.95, 1.0, 1.0);
-	te->scale        = fVec2(.8, 0.8);
+	te->colors       = fVec4(1.0,0.0,0.0,1.0);//fVec4(0.94,0.95, 1.0, 1.0);
+	te->scale        = fVec2(1.0,1.0);
 	te->UpdateGlyphs();
 	te->position.x -= te->GetSize().x * 0.5;
 	te->position.y += 130.0;
 	te->UpdateGlyphs();
 	
+    te->SetChrCallback([](Character* chr, TextIterData* tdata){
+        Transform* tr = chr->go.GetComponent<Transform>();
+        tr->position.y += 4.0 * cos(2.0*PI*tt + 2.0*PI * tdata->chrIndex/tdata->chrNum);
+    });
+
+    spr = textBox.AddComponent<Sprite>();
+    tr  = textBox.AddComponent<Transform>();
+    spr->SetShader(NW_DEFAULT_SHADER);
+	spr->SetTexture(NW_DEFAULT_TEXTURE);
+    spr->SetSortingLayer(TEXT_LAYER + 1);
+
+    fVec2 teSize = te->GetSize();
+    spr->SetSize(teSize);
+    tr->position = te->position + teSize / 2.0;
+
 	//Adds the leaves spawner
 	spawner.AddComponent<Script>()->SetScript<Spawner>();
 
@@ -138,6 +155,8 @@ extern NWPPFX::Tonemapper tm;
 extern NWPPFX::ColorCorrection cc;
 
 void GameManager::Update() {
+    tt += NWTime::GetDeltaTime();
+
     GameObject* sq = Scene::currentScene->GetGameObject("Square");
     sq->GetComponent<Collider>()->SetEdgesSprite();
 

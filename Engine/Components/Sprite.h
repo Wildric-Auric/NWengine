@@ -59,6 +59,8 @@ public:
      */
     ~Sprite();
 
+    void SetSize(const fVec2&);
+
     /**
      * @brief Sets the texture of the sprite from a file path.
      * @param path The file path of the texture.

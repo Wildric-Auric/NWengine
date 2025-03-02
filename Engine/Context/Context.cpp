@@ -24,6 +24,19 @@ void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size)
 		Context::WINDOW_HEIGHT = size.y;
 }
 
+void Context::GetWinDrawAreaSize(fVec2* v) {
+    NWin::Vec2 s;
+    NWin::Window* win = (NWin::Window*)Context::window;
+    win->getDrawAreaSize(s);
+    v->x = s.x;
+    v->y = s.y;
+}
+
+void Context::GetWinSize(fVec2* v) {
+    v->x = WINDOW_WIDTH;
+    v->y = WINDOW_HEIGHT;
+}
+
 void Context::SetViewPort(int x, int y, int sizeX, int sizeY) {
 	NW_GL_CALL(glViewport(x, y, sizeX, sizeY));
 }

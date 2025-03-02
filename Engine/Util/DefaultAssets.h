@@ -3,6 +3,13 @@
 #include "Image.h"
 #include "Shader.h"
 
+#define NW_DEFAULT_SHADER ShaderTexturedDefaultStr,&ShaderTexturedDefaultID
+#define NW_DEFAULT_SHADER_BATCHED ShaderTexturedBatchedDefaultStr,&ShaderTexturedBatchedDefaultID
+#define NW_DEFAULT_SHADER_TEXT ShaderTextDefaultStr,&ShaderTextDefaultID
+#define NW_DEFAULT_SHADER_TEXT_BATCHED ShaderTextBatchedStr,&ShaderTextBatchedDefaultID
+#define NW_DEFAULT_TEXTURE &ImageDefault,&TextureDefaultID
+
+
 /**
  * @brief The default textured shader text.
  */

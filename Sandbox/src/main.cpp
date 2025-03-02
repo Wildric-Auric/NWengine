@@ -28,6 +28,7 @@ void Init() {
 	CRT->stretchCoeff.y = 1.3;
 	s.Start();
 
+    bloomTst.luminanceThreshold = 1.0;
 	bloomTst.SetUp();
 
  
@@ -38,6 +39,7 @@ void Init() {
     io = {};
     io.SetInput(cc._fxio.GetOutput());
     tm.SetUp(&io);
+    
 
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
@@ -55,9 +57,15 @@ void Render() {
    //rpline.DrawLast();
     Camera::GetActiveCamera()->fbo.Blit(&waterFbo);
 
+    fVec2 winSize;
+    fVec2 camSize = fVec2(720.0f,480.0f); //tm._fxio.GetOutput()->GetCamera()->size;
+    Context::GetWinDrawAreaSize(&winSize);
+    tm._fxio.GetOutput()->SetStretch(winSize/camSize);
+
     bloomTst.Capture();
     cc.Capture();
     tm.Capture();
+
     tm.DrawLast();
     //(*CRT)(tm._fxio.GetOutput(), true);
 }

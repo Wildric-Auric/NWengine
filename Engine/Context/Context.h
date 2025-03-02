@@ -1,4 +1,5 @@
 #pragma once
+#include "Globals.h"
 
 struct OpenGLInfo {
     unsigned char minVersion = 3;
@@ -17,6 +18,9 @@ public:
      * @brief The window handle. Should be converted to NWin::Window* to be used
      */
     static void* window;  
+
+    static void GetWinDrawAreaSize(fVec2*);
+    static void GetWinSize(fVec2*);
 
     /**
      * @brief Initializes the application context.

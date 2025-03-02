@@ -53,6 +53,8 @@ public:
 
     void SetTexParams(const TexMinFilter, const TexMaxFilter);
 
+    void SetStretch(const fVec2&);
+
     bool _DrawPrep();
 
     /**

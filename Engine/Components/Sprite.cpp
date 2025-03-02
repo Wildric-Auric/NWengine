@@ -93,6 +93,9 @@ Sprite::~Sprite() {
 	}
 }
 
+void Sprite::SetSize(const fVec2& s) {
+    container.UpdateSize(s.x, s.y);
+}
 
 int Sprite::DefaultSpriteDrawCallback(void* data) {
 	GameObject* obj = (GameObject*)data;

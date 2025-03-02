@@ -59,6 +59,10 @@ void Renderer::SetTexParams(const TexMinFilter mi, const TexMaxFilter ma) {
     _magFilter = ma;
 }
 
+void Renderer::SetStretch(const fVec2& v) {
+    stretchCoeff = v;
+}
+
 bool Renderer::_DrawPrep() {
     Camera* cam = componentContainer.AddComponent<Camera>();
 	Sprite* sprite = componentContainer.GetComponent<Sprite>();
