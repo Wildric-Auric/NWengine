@@ -1,7 +1,6 @@
 #include "Text.h"
 #include "Transform.h"
 #include "Sprite.h"
-#include "Utilities.h"
 #include "Scene.h"
 
 #define MAX_BIT_10 1023.0
@@ -10,10 +9,16 @@ Text::Text(GameObject* go) {
 };
 
 void Text::Update() {
-	float x = this->position.x;
+	float x = position.x;
+    float y = position.y; 
+    float tmp = 0.0;
+    float maxYAdvance = 0.0f;
 	uint32 temp  = (uint32)(this->colors.g * MAX_BIT_10) | ((uint32)(this->colors.r * MAX_BIT_10) << 0xA);
 	uint32 temp0 = (uint32)(this->colors.a * MAX_BIT_10) | ((uint32)(this->colors.b * MAX_BIT_10) << 0xA);
 
+    TextIterData tdata;
+    tdata.chrIndex = 0;
+    tdata.chrNum = characters.size();
 	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
 		Transform* transform       = chr->go.GetComponent<Transform>(); //TODO::add transform variable to glyph
 		Sprite*    sprite          = chr->go.GetComponent<Sprite>();
@@ -22,25 +27,62 @@ void Text::Update() {
 		sprite->vertexAttributes.x = *((float*)&temp );
 		sprite->vertexAttributes.y = *((float*)&temp0);
 
-		transform->scale.x = this->scale.x;
-		transform->scale.y = this->scale.y;
+		transform->scale.x = scale.x;
+		transform->scale.y = scale.y;
 		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2) * transform->scale.x;
-		transform->position.y = this->position.y - (chr->glyph->size.y - chr->glyph->bearing.y - chr->glyph->size.y / 2) * transform->scale.y;
+		transform->position.y = y - (chr->glyph->size.y - chr->glyph->bearing.y - chr->glyph->size.y / 2) * transform->scale.y;
 			
+		chrCbk(&*chr, &tdata);
+        ++tdata.chrIndex;
 		sprite->Update(); 
-		x += (chr->glyph->advance / 64 ) * transform->scale.x;
-	}
+
+		x += (chr->glyph->GetAdvanceX()) * transform->scale.x;
+        tmp += (chr->glyph->GetAdvanceX()) * transform->scale.x;
+        maxYAdvance = Max(chr->glyph->GetAdvanceY(), maxYAdvance);
+        
+        if (constraints.boxHorizontalWrap == 0.0f || tmp < constraints.boxHorizontalWrap)
+            continue; 
+        x  = position.x;
+        tmp = 0.0f;
+
+        y -= (constraints.fixedLineSpacing != 0.0) ? constraints.fixedLineSpacing 
+             : maxYAdvance * transform->scale.y;
+        
+    }
 }
+
+void Text::SetChrCallback(CharacterUpdateCallback cbk) {
+    chrCbk = (cbk == 0) ? [](Character*, TextIterData*)->void{} : cbk;
+}
+
+void Text::SetContent(const char* str) {
+    text = str;
+}
+
+void Text::SetConstraint(const TextConstraint& c) {
+    constraints = c;
+}
+
 
 void Text::SetShader(Shader* s) {
 	_shader = s;
+}
+
+void Text::SetShader(std::string path) {
+	Loader<Shader> l;
+	_shader = l.LoadFromFileOrGetFromCache((void*)&path, path.c_str(), nullptr);
+}
+
+void Text::SetShader(const ShaderText& st, ShaderIdentifier* id) {
+		Loader<Shader> l;
+		_shader = l.LoadFromBufferOrGetFromCache(id, (void*)&st, id);
 }
 
 fVec2 Text::GetSize() {
 	fVec2 ret;
 	std::list<Character>::iterator iter = characters.begin();
 	for (auto c = characters.begin(); c != characters.end(); ++c) {
-		ret.x += (c->glyph->advance / 64) * c->go.GetComponent<Transform>()->scale.x * scale.x;
+		ret.x += (c->glyph->GetAdvanceX()) * c->go.GetComponent<Transform>()->scale.x * scale.x;
 		ret.y = Max(c->glyph->size.y * c->go.GetComponent<Transform>()->scale.y * scale.y, ret.y);
 	}
 	return ret;
@@ -60,7 +102,7 @@ void Text::UpdateGlyphs() {
 		Sprite* sprite = iter->go.AddComponent<Sprite>();
 
 		iter->glyph = &this->font->charactersMap.find(c)->second;
-		sprite->SetShader(_shader); //TODO::AddFunction to set shader by its pointer
+		sprite->SetShader(_shader); 
 		if (this->isBatched)
 			sprite->Batch();
 		sprite->SetTexture(&iter->glyph->texture);
@@ -95,5 +137,3 @@ Text::~Text() {
 	if (font)
 		font->Clean();
 }
-
-
