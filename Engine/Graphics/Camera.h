@@ -88,6 +88,8 @@ public:
      */
     void SetClearColor(int i, const fVec4& color);
 
+    fVec2 GetSize();
+
     /**
      * @brief Reset specific clear colors.
      */

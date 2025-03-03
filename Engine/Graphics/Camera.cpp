@@ -1,6 +1,11 @@
 #include "Camera.h"
 #include "Scene.h"
 
+
+fVec2 Camera::GetSize() {
+    return size;
+}
+
 Camera* Camera::GetActiveCamera() {
     return Camera::ActiveCamera;
 }

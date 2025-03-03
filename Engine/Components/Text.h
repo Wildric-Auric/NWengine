@@ -11,7 +11,7 @@ enum class TextHorizontalAlignment {
 };
 
 struct TextConstraint {
-    float boxHorizontalWrap = 0.0;
+    float boxHorizontalWrap = 0.0f;
     float fixedLineSpacing = 0.0f; 
     TextHorizontalAlignment halign  = TextHorizontalAlignment::LEFT;
 };
@@ -61,6 +61,19 @@ public:
      */
     void UpdateGlyphs();
 
+    void SetPosition(const fVec2&);
+
+    void SetScale(const fVec2&);
+    
+    inline Shader* GetShader() {return _shader;};
+
+    void SetBoxHorizontalWrap(const float);
+
+    void SetHorizontalAlignment(const TextHorizontalAlignment);
+
+    void SetFixedLineSpacing(const float); 
+
+    fVec2 GetPosition();
     /**
      * @brief SetFont sets the font of the Text component.
      * @param path The path to the font file.

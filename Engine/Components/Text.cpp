@@ -8,6 +8,30 @@ Text::Text(GameObject* go) {
 	this->attachedObject = go;
 };
 
+void Text::SetPosition(const fVec2& pos) {
+    position = pos;
+}
+
+void Text::SetScale(const fVec2& value) {
+    scale = value;
+}
+
+fVec2 Text::GetPosition() {
+    return position;
+}
+
+void Text::SetBoxHorizontalWrap(const float value) {
+    constraints.boxHorizontalWrap = value;
+}
+
+void Text::SetHorizontalAlignment(const TextHorizontalAlignment value) {
+    constraints.halign = value;
+}
+
+void Text::SetFixedLineSpacing(const float value) {
+    constraints.fixedLineSpacing = value;
+}
+
 void Text::Update() {
 	float x = position.x;
     float y = position.y; 
@@ -19,35 +43,42 @@ void Text::Update() {
     TextIterData tdata;
     tdata.chrIndex = 0;
     tdata.chrNum = characters.size();
+    
+    float halignOffset = 0.0;
+    if (constraints.halign == TextHorizontalAlignment::CENTER && constraints.boxHorizontalWrap) {
+        fVec2 s = GetSize(); //TODO::Cache the size
+        halignOffset = constraints.boxHorizontalWrap * 0.5;
+    }
+
+
 	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
 		Transform* transform       = chr->go.GetComponent<Transform>(); //TODO::add transform variable to glyph
 		Sprite*    sprite          = chr->go.GetComponent<Sprite>();
 
+        float dx = (chr->glyph->GetAdvanceX()) * transform->scale.x;
 
 		sprite->vertexAttributes.x = *((float*)&temp );
 		sprite->vertexAttributes.y = *((float*)&temp0);
 
+        if (constraints.boxHorizontalWrap != 0.0f && tmp + dx >= constraints.boxHorizontalWrap) {
+            x  = position.x;
+            tmp = 0.0f;
+            y -= (constraints.fixedLineSpacing != 0.0) ? constraints.fixedLineSpacing 
+                 : maxYAdvance * transform->scale.y;
+        }
 		transform->scale.x = scale.x;
 		transform->scale.y = scale.y;
 		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2) * transform->scale.x;
-		transform->position.y = y - (chr->glyph->size.y - chr->glyph->bearing.y - chr->glyph->size.y / 2) * transform->scale.y;
-			
+		transform->position.y = y + (chr->glyph->bearing.x + chr->glyph->size.y / 2) * transform->scale.y; 
+        transform->position.x += halignOffset;	
+
 		chrCbk(&*chr, &tdata);
         ++tdata.chrIndex;
 		sprite->Update(); 
 
-		x += (chr->glyph->GetAdvanceX()) * transform->scale.x;
-        tmp += (chr->glyph->GetAdvanceX()) * transform->scale.x;
-        maxYAdvance = Max(chr->glyph->GetAdvanceY(), maxYAdvance);
-        
-        if (constraints.boxHorizontalWrap == 0.0f || tmp < constraints.boxHorizontalWrap)
-            continue; 
-        x  = position.x;
-        tmp = 0.0f;
-
-        y -= (constraints.fixedLineSpacing != 0.0) ? constraints.fixedLineSpacing 
-             : maxYAdvance * transform->scale.y;
-        
+		x   += dx;
+        tmp += dx;
+        maxYAdvance = Max(chr->glyph->GetAdvanceY(), maxYAdvance);        
     }
 }
 
