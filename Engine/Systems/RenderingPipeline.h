@@ -38,6 +38,8 @@ namespace NWPPFX {
         EffectIO _fxio;
         RenderingPipeline _pline;
 
+        inline EffectIO  GetIO();
+        inline Renderer* GetOutput();
         virtual void SetUp() {};
         virtual void Clean();
         virtual void Capture();
@@ -95,7 +97,6 @@ namespace NWPPFX {
 
     class ColorCorrection : public Effect {
         public:
-        EffectIO* io;
         void SetUp(const EffectIO* input = 0);
         void Capture() override;
         void DrawLast() override;

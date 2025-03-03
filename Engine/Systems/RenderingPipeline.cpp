@@ -311,6 +311,15 @@ namespace NWPPFX {
         return 0;
     }
 
+
+    inline EffectIO Effect::GetIO() {
+        return _fxio;
+    }
+
+    Renderer* Effect::GetOutput() {
+        return _fxio.GetOutput(); 
+    }
+
     void Effect::Clean() {_pline.Clean();}
     void Effect::Capture() {_pline.Capture();}
     void Effect::DrawLast() {_pline.DrawLast();}

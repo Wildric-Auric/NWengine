@@ -12,9 +12,12 @@ static void Init() {
 	Context::EnableVSync();
 	Scene& s = Scene::CreateNew("New Scene");
 	s.MakeCurrent();
-	GameObject& manager = s.AddObject();
-	s.Rename("GameManagerObj", &manager);
-    manager.AddComponent<Script>()->SetScript<GameManager>();
+    GameObject& cam = s.AddObject();
+    Camera* camC = cam.AddComponent<Camera>();
+    camC->Use();
+    camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
+    camC->ChangeOrtho(720,480);
+    
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
