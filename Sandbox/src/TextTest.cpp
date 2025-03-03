@@ -1,9 +1,11 @@
 #include "Scripts.h"
 #include "Scene.h"
+#include "Components.h"
 #include "DefaultAssets.h"
 #include "Inputs.h"
 #include "NWTime.h"
 #include "Asset.h"
+#include "DllScripting.h"
 #include "ScriptingComp.h"
 #include "Keyboard.h"
 #include "RenderingPipeline.h"
@@ -47,8 +49,10 @@ void GameManager::Start() {
 	ADD_OBJ(s, "TreeObj",     tree);
 	ADD_OBJ(s, "TextObj",     text);
 	ADD_OBJ(s, "SpawnerObj",  spawner);
+	ADD_OBJ(s, "Square", sq);
     ADD_OBJ(s, "Circle0", c0);
     ADD_OBJ(s, "Circle1", c1);
+    ADD_OBJ(s, "TextBox",  textBox);
 
 	cam.AddComponent<Script>()->SetScript<CameraScript>();
 	water.AddComponent<Script>()->SetScript<WaterScript>();
@@ -57,7 +61,7 @@ void GameManager::Start() {
 	auto tr  = ground.AddComponent<Transform>();	
 	
 	//Adds ground and the tree---
-	spr->SetShader(NW_DEFAULT_SHADER);
+	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 	spr->SetTexture("../Sandbox/assets/Images/gnd.png");
 	spr->SetSortingLayer(GROUND_LAYER);
 	tr->scale = fVec2(1.3, 1.3);
@@ -66,7 +70,7 @@ void GameManager::Start() {
     tr = c0.AddComponent<Transform>();
     spr=c0.AddComponent<Sprite>();
     spr->SetSortingLayer(GROUND_LAYER);
-	spr->SetTexture(NW_DEFAULT_TEXTURE);
+	spr->SetTexture(&ImageDefault, &TextureDefaultID);
     spr->SetShader("../Sandbox/assets/Shaders/Circle.shader");
     tr->Translate({-200.0,0.0});
     spr->container.UpdateSize(128, 128);
@@ -74,7 +78,7 @@ void GameManager::Start() {
     tr =c1.AddComponent<Transform>();
     spr=c1.AddComponent<Sprite>();
     spr->SetSortingLayer(GROUND_LAYER);
-	spr->SetTexture(NW_DEFAULT_TEXTURE);
+	spr->SetTexture(&ImageDefault, &TextureDefaultID);
     spr->SetShader("../Sandbox/assets/Shaders/Circle.shader");
     tr->Translate({16.0,0.0});
     tr->Translate({-200.0,0.0});
@@ -94,33 +98,69 @@ void GameManager::Start() {
 	
 	//Adds text
 	auto te = text.AddComponent<Text>();
-
-    te->SetShader(ShaderTextBatchedStr, &ShaderTextBatchedDefaultID);
-	te->SetFont("../Sandbox/assets/Fonts/Cloudy.ttf",te->_shader);
-
+	Loader<Shader> l;
+	te->SetFont("../Sandbox/assets/Fonts/Cloudy.ttf",
+	l.LoadFromBufferOrGetFromCache(&ShaderTextBatchedDefaultID, (void*)&ShaderTextBatchedStr, &ShaderTextBatchedDefaultID));
+	
 	te->text = "NWengine 0.9!";
 	te->layerOrder = TEXT_LAYER;
-	te->colors       = fVec4(0.94,0.95, 1.0, 1.0);
-	te->SetScale(fVec2(1.0,1.0));
+	te->colors       = fVec4(1.0,0.0,0.0,1.0);//fVec4(0.94,0.95, 1.0, 1.0);
+	te->SetScale(fVec2(0.5,0.5));
 	te->UpdateGlyphs();
     te->SetPosition(fVec2(-te->GetSize().x * 0.5f, 130.0f));
 	te->UpdateGlyphs();
+    te->SetBoxHorizontalWrap(128.0f);
+    te->SetHorizontalAlignment(TextHorizontalAlignment::CENTER);
 	
     te->SetChrCallback([](Character* chr, TextIterData* tdata){
         Transform* tr = chr->go.GetComponent<Transform>();
-        tr->position.y += 8.0 * cos(2.0*PI*0.1*tt + 2.0*PI * tdata->chrIndex/tdata->chrNum);
+        //tr->position.y += 4.0 * cos(2.0*PI*tt + 2.0*PI * tdata->chrIndex/tdata->chrNum);
     });
+
+    spr = textBox.AddComponent<Sprite>();
+    tr  = textBox.AddComponent<Transform>();
+    spr->SetShader(NW_DEFAULT_SHADER);
+	spr->SetTexture(NW_DEFAULT_TEXTURE);
+    spr->SetSortingLayer(TEXT_LAYER + 1);
+
+    fVec2 teSize = te->GetSize();
+    spr->SetSize(fVec2(128.0, 300.0));
+    tr->position = te->position + fVec2(256,0) / 2.0;
 
 	//Adds the leaves spawner
 	spawner.AddComponent<Script>()->SetScript<Spawner>();
+
+	tr = sq.AddComponent<Transform>();
+	spr = sq.AddComponent<Sprite>();
+	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
+	spr->SetTexture(&ImageDefault,&TextureDefaultID);
+	tr->scale = tr->scale * 5.0;
+    sq.AddComponent<Collider>();
+    //spr->StopRendering();
+	//dynamic Script debugging
+//  DllScripting::Init();
+//	DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+//  dynScr = sq.AddComponent<DynamicScript>();	
+//	dynScr->Load("DllPath/test.dll");
+	
+	//dynScr->Unload();
+	//dynScr->Load("DllPath/test.dll");
+//	const char* (*f)()  = (const char* (*)())dynScr->dllScript->GetDllFunc("helloWorld");
+//	printf("%s\n", f());
 }
 
 static float t = 0.0;
+
 extern NWPPFX::Bloom bloomTst;
 extern NWPPFX::Tonemapper tm;
 extern NWPPFX::ColorCorrection cc;
 
 void GameManager::Update() {
+    tt += NWTime::GetDeltaTime();
+
+    GameObject* sq = Scene::currentScene->GetGameObject("Square");
+    sq->GetComponent<Collider>()->SetEdgesSprite();
+
 	t += NWTime::GetDeltaTime();
     GameObject* c = Scene::currentScene->GetGameObject("Circle0");
     GameObject* c1 = Scene::currentScene->GetGameObject("Circle1");
@@ -133,27 +173,46 @@ void GameManager::Update() {
     col0->isColliding(col1, &depthBuff);
     tr->Translate(depthBuff);
     depthBuff = {0.0,0.0};
+    Collider* sqCol = sq->GetComponent<Collider>();
+    col0->isColliding(sqCol, &depthBuff);
     tr->Translate(depthBuff);
+
     if (Inputs::GetInputKey('X', NWin::KeyEventEnum::NWIN_KeyReleased)) {
         //tm.spec.type = NWPPFX::TonemapperType::Reinhard;
         cc.spec.brightness += 0.03;
         cc.spec.contrast -= 0.1;
     }
+
     if (Inputs::GetInputKey('C', NWin::KeyEventEnum::NWIN_KeyReleased)) {
         //tm.spec.type = NWPPFX::TonemapperType::Uncharted;
         cc.spec.brightness -= 0.03;
         cc.spec.contrast += 0.1;
     }
+
     if (Inputs::GetInputKey('V', NWin::KeyEventEnum::NWIN_KeyReleased)) {
         tm.spec.type = NWPPFX::TonemapperType::ACESNrkz;
     }
+
     if (Inputs::GetInputKey('B', NWin::KeyEventEnum::NWIN_KeyReleased)) {
         tm.spec.type = NWPPFX::TonemapperType::Uncharted;
     }
+
+
+	float hw = Context::WINDOW_WIDTH  * 0.5f;
+	float hh = Context::WINDOW_HEIGHT * 0.5f;
 	auto tree = Scene::GetCurrent()->GetGameObject("TreeObj");
+	//tree->GetComponent<Transform>()->position = fVec2(Inputs::mousePosX - hw, -Inputs::mousePosY + hh);
 	tree->GetComponent<Sprite>()->shader->Use();
 	tree->GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
 	tree->GetComponent<Sprite>()->shader->Unuse();
+	static float a = 5.0;
+//	if (Inputs::GetInputKey('D', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+//		dynScr->Unload();
+//		DllScripting::CompileDll({ "../Sandbox/src/DynScriptTest.cpp" }, "DllPath/test.dll");
+//		dynScr->Reload("DllPath/test.dll");
+//	}
 
-    tt += NWTime::GetDeltaTime();
+//	float(*f)()  = (float(*)())dynScr->dllScript->GetDllFunc("getFloat");
+//	a = f();
+	Scene::GetCurrent()->GetGameObject("Square")->GetComponent<Transform>()->rotation = t * a;
 }
