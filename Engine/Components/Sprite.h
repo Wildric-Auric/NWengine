@@ -87,6 +87,8 @@ public:
      */
     void SetShader(std::string path);
 
+    Shader* GetShader();
+
     /**
      * @brief Sets the shader of the sprite from a ShaderText object.
      * @param st The ShaderText object representing the shader.

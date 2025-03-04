@@ -1,6 +1,4 @@
 #include "Font.h"
-#include "Sprite.h"
-#include "Transform.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
@@ -37,8 +35,8 @@ Asset* Font::LoadFromFile(const char* path, void* data = nullptr) {
 Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 	Font& font = resList.emplace(*(FontIdentifier*)data, Font()).first->second;
 
-	font.face = (FT_Face)buffer;
-	FT_Face f = (FT_Face)font.face;
+	font._face = (FT_Face)buffer;
+	FT_Face f = (FT_Face)font._face;
 
 	FT_Set_Pixel_Sizes(f, 0, nativeSize);
 	for (uint8 i = 0; i < 128; ++i) {
@@ -66,18 +64,21 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->bearing.y = f->glyph->bitmap_top;
 
 		character->advance.x = f->glyph->advance.x;
-		character->advance.y = f->glyph->advance.x;
+		character->advance.y = f->glyph->advance.y;
+
+        character->ppem.x  = f->size->metrics.x_ppem;
+        character->ppem.y  = f->size->metrics.y_ppem;
 	}
 	return (Asset*)&font;
 }
 
 
 float Glyph::GetAdvanceX() {
-    return advance.x / 64.0f;
+    return advance.x / (float)ppem.x;
 }
 
 float Glyph::GetAdvanceY() {
-    return advance.y / 64.0f;
+    return advance.y / (float)ppem.y;
 }
 
 void Glyph::GetBearing(fVec2* outp) {
@@ -102,6 +103,6 @@ void Font::Clean() {
 	for (auto iter = charactersMap.begin(); iter != charactersMap.end(); ++iter) {
 		iter->second.Delete();
 	}
-	FT_Done_Face((FT_Face)face);
+	FT_Done_Face((FT_Face)_face);
 	EraseRes<Font>(GetIDWithAsset<Font*, FontIdentifier>(this));
 }

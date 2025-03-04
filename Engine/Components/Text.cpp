@@ -61,15 +61,15 @@ void Text::Update() {
 		sprite->vertexAttributes.y = *((float*)&temp0);
 
         if (constraints.boxHorizontalWrap != 0.0f && tmp + dx >= constraints.boxHorizontalWrap) {
-            x  = position.x;
+            x   = position.x;
             tmp = 0.0f;
-            y -= (constraints.fixedLineSpacing != 0.0) ? constraints.fixedLineSpacing 
+            y  -= (constraints.fixedLineSpacing != 0.0) ? constraints.fixedLineSpacing 
                  : maxYAdvance * transform->scale.y;
         }
 		transform->scale.x = scale.x;
 		transform->scale.y = scale.y;
-		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2) * transform->scale.x;
-		transform->position.y = y + (chr->glyph->bearing.x + chr->glyph->size.y / 2) * transform->scale.y; 
+		transform->position.x = x + (chr->glyph->bearing.x + chr->glyph->size.x / 2.0f) * transform->scale.x;
+		transform->position.y = y + (chr->glyph->bearing.y - chr->glyph->size.y / 2.0) * transform->scale.y; 
         transform->position.x += halignOffset;	
 
 		chrCbk(&*chr, &tdata);
@@ -78,7 +78,8 @@ void Text::Update() {
 
 		x   += dx;
         tmp += dx;
-        maxYAdvance = Max(chr->glyph->GetAdvanceY(), maxYAdvance);        
+        maxYAdvance = Max((float)chr->glyph->size.y*1.2f, maxYAdvance);        
+
     }
 }
 
@@ -88,6 +89,11 @@ void Text::SetChrCallback(CharacterUpdateCallback cbk) {
 
 void Text::SetContent(const char* str) {
     text = str;
+}
+
+void Text::SetContentAndUpdateGlyphs(const char* str) {
+    SetContent(str);
+    UpdateGlyphs();
 }
 
 void Text::SetConstraint(const TextConstraint& c) {
@@ -147,7 +153,7 @@ void Text::UpdateGlyphs() {
 	}
 }
 
-void Text::SetFont(const std::string& path, Shader* shader) {
+void Text::SetFont(const std::string& path) { 
 	if (path == "")
 		return;
 	if (this->font != nullptr)
@@ -155,9 +161,23 @@ void Text::SetFont(const std::string& path, Shader* shader) {
 	Font loader;
 	FontIdentifier fid = path;
 	font = (Font*)loader.LoadFromFileOrGetFromCache(&fid, path.c_str(), &fid);
-	_shader = shader;
-	UpdateGlyphs();
 }
+
+void Text::SetFont(const std::string& path, Shader* shader) {
+    SetFont(path);
+	SetShader(shader);
+}
+
+void Text::SetFont(const std::string& sf, const std::string& shdrPath) {
+    SetFont(sf);
+    SetShader(shdrPath);
+}
+
+void Text::SetFont(const std::string& sf, const ShaderText& st, ShaderIdentifier* id) {
+    SetFont(sf);
+    SetShader(st,id);
+}
+
 
 Text::~Text() {
 	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {

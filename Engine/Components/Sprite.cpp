@@ -31,6 +31,10 @@ void Sprite::SetTexture(const Image* im, TextureIdentifierPtr id) {
 	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
+Shader* Sprite::GetShader() {
+    return shader;
+}
+
 void Sprite::SetShader(std::string path) {
 	Loader<Shader> l;
 	Sprite::shader = l.LoadFromFileOrGetFromCache((void*)&path, path.c_str(), nullptr);

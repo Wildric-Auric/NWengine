@@ -17,12 +17,13 @@ class Glyph {
 public:
     Glyph() = default;
 
-    /**
+    /*
      * @brief Deletes the glyph.
      */
     void Delete();
 
-    iVec2 advance = 0; /**< The advance value of the glyph. */
+    iVec2 ppem;
+    iVec2 advance; /**< The advance value of the glyph. */
     iVec2 bearing; /**< The bearing of the glyph. */
     iVec2 size; /**< The size of the glyph. */
     Texture texture; /**< The texture of the glyph. */
@@ -39,9 +40,8 @@ public:
  * @brief Class representing a font asset.
  */
 class Font : public Asset {
-private:
-    NW_FT_Face face = nullptr; /**< The FreeType face. */
 public:
+    NW_FT_Face _face = nullptr; /**< The FreeType face. */
     std::unordered_map<char, Glyph> charactersMap; /**< The map of characters to glyphs. */
     uint32 nativeSize = 64;
 

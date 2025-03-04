@@ -81,7 +81,15 @@ public:
      */
     void SetFont(const std::string& path, Shader* shader);
 
+    void SetFont(const std::string& path);
+
+    void SetFont(const std::string&, const std::string& shdrPath);
+
+    void SetFont(const std::string&, const ShaderText& st, ShaderIdentifier* id);
+
     void SetContent(const char*);
+
+    void SetContentAndUpdateGlyphs(const char*);
 
     void SetConstraint(const TextConstraint&);
 
