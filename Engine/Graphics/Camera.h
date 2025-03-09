@@ -88,6 +88,7 @@ public:
      */
     void SetClearColor(int i, const fVec4& color);
 
+    fVec2 GetPosition();
     fVec2 GetSize();
 
     /**

@@ -8,7 +8,18 @@
 
 typedef void* NW_FT_Lib ;
 typedef void* NW_FT_Face;
-typedef std::string FontIdentifier;
+
+class FontIdentifier {
+    public:
+    std::string path = "";
+    uint32 nativeSize = 64;
+    FontIdentifier(){};
+    FontIdentifier(const char* p, uint32 n) : path(p), nativeSize(n) {};
+    FontIdentifier(const char* p) : path(p) {};
+    bool operator==(const FontIdentifier& other) const {
+        return path == other.path && nativeSize == other.nativeSize;
+    }
+};
 
 /**
  * @brief Class representing a glyph.
@@ -36,6 +47,13 @@ public:
     void  GetCenterPosOffset(fVec2*);
 };
 
+struct FontInfo {
+    int linespace = 0;
+    int ascent  = 0;
+    int descent = 0;
+    int linegap = 0;
+    int height  = 0;
+};
 /**
  * @brief Class representing a font asset.
  */
@@ -43,7 +61,8 @@ class Font : public Asset {
 public:
     NW_FT_Face _face = nullptr; /**< The FreeType face. */
     std::unordered_map<char, Glyph> charactersMap; /**< The map of characters to glyphs. */
-    uint32 nativeSize = 64;
+    uint32   _nativeSize = 64;
+    FontInfo _inf;
 
     Font() = default;
 
@@ -57,8 +76,8 @@ public:
     void Clean() override;
 
     Asset* GetFromCache(void* identifier) override;
-    Asset* LoadFromFile(const char* path, void* data) override;
-    Asset* LoadFromBuffer(void* ftFace, void* data) override;
+    Asset* LoadFromFile(const char* path, void* fontSizeInt) override;
+    Asset* LoadFromBuffer(void* ftFace, void* id) override;
 
     static NW_FT_Lib lib; /**< The FreeType library. */
 

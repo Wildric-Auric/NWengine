@@ -96,7 +96,7 @@ void GameManager::Start() {
 	auto te = text.AddComponent<Text>();
 
     te->SetShader(ShaderTextBatchedStr, &ShaderTextBatchedDefaultID);
-	te->SetFont("../Sandbox/assets/Fonts/Cloudy.ttf",te->_shader);
+	te->SetFont({"../Sandbox/assets/Fonts/Cloudy.ttf",0},te->_shader);
 
 	te->text = "NWengine 0.9!";
 	te->layerOrder = TEXT_LAYER;

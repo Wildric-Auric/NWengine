@@ -2,6 +2,7 @@
 #include "Font.h"
 #include "GameObject.h"
 #include "Shader.h"
+#include "CoordSys.h"
 #include <list>
 
 enum class TextHorizontalAlignment {
@@ -21,6 +22,7 @@ struct TextIterData {
     int chrIndex = 0;
     void* other = 0;
 };
+
 
 typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
 
@@ -63,6 +65,10 @@ public:
 
     void SetPosition(const fVec2&);
 
+    void SetCenterPosition(const fVec2&);
+
+    void SetTopLeftPosition(const fVec2&);
+
     void SetScale(const fVec2&);
     
     inline Shader* GetShader() {return _shader;};
@@ -74,18 +80,20 @@ public:
     void SetFixedLineSpacing(const float); 
 
     fVec2 GetPosition();
+    fVec2 GetPositionCenter();
+    fVec2 GetPostionTopLeft();
     /**
      * @brief SetFont sets the font of the Text component.
      * @param path The path to the font file.
      * @param shader The shader to use for rendering the text.
      */
-    void SetFont(const std::string& path, Shader* shader);
+    void SetFont(const FontIdentifier& id, Shader* shader);
 
-    void SetFont(const std::string& path);
+    void SetFont(const FontIdentifier& id);
 
-    void SetFont(const std::string&, const std::string& shdrPath);
+    void SetFont(const FontIdentifier& id, const std::string& shdrPath);
 
-    void SetFont(const std::string&, const ShaderText& st, ShaderIdentifier* id);
+    void SetFont(const FontIdentifier& fid, const ShaderText& st, ShaderIdentifier* id);
 
     void SetContent(const char*);
 
@@ -111,6 +119,15 @@ public:
      * @note Only horizontal size is tested.
      */
     fVec2 GetSize();
+
+    float _yoff = 0.0f; //TODO::Tempporary
+    float _firstLineYOffset = 0.0f;
+    float _firstLineYSize = 0.0f;
+
+    NWCoordSys::BoundingBox& GetBBRef();
+    void GetBB(NWCoordSys::BoundingBox*);
+
+    fVec2 _ForceRecGetSize(float* yBearingOffset = 0);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
@@ -158,4 +175,6 @@ public:
      * @brief scale is the scale of the text.
      */
     fVec2 scale = fVec2(1.0f, 1.0f);
+
+    NWCoordSys::BoundingBox _bb;
 };
