@@ -22,3 +22,6 @@ double  NWsin(double val) {
 double  NWpow(double x, double p) {
     return pow(x,p);
 }
+double  NWacos(double x) {
+    return acos(x);
+} 

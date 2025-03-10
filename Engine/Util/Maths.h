@@ -27,10 +27,11 @@ public:
 	Vector2(T x = 0.0f, T y = 0.0f);
 
 	Vector2<float> normalize();
-	float magnitude();
-	T Dot(Vector2 const& vec1);
-	Vector2 Project(Vector2 const& vec1);
-	Vector2 Rotate(float const& angle); //In degree
+	float magnitude() const;
+	T Dot(const Vector2 & vec1) const;
+	Vector2 Project(Vector2 const& vec1) const;
+	Vector2 Rotate(float const& angle) const; //In degree
+    float GetAngle(const Vector2& other) const;
 
 	Vector2 operator + (Vector2 const& vec1) const;
 	Vector2 operator + (T const& num)        const;
@@ -71,27 +72,39 @@ Vector2<float> Vector2<T>::normalize() {
 	return Vector2<float>(x / magnitude, y / magnitude);
 }
 template<typename T>
-float Vector2<T>::magnitude() {
+float Vector2<T>::magnitude() const {
 	return NWpow(x * x + y * y, 0.5);
 }
 
 template<typename T>
-T Vector2<T>::Dot(Vector2 const& vec1) {
+T Vector2<T>::Dot(const Vector2 & vec1) const {
 	return x * vec1.x + y * vec1.y;
 };
 
 template<typename T>
 //Vec1 should be normalized
-Vector2<T> Vector2<T>::Project(Vector2 const& vec1) {
+Vector2<T> Vector2<T>::Project(Vector2 const& vec1) const {
 	return Dot(vec1) * vec1;
 }
 
 template<typename T> 
-Vector2<T> Vector2<T>::Rotate(float const& angle) {
+Vector2<T> Vector2<T>::Rotate(float const& angle) const {
 	float angle0 = DegToRad(angle);
 	return Vector2<T>(NWcos(angle0) * x - NWsin(angle0) * y, 
 					  NWsin(angle0) * x + NWcos(angle0) * y);
 }
+
+template<typename T>
+float Vector2<T>::GetAngle(const Vector2& other) const {
+    Vector2<T> normal = Vector2<T>(-y,x);
+    double angle = NWacos(Dot(other)/(other.magnitude() * magnitude()));
+    T proj = other.Dot(normal);
+    if (proj >= 0.0) {
+        return RadToDeg(angle);
+    }
+    return RadToDeg(2.0*PI - angle);         
+}
+
 template<typename T>
 Vector2<T>::Vector2(T x, T y) {
 	Vector2::x = x;

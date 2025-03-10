@@ -6,4 +6,5 @@ extern void    NWfree(void*);
 extern double  NWtan(double);
 extern double  NWcos(double);
 extern double  NWsin(double);
+extern double  NWacos(double);
 extern double  NWpow(double, double);
