@@ -44,3 +44,4 @@
 #include "ShaderParser.cpp"
 #include "ds.cpp"
 #include "Globals.cpp"
+#include "LineRenderer.cpp"

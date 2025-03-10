@@ -10,6 +10,7 @@
 #include "Batch.h"
 #include "Renderer.h"
 #include "ScriptingComp.h"
+#include "LineRenderer.h"
 
 int GameObject::numberOfGameObjects = 0;
 
@@ -35,7 +36,7 @@ GameObject::GameObject(const GameObject& other) {
 		this->components.emplace(iter->first, iter->second);
 		iter->second->SetGameObject(this);
 	}
-};
+}
 
 
 GameObject::~GameObject() {};
@@ -69,6 +70,7 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(Text              , type);
 	ADD_COMPONENT(DynamicScript     , type);
 	ADD_COMPONENT(BatchExtra        , type);
+	ADD_COMPONENT(LineRenderer      , type);
 	return nullptr;
 };
 
