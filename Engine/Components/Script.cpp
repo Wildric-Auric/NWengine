@@ -33,10 +33,9 @@ void Scriptable::ShaderCode(void* sprite) {
 	sprite0->shader->Use();
 	sprite0->shader->SetUniform1i("uTex0", 0);
 	Matrix4<float> model(1.0f);
-	ScaleMat(model, fVec3(scale.x * sprite0->container.width, scale.y * sprite0->container.height, 1.0f));
-	RotateMat(model, transform->rotation, fVec3(0.0f, 0.0f, 1.0f));
-	TranslateMat(model, fVec3(transform->position.x, transform->position.y, sprite0->zbuffer));
-	sprite0->shader->SetMat4x4("uMvp", &(Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model).values[0]);
+    transform->ComputeModelMat(fVec2(sprite0->container.width,sprite0->container.height), &model);
+    fMat4 mvp = (Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model);
+	sprite0->shader->SetMat4x4("uMvp", &mvp.values[0]);
 }
 
 

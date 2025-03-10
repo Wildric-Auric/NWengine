@@ -17,6 +17,7 @@ public:
     fVec2 position = fVec2(0.0f,0.0f); /**< The position of the game object. */
     fVec2 scale    = fVec2(1.0f, 1.0f); /**< The scale of the game object. */
     float rotation = 0.0f; /**< The rotation of the game object. */
+    fVec2 rotationAnchor = fVec2(0.0f,0.0f);
 
     /**
      * @brief Default constructor for the Transform class.
@@ -47,5 +48,11 @@ public:
 
     fVec2 GetScale();
 
+    fVec2 GetRotationAnchor();
+
+    void SetRotationAnchor(const fVec2&);
+
     float GetRotation();
+
+    void ComputeModelMat(const fVec2& size, fMat4* model, float z = 0.0f);
 };

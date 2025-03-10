@@ -31,3 +31,21 @@ void Transform::SetRotation(const float r) {rotation = r;}
 fVec2 Transform::GetPosition() {return position;}
 fVec2 Transform::GetScale() {return scale;}
 float Transform::GetRotation() {return rotation;}
+
+
+void Transform::ComputeModelMat(const fVec2& size, fMat4* model, float z) {
+    fVec2 ar = rotationAnchor * scale;
+    ScaleMat(*model, fVec3(scale.x * size.x, scale.y * size.y, 1.0f)); 
+    TranslateMat(*model, fVec3(-ar.x,-ar.y,z));
+    RotateMat(*model, rotation, fVec3(0.0f, 0.0f, 1.0f));
+    TranslateMat(*model, fVec3(ar.x,ar.y,-z));
+	TranslateMat(*model, fVec3(position.x, position.y, z));
+}
+
+fVec2 Transform::GetRotationAnchor() {
+    return rotationAnchor;
+}
+
+void Transform::SetRotationAnchor(const fVec2& ar) {
+    rotationAnchor = ar;
+}
