@@ -237,11 +237,7 @@ int Batch::DefaultBatchDrawCallback(void* data) {
     BatchExtra* extra = obj->GetComponent<BatchExtra>();
 
 	Matrix4<float> model = Matrix4<float>(1.0f);
-
-	ScaleMat(model, fVec3(transform->scale.x * sprite->container.width, transform->scale.y * sprite->container.height, 1.0f));
-	RotateMat(model, transform->rotation, fVec3(0.0f, 0.0f, 1.0f));
-	TranslateMat(model, fVec3(transform->position.x, transform->position.y, sprite->zbuffer));
-
+    transform->ComputeModelMat(fVec2(sprite->container.width, sprite->container.height),&model, sprite->zbuffer);
 	Matrix4<float> mvp = model;
 	if (sprite->_isBatched == BatchType::DYNAMIC_BATCH)
 		mvp  = Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * mvp;
