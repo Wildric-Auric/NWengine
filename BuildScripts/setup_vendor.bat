@@ -17,11 +17,15 @@ mkdir ..\\Dependencies\\glew\\lib\\release\\win64
 mkdir ..\\Dependencies\\glew\\lib\\debug\\win86
 mkdir ..\\Dependencies\\glew\\lib\\debug\\win64
 mkdir ..\\Dependencies\\vendor\\stb
+
 cd nwtmp
 git clone https://github.com/freetype/freetype.git
 git clone https://github.com/Perlmint/glew-cmake.git
 git clone https://github.com/nothings/stb.git
+
 copy stb\\stb_image.h ..\\..\\Dependencies\\vendor\\stb\\stb_image.h
+copy stb\\stb_image_write.h ..\\..\\Dependencies\\vendor\\stb\\stb_image_write.h
+
 cd freetype
 msbuild -p:Configuration="Release Static"  -p:Platform=x64 
 msbuild -p:Configuration="Release Static" -p:Platform=Win32
