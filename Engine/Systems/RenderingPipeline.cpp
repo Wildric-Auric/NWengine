@@ -312,7 +312,7 @@ namespace NWPPFX {
     }
 
 
-    inline EffectIO Effect::GetIO() {
+    EffectIO Effect::GetIO() {
         return _fxio;
     }
 

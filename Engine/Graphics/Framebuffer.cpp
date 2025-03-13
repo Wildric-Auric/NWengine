@@ -7,6 +7,7 @@ FrameBuffer* FrameBuffer::GetCurrent() {
 
 FrameBuffer* FrameBuffer::_current = 0;
 
+
 void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
 	tex._size = size;
 	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB);
@@ -95,6 +96,20 @@ void FrameBuffer::Delete() {
 	delete resolveFbo;
 	resolveFbo = nullptr;
 	*this = {};
+}
+
+
+void FrameBuffer::CopyFramebufferToCPU(Image* img, int attIndex) {
+    Bind(NW_READ);
+    FrameBufferAttachment& att = GetAtt(attIndex);
+    NW_GL_CALL(glReadBuffer(GL_COLOR_ATTACHMENT0 + attIndex));
+    img->width = att.tex._size.x;
+    img->height = att.tex._size.y;
+    img->channels = 3;
+    img->alpha = 1;
+    img->Alloc();
+    glReadPixels(0, 0, att.tex._size.x, att.tex._size.y, GL_RGBA, GL_UNSIGNED_BYTE, img->pixelBuffer);
+    Unbind();
 }
 
 void FrameBuffer::Blit(FrameBuffer* other) {

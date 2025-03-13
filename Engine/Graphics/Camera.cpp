@@ -39,6 +39,10 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 	this->fbo.Unbind();
 }
 
+FrameBuffer* Camera::GetFbo() {
+    return &fbo;
+}
+
 Camera::Camera(GameObject* go) {
 	attachedObject = go;
 	position = Vector2<int>(0, 0);

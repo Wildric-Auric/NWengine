@@ -42,6 +42,9 @@ public:
      * @return A pointer to the loaded image asset.
      */
     Asset* LoadFromFile(const char* path, void* output) override;
+
+    void Alloc();
+    int SaveToFile(const char*);
     
     /**
      * @brief Cleans up the image asset.

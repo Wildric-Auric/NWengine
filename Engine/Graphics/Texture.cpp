@@ -13,7 +13,7 @@ void Texture::_GPUGen(uint8* pixelBuffer, TexChannelInfo info) {
 
 	if (info == TexChannelInfo::NW_R)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+    //TODO::Fix the following line to handle the case of one byte
 	NW_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, _size.x, _size.y, 0, info, GL_UNSIGNED_BYTE, pixelBuffer));
 	
 	if (this->_hasMipMap) {

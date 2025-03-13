@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "FrameBuffer.h"
 #include "Maths.h"
+#include "Image.h"
 
 /**
  * @brief The Camera class represents a camera in the game world.
@@ -91,6 +92,7 @@ public:
     fVec2 GetPosition();
     fVec2 GetSize();
 
+    FrameBuffer* GetFbo();
     /**
      * @brief Reset specific clear colors.
      */

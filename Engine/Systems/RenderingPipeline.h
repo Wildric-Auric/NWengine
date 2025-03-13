@@ -38,8 +38,8 @@ namespace NWPPFX {
         EffectIO _fxio;
         RenderingPipeline _pline;
 
-        inline EffectIO  GetIO();
-        inline Renderer* GetOutput();
+        EffectIO  GetIO();
+        Renderer* GetOutput();
         virtual void SetUp() {};
         virtual void Clean();
         virtual void Capture();

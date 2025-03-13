@@ -2,9 +2,11 @@
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
 
 #include "stb/stb_image.h"
+#include "stb/stb_image_write.h"
 #include "Image.h"
 
 
@@ -19,6 +21,15 @@ Asset* Image::LoadFromFile(const char* path, void* unused) {
 	}
 	return this;
 };
+
+int Image::SaveToFile(const char* path) {
+  stbi_flip_vertically_on_write(1);
+  return stbi_write_png(path, width, height, (channels+alpha), pixelBuffer, (channels+alpha) * width * sizeof(uint8));
+}
+
+void Image::Alloc() {
+    pixelBuffer = (uint8*)malloc(sizeof(uint8) * width * height * (channels+alpha));
+}
 
 void Image::Clean() {
 	stbi_image_free(pixelBuffer);

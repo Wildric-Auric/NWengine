@@ -2,6 +2,7 @@
 #include "Context.h"
 #include "Texture.h"
 #include "Maths.h"
+#include "Image.h"
 
 
 enum MSAAValue {
@@ -58,6 +59,7 @@ public:
      */
     FrameBuffer() = default;
 
+    void CopyFramebufferToCPU(Image* img, int attIndex = 0);
     /**
      * @brief Sets up the framebuffer with the specified size.
      * @param size The size of the framebuffer.
