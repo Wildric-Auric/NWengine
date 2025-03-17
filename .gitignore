@@ -3,6 +3,7 @@ build/
 Dependencies/
 Template/
 Engine/Doc/
+BuildScripts/nwtmp/
 
 *.aps
 *.ico
