@@ -30,7 +30,7 @@ public:
      */
     GameObject* attachedObject;
 
-    static std::string GetType() { return "GameComponent"; }
+    static const char* GetType() { return "GameComponent"; }
 
     /**
      * @brief Update the game component. Does noting if not overriden.

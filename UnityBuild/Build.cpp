@@ -45,3 +45,4 @@
 #include "ds.cpp"
 #include "Globals.cpp"
 #include "LineRenderer.cpp"
+#include "TriangleRenderer.cpp"

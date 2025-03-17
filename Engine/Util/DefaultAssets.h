@@ -7,9 +7,13 @@
 #define NW_DEFAULT_SHADER_BATCHED ShaderTexturedBatchedDefaultStr,&ShaderTexturedBatchedDefaultID
 #define NW_DEFAULT_SHADER_TEXT ShaderTextDefaultStr,&ShaderTextDefaultID
 #define NW_DEFAULT_SHADER_TEXT_BATCHED ShaderTextBatchedStr,&ShaderTextBatchedDefaultID
+#define NW_DEFAULT_SHADER_TRIANGLE ShaderTriangleDefaultStr,&ShaderTriangleDefaultID
 #define NW_DEFAULT_TEXTURE &ImageDefault,&TextureDefaultID
 
 
+extern ShaderIdentifier  ShaderTriangleDefaultID;
+
+extern const ShaderText ShaderTriangleDefaultStr;
 /**
  * @brief The default textured shader text.
  */

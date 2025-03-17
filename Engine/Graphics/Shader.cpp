@@ -187,8 +187,17 @@ void Shader::SetUniformArrayf(int loc, float* value, int size) {
     NW_GL_CALL(glUniform1fv(loc, size, value));
 }
 
+void Shader::SetUniformArray2f(int loc, float* value, int size) {
+    NW_GL_CALL(glUniform2fv(loc, size, value));
+}
+
+
 void Shader::SetUniformArrayi(int loc, int* value, int size) {
     NW_GL_CALL(glUniform1iv(loc, size, value));
+}
+
+void Shader::SetUniformArray2f(const char* name, float* value, int size) {
+    SetUniformArray2f(glGetUniformLocation(_glID, name), value, size);
 }
 
 void Shader::SetMat4x4(const char* name, const float* value) {

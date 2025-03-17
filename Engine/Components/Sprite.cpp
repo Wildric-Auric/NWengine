@@ -1,14 +1,18 @@
 #include "Sprite.h"
-#include "Utilities.h"
 #include "Scene.h"
 #include "Script.h"
 #include "Batch.h"
+#include "DefaultAssets.h"
 
 Sprite::Sprite(GameObject* obj) {
 	attachedObject = obj;
 	obj->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);
 };
 
+void Sprite::OnAdd() {
+    SetTexture(NW_DEFAULT_TEXTURE);
+    SetShader(NW_DEFAULT_SHADER);
+}
 
 
 void Sprite::SetTexture(std::string path, bool alpha) {
@@ -87,8 +91,6 @@ void Sprite::Update() {
 }
 
 Sprite::~Sprite() { 
-	//this->container.Delete(); No longer vertex array buffer in quad
-	
 	for (auto iter = Scene::currentScene->drawList.begin(); iter != Scene::currentScene->drawList.end(); ++iter) {
 		if (*iter != this)
 			continue;
@@ -101,11 +103,9 @@ void Sprite::SetSize(const fVec2& s) {
     container.UpdateSize(s.x, s.y);
 }
 
-int Sprite::DefaultSpriteDrawCallback(void* data) {
+void Sprite::PrepDefaultDrawCallback(void* data) {
 	GameObject* obj = (GameObject*)data;
-
 	Sprite* sprite = obj->GetComponent<Sprite>();
-
 	Scriptable temp;
 	Scriptable* scriptable;
 	Script* script = obj->GetComponent<Script>();
@@ -121,9 +121,14 @@ int Sprite::DefaultSpriteDrawCallback(void* data) {
 
 	int textureSlot = 0;
 	sprite->texture->Bind(textureSlot);
+}
+
+int Sprite::DefaultSpriteDrawCallback(void* data) {
+	GameObject* obj = (GameObject*)data;
+	Sprite* sprite = obj->GetComponent<Sprite>();
+    PrepDefaultDrawCallback(data);
 	sprite->container.Draw();
 	sprite->shader->Unuse();
-
 	return sprite->sortingLayer;
 }
 

@@ -39,7 +39,7 @@ public:
 
     fVec3 vertexAttributes; /**< Vertex attributes of the sprite */
     Shader* shader = nullptr;
-    Quad container; /**< Container of the sprite */
+    Quad container = Quad(16,16); /**< Container of the sprite */
     int sortingLayer = 0; /**< Sorting layer of the sprite */
     double zbuffer = 1.0; /**< Z-buffer value of the sprite */
 
@@ -53,6 +53,8 @@ public:
      * @param go The GameObject to attach the sprite to.
      */
     Sprite(GameObject* go);
+
+    void OnAdd() override;
 
     /**
      * @brief Destructor for the Sprite class.
@@ -140,6 +142,7 @@ public:
      * @return The result of the draw callback.
      */
     static int DefaultSpriteDrawCallback(void* data);
+    static void PrepDefaultDrawCallback(void* data);
 };
 
 class BatchExtra : public GameComponent {

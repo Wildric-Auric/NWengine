@@ -217,3 +217,39 @@ ShaderIdentifier  ShaderTexturedDefaultID           = "DefaultShaderTextured";
 ShaderIdentifier  ShaderTexturedBatchedDefaultID    = "DefaultShaderTexturedBatched";
 ShaderIdentifier  ShaderTextDefaultID               = "DefaultShaderText";
 ShaderIdentifier  ShaderTextBatchedDefaultID        = "DefaultShaderTextBatched";
+
+ShaderIdentifier  ShaderTriangleDefaultID = "DefaultShaderTriangle";
+
+const ShaderText ShaderTriangleDefaultStr = {
+R"V0G0N( 
+        #pragma vertex
+        #version 330 core
+        
+        layout(location = 0) in vec3 attribPos;
+        layout(location = 1) in vec2 texCoord;
+        
+        uniform vec2 uVert[3];
+        uniform mat4 uMvp = mat4(1.0); 
+        out vec2 uv;
+        
+        void main() {
+            gl_Position = uMvp * vec4(uVert[gl_VertexID], attribPos.z, 1.0);
+            uv = texCoord;
+        }
+)V0G0N",
+R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        
+        uniform sampler2D uTex0;
+        in vec2 uv; 
+        out vec4 FragColor;
+        
+        void main() {
+            vec4 col = texture(uTex0, uv);
+            if (col.a < 0.1) discard;
+            FragColor = col;
+        }
+        
+)V0G0N"
+};

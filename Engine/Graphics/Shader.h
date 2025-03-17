@@ -132,6 +132,11 @@ public:
      */
     void SetUniformArrayi(const char* name, int* value, int size);
 
+    void SetUniformArray2f(const char* name, float* value, int size);
+
+    void SetUniformArray2f(int loc, float* value, int size);
+
+
     /**
      * @brief Get a shader asset from the cache.
      * @param identifier The identifier of the shader.
