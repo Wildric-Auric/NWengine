@@ -32,6 +32,7 @@ public:
     bool isActive = 0; /**< Indicates whether the camera is active or not. */
     std::unordered_map<int, fVec4> clearCols;
     MSAAValue _msaa = NW_MSx1;
+    bool _wireframe = 0;
     
     void _ClearAtts();
     /**
@@ -88,6 +89,9 @@ public:
      * @param color RGBA color values.
      */
     void SetClearColor(int i, const fVec4& color);
+
+    void EnableWireframeRendering();
+    void DisableWireframeRendering();
 
     fVec2 GetPosition();
     fVec2 GetSize();

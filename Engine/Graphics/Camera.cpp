@@ -26,9 +26,18 @@ void Camera::_ClearAtts() {
     }
 }
 
+void Camera::EnableWireframeRendering() {
+    _wireframe = 1;
+}
+
+void Camera::DisableWireframeRendering() {
+    _wireframe = 0;
+}
+
 void Camera::Capture() {	/// Captures  current scene (see currentScene variable in Scene class)
 	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
+        if (_wireframe) Context::EnableWireframe(1);
 		Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
         _ClearAtts(); 
 		Camera* temp = ActiveCamera;
@@ -36,6 +45,7 @@ void Camera::Capture() {	/// Captures  current scene (see currentScene variable 
 		if (Scene::currentScene != nullptr)
 			Scene::currentScene->Draw();
 		ActiveCamera = temp;
+        if (_wireframe) Context::EnableWireframe(0);
 	this->fbo.Unbind();
 }
 
