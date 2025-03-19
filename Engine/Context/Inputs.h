@@ -4,7 +4,7 @@
  */
 
 #pragma once
-#include "Maths.h"
+#include "Globals.h"
 
 /**
  * @def INPUT_LEFT_X
@@ -48,15 +48,10 @@ typedef int Input_Mode;
  */
 class Inputs {
 public:
-	/**
-  * @brief The X-coordinate of the mouse position.
-  */
-	static double mousePosX;
-
-	/**
-  * @brief The Y-coordinate of the mouse position.
-  */
-	static double mousePosY;
+    /**
+    *@brief Mouse cursor in window coordinates. 0,0 is the center of the window.
+    */
+	static fVec2 _mousePos;
 
 	/**
   * @brief Flag indicating if the left input key is pressed.
@@ -185,6 +180,10 @@ public:
   */
 	static bool GetInputMouse(Input_Number key, Input_Mode mode);
 
+    /**
+      @brief Get mouse position in window coordinates
+    */
+    static fVec2 GetMousePosition();
 	/**
   * @brief The array of joystick axis values.
   */
