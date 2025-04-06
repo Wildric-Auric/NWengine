@@ -46,3 +46,4 @@
 #include "Globals.cpp"
 #include "LineRenderer.cpp"
 #include "TriangleRenderer.cpp"
+#include "CircleRenderer.cpp"
