@@ -6,7 +6,7 @@
 
 
 int main() {
-    Sandbox::Run();
+    PrimitivesTst::Run();
 	return 0;
 }
 

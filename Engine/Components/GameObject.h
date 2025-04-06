@@ -9,6 +9,7 @@
 #include <string>
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
+#define NW_REQUIRE_COMP(go, comp) go->AddComponent<comp>()
 
 /**
  * @brief Function pointer type for draw callbacks. Mostly used internally.

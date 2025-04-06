@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "DefaultAssets.h"
 #include "TriangleRenderer.h"
+#include "CircleRenderer.h"
 
 
 namespace PrimitivesTst {
@@ -13,6 +14,8 @@ static void Init() {
 	s.MakeCurrent();
     GameObject& cam = s.AddObject();
     GameObject& tri = s.AddObject();
+    GameObject& cir = s.AddObject();
+
     Camera* camC = cam.AddComponent<Camera>();
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
@@ -20,6 +23,11 @@ static void Init() {
 
     TriangleRenderer* triR = tri.AddComponent<TriangleRenderer>();
     //triR->SetBaseRight({200.0,-100.0f});
+    CircleRenderer* cr = cir.AddComponent<CircleRenderer>();
+    cr->SetPosition({-250,0});
+    cr->SetRadius(32);
+    cr->SetRenderingAA(0.25);
+
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
