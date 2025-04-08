@@ -11,6 +11,7 @@
 #include "Globals.h"
 #include "Interpolation.h"
 #include <deque>
+#include "ComponentTypes.h"
 
 /**
  * @def SHADER_PARTICLES_DEFAULT
@@ -83,7 +84,7 @@ class ParticleSystem : public GameComponent {
 private:
     double clock = 0.0; /**< The clock of the particle system */
 public:
-    static std::string GetType() { return "ParticleSystem"; };
+    NW_ST_GET_TYPE_IMPL(ParticleSystem);
 
     ParticleSystem() {};
     ~ParticleSystem();

@@ -33,7 +33,7 @@ void ParticleSystem::Update() {
 
 		UPDATE_ATTRIBUTE(particle->prop.directionX.duration, particle->currentDirection.x, particle->prop.directionX);
 		UPDATE_ATTRIBUTE(particle->prop.directionY.duration, particle->currentDirection.y, particle->prop.directionY);
-#undef UPDATE_ATTRIBUTE(duration, value, interpolator)
+#undef UPDATE_ATTRIBUTE
 
 		particle->currentPosition = particle->currentPosition +  particle->currentDirection.normalize() * NWTime::GetDeltaTime() * particle->currentSpeed;
 		particle->distance = (particle->currentPosition - particle->prop.sPosition).magnitude();

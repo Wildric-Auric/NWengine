@@ -3,6 +3,7 @@
 #include "FrameBuffer.h"
 #include "Maths.h"
 #include "Image.h"
+#include "ComponentTypes.h"
 
 /**
  * @brief The Camera class represents a camera in the game world.
@@ -13,8 +14,8 @@ public:
      * @brief Gets the type of the camera.
      * @return The type of the camera.
      */
-    static std::string GetType() { return "Camera"; };
 
+    NW_ST_GET_TYPE_IMPL(Camera);
     /**
      * @brief Updates the active camera.
      *

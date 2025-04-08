@@ -168,7 +168,7 @@ Scene::~Scene() {
 
 void Scene::Start() {	
 	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
-		for (std::map<std::string, GameComponent*>::iterator iter = obj->components.begin(); iter != obj->components.end(); iter++) {
+		for (auto iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Start();
 		}
         if (_autoCache)
@@ -217,7 +217,7 @@ std::list<Scene> Scene::_scenes;
 
 void Scene::SetUp() {
 	for (std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
-		std::map<std::string, GameComponent*>::iterator iter = obj->components.find("Camera");
+		auto iter = obj->components.find(CameraID);
 		if (iter == obj->components.end())
 			continue;
 		((Camera*)iter->second)->Use();

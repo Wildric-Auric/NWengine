@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Image.h"
 #include "Primitives.h"
+#include "ComponentTypes.h"
 
 /**
  * @brief Enumerates the batch types for sprites.
@@ -28,7 +29,7 @@ enum BatchType {
 class Sprite : public GameComponent {
 private:
 public:
-    static std::string GetType() { return "Sprite"; };
+    NW_ST_GET_TYPE_IMPL(Sprite);
     TextureIdentifier _texId{};
     Texture* texture = nullptr;
 

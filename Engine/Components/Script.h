@@ -6,6 +6,7 @@
 
 #pragma once
 #include "GameObject.h"
+#include "ComponentTypes.h"
 
 
 /**
@@ -80,8 +81,9 @@ public:
      * @brief Gets the type of the script component.
      * @return The type of the script component.
      */
-    static std::string GetType() { return "Script";};
     
+    NW_ST_GET_TYPE_IMPL(Script);
+
     Script() {}; /**< Default constructor. */
     
     /**

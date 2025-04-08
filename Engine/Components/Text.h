@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "CoordSys.h"
 #include <list>
+#include "ComponentTypes.h"
 
 enum class TextHorizontalAlignment {
     LEFT   = 0,
@@ -35,7 +36,7 @@ public:
      * @brief GetType returns the type of the Text component.
      * @return The type of the Text component.
      */
-    static std::string GetType() { return "Text"; }
+    NW_ST_GET_TYPE_IMPL(Text);
 
     /**
      * @brief Text constructor.

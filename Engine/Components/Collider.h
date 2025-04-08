@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include <vector>
+#include "ComponentTypes.h"
 
 /**
  * @brief The Collider class represents a base collider component.
@@ -13,7 +14,8 @@ public:
   * @brief Get the type of the collider.
   * @return The type of the collider.
   */
-	static std::string GetType() { return "Collider"; }
+
+    NW_ST_GET_TYPE_IMPL(Collider);
 
     uint32      tag = 0;
 	/**
@@ -87,7 +89,7 @@ public:
 class CircleCollider: public GameComponent {
     public:
         float radius = 32.0f;
-	    static std::string GetType() { return "CircleCollider"; }
+        NW_ST_GET_TYPE_IMPL(CircleCollider);
         CircleCollider() {};
         CircleCollider(GameObject* obj) {attachedObject = obj;}
         float Sat(const fVec2& axis, const fVec2& origin, Collider*);
