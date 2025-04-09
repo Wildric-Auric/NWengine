@@ -8,7 +8,12 @@
 #define NW_DEFAULT_SHADER_TEXT ShaderTextDefaultStr,&ShaderTextDefaultID
 #define NW_DEFAULT_SHADER_TEXT_BATCHED ShaderTextBatchedStr,&ShaderTextBatchedDefaultID
 #define NW_DEFAULT_SHADER_TRIANGLE ShaderTriangleDefaultStr,&ShaderTriangleDefaultID
+#define NW_DEFAULT_SHADER_CIRCLE ShaderCircleDefaultStr,&ShaderCircleDefaultID
+
 #define NW_DEFAULT_TEXTURE &ImageDefault,&TextureDefaultID
+
+extern const ShaderText ShaderCircleDefaultStr;
+extern ShaderIdentifier  ShaderCircleDefaultID;
 
 
 extern ShaderIdentifier  ShaderTriangleDefaultID;

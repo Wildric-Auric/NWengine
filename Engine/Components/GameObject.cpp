@@ -8,12 +8,11 @@
 #include "Shader.h"
 #include "Primitives.h"
 #include "Batch.h"
-#include "Renderer.h"
 #include "ScriptingComp.h"
 #include "LineRenderer.h"
+#include "CircleRenderer.h"
 
 int GameObject::numberOfGameObjects = 0;
-
 
 int GameObject::Draw() {
 	if (_drawProc == nullptr) return 0;
@@ -41,7 +40,7 @@ GameObject::GameObject(const GameObject& other) {
 
 GameObject::~GameObject() {};
 
-void GameObject::DeleteComponent(std::string typeName) {
+void GameObject::DeleteComponent(uint32 typeName) {
 	if (components.find(typeName) == components.end()) return;
 	components[typeName]->OnDelete();
 	delete components[typeName];
@@ -49,14 +48,14 @@ void GameObject::DeleteComponent(std::string typeName) {
 }
 
 void GameObject::DeleteComponents() {
-	for (std::map<std::string, GameComponent*>::iterator component = components.begin(); component != components.end(); component++) {
+	for (auto component = components.begin(); component != components.end(); component++) {
 		component->second->OnDelete();
 		delete component->second;
 	}
 	components.clear();
 }
 
-GameComponent* GameObject::AddComponent(std::string type) {
+GameComponent* GameObject::AddComponent(const std::string& type) {
 	ADD_COMPONENT(Transform         , type);
 	ADD_COMPONENT(Sprite            , type);
 	ADD_COMPONENT(ParticleSystem    , type);
@@ -71,11 +70,13 @@ GameComponent* GameObject::AddComponent(std::string type) {
 	ADD_COMPONENT(DynamicScript     , type);
 	ADD_COMPONENT(BatchExtra        , type);
 	ADD_COMPONENT(LineRenderer      , type);
+	ADD_COMPONENT(CircleRenderer    , type);
 	return nullptr;
 };
 
-GameComponent* GameObject::GetComponent(const std::string& type) {
-	std::map<std::string, GameComponent*>::iterator pair = components.find(type);
+GameComponent* GameObject::GetComponent(const uint32 type) {
+	auto pair = components.find(type);
 	if (pair == components.end()) return nullptr;
 	return pair->second;
 }
+

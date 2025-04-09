@@ -293,7 +293,7 @@ int Batch::DefaultBatchDrawCallback(void* data) {
         memcpy(stride + 3*newStrSize + 8, extra->rawData.data(), extra->rawData.size() * sizeof(float));
     }
 
-#undef SET(i,e) stride[i+offset] = e;
+#undef SET
 
 
 	//First layer batch creation

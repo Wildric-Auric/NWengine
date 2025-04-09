@@ -7,8 +7,8 @@ namespace NWCoordSys {
         fVec2 size;
     };
 
-    fVec2 ScrToWorld(const fVec2&);
-    fVec2 ScrZeroOneToWorld(const fVec2&);
-    fVec2 WorldToScr(const fVec2&);
-    fVec2 WorldToScrZeroOne(const fVec2&);
+    fVec2 ViewportToWorld(const fVec2&);
+    fVec2 ViewportZeroOneToWorld(const fVec2&);
+    fVec2 WorldToViewport(const fVec2&);
+    fVec2 WorldToViewportZeroOne(const fVec2&);
 };

@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "GameObject.h"
 #include "Primitives.h"
+#include "ComponentTypes.h"
 
 /**
  * @brief The Transform class represents the transformation of a game object.
@@ -20,7 +21,7 @@ public:
      * @brief GetType returns the type of the Transform component.
      * @return The type of the Transform component.
      */
-    static const char* GetType() { return "TriangleRenderer"; }
+    NW_ST_GET_TYPE_IMPL(TriangleRenderer);
     static int TriangleDrawCallback(void*);
     TriangleCoord _coord;
     Triangle _triangle;

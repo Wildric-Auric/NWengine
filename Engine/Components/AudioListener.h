@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "ComponentTypes.h"
 
 /**
  * @class AudioListener
@@ -11,7 +12,7 @@ public:
   * @brief Gets the type of the audio listener component.
   * @return The type of the audio listener component.
   */
-	static std::string GetType() { return "AudioListener"; };
+    NW_ST_GET_TYPE_IMPL(AudioListener);
 
 	/**
   * @brief Default constructor for the AudioListener class.

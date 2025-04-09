@@ -9,27 +9,20 @@ R"V0G0N(
         layout(location = 1) in vec2 texCoord;
         
         uniform mat4 uMvp = mat4(1.0);
-        uniform vec2 uResolution;
         
         out vec2 uv;
-        out vec4 screenPos;
         
         void main() {
             gl_Position = uMvp * vec4(attribPos, 1.0);
             uv = texCoord;
-            screenPos = gl_Position;
         };
 )V0G0N",
 R"V0G0N(        
         #pragma fragment
         #version 330 core
         
-        uniform float uTime;
         uniform sampler2D uTex0;
-        uniform vec2 uResolution;
-        uniform vec2 uMouse;
         in vec2 uv;
-        in vec4 screenPos;
         
         out vec4 FragColor;
         
@@ -53,16 +46,12 @@ R"V0G0N(
         layout(location = 3) in float sampleIDattrib;
         
         out vec2  uv;
-        out vec4  screenPos;
         out float sampleID;
-        out vec3  test;
         
         void main() {
             gl_Position = vec4(attribPos, 1.0);
             uv = texCoord;
-            screenPos = gl_Position;
             sampleID  = sampleIDattrib;
-            test      = usrData;
         };
 )V0G0N",
 R"V0G0N(
@@ -72,8 +61,6 @@ R"V0G0N(
 
         uniform sampler2D uTex[MAX_TEX];
         in vec2  uv;
-        in vec4  screenPos;
-        in vec3  test;
         in float sampleID;
         out vec4 FragColor;
         
@@ -93,15 +80,12 @@ const ShaderText ShaderTextDefaultStr = {R"V0G0N(
         layout(location = 1) in vec2 texCoord;
 
         uniform mat4 uMvp = mat4(1.0);
-        uniform vec2 uResolution;
 
         out vec2 uv;
-        out vec4 screenPos;
 
         void main() {
             gl_Position = uMvp * vec4(attribPos, 1.0);
             uv = texCoord;
-            screenPos = gl_Position;
         };
 )V0G0N",
 R"V0G0N(
@@ -110,7 +94,6 @@ R"V0G0N(
 
         uniform sampler2D uTex0;
         in vec2 uv;
-        in vec4 screenPos;
 
         out vec4 FragColor;
 
@@ -135,14 +118,12 @@ const ShaderText ShaderTextBatchedStr = {
         layout(location = 3) in float sampleIDattrib;
 
         out vec2  uv;
-        out vec4  screenPos;
         out vec4  color10bit;
         out float sampleID;
 
         void main() {
             gl_Position = vec4(attribPos, 1.0);
             uv = texCoord;
-            screenPos = gl_Position;
             sampleID  = sampleIDattrib;
             //floatBitsToInt(var) = *(int*)&var in C syntax
             color10bit = vec4((float((0x000FFC00 & floatBitsToInt(usrData.x)) >>0xA) ) / MAXUINT10,
@@ -159,7 +140,6 @@ R"V0G0N(
 
         uniform sampler2D uTex[MAX_TEX];
         in vec2  uv;
-        in vec4  screenPos;
         in vec4  color10bit;
         in float sampleID;
         out vec4 FragColor;
@@ -219,6 +199,44 @@ ShaderIdentifier  ShaderTextDefaultID               = "DefaultShaderText";
 ShaderIdentifier  ShaderTextBatchedDefaultID        = "DefaultShaderTextBatched";
 
 ShaderIdentifier  ShaderTriangleDefaultID = "DefaultShaderTriangle";
+
+ShaderIdentifier  ShaderCircleDefaultID = "DefaultShaderCircle";
+const ShaderText ShaderCircleDefaultStr = {
+R"V0G0N( 
+        #pragma vertex
+        #version 330 core
+        
+        layout(location = 0) in vec3 attribPos;
+        layout(location = 1) in vec2 texCoord;
+        
+        uniform mat4 uMvp = mat4(1.0); 
+        out vec2 uv;
+        
+        void main() {
+            gl_Position = uMvp * vec4(attribPos, 1.0);
+            uv = texCoord;
+        };
+)V0G0N",
+R"V0G0N(        
+        #pragma fragment
+        #version 330 core 
+        uniform sampler2D uTex0;
+        uniform float uAA = 0.0;
+        in vec2 uv;
+        
+        out vec4 FragColor;
+        
+        void main() {
+            vec2 c = uv - vec2(0.5,0.5);
+            float p = c.x * c.x + c.y * c.y; 
+            float aaval = 1.0 - smoothstep(0.25-uAA,0.25,p);
+            vec4 col = texture(uTex0,uv) * aaval; 
+            FragColor = col;
+        } 
+)V0G0N"
+};
+
+
 
 const ShaderText ShaderTriangleDefaultStr = {
 R"V0G0N( 

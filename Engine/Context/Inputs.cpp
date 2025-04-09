@@ -5,8 +5,6 @@
 #include "keyboard.h"
 #include "window.h"
 
-#include <cstring>
-
  bool Inputs::left, Inputs::right, Inputs::up, Inputs::down, Inputs::d, Inputs::r, Inputs::s, Inputs::t,
  Inputs::n_1, Inputs::n_2, Inputs::n_3, Inputs::n_0, Inputs::n_4, Inputs::left_click,
  Inputs::space, Inputs::usingJoystick, Inputs::f2, Inputs::enter = 0,
@@ -14,8 +12,7 @@
  Inputs::left_ctrl,
  Inputs::right_ctrl;
 
-double Inputs::mousePosX;
-double Inputs::mousePosY;
+fVec2 Inputs::_mousePos;
 
 float Inputs::joystickAxis[6] = {0.0f};
 
@@ -27,6 +24,7 @@ bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
 	if (mode == NWin::KeyEventEnum::NWIN_KeyReleased) {
 		return window->_getKeyboard().onKeyRelease((NWin::Key)key);
 	}
+    return 0;
 }
 
 //Legacy lol
@@ -34,13 +32,20 @@ bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) {
 	return Inputs::GetInputKey(key, mode);
 }
 
+fVec2 Inputs::GetMousePosition() {
+    return _mousePos;
+}
+
 void Inputs::Process(void* window0) {
     NWin::Window* window = (NWin::Window*)Context::window;
 	window = (NWin::Window*)window0;
 	NWin::Vec2 pos;
+    fVec2 winSize;
 	window->getMousePosition(pos);
-	Inputs::mousePosX = pos.x;
-	Inputs::mousePosY = pos.y;
+    Context::GetWinDrawAreaSize(&winSize);
+	Inputs::_mousePos = fVec2(pos.x, pos.y);
+    Inputs::_mousePos.x = _mousePos.x - winSize.x * 0.5;
+    Inputs::_mousePos.y = -_mousePos.y + winSize.y * 0.5;
 
 	usingJoystick = 0;
 	/*const unsigned char* buttons = 0;
@@ -75,5 +80,4 @@ void Inputs::Process(void* window0) {
 	left_ctrl  = kb.isKeyPressed(NWin::Key::NWIN_KEY_LCONTROL);
 	right_ctrl = kb.isKeyPressed(NWin::Key::NWIN_KEY_RCONTROL);
 	ctrl	   =  right_ctrl || left_ctrl;
-
 };

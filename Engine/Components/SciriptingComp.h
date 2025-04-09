@@ -1,9 +1,10 @@
 #pragma once
 #include "GameObject.h"
 #include "DllScripting.h"
+#include "ComponentTypes.h"
 
 class DynamicScript: GameComponent {
-    static std::string GetType() { return "DynamicScript"; };
+    NW_ST_GET_TYPE_IMPL(DynamicScript);
 
     DllScript* dllScript = 0;
 

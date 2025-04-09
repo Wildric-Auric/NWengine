@@ -2,10 +2,11 @@
 #include "Maths.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "ComponentTypes.h"
 
 class LineRenderer : public GameComponent {
     public:
-        static std::string GetType() {return "LineRenderer";}
+        NW_ST_GET_TYPE_IMPL(LineRenderer);
 
         fVec2 _start;
         fVec2 _end;

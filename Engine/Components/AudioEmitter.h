@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Audio.h"
+#include "ComponentTypes.h"
 
 /**
  * @brief The AudioEmitter class represents a component that **owns** a Sound 
@@ -12,7 +13,8 @@ public:
      * @brief GetType static function for simple component reflection.
      * @return The type of the AudioEmitter component.
      */
-    static std::string GetType() { return "AudioEmitter"; };
+
+    NW_ST_GET_TYPE_IMPL(AudioEmitter);
 
     static bool ConditionHasAudioEmitter(GameObject* obj);
 
@@ -122,8 +124,9 @@ public:
 class MultiAudioEmitter : public GameComponent {
     public:
         std::unordered_map<GameObject*, AudioEmitter*> _container;
+        
+        NW_ST_GET_TYPE_IMPL(MultiAudioEmitter);
 
-        static std::string GetType() { return "MultiAudioEmitter";}
         inline MultiAudioEmitter() {}
         inline MultiAudioEmitter(GameObject* obj) { attachedObject = obj;}
         ~MultiAudioEmitter();

@@ -16,6 +16,7 @@ typedef __UINT8_TYPE__   ui8;
 typedef __UINT32_TYPE__  ui32;
 typedef __UINT64_TYPE__  ui64;
 typedef __INT8_TYPE__    byte;
+typedef __INT8_TYPE__    ds_byte;
 #endif
 typedef void*    gen;
 typedef void*    addr;

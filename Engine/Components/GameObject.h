@@ -5,10 +5,13 @@
 
 #pragma once
 #include "Globals.h"
-#include <map>
+#include <unordered_map>
 #include <string>
+#include "ComponentTypes.h"
 
 #define ADD_COMPONENT(str, type) if (type == #str ) return this->AddComponent<str>();
+#define NW_REQUIRE_COMP(go, comp) go->AddComponent<comp>()
+#define NW_ST_GET_TYPE_IMPL(type) static uint32 GetType() { return type##ID; }
 
 /**
  * @brief Function pointer type for draw callbacks. Mostly used internally.
@@ -30,7 +33,7 @@ public:
      */
     GameObject* attachedObject;
 
-    static const char* GetType() { return "GameComponent"; }
+    static uint32 GetType() { return -1; }
 
     /**
      * @brief Update the game component. Does noting if not overriden.
@@ -74,7 +77,7 @@ private:
     static int numberOfGameObjects; //Unused.
 
 public:
-    std::map<std::string, GameComponent*> components; /**< Map of components attached to the game object. Internal member */
+    std::unordered_map<uint32, GameComponent*> components; /**< Map of components attached to the game object. Internal member */
     std::string name = "new GameObject"; /**< The name of the game object. */
     uint32 tag = 0; /**< A tag of the game object. Can be used for different purposes. */
     DrawCallback _drawProc = nullptr; /**< The draw callback for the game object. */
@@ -112,7 +115,7 @@ public:
      * if no component component is found, nothing is done.
      * @param typeName The type name of the component to delete. Example: "Sprite"
      */
-    void DeleteComponent(std::string typeName);
+    void DeleteComponent(uint32 typeName);
 
     /**
      * @brief Delete all components from the game object.
@@ -140,10 +143,10 @@ public:
      */
     template<typename T>
     T* AddComponent() {
-        std::map<std::string, GameComponent*>::iterator temp = components.find(T::GetType());
+        auto temp = components.find(T::GetType());
         if (temp != components.end()) return (T*)(*&temp)->second;
         T* ptr = new T(this);
-        components.insert(std::pair<std::string, GameComponent*>( T::GetType(), ptr ));
+        components.insert(std::pair<uint32, GameComponent*>( T::GetType(), ptr ));
         ptr->OnAdd(); 
         return ptr;
     };
@@ -154,13 +157,13 @@ public:
      * @return A pointer to the component.
      */
 
-    GameComponent* AddComponent(std::string type);
+    GameComponent* AddComponent(const std::string& type);
     /**
      * @brief Get a component of the specified type.
      * @param type The type of the component.
      * @return A pointer to the component, or nullptr if the component does not exist.
      */
-    GameComponent* GetComponent(const std::string& type);
+    GameComponent* GetComponent(const uint32 type);
     /**
      * @brief Delete a component of the specified type. 
      * If it is not found, this function does nothing.

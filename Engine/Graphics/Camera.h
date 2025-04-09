@@ -3,6 +3,7 @@
 #include "FrameBuffer.h"
 #include "Maths.h"
 #include "Image.h"
+#include "ComponentTypes.h"
 
 /**
  * @brief The Camera class represents a camera in the game world.
@@ -13,8 +14,8 @@ public:
      * @brief Gets the type of the camera.
      * @return The type of the camera.
      */
-    static std::string GetType() { return "Camera"; };
 
+    NW_ST_GET_TYPE_IMPL(Camera);
     /**
      * @brief Updates the active camera.
      *
@@ -32,6 +33,7 @@ public:
     bool isActive = 0; /**< Indicates whether the camera is active or not. */
     std::unordered_map<int, fVec4> clearCols;
     MSAAValue _msaa = NW_MSx1;
+    bool _wireframe = 0;
     
     void _ClearAtts();
     /**
@@ -88,6 +90,9 @@ public:
      * @param color RGBA color values.
      */
     void SetClearColor(int i, const fVec4& color);
+
+    void EnableWireframeRendering();
+    void DisableWireframeRendering();
 
     fVec2 GetPosition();
     fVec2 GetSize();
