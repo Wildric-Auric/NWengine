@@ -83,7 +83,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 	}
     font._inf.ascent = f->ascender  / 64.0f;
     font._inf.descent= f->descender / 64.0f;
-    font._inf.height = f->height / 64.0f;
+    font._inf.height = f->size->metrics.height / 64.0f;
     font._inf.linegap= (f->height - f->ascender + f->descender) / 64.0f;
     font._inf.linespace = font._inf.ascent + font._inf.ascent - font._inf.descent + font._inf.linegap;
 	return (Asset*)&font;

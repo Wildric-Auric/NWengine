@@ -6,7 +6,7 @@
 
 
 int main() {
-    Sandbox::Run();
+    TextTst::Run();
 	return 0;
 }
 

@@ -24,6 +24,10 @@ struct TextIterData {
     void* other = 0;
 };
 
+struct TextConstraintIterData {
+    fVec2 cur;
+};
+
 
 typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
 
@@ -63,6 +67,9 @@ public:
      * @brief UpdateGlyphs updates the glyphs of the Text component.
      */
     void UpdateGlyphs();
+
+    void ApplyContraint(Character*, TextConstraintIterData*);
+    void SetChrComps(Character* chr, char c);
 
     void SetPosition(const fVec2&);
 
@@ -127,8 +134,6 @@ public:
 
     NWCoordSys::BoundingBox& GetBBRef();
     void GetBB(NWCoordSys::BoundingBox*);
-
-    fVec2 _ForceRecGetSize(float* yBearingOffset = 0);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
