@@ -26,6 +26,8 @@ struct TextIterData {
 
 struct TextConstraintIterData {
     fVec2 cur;
+    int lineNum = 1;
+    int lastBearing = 0;
 };
 
 
@@ -134,6 +136,8 @@ public:
 
     NWCoordSys::BoundingBox& GetBBRef();
     void GetBB(NWCoordSys::BoundingBox*);
+
+    void CalcBB(TextConstraintIterData*);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**

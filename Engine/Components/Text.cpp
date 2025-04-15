@@ -119,6 +119,15 @@ void Text::GetBB(NWCoordSys::BoundingBox* bb) {
    *bb =  _bb;
 }
 
+void Text::CalcBB(TextConstraintIterData* d) {
+    int n = d->lineNum;
+    int width = (d->lineNum == 1 ) ? d->cur.x : constraints.boxHorizontalWrap;
+    _bb.size.y = n * font->_inf.height;
+    _bb.size.x   = width; 
+    _bb.center.x = width / 2.0;
+    _bb.center.y = font->_inf.height - _bb.size.y * 0.5 - d->lastBearing;
+}
+
 void Text::UpdateGlyphs() {
 	if (characters.size() < 1) 
 		characters.push_back(Character());
@@ -135,6 +144,7 @@ void Text::UpdateGlyphs() {
         ApplyContraint(&*iter, &tid);
 		++iter;
 	}
+    CalcBB(&tid);
     
 	while (iter != characters.end()) {
 		iter->go.DeleteComponents();
@@ -148,18 +158,24 @@ void Text::ApplyContraint(Character* chr, TextConstraintIterData* data) {
     TextConstraintIterData& d = *data;
     Glyph& g = *chr->glyph;
 
-    bool wrapx = d.cur.x >= constraints.boxHorizontalWrap;
+    float dx = d.cur.x + chr->glyph->GetAdvanceX();
+    bool wrapx = dx >= constraints.boxHorizontalWrap;
     if (wrapx) {
-        d.cur.x  = 0.0;
+        d.cur.x  = 0.0; dx = chr->glyph->GetAdvanceX();
         d.cur.y -= font->_inf.height;
+        d.lastBearing = 0;
+        ++d.lineNum;
     }
+    int yoff = g.size.y - bear.y; //Under the line on which we write
     tr.position.x  = d.cur.x + bear.x;
-    tr.position.y  = d.cur.y - (g.size.y - bear.y);
+    tr.position.y  = d.cur.y - yoff;
 
     tr.position.x += g.size.x / 2.0;
     tr.position.y += g.size.y / 2.0;
 
-    d.cur.x += chr->glyph->GetAdvanceX();
+    d.lastBearing = Max(d.lastBearing, yoff);
+
+    d.cur.x = dx;
 }
 
 void Text::SetChrComps(Character* chr, char c) {

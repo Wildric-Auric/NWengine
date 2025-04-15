@@ -19,12 +19,13 @@ static void Init() {
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(720,480); 
     Text* te = str.AddComponent<Text>();
-    te->SetFont({"../Sandbox/assets/Fonts/Cloudy.ttf", 64}, NW_DEFAULT_SHADER_TEXT_BATCHED);
+    te->SetFont({"../Sandbox/assets/Fonts/cloudy.ttf", 32}, NW_DEFAULT_SHADER_TEXT_BATCHED);
+    //te->SetFont({"C:/Programming/artha/ImageProcessing/Visualizer/example/assets/Fonts/arial.ttf", 64}, NW_DEFAULT_SHADER_TEXT_BATCHED);
     te->SetBoxHorizontalWrap(180.0f);
 
-    te->SetContentAndUpdateGlyphs("Hello World");
+    te->SetContentAndUpdateGlyphs("Hjjlo World hjljej");
 
-    te->colors = fVec4(1.0,1.0,1.0,1.0);
+    te->colors = fVec4(1.0,.0,.0,1.0);
     bg.AddComponent<Transform>();
 
     Sprite* spr = bg.AddComponent<Sprite>();
@@ -43,8 +44,9 @@ static void Init() {
     spr->SetTexture(NW_DEFAULT_TEXTURE);
     spr->SetShader(NW_DEFAULT_SHADER);
     spr->SetSortingLayer(10);
-    spr->SetSize({32,32});
-    tr->SetPosition({0.0f,0.0f});
+    spr->SetSize(te->GetBBRef().size);
+    printf("%d %d\n", spr->container.width, spr->container.height);
+    tr->SetPosition(te->GetBBRef().center);
     
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
