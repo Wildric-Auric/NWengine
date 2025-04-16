@@ -5,6 +5,10 @@
 
 namespace TextTst {
 
+static Text* text;
+static Transform* box;
+static fVec2 direction = fVec2(1.0,-1.0).normalize();
+
 static void Init() {
 	Context::SetTitle("Sandbox");
 	Context::EnableVSync();
@@ -19,14 +23,18 @@ static void Init() {
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(720,480); 
     Text* te = str.AddComponent<Text>();
-    te->SetPosition({200.0,-100.0});
+    //te->SetPosition({200.0,-100.0});
     te->SetFont({"../Sandbox/assets/Fonts/cloudy.ttf", 32}, NW_DEFAULT_SHADER_TEXT_BATCHED);
-    //te->SetFont({"C:/Programming/artha/ImageProcessing/Visualizer/example/assets/Fonts/arial.ttf", 64}, NW_DEFAULT_SHADER_TEXT_BATCHED);
+    std::string ifont;
+    GetSystemFontDir(&ifont);
+//    ifont += "arial.ttf";
+//    te->SetScale(fVec2(1.0,1.0));
+//    te->SetFont({ifont.c_str(), 32}, NW_DEFAULT_SHADER_TEXT_BATCHED);
     te->SetBoxHorizontalWrap(180.0f);
 
-    te->SetContentAndUpdateGlyphs("Hjjlo World hlllhel");
+    te->SetContentAndUpdateGlyphs("Hello jiji");
 
-    te->colors = fVec4(1.0,.0,.0,1.0);
+    te->colors = fVec4(1.0,0.0,1.0,1.0);
     bg.AddComponent<Transform>();
 
     Sprite* spr = bg.AddComponent<Sprite>();
@@ -49,12 +57,31 @@ static void Init() {
     printf("%d %d\n", spr->container.width, spr->container.height);
     tr->SetPosition(te->GetBBRef().center);
     
+    text = te;
+    box = tr;
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
 static void Render() {
     (*Renderer::defaultRenderer)(true);
+    
+    float mmag = 100.0;
+    fVec2 newPos = text->GetPosition() + direction * mmag * NWTime::GetDeltaTime(); 
+    fVec2 bsize  = text->GetSize();
+    fVec2 csize  = Camera::GetActiveCamera()->GetSize(); 
+    if (newPos.x + bsize.x * 0.5 >= csize.x * 0.5 ||
+        newPos.x - bsize.x * 0.5 <= -csize.x * 0.5) {
+        direction.x = -direction.x;
+    }
+    if (newPos.y + bsize.y * 0.5 >= csize.y * 0.5 ||
+        newPos.y - bsize.y * 0.5 <= -csize.y * 0.5
+       ) {
+        direction.y = -direction.y;
+    }
+    text->SetPosition(text->GetPosition() + direction * mmag * NWTime::GetDeltaTime());
+    text->UpdateGlyphs();
+    box->SetPosition(text->GetPosition());
 }
 
 void Run() {

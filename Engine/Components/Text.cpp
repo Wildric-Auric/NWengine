@@ -12,28 +12,14 @@ void Text::SetPosition(const fVec2& pos) {
     _bb.center = pos;
 }
 
-void Text::SetCenterPosition(const fVec2& pos) {
-    fVec2 s = GetSize();
-    _bb.center = pos + fVec2(-s.x, s.y - _firstLineYSize*2.0) * 0.5f;
-}
-
-void Text::SetTopLeftPosition(const fVec2& pos) {
-    fVec2 s = GetSize();
-    _bb.center.y += s.y / 2.0f;
-}
-
 void Text::SetScale(const fVec2& value) {
     scale = value;
 }
 
 fVec2 Text::GetPosition() {
-    return _bb.size;
-}
-    
-fVec2 Text::GetPositionCenter() {
     return _bb.center;
 }
-    
+
 fVec2 Text::GetPostionTopLeft() {
     return _bb.center + fVec2(-_bb.size.x * 0.5, + _bb.size.y * 0.5);
 }
@@ -121,15 +107,16 @@ void Text::GetBB(NWCoordSys::BoundingBox* bb) {
 void Text::CalcBB(TextConstraintIterData* d) {
     int n = d->lineNum;
     int width = (d->lineNum == 1 ) ? d->cur.x : constraints.boxHorizontalWrap;
-    _bb.size.y = n * font->_inf.height;
-    _bb.size.x   = width; 
+    _bb.size.y = n * font->_inf.height * scale.y;
+    _bb.size.x   = width * scale.x; 
+    _bearing = d->lastBearing;
 }
 
-void Text::SetRelCharPos(Character* chr, TextConstraintIterData* d) {
+void Text::SetRelCharPos(Character* chr) {
     Transform* tr = chr->go.GetComponent<Transform>();
     fVec2 apos;
     apos.x = -_bb.size.x* 0.5;
-    apos.y = _bb.size.y * 0.5 - font->_inf.height + d->lastBearing;
+    apos.y = _bb.size.y * 0.5 + (-font->_inf.height + _bearing)*scale.y;
     tr->Translate(_bb.center + apos);
 }
 
@@ -146,7 +133,7 @@ void Text::UpdateGlyphs() {
 			iter = --characters.end();
 		}
         SetChrComps(&*iter, c);
-        ApplyContraint(&*iter, &tid);
+        ApplyConstraint(&*iter, &tid);
 		++iter;
 	}
 	while (iter != characters.end()) {
@@ -156,11 +143,11 @@ void Text::UpdateGlyphs() {
 
     CalcBB(&tid);
     for (iter = characters.begin(); iter != characters.end(); ++iter) {
-        SetRelCharPos(&*iter, &tid); 
+        SetRelCharPos(&*iter); 
     }
 }
 
-void Text::ApplyContraint(Character* chr, TextConstraintIterData* data) {
+void Text::ApplyConstraint(Character* chr, TextConstraintIterData* data) {
     Transform& tr  = *chr->go.GetComponent<Transform>();
     iVec2& bear    = chr->glyph->bearing;
     TextConstraintIterData& d = *data;
@@ -175,11 +162,13 @@ void Text::ApplyContraint(Character* chr, TextConstraintIterData* data) {
         ++d.lineNum;
     }
     int yoff = g.size.y - bear.y; //Under the line on which we write
-    tr.position.x  = d.cur.x + bear.x;
-    tr.position.y  = d.cur.y - yoff;
+    tr.position.x  = (d.cur.x + bear.x)*scale.x;
+    tr.position.y  = (d.cur.y - yoff)*scale.y;
+    
+    tr.scale = scale;
 
-    tr.position.x += g.size.x / 2.0;
-    tr.position.y += g.size.y / 2.0;
+    tr.position.x += g.size.x * tr.scale.x / 2.0;
+    tr.position.y += g.size.y * tr.scale.y / 2.0;
 
     d.lastBearing = Max(d.lastBearing, yoff);
 

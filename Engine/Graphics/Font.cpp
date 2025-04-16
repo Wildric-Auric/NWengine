@@ -36,7 +36,9 @@ Asset* Font::GetFromCache(void* identifier) {
 Asset* Font::LoadFromFile(const char* path, void* data) {
 	FT_Face tFace;
 	if (FT_New_Face((FT_Library)Font::lib, path, 0, &tFace)) {
-		NW_LOG_ERROR("Error::Loading font error");
+		NW_LOG_ERROR("Error::Failed to load font at path: ");
+		NW_LOG_ERROR(path);
+		NW_LOG_ERROR("\n");
 		return nullptr;
 	}
 	return LoadFromBuffer(tFace, data);

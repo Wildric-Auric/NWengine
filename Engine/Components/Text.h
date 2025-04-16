@@ -5,6 +5,7 @@
 #include "CoordSys.h"
 #include <list>
 #include "ComponentTypes.h"
+#include "Utilities.h"
 
 enum class TextHorizontalAlignment {
     LEFT   = 0,
@@ -70,14 +71,10 @@ public:
      */
     void UpdateGlyphs();
 
-    void ApplyContraint(Character*, TextConstraintIterData*);
+    void ApplyConstraint(Character*, TextConstraintIterData*);
     void SetChrComps(Character* chr, char c);
 
     void SetPosition(const fVec2&);
-
-    void SetCenterPosition(const fVec2&);
-
-    void SetTopLeftPosition(const fVec2&);
 
     void SetScale(const fVec2&);
     
@@ -90,7 +87,6 @@ public:
     void SetFixedLineSpacing(const float); 
 
     fVec2 GetPosition();
-    fVec2 GetPositionCenter();
     fVec2 GetPostionTopLeft();
     /**
      * @brief SetFont sets the font of the Text component.
@@ -130,15 +126,13 @@ public:
      */
     fVec2 GetSize();
 
-    float _yoff = 0.0f; //TODO::Tempporary
-    float _firstLineYOffset = 0.0f;
-    float _firstLineYSize = 0.0f;
+    float _bearing = 0.0f; 
 
     NWCoordSys::BoundingBox& GetBBRef();
     void GetBB(NWCoordSys::BoundingBox*);
 
     void CalcBB(TextConstraintIterData*);
-    void SetRelCharPos(Character*, TextConstraintIterData*);
+    void SetRelCharPos(Character*);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
