@@ -7,6 +7,13 @@
 #endif
 #define WIN 
 
+
+bool GetEnvVar(const char*, std::string*);
+
+//TODO::use IDWriteFontCollection to get fonts correctly
+void GetSystemFontDir(std::string* out);
+
+void GetSystemFontDirALT(std::string* out);
 /**
  * @brief Process text to make it compatible with lpstr filter in functions such as GetFile() or SaveAs
  * 
