@@ -9,18 +9,17 @@ Text::Text(GameObject* go) {
 };
 
 void Text::SetPosition(const fVec2& pos) {
-    position = pos;
+    _bb.center = pos;
 }
 
 void Text::SetCenterPosition(const fVec2& pos) {
     fVec2 s = GetSize();
-    position = pos + fVec2(-s.x, s.y - _firstLineYSize*2.0) * 0.5f;
+    _bb.center = pos + fVec2(-s.x, s.y - _firstLineYSize*2.0) * 0.5f;
 }
 
 void Text::SetTopLeftPosition(const fVec2& pos) {
     fVec2 s = GetSize();
-    position = _bb.center;
-    position.y += s.y / 2.0f;
+    _bb.center.y += s.y / 2.0f;
 }
 
 void Text::SetScale(const fVec2& value) {
@@ -28,15 +27,15 @@ void Text::SetScale(const fVec2& value) {
 }
 
 fVec2 Text::GetPosition() {
-    return position;
+    return _bb.size;
 }
     
 fVec2 Text::GetPositionCenter() {
-    return position + _bb.center;
+    return _bb.center;
 }
     
 fVec2 Text::GetPostionTopLeft() {
-    return position + _bb.center + fVec2(-_bb.size.x * 0.5, + _bb.size.y * 0.5);
+    return _bb.center + fVec2(-_bb.size.x * 0.5, + _bb.size.y * 0.5);
 }
 
 void Text::SetBoxHorizontalWrap(const float value) {
@@ -124,8 +123,14 @@ void Text::CalcBB(TextConstraintIterData* d) {
     int width = (d->lineNum == 1 ) ? d->cur.x : constraints.boxHorizontalWrap;
     _bb.size.y = n * font->_inf.height;
     _bb.size.x   = width; 
-    _bb.center.x = width / 2.0;
-    _bb.center.y = font->_inf.height - _bb.size.y * 0.5 - d->lastBearing;
+}
+
+void Text::SetRelCharPos(Character* chr, TextConstraintIterData* d) {
+    Transform* tr = chr->go.GetComponent<Transform>();
+    fVec2 apos;
+    apos.x = -_bb.size.x* 0.5;
+    apos.y = _bb.size.y * 0.5 - font->_inf.height + d->lastBearing;
+    tr->Translate(_bb.center + apos);
 }
 
 void Text::UpdateGlyphs() {
@@ -144,12 +149,15 @@ void Text::UpdateGlyphs() {
         ApplyContraint(&*iter, &tid);
 		++iter;
 	}
-    CalcBB(&tid);
-    
 	while (iter != characters.end()) {
 		iter->go.DeleteComponents();
 		iter = characters.erase(iter);
 	}
+
+    CalcBB(&tid);
+    for (iter = characters.begin(); iter != characters.end(); ++iter) {
+        SetRelCharPos(&*iter, &tid); 
+    }
 }
 
 void Text::ApplyContraint(Character* chr, TextConstraintIterData* data) {

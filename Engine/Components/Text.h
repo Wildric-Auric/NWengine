@@ -138,6 +138,7 @@ public:
     void GetBB(NWCoordSys::BoundingBox*);
 
     void CalcBB(TextConstraintIterData*);
+    void SetRelCharPos(Character*, TextConstraintIterData*);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
@@ -175,11 +176,6 @@ public:
      * @brief colors is the color of the text.
      */
     Vector4<float> colors = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f); // Each color is 10 bits
-
-    /**
-     * @brief position is the position of the text.
-     */
-    fVec2 position = fVec2(0.0f, 0.0f);
 
     /**
      * @brief scale is the scale of the text.

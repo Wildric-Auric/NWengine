@@ -19,11 +19,12 @@ static void Init() {
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(720,480); 
     Text* te = str.AddComponent<Text>();
+    te->SetPosition({200.0,-100.0});
     te->SetFont({"../Sandbox/assets/Fonts/cloudy.ttf", 32}, NW_DEFAULT_SHADER_TEXT_BATCHED);
     //te->SetFont({"C:/Programming/artha/ImageProcessing/Visualizer/example/assets/Fonts/arial.ttf", 64}, NW_DEFAULT_SHADER_TEXT_BATCHED);
     te->SetBoxHorizontalWrap(180.0f);
 
-    te->SetContentAndUpdateGlyphs("Hjjlo World hjljej");
+    te->SetContentAndUpdateGlyphs("Hjjlo World hlllhel");
 
     te->colors = fVec4(1.0,.0,.0,1.0);
     bg.AddComponent<Transform>();
