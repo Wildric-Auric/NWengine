@@ -53,7 +53,7 @@ void  InlineShader::AppVertGlobal(const char* txt) {
 }
 
 void  InlineShader::AppVertMain(const char* txt) {
-    _end.frag = std::string(txt) + '\n';
+    _end.frag += std::string(txt) + '\n';
 }
 
 void InlineShader::SetFragOut(const char* txt) {
