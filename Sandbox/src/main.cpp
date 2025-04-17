@@ -3,10 +3,10 @@
 #include "templates/TextTst.h"
 #include "templates/LineTst.h"
 #include "templates/PrimitivesTst.h"
-
+#include "templates/InlineShaderTst.h"
 
 int main() {
-    TextTst::Run();
+    InlineShaderTst::Run();
 	return 0;
 }
 
