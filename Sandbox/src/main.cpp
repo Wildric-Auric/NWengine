@@ -6,7 +6,7 @@
 #include "templates/InlineShaderTst.h"
 
 int main() {
-    InlineShaderTst::Run();
+    Sandbox::Run();
 	return 0;
 }
 
