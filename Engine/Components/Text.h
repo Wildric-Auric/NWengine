@@ -14,7 +14,7 @@ enum class TextHorizontalAlignment {
 };
 
 struct TextConstraint {
-    float boxHorizontalWrap = 0.0f;
+    float boxHorizontalWrap = INFINITY;
     float fixedLineSpacing = 0.0f; 
     TextHorizontalAlignment halign  = TextHorizontalAlignment::LEFT;
 };
