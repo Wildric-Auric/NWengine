@@ -9,6 +9,17 @@
 #include "stb/stb_image_write.h"
 #include "Image.h"
 
+void Image::Read(const iVec2& coord, ImageColor* color) {
+    int x = coord.x * width + coord.y;
+    int c = channels+alpha;
+    memcpy(color, &pixelBuffer[x*c], c*sizeof(uint8));
+}
+
+void Image::Write(const iVec2& coord, const ImageColor& color) {
+    int x = coord.x * width + coord.y;
+    int c = channels+alpha;
+    *((ImageColor*)(pixelBuffer+x*c)) = color;
+}
 
 Asset* Image::LoadFromFile(const char* path, void* unused) {
 	stbi_set_flip_vertically_on_load(1);

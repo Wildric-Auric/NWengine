@@ -103,6 +103,7 @@ void FrameBuffer::CopyFramebufferToCPU(Image* img, int attIndex) {
     Bind(NW_READ);
     FrameBufferAttachment& att = GetAtt(attIndex);
     NW_GL_CALL(glReadBuffer(GL_COLOR_ATTACHMENT0 + attIndex));
+    img->Clean();
     img->width = att.tex._size.x;
     img->height = att.tex._size.y;
     img->channels = 3;
