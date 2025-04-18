@@ -48,3 +48,6 @@
 #include "TriangleRenderer.cpp"
 #include "CircleRenderer.cpp"
 #include "ComponentTypes.cpp"
+#include "InlineShader.cpp"
+#include "Wave.cpp"
+

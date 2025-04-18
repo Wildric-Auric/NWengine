@@ -9,18 +9,7 @@ Text::Text(GameObject* go) {
 };
 
 void Text::SetPosition(const fVec2& pos) {
-    position = pos;
-}
-
-void Text::SetCenterPosition(const fVec2& pos) {
-    fVec2 s = GetSize();
-    position = pos + fVec2(-s.x, s.y - _firstLineYSize*2.0) * 0.5f;
-}
-
-void Text::SetTopLeftPosition(const fVec2& pos) {
-    fVec2 s = GetSize();
-    position = _bb.center;
-    position.y += s.y / 2.0f;
+    _bb.center = pos;
 }
 
 void Text::SetScale(const fVec2& value) {
@@ -28,15 +17,11 @@ void Text::SetScale(const fVec2& value) {
 }
 
 fVec2 Text::GetPosition() {
-    return position;
+    return _bb.center;
 }
-    
-fVec2 Text::GetPositionCenter() {
-    return position + _bb.center;
-}
-    
+
 fVec2 Text::GetPostionTopLeft() {
-    return position + _bb.center + fVec2(-_bb.size.x * 0.5, + _bb.size.y * 0.5);
+    return _bb.center + fVec2(-_bb.size.x * 0.5, + _bb.size.y * 0.5);
 }
 
 void Text::SetBoxHorizontalWrap(const float value) {
@@ -51,62 +36,7 @@ void Text::SetFixedLineSpacing(const float value) {
     constraints.fixedLineSpacing = value;
 }
 
-struct ApplyCnData {
-    float x = 0.0f;
-    float y = 0.0f;
-    float xacc = 0.0f;
-    float yacc = 0.0f;
-    float yoff = 0.0f;
-    float lastx = 0.0f;
-    float maxYSize = 0.0f;
-    float firstLineYSize = 0.0f;
-    float firstLineYOff  = 0.0f;
-    fVec2 size;
-    Text* text;
-};
-
-static void ApplyConstraints(Character* chr, TextIterData* data) {
-    ApplyCnData& d = *(ApplyCnData*)data->other;
-    fVec2 scale = d.text->scale;
-    float dx = (chr->glyph->GetAdvanceX()) * scale.x;
-    bool boxXCond = d.text->constraints.boxHorizontalWrap != 0.0f && d.xacc + dx >= d.text->constraints.boxHorizontalWrap;
-    if (boxXCond) {
-        d.x    = d.text->position.x;
-        float tmp = 
-        (d.text->constraints.fixedLineSpacing != 0.0) ? 
-        d.text->constraints.fixedLineSpacing 
-        : d.text->font->_inf.linespace * scale.y;
-        d.y      -= tmp;
-        d.size.y += tmp;
-        d.firstLineYSize == 0.0f ? d.firstLineYOff = d.yoff : 0;
-        d.firstLineYSize == 0.0f ? d.firstLineYSize = d.maxYSize : 0;
-        d.xacc  = 0.0f;
-        d.yoff  = 0.0f;
-    }
-    d.yoff     = Max(((float)chr->glyph->size.y - chr->glyph->bearing.y) * scale.y, d.yoff);
-    d.maxYSize = Max(((float)chr->glyph->size.y + d.yoff) * scale.y, d.maxYSize);
-    d.lastx = d.x;
-    d.x    += dx;
-    d.xacc += dx;     
-    d.size.x = Max(d.xacc, d.size.x);
-}
-
-static void PostProcess(ApplyCnData* d) {
-    if (d->firstLineYSize == 0.0f) {
-        d->firstLineYSize = d->maxYSize;
-        d->firstLineYOff  = d->yoff;
-    }
-    else { 
-        d->firstLineYSize += d->yoff; 
-    }
-    d->size.y += d->firstLineYSize;
-}
-
 void Text::Update() {
-    ApplyCnData d;
-	d.x = position.x;
-    d.y = position.y; 
-    d.text = this;
 
 	uint32 temp  = (uint32)(this->colors.g * MAX_BIT_10) | ((uint32)(this->colors.r * MAX_BIT_10) << 0xA);
 	uint32 temp0 = (uint32)(this->colors.a * MAX_BIT_10) | ((uint32)(this->colors.b * MAX_BIT_10) << 0xA);
@@ -116,35 +46,17 @@ void Text::Update() {
     tdata.chrNum = characters.size();
     
     float halignOffset = 0.0;
-
-    if (constraints.halign == TextHorizontalAlignment::CENTER && constraints.boxHorizontalWrap) {
-        fVec2 s = GetSize(); //TODO::Cache the size
-        halignOffset = constraints.boxHorizontalWrap * 0.5;
-    }
-    
-    TextIterData d1; 
-    d1.other = &d;
+    float offset = 0.0;
 
 	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
 		Transform* transform       = chr->go.GetComponent<Transform>(); //TODO::add transform variable to glyph
 		Sprite*    sprite          = chr->go.GetComponent<Sprite>();
+        sprite->vertexAttributes.x = *((float*)&temp);
+  	    sprite->vertexAttributes.y = *((float*)&temp0);
 
-      float dx = (chr->glyph->GetAdvanceX()) * transform->scale.x;
-
-      sprite->vertexAttributes.x = *((float*)&temp );
-	  sprite->vertexAttributes.y = *((float*)&temp0);
-
-      ApplyConstraints(&*chr, &d1);    
-
-      transform->scale.x = scale.x;
-      transform->scale.y = scale.y;
-      transform->position.x  = d.lastx + (chr->glyph->bearing.x + chr->glyph->size.x / 2.0f) * transform->scale.x;
-      transform->position.y  = d.y + (chr->glyph->bearing.y - chr->glyph->size.y / 2.0) * transform->scale.y; 
-      transform->position.x += halignOffset;	
-
-      chrCbk(&*chr, &tdata);
-      ++tdata.chrIndex;
-      sprite->Update(); 
+        chrCbk(&*chr, &tdata);
+        ++tdata.chrIndex;
+        sprite->Update(); 
     }
 }
 
@@ -192,21 +104,20 @@ void Text::GetBB(NWCoordSys::BoundingBox* bb) {
    *bb =  _bb;
 }
 
-fVec2 Text::_ForceRecGetSize(float* ybearingoffset) {
-	fVec2 ret;
-	std::list<Character>::iterator iter = characters.begin();
-    float tmp = 0.0f;
-    TextIterData d0;
-    ApplyCnData  d1;
-    d1.text = this;
-    d0.other= &d1;
-	for (auto c = characters.begin(); c != characters.end(); ++c) {
-        ApplyConstraints(&*c, &d0);
-	}
-    PostProcess(&d1);
-    ret = d1.size;
-    ybearingoffset ? *ybearingoffset = d1.yoff : 0;
-	return ret;
+void Text::CalcBB(TextConstraintIterData* d) {
+    int n = d->lineNum;
+    int width = (d->lineNum == 1 ) ? d->cur.x : constraints.boxHorizontalWrap;
+    _bb.size.y = n * font->_inf.height * scale.y;
+    _bb.size.x   = width * scale.x; 
+    _bearing = d->lastBearing;
+}
+
+void Text::SetRelCharPos(Character* chr) {
+    Transform* tr = chr->go.GetComponent<Transform>();
+    fVec2 apos;
+    apos.x = -_bb.size.x* 0.5;
+    apos.y = _bb.size.y * 0.5 + (-font->_inf.height + _bearing)*scale.y;
+    tr->Translate(_bb.center + apos);
 }
 
 void Text::UpdateGlyphs() {
@@ -214,44 +125,65 @@ void Text::UpdateGlyphs() {
 		characters.push_back(Character());
 
 	std::list<Character>::iterator iter = characters.begin();
-    ApplyCnData d0;
-    TextIterData d1;
-    d0.text  = this;
-    d0.x = position.x;
-    d0.y = position.y;
-    d1.other = &d0;
 
+    TextConstraintIterData tid;
 	for (char c : text) {
 		if (iter == characters.end()) {
 			characters.push_back(Character());
 			iter = --characters.end();
 		}
-
-		iter->go.AddComponent<Transform>();
-		Sprite* sprite = iter->go.AddComponent<Sprite>();
-
-		iter->glyph = &this->font->charactersMap.find(c)->second;
-		sprite->SetShader(_shader); 
-		if (this->isBatched)
-			sprite->Batch();
-		sprite->SetTexture(&iter->glyph->texture);
-		sprite->SetSortingLayer(layerOrder);
-		sprite->container.UpdateSize(iter->glyph->size.x, iter->glyph->size.y);
-
-        ApplyConstraints(&*iter, &d1);
+        SetChrComps(&*iter, c);
+        ApplyConstraint(&*iter, &tid);
 		++iter;
 	}
-    
-    PostProcess(&d0);
-    _yoff = d0.yoff;
-    _firstLineYOffset = d0.firstLineYOff;
-    _firstLineYSize   = d0.firstLineYSize;
-    _bb.size = d0.size;
-    _bb.center = fVec2(d0.size.x * 0.5, d0.yoff + 0.5*d0.firstLineYSize - d0.size.y * 0.5);
 	while (iter != characters.end()) {
 		iter->go.DeleteComponents();
 		iter = characters.erase(iter);
 	}
+
+    CalcBB(&tid);
+    for (iter = characters.begin(); iter != characters.end(); ++iter) {
+        SetRelCharPos(&*iter); 
+    }
+}
+
+void Text::ApplyConstraint(Character* chr, TextConstraintIterData* data) {
+    Transform& tr  = *chr->go.GetComponent<Transform>();
+    iVec2& bear    = chr->glyph->bearing;
+    TextConstraintIterData& d = *data;
+    Glyph& g = *chr->glyph;
+
+    float dx = d.cur.x + chr->glyph->GetAdvanceX();
+    bool wrapx = dx >= constraints.boxHorizontalWrap;
+    if (wrapx) {
+        d.cur.x  = 0.0; dx = chr->glyph->GetAdvanceX();
+        d.cur.y -= font->_inf.height;
+        d.lastBearing = 0;
+        ++d.lineNum;
+    }
+    int yoff = g.size.y - bear.y; //Under the line on which we write
+    tr.position.x  = (d.cur.x + bear.x)*scale.x;
+    tr.position.y  = (d.cur.y - yoff)*scale.y;
+    
+    tr.scale = scale;
+
+    tr.position.x += g.size.x * tr.scale.x / 2.0;
+    tr.position.y += g.size.y * tr.scale.y / 2.0;
+
+    d.lastBearing = Max(d.lastBearing, yoff);
+
+    d.cur.x = dx;
+}
+
+void Text::SetChrComps(Character* chr, char c) {
+		chr->go.AddComponent<Transform>();
+		Sprite* sprite = chr->go.AddComponent<Sprite>();
+		chr->glyph = &this->font->charactersMap.find(c)->second;
+		sprite->SetShader(_shader); 
+		if (this->isBatched)
+			sprite->Batch();
+		sprite->SetTexture(&chr->glyph->texture);
+		sprite->SetSortingLayer(layerOrder);
 }
 
 void Text::SetFont(const FontIdentifier& id) { 

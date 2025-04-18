@@ -5,6 +5,7 @@
 #include "CoordSys.h"
 #include <list>
 #include "ComponentTypes.h"
+#include "Utilities.h"
 
 enum class TextHorizontalAlignment {
     LEFT   = 0,
@@ -13,7 +14,7 @@ enum class TextHorizontalAlignment {
 };
 
 struct TextConstraint {
-    float boxHorizontalWrap = 0.0f;
+    float boxHorizontalWrap = INFINITY;
     float fixedLineSpacing = 0.0f; 
     TextHorizontalAlignment halign  = TextHorizontalAlignment::LEFT;
 };
@@ -22,6 +23,12 @@ struct TextIterData {
     int chrNum   = 0;
     int chrIndex = 0;
     void* other = 0;
+};
+
+struct TextConstraintIterData {
+    fVec2 cur;
+    int lineNum = 1;
+    int lastBearing = 0;
 };
 
 
@@ -64,11 +71,10 @@ public:
      */
     void UpdateGlyphs();
 
+    void ApplyConstraint(Character*, TextConstraintIterData*);
+    void SetChrComps(Character* chr, char c);
+
     void SetPosition(const fVec2&);
-
-    void SetCenterPosition(const fVec2&);
-
-    void SetTopLeftPosition(const fVec2&);
 
     void SetScale(const fVec2&);
     
@@ -81,7 +87,6 @@ public:
     void SetFixedLineSpacing(const float); 
 
     fVec2 GetPosition();
-    fVec2 GetPositionCenter();
     fVec2 GetPostionTopLeft();
     /**
      * @brief SetFont sets the font of the Text component.
@@ -121,14 +126,13 @@ public:
      */
     fVec2 GetSize();
 
-    float _yoff = 0.0f; //TODO::Tempporary
-    float _firstLineYOffset = 0.0f;
-    float _firstLineYSize = 0.0f;
+    float _bearing = 0.0f; 
 
     NWCoordSys::BoundingBox& GetBBRef();
     void GetBB(NWCoordSys::BoundingBox*);
 
-    fVec2 _ForceRecGetSize(float* yBearingOffset = 0);
+    void CalcBB(TextConstraintIterData*);
+    void SetRelCharPos(Character*);
 
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
@@ -166,11 +170,6 @@ public:
      * @brief colors is the color of the text.
      */
     Vector4<float> colors = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f); // Each color is 10 bits
-
-    /**
-     * @brief position is the position of the text.
-     */
-    fVec2 position = fVec2(0.0f, 0.0f);
 
     /**
      * @brief scale is the scale of the text.

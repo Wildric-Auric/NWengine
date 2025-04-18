@@ -5,7 +5,7 @@
 
 #include "Asset.h"
 
-
+typedef Vector4<uint8> ImageColor;
 /**
  * @brief Represents an image asset.
  */
@@ -18,6 +18,9 @@ public:
     int height = 0; /**< The height of the image. */
     bool alpha = 0; /**< Indicates whether the image has an alpha channel. */
     
+    void Read(const iVec2&, ImageColor*);
+    void Write(const iVec2& coord, const ImageColor& color);
+
     /**
      * @brief Default constructor for Image.
      */
@@ -49,5 +52,5 @@ public:
     /**
      * @brief Cleans up the image asset.
      */
-    void Clean() override;
+    void Clean() override;    
 };

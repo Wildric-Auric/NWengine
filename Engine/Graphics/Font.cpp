@@ -36,7 +36,9 @@ Asset* Font::GetFromCache(void* identifier) {
 Asset* Font::LoadFromFile(const char* path, void* data) {
 	FT_Face tFace;
 	if (FT_New_Face((FT_Library)Font::lib, path, 0, &tFace)) {
-		NW_LOG_ERROR("Error::Loading font error");
+		NW_LOG_ERROR("Error::Failed to load font at path: ");
+		NW_LOG_ERROR(path);
+		NW_LOG_ERROR("\n");
 		return nullptr;
 	}
 	return LoadFromBuffer(tFace, data);
@@ -83,7 +85,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 	}
     font._inf.ascent = f->ascender  / 64.0f;
     font._inf.descent= f->descender / 64.0f;
-    font._inf.height = f->height / 64.0f;
+    font._inf.height = f->size->metrics.height / 64.0f;
     font._inf.linegap= (f->height - f->ascender + f->descender) / 64.0f;
     font._inf.linespace = font._inf.ascent + font._inf.ascent - font._inf.descent + font._inf.linegap;
 	return (Asset*)&font;

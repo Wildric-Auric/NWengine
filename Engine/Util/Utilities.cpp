@@ -4,6 +4,29 @@
 #include <wchar.h>
 #include <codecvt>
 #include <locale>
+#include <shlobj.h>
+
+bool GetEnvVar(const char* var, std::string* outStr) {
+    DWORD s = GetEnvironmentVariable(var,0,0);
+    if (s <= 0) return 0;
+    *outStr = std::string(s,' ');
+    s = GetEnvironmentVariable(var,&((*outStr)[0]),s);
+    if (s <= 0) return 0;
+    outStr->pop_back();
+    return 1;
+}
+
+void GetSystemFontDir(std::string* out) {
+    char path[MAX_PATH];
+    if (SHGetFolderPathA(nullptr, CSIDL_FONTS, nullptr, 0, path) != S_OK)
+        return;
+    *out = std::string(path) + "\\";
+}
+
+void GetSystemFontDirALT(std::string* out) {
+    GetEnvVar("USERPROFILE", out);
+    *out += "\\AppData\\Local\\Microsoft\\Windows\\Fonts\\";
+}
 
 std::vector<std::string> GetNWlist(std::string path) {
 	std::fstream stream(path); //TODO::ERROR checking

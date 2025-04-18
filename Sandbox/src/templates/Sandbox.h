@@ -65,14 +65,6 @@ static void Render() {
     tm.Capture();
     tm.DrawLast();
     //(*CRT)(tm._fxio.GetOutput(), true);
-
-    if (tmp && t > 3.0) {
-        Image im;
-        tm.GetOutput()->GetCamera()->GetFbo()->CopyFramebufferToCPU(&im);
-        im.SaveToFile("C:/Users/HP/source/repos/Wildric-Auric/NWengine/b.png");
-        im.Clean();
-        tmp = 0;
-    }
 }
 
 void Run() {

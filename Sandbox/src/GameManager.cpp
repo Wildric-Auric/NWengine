@@ -7,6 +7,7 @@
 #include "ScriptingComp.h"
 #include "Keyboard.h"
 #include "RenderingPipeline.h"
+#include "Wave.h"
 
 #define ADD_OBJ(scenePtr,name, variable) GameObject& variable =  s->AddObject(); s->Rename(name, &variable)
 
@@ -103,12 +104,16 @@ void GameManager::Start() {
 	te->colors       = fVec4(0.94,0.95, 1.0, 1.0);
 	te->SetScale(fVec2(1.0,1.0));
 	te->UpdateGlyphs();
-    te->SetPosition(fVec2(-te->GetSize().x * 0.5f, 130.0f));
+    te->SetPosition(fVec2(0.0, 130.0f));
 	te->UpdateGlyphs();
 	
     te->SetChrCallback([](Character* chr, TextIterData* tdata){
-        Transform* tr = chr->go.GetComponent<Transform>();
-        tr->position.y += 8.0 * cos(2.0*PI*0.1*tt + 2.0*PI * tdata->chrIndex/tdata->chrNum);
+        Transform* tr  = chr->go.GetComponent<Transform>();
+        float ampl     = 16.0f;
+        float f        = 0.5f;
+        float off      = (float)tdata->chrIndex/tdata->chrNum;
+        float last     = (tt != 0.0) * SineWave(f,ampl,off).Evaluate(tt - NWTime::GetDeltaTime());
+        tr->position.y+= SineWave(f,ampl,off).Evaluate(tt) - last;
     });
 
 	//Adds the leaves spawner
