@@ -11,6 +11,7 @@
 #include "ScriptingComp.h"
 #include "LineRenderer.h"
 #include "CircleRenderer.h"
+#include "UIWindow.h"
 
 int GameObject::numberOfGameObjects = 0;
 
@@ -71,6 +72,7 @@ GameComponent* GameObject::AddComponent(const std::string& type) {
 	ADD_COMPONENT(BatchExtra        , type);
 	ADD_COMPONENT(LineRenderer      , type);
 	ADD_COMPONENT(CircleRenderer    , type);
+	ADD_COMPONENT(UIWindow          , type);
 	return nullptr;
 };
 

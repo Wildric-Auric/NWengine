@@ -181,7 +181,7 @@ public:
 	static bool GetInputMouse(Input_Number key, Input_Mode mode);
 
     /**
-      @brief Get mouse position in window coordinates
+      @brief Get mouse position in window coordinates. See namespace CoordSys 
     */
     static fVec2 GetMousePosition();
 	/**

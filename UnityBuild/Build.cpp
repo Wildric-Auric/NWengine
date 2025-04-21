@@ -50,4 +50,5 @@
 #include "ComponentTypes.cpp"
 #include "InlineShader.cpp"
 #include "Wave.cpp"
-
+#include "UIWindow.cpp"
+#include "CoordSys.cpp"
