@@ -41,19 +41,19 @@ R"V0G0N(
 
         
 void InlineShader::AppFragGlobal(const char* txt) {
-    _data.frag += std::string(txt) + '\n';
+    _data.frag += std::string(txt) + ";";
 }
 
 void  InlineShader::AppFragMain(const char* txt) {
-    _end.frag += std::string(txt) + '\n';
+    _end.frag += std::string(txt) + ";";
 }
 
 void  InlineShader::AppVertGlobal(const char* txt) {
-    _data.vert += std::string(txt) + '\n';
+    _data.vert += std::string(txt) + ";";
 }
 
 void  InlineShader::AppVertMain(const char* txt) {
-    _end.frag += std::string(txt) + '\n';
+    _end.frag += std::string(txt) + ";";
 }
 
 void InlineShader::SetFragOut(const char* txt) {
