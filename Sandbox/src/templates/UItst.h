@@ -17,7 +17,7 @@ static void Init() {
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(500,500);
-    Renderer::defaultRenderer->SetStretch({0.5,0.5});
+    Renderer::defaultRenderer->SetStretch({1.0,1.0});
 
     uwin.AddComponent<UIWindow>();
 
@@ -32,8 +32,8 @@ static void Render() {
 void Run() {
         Context::_glInfo.maxVersion = 4;
         Context::_glInfo.minVersion = 6;
-        Context::WINDOW_WIDTH = 500;
-        Context::WINDOW_HEIGHT= 500;
+        Context::WINDOW_WIDTH = 800;
+        Context::WINDOW_HEIGHT= 800;
 
         NWenginePushFunction(ON_MAIN_CALL_LOCATION::InitEnd, Init);
         NWenginePushFunction(ON_MAIN_CALL_LOCATION::FrameIntermediate, Render);
