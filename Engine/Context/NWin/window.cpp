@@ -31,6 +31,7 @@ uint64_t Window::_incID = 1;
 std::unordered_map<winHandle, Window> Window::_windowsMap;
 
 
+
 void getWinRect(const Rect& r, RECT& outRect) {
 	outRect.left   = r.pos.x;
 	outRect.top    = r.pos.y;
@@ -112,6 +113,28 @@ LRESULT CALLBACK defaultWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+static HCURSOR loadCursor(CursorIcon c) {
+    LPSTR cur = IDC_ARROW;
+    switch (c) {
+        case CursorIcon::RESIZE_NE:
+            cur = IDC_SIZENESW; 
+        case CursorIcon::RESIZE_SW:
+            cur = IDC_SIZENWSE;
+        case CursorIcon::RESIZE_NS:
+            cur = IDC_SIZENS;
+        case CursorIcon::RESIZE_WE:
+            cur = IDC_SIZEWE;
+        default:
+            break;        
+    }
+    return LoadCursor(0, cur);
+}
+
+void Window::setCursor(CursorIcon c) {
+    HCURSOR cur = loadCursor(c);
+    SetCursor(cur);
+    SetClassLongPtrA((HWND)_handle, -12, (LONG_PTR)&cur);
+}
 
 bool Window::shouldLoop() {
 	return _shouldLoop;

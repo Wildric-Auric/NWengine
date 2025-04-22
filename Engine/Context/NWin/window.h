@@ -18,6 +18,13 @@ typedef	void* applicationInstance;
 typedef void(*procResizeCallback)(winHandle, Vec2 newSize);
 typedef void(*procDrawCallback)(winHandle);
 
+enum class CursorIcon {
+    ARROW,
+    RESIZE_WE,
+    RESIZE_NS,
+    RESIZE_NE,
+    RESIZE_SW, 
+};
 
 enum class WindowStyle : Word {
 	Default = (0x00000000L | 0x00C00000L | 0x00080000L | 0x00040000L | 0x00020000L | 0x00010000L)
@@ -79,6 +86,8 @@ public:
 	//Styles setters
 	void disableTitleBar();
 	void enableTitleBar();
+
+    void setCursor(CursorIcon);
 
 	void setTitle(const char* newTitle);
 	void getTitle(char* title, int buffLen);
