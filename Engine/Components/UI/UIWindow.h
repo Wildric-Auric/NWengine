@@ -11,6 +11,7 @@ enum class NWUiWindowState {
 
 struct UIWindowMetrics {
     int titleBarHeight = 20;
+    int resizeAreaWidth = 5;
 };
 
 class UIWindow : public GameComponent {

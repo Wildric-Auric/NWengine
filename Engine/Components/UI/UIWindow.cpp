@@ -35,7 +35,7 @@ int UIWindow::IsCursorOnTitleBar() {
 
 int UIWindow::IsCursorOnResize() {
     Sprite* spr = attachedObject->GetComponent<Sprite>();
-    return IsCursorOnWindow() && abs(rpos.x) > (spr->container.width*0.5-10) || abs(rpos.y) > (spr->container.height*0.5-5);
+    return IsCursorOnWindow() && abs(rpos.x) > (spr->container.width*0.5-metrics.resizeAreaWidth) || abs(rpos.y) > (spr->container.height*0.5-metrics.resizeAreaWidth);
 }
 
 int UIWindow::IsCursorOnWindow() {
