@@ -27,6 +27,22 @@ UIWindow::UIWindow(GameObject* go) {
     attachedObject = go;
 }
 
+int UIWindow::IsCursorOnTitleBar() {
+    //dist from top
+    if (relPos.y < 0.0) return 0;
+    return lsize.y * 0.5 - relPos.y <= metrics.titleBarHeight;
+}
+
+int UIWindow::IsCursorOnResize() {
+    Sprite* spr = attachedObject->GetComponent<Sprite>();
+    return IsCursorOnWindow() && abs(rpos.x) > (spr->container.width*0.5-10) || abs(rpos.y) > (spr->container.height*0.5-5);
+}
+
+int UIWindow::IsCursorOnWindow() {
+    Sprite* spr = attachedObject->GetComponent<Sprite>();
+    return (abs(rpos.x) < spr->container.width*0.5 && abs(rpos.y) < spr->container.height*0.5);
+}
+
 void UIWindow::Update() {
     Sprite* spr = attachedObject->GetComponent<Sprite>();
     Transform* tr = attachedObject->GetComponent<Transform>();
@@ -34,33 +50,32 @@ void UIWindow::Update() {
     fVec2 s = fVec2(spr->container.width, spr->container.height);
     fVec2 hs = 0.5*fVec2(spr->container.width, spr->container.height);
     spr->GetShader()->SetVector2("uRes", s.x, s.y);
-    spr->GetShader()->SetUniform1f("uTitleHeight", 20.0f);
+    spr->GetShader()->SetUniform1f("uTitleHeight", metrics.titleBarHeight);
 
     fVec2 mpos = Inputs::GetMousePosition();
     fVec2 p    = NWCoordSys::WorldToViewportNonNormalized(mpos);
-    fVec2 rpos = -tr->GetPosition() + p;
+    rpos = -tr->GetPosition() + p;
     bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON,NWin::KeyEventEnum::NWIN_KeyPressed); 
     
     std::cout << "Mpos:" << mpos.x << " " << mpos.y << "\n";
     std::cout << "p: " << p.x << " " << p.y << "\n";
     std::cout << "Scr: " << NWCoordSys::WorldToScreenNonNormalized(mpos).x << " " << NWCoordSys::WorldToScreenNonNormalized(mpos).y << "\n";
     
-    bool cond = (abs(rpos.x) < spr->container.width*0.5 && abs(rpos.y) < spr->container.height*0.5);
-    bool cond2= abs(rpos.x) > 0.9 * hs.x || abs(rpos.y) > 0.9 * hs.y;
-    if (cond2 && cond) {
+    if (IsCursorOnResize() && IsCursorOnWindow() && state == NWUiWindowState::NONE) {
         ((NWin::Window*)(Context::window))->setCursor(NWin::CursorIcon::RESIZE_WE);
     }
-    else {
+    else if ( !IsCursorOnWindow() || (!IsCursorOnResize() && state != NWUiWindowState::RESIZE)) {
         ((NWin::Window*)(Context::window))->setCursor(NWin::CursorIcon::ARROW);
     }
 
-    if (state == NWUiWindowState::NONE && m && cond){
+    if (state == NWUiWindowState::NONE && m && IsCursorOnWindow()) {
         relPos = rpos;
         lsize = fVec2(spr->container.width, spr->container.height);
         lpos  = p;
         lwinPos = tr->GetPosition();
-        state = NWUiWindowState::MOVE;
-        if (cond2) {
+        if (IsCursorOnTitleBar())
+            state = NWUiWindowState::MOVE;
+        if (IsCursorOnResize()) {
             state = NWUiWindowState::RESIZE;
         }
     }

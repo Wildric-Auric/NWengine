@@ -4,9 +4,10 @@
 #include "templates/LineTst.h"
 #include "templates/PrimitivesTst.h"
 #include "templates/InlineShaderTst.h"
+#include "templates/UItst.h"
 
 int main() {
-    Sandbox::Run();
+    UITst::Run();
 	return 0;
 }
 

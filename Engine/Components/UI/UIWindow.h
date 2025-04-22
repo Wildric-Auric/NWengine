@@ -9,6 +9,10 @@ enum class NWUiWindowState {
     RESIZE_Y,
 };
 
+struct UIWindowMetrics {
+    int titleBarHeight = 20;
+};
+
 class UIWindow : public GameComponent {
     public:
     NW_ST_GET_TYPE_IMPL(UIWindow);
@@ -18,9 +22,16 @@ class UIWindow : public GameComponent {
 
     void Update() override;
 
+    int IsCursorOnTitleBar();
+    int IsCursorOnResize();
+    int IsCursorOnWindow();
+
     NWUiWindowState state = NWUiWindowState::NONE;
     fVec2 relPos;
+    fVec2 rpos;
     fVec2 lsize;
     fVec2 lpos;
     fVec2 lwinPos;
+
+    UIWindowMetrics metrics;
 };
