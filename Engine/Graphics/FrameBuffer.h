@@ -120,4 +120,6 @@ public:
      * @brief Deletes the framebuffer.
      */
     void Delete();
+    
+    void GenDepthStencilBuffer();
 };

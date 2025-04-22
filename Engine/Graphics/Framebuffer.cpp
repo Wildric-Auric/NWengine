@@ -26,6 +26,15 @@ void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
 	 NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + num, GL_TEXTURE_2D, tex._glID, 0));
 }
 
+void FrameBuffer::GenDepthStencilBuffer() {
+    Bind();
+    NW_GL_CALL(glGenRenderbuffers(1,&_renderbuffer));
+    NW_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer));  
+    NW_GL_CALL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, attachments[0].tex._size.x, attachments[0].tex._size.y));
+    NW_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _renderbuffer));  
+    Unbind();
+}
+
 void FrameBufferAttachment::Clean() {
     tex.Clean();
 	msTex.Clean();
@@ -71,9 +80,7 @@ void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
 	NW_GL_CALL(glGenFramebuffers(1, &_framebuffer));
 	_msaaVal = msVal;
 
-	Bind();
-    AddAttachment(size);
-    Unbind();
+    AddAttachment(size); 
 }
 
 void FrameBuffer::Bind(RWFrameBuffer ro) {
@@ -123,8 +130,7 @@ void FrameBuffer::Blit(FrameBuffer* other) {
         NW_GL_CALL(glReadBuffer(GL_COLOR_ATTACHMENT0 + i));
         NW_GL_CALL(glDrawBuffer(GL_COLOR_ATTACHMENT0 + i));
 	    NW_GL_CALL(glBlitFramebuffer(0,0, att.tex._size.x, att.tex._size.y, 0,0, att.tex._size.x, att.tex._size.y, GL_COLOR_BUFFER_BIT, GL_NEAREST));
-    }
-	
+    }	
 	Unbind();
 }
 
