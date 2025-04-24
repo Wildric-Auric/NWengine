@@ -11,8 +11,9 @@ static void Init() {
 	Context::EnableVSync();
 	Scene& s = Scene::CreateNew("New Scene");
 	s.MakeCurrent();
-    GameObject& cam = s.AddObject();
-    GameObject& uwin = s.AddObject();
+    GameObject& cam   = s.AddObject();
+    GameObject& uwin  = s.AddObject();
+    GameObject& uwin2 = s.AddObject();
     Camera* camC = cam.AddComponent<Camera>();
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
@@ -20,6 +21,8 @@ static void Init() {
     Renderer::defaultRenderer->SetStretch({1.0,1.0});
 
     uwin.AddComponent<UIWindow>();
+    uwin2.AddComponent<UIWindow>();
+    uwin2.GetComponent<Transform>()->Translate({-150,0});
 
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());

@@ -94,6 +94,7 @@ NW_PREFIX void NWengineLoop() {
 
 		Inputs::Process(Context::window);
 		Context::Update();
+        UISys::Update();
 
 		
 		//Calculate fps

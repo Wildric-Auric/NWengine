@@ -27,6 +27,7 @@
 #include "Components.h"
 #include "Batch.h"
 #include "Text.h"
+#include "UISys.h"
 
 #include "Utilities.h"
 #include "Globals.h"
