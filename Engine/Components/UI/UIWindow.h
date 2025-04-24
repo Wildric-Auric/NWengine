@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-enum class NWUiWindowState {
+enum class UIWindowState {
     NONE,
     MOVE,
     RESIZE,
@@ -12,6 +12,7 @@ enum class NWUiWindowState {
 struct UIWindowMetrics {
     int titleBarHeight = 20;
     int resizeAreaWidth = 5;
+    int borderWidth     = 2;
 };
 
 class UIWindow : public GameComponent {
@@ -27,8 +28,11 @@ class UIWindow : public GameComponent {
     int IsCursorOnTitleBar();
     int IsCursorOnResize();
     int IsCursorOnWindow();
+    bool IsFocused();
+    UIWindowState GetState(); 
+    void SetShaderParams();
 
-    NWUiWindowState state = NWUiWindowState::NONE;
+    UIWindowState state = UIWindowState::NONE;
     fVec2 relPos;
     fVec2 rpos;
     fVec2 lsize;

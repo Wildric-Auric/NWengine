@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "DefaultAssets.h"
 #include "UIWindow.h"
+#include "UISys.h"
 
 
 namespace UITst {
@@ -14,6 +15,7 @@ static void Init() {
     GameObject& cam   = s.AddObject();
     GameObject& uwin  = s.AddObject();
     GameObject& uwin2 = s.AddObject();
+    GameObject& uwin3 = s.AddObject();
     Camera* camC = cam.AddComponent<Camera>();
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
@@ -23,6 +25,8 @@ static void Init() {
     uwin.AddComponent<UIWindow>();
     uwin2.AddComponent<UIWindow>();
     uwin2.GetComponent<Transform>()->Translate({-150,0});
+    uwin3.AddComponent<UIWindow>();
+    uwin3.GetComponent<Transform>()->Translate({150,0});
 
     s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());

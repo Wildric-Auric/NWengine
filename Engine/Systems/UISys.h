@@ -21,7 +21,9 @@ class UISys {
     static bool      isResposive;
     static NWin::Key clickKey; 
     static UIWindow* focusedWindow;
+    static UIWindow* hoveredWindow;
     static UIWindow* topMostSelected;
+    static UIWindow* topMostHovered;
 
     static void Init();
     static void Update();
@@ -29,5 +31,9 @@ class UISys {
     static void SetCursorState(UISysCursorState s =  UISysCursorState::NONE, int priority = 0);
     static void Focus(UIWindow*);
     static void ForceFocus(UIWindow*);
-    
+    static void Hover(UIWindow*);
+    static void ForceHover(UIWindow*);
+    static void UnFocus();
+    static bool GetClickEvent(); 
+    static fVec2 GetCurPos();
 };
