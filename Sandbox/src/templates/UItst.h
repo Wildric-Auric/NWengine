@@ -22,7 +22,7 @@ static void Init() {
     camC->ChangeOrtho(500,500);
     Renderer::defaultRenderer->SetStretch({1.0,1.0});
 
-    uwin.AddComponent<UIWindow>();
+    uwin.AddComponent<UIWindow>()->SetTitle("Hello Window");
     uwin2.AddComponent<UIWindow>();
     uwin2.GetComponent<Transform>()->Translate({-150,0});
     uwin3.AddComponent<UIWindow>();
@@ -49,4 +49,3 @@ void Run() {
         NWengineShutdown();
     }
 };
-

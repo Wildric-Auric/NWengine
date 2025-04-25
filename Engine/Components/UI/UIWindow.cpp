@@ -9,9 +9,20 @@
 #include "InlineShader.h"
 #include "UISys.h"
 #include "Scene.h"
+#include "Text.h"
+#include "DefaultAssets.h"
+#include "Utilities.h"
 
+#include "DefaultAssets.h"
 bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) {
     return obj->GetComponent<UIWindow>();
+}
+
+int UIWindow::UIWindowDrawCallback(void* obj) {
+    UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
+    int ret = Sprite::DefaultSpriteDrawCallback(obj); 
+    win->items[UIItemType::TITLE][0].Draw();
+    return ret;
 }
 
 void UIWindow::OnAdd() {
@@ -34,6 +45,22 @@ void UIWindow::OnAdd() {
     spr->SetShader(inlineShader.GetShader());
     Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
     spr->SetSortingLayerFull(UISys::GetAvailableLayer());
+
+    GameObject* obj = AddItem(UIItemType::TITLE);
+    Text* te = obj->AddComponent<Text>();
+    te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
+    te->isBatched = false;
+    std::string fdir;
+    GetSystemFontDir(&fdir); 
+    fdir += "Arial.ttf";
+	te->SetFont({fdir.c_str(),15}, te->_shader);
+    te->layerOrder = spr->sortingLayer - 1;
+    attachedObject->SetDrawCallback(UIWindowDrawCallback);
+}
+
+GameObject* UIWindow::AddItem(UIItemType type) {
+   items[type].push_back({});
+   return &items[type].back();
 }
 
 void UIWindow::OnDelete() {
@@ -68,6 +95,11 @@ UIWindowState UIWindow::GetState() {
     return state;
 }
 
+fVec2 UIWindow::GetSize() {
+    Sprite* spr = attachedObject->GetComponent<Sprite>();
+    return fVec2(spr->container.width, spr->container.height);
+}
+
 void UIWindow::SetShaderParams() {
     Sprite* spr = attachedObject->GetComponent<Sprite>();
     spr->GetShader()->Use();
@@ -76,6 +108,21 @@ void UIWindow::SetShaderParams() {
     spr->GetShader()->SetUniform1f("uTitleHeight", metrics.titleBarHeight);
     spr->GetShader()->SetUniform1f("uBorderWidth", metrics.borderWidth);
     spr->GetShader()->SetUniform4f("uCol", bgCol.x, bgCol.y, bgCol.z, bgCol.z);
+}
+
+fVec2 UIWindow::GetPosition() {
+    Transform* tr = attachedObject->GetComponent<Transform>();
+    return tr->GetPosition();
+}
+
+void UIWindow::SetTitle(const char* c) {
+    Text* te = items[UIItemType::TITLE][0].GetComponent<Text>();
+    te->SetContent(c);
+    te->UpdateGlyphs();
+    fVec2 s = GetSize();
+    NWCoordSys::BoundingBox& bb = te->GetBBRef();
+    te->SetPosition(GetPosition() + fVec2(-s.x * 0.5 + bb.size.x * 0.5, s.y * 0.5 - bb.size.y * 0.5));
+    te->UpdateGlyphs();
 }
 
 void UIWindow::Update() {
@@ -96,8 +143,7 @@ void UIWindow::Update() {
         UISys::Hover(this);
     }
 
-    bgCol.x = IsFocused(); 
-    
+    bgCol.x = IsFocused();
 
     if (state == UIWindowState::NONE && m && IsCursorOnWindow() && UISys::focusedWindow == this) {
         relPos = rpos;
@@ -132,7 +178,7 @@ void UIWindow::Update() {
         newsize.x = Max<int>(newsize.x, metrics.minSize.x);
         newsize.y = Max<int>(newsize.y, metrics.minSize.y);
         spr->SetSize(newsize);
-//        if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)
-//            tr->SetPosition(lwinPos - m);
+        tr->SetPosition(lwinPos - m);
+//      if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)
     }
 }
