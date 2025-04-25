@@ -43,7 +43,7 @@ void UISys::UnFocus() {
 int64 UISys::GetAvailableLayer() {
     auto f = Scene::GetCurrent()->cache.find(UIWindow::CacheConditionHasUIWindow);
     int num = f->second.size();
-    return UISys::layerConsts.windowRange * num;
+    return UISys::layerConsts.baseWindowLayer + UISys::layerConsts.windowRange * (num + 1);
 }
 
 void UISys::Update() {
