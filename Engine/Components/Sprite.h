@@ -34,7 +34,7 @@ public:
     Texture* texture = nullptr;
 
     BatchType _isBatched = BatchType::UNBATCHED;
-    int  _lastSortingLayer = 0;
+    int64 _lastSortingLayer = 0;
     bool _shouldDraw = 1;
     bool _isRendered = 1;
 
@@ -110,6 +110,10 @@ public:
      * @param order The sorting order of the sprite.
      */
     void SetSortingLayer(int order);
+
+    void SetSortingLayerFull(int64 order);
+
+    int64 GetSortingLayer();
 
     /**
      * @brief Renders the sprite.

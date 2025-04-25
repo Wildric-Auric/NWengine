@@ -15,6 +15,10 @@ void Sprite::OnAdd() {
 }
 
 
+int64 Sprite::GetSortingLayer() {
+    return sortingLayer;
+}
+
 void Sprite::SetTexture(std::string path, bool alpha) {
 	//TODO::Add error handling
 	Texture loader;
@@ -53,15 +57,17 @@ void Sprite::SetShader(Shader* s) {
 	shader = s;
 }
 
-void Sprite::SetSortingLayer(int order) {
+void Sprite::SetSortingLayerFull(int64 order) {
 	sortingLayer = order;
-	uint64 unsignedLayer = sortingLayer + 0xFFFFFFFF;
 	if (sortingLayer != _lastSortingLayer) {
-		zbuffer = 1.0 / ((double)(unsignedLayer + 1));
 		_lastSortingLayer = sortingLayer;
 		if (_isRendered)
 			Scene::currentScene->Rearrange(this);
-	}	
+	}	 
+}
+
+void Sprite::SetSortingLayer(int order) {
+    SetSortingLayerFull(order);
 }
 
 void Sprite::Batch(BatchType type) {

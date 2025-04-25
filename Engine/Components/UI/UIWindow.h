@@ -13,6 +13,7 @@ struct UIWindowMetrics {
     int titleBarHeight = 20;
     int resizeAreaWidth = 5;
     int borderWidth     = 2;
+    iVec2 minSize       = iVec2(20,20);
 };
 
 class UIWindow : public GameComponent {

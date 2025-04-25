@@ -33,6 +33,7 @@ void UIWindow::OnAdd() {
     inlineShader.Generate();
     spr->SetShader(inlineShader.GetShader());
     Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
+    spr->SetSortingLayerFull(UISys::GetAvailableLayer());
 }
 
 void UIWindow::OnDelete() {
@@ -127,7 +128,11 @@ void UIWindow::Update() {
         if (relPos.y < 0.0) {
             ps.y = -(ps.y);
         }
-        spr->SetSize(lsize + ps);
-        tr->SetPosition(lwinPos - m);
+        fVec2 newsize = lsize + ps;
+        newsize.x = Max<int>(newsize.x, metrics.minSize.x);
+        newsize.y = Max<int>(newsize.y, metrics.minSize.y);
+        spr->SetSize(newsize);
+//        if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)
+//            tr->SetPosition(lwinPos - m);
     }
 }

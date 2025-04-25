@@ -6,6 +6,11 @@
 #include "Sprite.h"
 #include "Scene.h"
 
+//Range of each window layers is of 0x10000 = 65536
+//r:      b ---> l: b + 0x10000
+//b is base, l layer is allocated is allocated to the window itself, 
+//other layers are allocated to the window content.
+//
 
 GameObject UISys::camContainer;
 fVec2      UISys::curPos;
@@ -16,6 +21,7 @@ UIWindow*  UISys::focusedWindow          = 0;
 UIWindow*  UISys::topMostSelected        = 0;
 UIWindow*  UISys::hoveredWindow          = 0;
 UIWindow*  UISys::topMostHovered         = 0;
+UILayerConsts UISys::layerConsts;
 
 int UISys::curStatePriority = 0;
 UISysCursorState UISys::curState = UISysCursorState::NONE;
@@ -34,6 +40,12 @@ void UISys::UnFocus() {
     focusedWindow = 0;
 }
 
+int64 UISys::GetAvailableLayer() {
+    auto f = Scene::GetCurrent()->cache.find(UIWindow::CacheConditionHasUIWindow);
+    int num = f->second.size();
+    return UISys::layerConsts.windowRange * num;
+}
+
 void UISys::Update() {
     if (!isResposive) return;
     NWin::Window* win = ((NWin::Window*)(Context::window));
@@ -42,19 +54,32 @@ void UISys::Update() {
     curPos     = NWCoordSys::WorldToViewportNonNormalized(curPos);
     clickEvent = win->_getKeyboard().onKeyPress(clickKey);
     //-----------Set focus and hover logic-----------
+    struct MapProcData {
+        UIWindow* win;          
+        int64 refLayer;
+    };
+
     if (clickEvent && topMostSelected == 0) {
         UnFocus();
     }
     if (topMostSelected && focusedWindow != topMostSelected) {
         focusedWindow = topMostSelected;
         mapProc mapProc = [](GameObject* obj, void* d) -> int {
-            UIWindow* win = (UIWindow*)d;
+            UIWindow* win = ((MapProcData*)d)->win;
+            int64 ref = ((MapProcData*)d)->refLayer;
             Sprite* spr = obj->GetComponent<Sprite>();
-            int newlayer = obj == win->attachedObject ? -100 : spr->sortingLayer + 1;
-            spr->SetSortingLayer(newlayer);
+            if (obj == win->attachedObject) {
+                spr->SetSortingLayerFull(UISys::layerConsts.baseWindowLayer);
+                return 1;
+            } 
+            if (spr->GetSortingLayer() >= ref)
+                return 0;
+            int64 newlyr = spr->sortingLayer + UISys::layerConsts.windowRange;
+            spr->SetSortingLayerFull(newlyr);
             return 0; 
         };
-        Scene::GetCurrent()->CacheMap(UIWindow::CacheConditionHasUIWindow,  mapProc, focusedWindow);
+        MapProcData d = {focusedWindow, focusedWindow->attachedObject->GetComponent<Sprite>()->GetSortingLayer()};
+        Scene::GetCurrent()->CacheMap(UIWindow::CacheConditionHasUIWindow,  mapProc, &d);
     }
     hoveredWindow = topMostHovered; 
     topMostHovered  = 0;

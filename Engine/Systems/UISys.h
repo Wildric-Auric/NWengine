@@ -11,10 +11,18 @@ enum class UISysCursorState {
    RESIZE = 1
 };
 
+struct UILayerConsts{
+    int64 baseWindowLayer =  0xFFFFFFFF00000000;
+    int64 windowRange     =  0x10000; 
+};
+
 class UISys {
     public:
+
+    static UILayerConsts layerConsts;
+
     static GameObject camContainer;
-    static fVec2 curPos;
+    static fVec2     curPos;
     static int       curStatePriority;
     static UISysCursorState curState;
     static bool      clickEvent;
@@ -36,4 +44,5 @@ class UISys {
     static void UnFocus();
     static bool GetClickEvent(); 
     static fVec2 GetCurPos();
+    static int64 GetAvailableLayer();
 };
