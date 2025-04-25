@@ -65,7 +65,7 @@ void InlineShader::SetVertOut(const char* txt) {
 }
 
 void InlineShader::Generate() {
-    Shader::parser.ClearCnsts();
+    auto consts = Shader::parser.constants;
 
     Shader::parser.AddCnst("INLINE_VERT_BEG_USR", _data.vert.c_str());
     Shader::parser.AddCnst("INLINE_VERT_MAIN_USR", _end.vert.c_str());
@@ -77,6 +77,8 @@ void InlineShader::Generate() {
     _id += std::to_string(_autoIncID++);
     auto loader = Loader<Shader>();
     _shader = loader.LoadFromBuffer((void*)&Raw,&_id);
+
+    Shader::parser.constants = consts;
 }
 
 Shader* InlineShader::GetShader() {
