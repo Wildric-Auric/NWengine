@@ -21,8 +21,22 @@ bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) {
 int UIWindow::UIWindowDrawCallback(void* obj) {
     UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
     int ret = Sprite::DefaultSpriteDrawCallback(obj); 
-    win->items[UIItemType::TITLE][0].Draw();
+    win->DrawItems();
     return ret;
+}
+
+void UIWindow::DrawItems() {
+    for (auto iter = this->items.begin(); iter != this->items.end(); iter++) {
+        iter->obj.Draw();
+    }
+}
+    
+int64 UIWindow::GetLayer() {
+    return attachedObject->GetComponent<Sprite>()->GetSortingLayer();
+}
+
+int64 UIWindow::GetUIItemLayer(int64 relative) {
+    return GetLayer() - relative;
 }
 
 void UIWindow::OnAdd() {
@@ -46,7 +60,8 @@ void UIWindow::OnAdd() {
     Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
     spr->SetSortingLayerFull(UISys::GetAvailableLayer());
 
-    GameObject* obj = AddItem(UIItemType::TITLE);
+    UIItem* item = AddItem(UIItemType::TITLE,-1);
+    GameObject* obj = &item->obj;
     Text* te = obj->AddComponent<Text>();
     te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
     te->isBatched = false;
@@ -58,9 +73,39 @@ void UIWindow::OnAdd() {
     attachedObject->SetDrawCallback(UIWindowDrawCallback);
 }
 
-GameObject* UIWindow::AddItem(UIItemType type) {
-   items[type].push_back({});
-   return &items[type].back();
+UIItemType UIItem::GetType() {
+    return type;
+}
+
+int64 UIItem::GetLayer() {
+    return obj.GetComponent<Sprite>()->GetSortingLayer();
+}
+
+void UIItem::_SetUp(UIItemType ptype, int64 layer, std::list<UIItem>::iterator it) {
+    obj.AddComponent<Sprite>()->sortingLayer = layer;
+    type = ptype;
+    _iter = it;
+}
+
+UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
+    //insert at beginning
+    if (items.size() == 0 || items.front().GetLayer() <= layer) {
+        items.push_front({});
+        items.front()._SetUp(type, layer, items.begin());
+        return &items.front();
+    }
+    //insert at the middle
+    for (auto it = ++items.begin(); it != items.end(); ++it) {
+        if (it->GetLayer() > layer)
+            continue;
+        auto newIt = items.insert(it,{});
+        newIt->_SetUp(type, layer, newIt);
+        return &*newIt;
+    }
+    //insert at the end
+    items.push_back({});
+    (--items.end())->_SetUp(type,layer, --items.end());
+    return &items.back();
 }
 
 void UIWindow::OnDelete() {
@@ -116,7 +161,7 @@ fVec2 UIWindow::GetPosition() {
 }
 
 void UIWindow::SetTitle(const char* c) {
-    Text* te = items[UIItemType::TITLE][0].GetComponent<Text>();
+    Text* te = items.back().obj.GetComponent<Text>();
     te->SetContent(c);
     te->UpdateGlyphs();
     fVec2 s = GetSize();

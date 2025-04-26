@@ -183,6 +183,8 @@ void Text::SetChrComps(Character* chr, char c) {
 		if (this->isBatched)
 			sprite->Batch();
 		sprite->SetTexture(&chr->glyph->texture);
+        sprite->texture->SetMinFilter(TexMinFilter::NW_NEAREST_MIPMAP_NEAREST);
+        sprite->texture->SetMaxFilter(TexMaxFilter::NW_LINEAR);
 		sprite->SetSortingLayer(layerOrder);
 }
 
