@@ -37,7 +37,6 @@ void Text::SetFixedLineSpacing(const float value) {
 }
 
 void Text::Update() {
-
 	uint32 temp  = (uint32)(this->colors.g * MAX_BIT_10) | ((uint32)(this->colors.r * MAX_BIT_10) << 0xA);
 	uint32 temp0 = (uint32)(this->colors.a * MAX_BIT_10) | ((uint32)(this->colors.b * MAX_BIT_10) << 0xA);
 
@@ -120,7 +119,26 @@ void Text::SetRelCharPos(Character* chr) {
     tr->Translate(_bb.center + apos);
 }
 
-void Text::UpdateGlyphs() {
+
+void Text::MapOnChar(CharacterUpdateCallback f, void* data) {
+    int i = 0;
+    for (Character& c : characters) {
+        TextIterData d;
+        d.chrNum = characters.size();
+        d.chrIndex = i++;
+        d.other = data;
+        f(&c, &d);
+    }
+}
+
+void Text::DirectDraw() {
+   for (Character& c : characters) {
+        c.go.Draw();
+   }
+}
+
+void Text::UpdateGlyphs(bool dontRender) {
+    _isRendered = !dontRender;
 	if (characters.size() < 1) 
 		characters.push_back(Character());
 
@@ -145,6 +163,25 @@ void Text::UpdateGlyphs() {
     for (iter = characters.begin(); iter != characters.end(); ++iter) {
         SetRelCharPos(&*iter); 
     }
+}
+
+void Text::Render() {
+    _isRendered = 1;
+    for (Character& c : characters) {
+        Sprite* spr = c.go.GetComponent<Sprite>();
+        spr->sortingLayer = layerOrder+1;
+        spr->SetSortingLayerFull(layerOrder);
+    }
+}
+
+void Text::StopRendering() {
+    _isRendered = 0;
+    for (Character& chr : characters) {
+		Sprite* sprite = chr.go.GetComponent<Sprite>();
+        sprite->StopRendering();
+        sprite->DontDraw();
+	}
+	Scene::currentScene->ForceRenderStop();
 }
 
 void Text::ApplyConstraint(Character* chr, TextConstraintIterData* data) {
@@ -185,7 +222,13 @@ void Text::SetChrComps(Character* chr, char c) {
 		sprite->SetTexture(&chr->glyph->texture);
         sprite->texture->SetMinFilter(TexMinFilter::NW_NEAREST_MIPMAP_NEAREST);
         sprite->texture->SetMaxFilter(TexMaxFilter::NW_LINEAR);
-		sprite->SetSortingLayer(layerOrder);
+        if (_isRendered)
+		    sprite->SetSortingLayer(layerOrder);
+        else {
+            sprite->sortingLayer = layerOrder;
+            sprite->DontDraw();
+            sprite->StopRendering();
+        }
 }
 
 void Text::SetFont(const FontIdentifier& id) { 
@@ -215,11 +258,7 @@ void Text::SetFont(const FontIdentifier& sf, const ShaderText& st, ShaderIdentif
 
 
 Text::~Text() {
-	for (std::list<Character>::iterator chr = characters.begin(); chr != characters.end(); ++chr) {
-		Sprite* sprite = chr->go.GetComponent<Sprite>();
-		sprite->_isRendered = 0;
-	}
-	Scene::currentScene->ForceRenderStop();
+    StopRendering();
 	if (font)
 		font->Clean();
 }

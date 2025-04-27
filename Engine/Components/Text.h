@@ -69,7 +69,7 @@ public:
     /**
      * @brief UpdateGlyphs updates the glyphs of the Text component.
      */
-    void UpdateGlyphs();
+    void UpdateGlyphs(bool dontRender = 0);
 
     void ApplyConstraint(Character*, TextConstraintIterData*);
     void SetChrComps(Character* chr, char c);
@@ -85,6 +85,8 @@ public:
     void SetHorizontalAlignment(const TextHorizontalAlignment);
 
     void SetFixedLineSpacing(const float); 
+
+    void MapOnChar(CharacterUpdateCallback, void*);
 
     fVec2 GetPosition();
     fVec2 GetPostionTopLeft();
@@ -134,6 +136,11 @@ public:
     void CalcBB(TextConstraintIterData*);
     void SetRelCharPos(Character*);
 
+    void Render();
+    void StopRendering();
+
+    void DirectDraw();
+
     CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
     /**
      * @brief characters is a list of characters that make up the text.
@@ -160,7 +167,7 @@ public:
      * @brief isBatched indicates whether the text is batched for rendering.
      */
     bool isBatched = true;
-
+    bool _isRendered = true;
     /**
      * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
      */
