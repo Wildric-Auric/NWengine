@@ -121,6 +121,26 @@ void Context::EnableDepthTest(bool status) {
 	NW_GL_CALL(glDisable(GL_DEPTH_TEST));
 }
 
+void Context::EnableStencilTest(bool status) {
+	if (status) {
+		NW_GL_CALL(glEnable(GL_STENCIL_TEST));
+        NW_GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE));
+        SetStencilFunc(NWStencilBehaviour::NW_ALWAYS);
+        SetStencilMask(0);
+        
+		return;
+	}
+	NW_GL_CALL(glDisable(GL_STENCIL_TEST));
+}
+
+void Context::SetStencilFunc(NWStencilBehaviour b) {
+    NW_GL_CALL(glStencilFunc(b, 1, 0xFF));
+}
+
+void Context::SetStencilMask(bool val) {
+    NW_GL_CALL(glStencilMask(val*0xFF));
+}
+
 void Context::EnableWireframe(bool status) {
 	if (status) {
 		NW_GL_CALL(glDisable(GL_BLEND));
@@ -134,7 +154,33 @@ void Context::EnableWireframe(bool status) {
 
 void Context::Clear(float r, float g, float b, float a) { ///RGBA
 	NW_GL_CALL(glClearColor(r,g,b,a));
-	NW_GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	NW_GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
+}
+
+void Context::Clear(const fVec4& col) { 
+	NW_GL_CALL(glClearColor(col.r,col.g,col.b,col.a));
+	NW_GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
+}
+
+void Context::ClearStencilBuff() {
+	NW_GL_CALL(glClear(GL_STENCIL_BUFFER_BIT));
+}
+
+void Context::ClearColorBuff(const fVec4& col) {
+	NW_GL_CALL(glClearColor(col.r,col.g,col.b,col.a));
+	NW_GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+void Context::ClearDepthBuff() {
+	NW_GL_CALL(glClear(GL_DEPTH_BUFFER_BIT));
+}
+
+void Context::SetStencilWrite(bool val) {
+    if (!val) {
+       NW_GL_CALL(glStencilMask(0x00));
+       return;
+    }
+    NW_GL_CALL(glStencilMask(0xFF));
 }
 
 

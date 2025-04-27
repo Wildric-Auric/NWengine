@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 
+
 struct OpenGLInfo {
     unsigned char minVersion = 3;
     unsigned char maxVersion = 3;
@@ -8,6 +9,15 @@ struct OpenGLInfo {
     bool  disableCompatibility = 1;
 };
 
+enum NWStencilBehaviour {
+    NW_LESS          = 0x0201,
+    NW_EQUAL         = 0x0202,
+    NW_LEQUAL        = 0x0203,
+    NW_GL_GREATER    = 0x0204,
+    NW_NOTEQUAL      = 0x0205,
+    NW_GEQUAL        = 0x0206,
+    NW_ALWAYS        = 0x0207
+};
 
 /**
  * @brief The Context class represents the application context.
@@ -65,6 +75,14 @@ public:
      */
     static void EnableDepthTest(bool status = true);
 
+    static void EnableStencilTest(bool status = true);
+
+    static void SetStencilWrite(bool val);
+
+    static void SetStencilFunc(NWStencilBehaviour b);
+    
+    static void SetStencilMask(bool val);
+
     /**
      * @brief Clears the screen with the specified color.
      * @param r The red component of the color.
@@ -73,6 +91,10 @@ public:
      * @param a The alpha component of the color.
      */
     static void Clear(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
+    static void Clear(const fVec4&);
+    static void ClearStencilBuff();
+    static void ClearColorBuff(const fVec4&);
+    static void ClearDepthBuff();
 
     /**
      * @brief Sets the viewport.
