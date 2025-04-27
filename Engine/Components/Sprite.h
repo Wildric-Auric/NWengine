@@ -125,6 +125,8 @@ public:
      */
     void StopRendering();
 
+    void DontDraw();
+
     /**
      * @brief Batches the sprite.
      * @param type The batch type to use.
@@ -140,7 +142,6 @@ public:
      * @brief Updates the sprite.
      */
     void Update() override;
-
     /**
      * @brief Default draw callback for sprites.
      * @param data The data to pass to the draw callback.

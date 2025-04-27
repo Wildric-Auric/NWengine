@@ -90,6 +90,10 @@ void Sprite::StopRendering() {
 	_isRendered = 0;
 }
 
+void Sprite::DontDraw() {
+    _shouldDraw = 0;
+}
+
 void Sprite::Update() {
 	if (!_shouldDraw) return;
 	Scene::currentScene->Rearrange(this);
