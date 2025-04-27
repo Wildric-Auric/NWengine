@@ -29,7 +29,10 @@ class UIItem {
     UIItemType GetType();
     int64 GetLayer();
     void _SetUp(UIItemType type, int64 layer, std::list<UIItem>::iterator);
+    int64 (*_GetLayerProc)(UIItem*) = DefaultUIItemGetLayerProc; 
     std::list<UIItem>::iterator _iter;
+
+    static int64 (*DefaultUIItemGetLayerProc)(UIItem*);
 };
 
 class UIWindow : public GameComponent {
@@ -51,11 +54,12 @@ class UIWindow : public GameComponent {
     fVec2  GetPosition();
     void SetShaderParams(); 
     void SetTitle(const char* str);
+    void _SetTitlePosition();
     int64 GetLayer(); 
     int64 GetUIItemLayer(int64 relative);
 
     UIItem* AddItem(UIItemType, int64);
-    void        DrawItems();
+    void    DrawItems();
 
     UIWindowState state = UIWindowState::NONE;
     fVec2 relPos;

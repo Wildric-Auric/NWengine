@@ -36,5 +36,3 @@ void Scriptable::ShaderCode(void* sprite) {
     fMat4 mvp = (Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix * model);
 	sprite0->shader->SetMat4x4("uMvp", &mvp.values[0]);
 }
-
-

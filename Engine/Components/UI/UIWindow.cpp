@@ -13,20 +13,30 @@
 #include "DefaultAssets.h"
 #include "Utilities.h"
 
-#include "DefaultAssets.h"
+int64 (*UIItem::DefaultUIItemGetLayerProc)(UIItem*) = [](UIItem* item)->int64{ return item->obj.GetComponent<Sprite>()->GetSortingLayer();};
+
 bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) {
     return obj->GetComponent<UIWindow>();
 }
 
 int UIWindow::UIWindowDrawCallback(void* obj) {
     UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
+    Context::EnableStencilTest(1);
+    Context::SetStencilMask(1);
+    Context::ClearStencilBuff();
+    Context::SetStencilFunc(NWStencilBehaviour::NW_ALWAYS);
     int ret = Sprite::DefaultSpriteDrawCallback(obj); 
+    Context::SetStencilFunc(NWStencilBehaviour::NW_EQUAL);
     win->DrawItems();
+    Context::EnableStencilTest(0);
     return ret;
 }
 
 void UIWindow::DrawItems() {
     for (auto iter = this->items.begin(); iter != this->items.end(); iter++) {
+        if (iter->type == UIItemType::TITLE) {
+            iter->obj.GetComponent<Text>()->DirectDraw();
+        }
         iter->obj.Draw();
     }
 }
@@ -61,6 +71,7 @@ void UIWindow::OnAdd() {
     spr->SetSortingLayerFull(UISys::GetAvailableLayer());
 
     UIItem* item = AddItem(UIItemType::TITLE,-1);
+
     GameObject* obj = &item->obj;
     Text* te = obj->AddComponent<Text>();
     te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
@@ -82,7 +93,8 @@ int64 UIItem::GetLayer() {
 }
 
 void UIItem::_SetUp(UIItemType ptype, int64 layer, std::list<UIItem>::iterator it) {
-    obj.AddComponent<Sprite>()->sortingLayer = layer;
+    if (ptype == UIItemType::TITLE) _GetLayerProc = 
+    [](UIItem* item)->int64 {return item->obj.GetComponent<Text>()->layerOrder;};    
     type = ptype;
     _iter = it;
 }
@@ -160,17 +172,29 @@ fVec2 UIWindow::GetPosition() {
     return tr->GetPosition();
 }
 
-void UIWindow::SetTitle(const char* c) {
-    Text* te = items.back().obj.GetComponent<Text>();
-    te->SetContent(c);
-    te->UpdateGlyphs();
+void UIWindow::_SetTitlePosition() {
+    if (items.size() == 0) return;
+    UIItem& item = items.back();
+    if (item.type != UIItemType::TITLE) return;
+    Text* te = item.obj.GetComponent<Text>();
     fVec2 s = GetSize();
     NWCoordSys::BoundingBox& bb = te->GetBBRef();
     te->SetPosition(GetPosition() + fVec2(-s.x * 0.5 + bb.size.x * 0.5, s.y * 0.5 - bb.size.y * 0.5));
-    te->UpdateGlyphs();
+    te->UpdateGlyphs(1);
+}
+
+void UIWindow::SetTitle(const char* c) {
+    Text* te = items.back().obj.GetComponent<Text>();
+    te->SetContent(c);
+    te->UpdateGlyphs(1);
 }
 
 void UIWindow::Update() {
+    for (UIItem& item : items) {
+        Text* t = item.obj.GetComponent<Text>();
+        if (t) {_SetTitlePosition();t->Update();}
+    }
+
     Sprite* spr = attachedObject->GetComponent<Sprite>();
     Transform* tr = attachedObject->GetComponent<Transform>();
     NWin::Window* win = ((NWin::Window*)(Context::window));

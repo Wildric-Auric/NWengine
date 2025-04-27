@@ -20,6 +20,7 @@ static void Init() {
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(500,500);
+    camC->GetFbo()->GenDepthStencilBuffer();
     Renderer::defaultRenderer->SetStretch({1.0,1.0});
 
     uwin.AddComponent<UIWindow>()->SetTitle("Hello Window");
