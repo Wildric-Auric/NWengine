@@ -26,7 +26,7 @@ void Scene::Rearrange(Sprite* sprite) {
 void Scene::Render(Sprite* sprite) {
 	//TODO::Make drawList a list of sprities not gameobjects
 	std::list<Sprite*>::iterator iter = drawList.begin();
-	int layer = sprite->sortingLayer;
+	int64 layer = sprite->sortingLayer;
 	//Insert at beginning
 	if (drawList.size() < 1 || layer <= (*iter)->sortingLayer) {
 		drawList.insert(drawList.begin(), sprite);
@@ -40,8 +40,8 @@ void Scene::Render(Sprite* sprite) {
 	while (iter != --drawList.end()) {
 		auto a	   = iter;
 		auto b	   = ++iter;
-		int lA = (*a)->sortingLayer;
-		int lB=  (*b)->sortingLayer;
+		int64 lA = (*a)->sortingLayer;
+		int64 lB=  (*b)->sortingLayer;
 		if (lA <= layer && lB >= layer) {
 			drawList.insert(b, sprite);
 			return;
@@ -124,8 +124,8 @@ void Scene::Draw() {
 	std::list<Sprite*>::iterator it		  = drawList.end();
 	std::unordered_map<int, std::vector<Batch*>>::iterator it0;
 
-	int lastLayer							      = 0xFFFFFFFF - 1;
-	int temp									  = 0;
+	int64 lastLayer							      = 0x7FFFFFFFFFFFFFFF;
+	int64 temp									  = 0;
 
 	while (it != drawList.begin()) {
 		--it;
@@ -341,6 +341,17 @@ int Scene::CacheMap(cacheCondProc key, mapProc proc, void* data) {
         res = res + proc(pair.first, data);
     }
     return res;
+}
+
+GameObject* Scene::GetFirstObjectWith(bool(*f)(GameObject*,void*),void* data) {
+    for (GameObject& obj : sceneObjs) {
+        if (f(&obj, data)) return &obj;
+    }
+    return 0;
+}
+
+GameObject* Scene::GetFirstObjectWithComponent(uint32 compID) {
+    return GetFirstObjectWith([](GameObject* obj, void* compID)->bool{ return obj->GetComponent(*(uint32*)compID);}, &compID);
 }
 
 int Scene::ObjMap(mapProc proc, void* data) {

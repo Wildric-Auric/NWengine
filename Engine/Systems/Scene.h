@@ -95,6 +95,16 @@ public:
      */
     int CacheMap(cacheCondProc cond, mapProc proc, void* data);
 
+    GameObject* GetFirstObjectWith(bool(*)(GameObject*,void*),void*);
+    GameObject* GetFirstObjectWithComponent(uint32 compID);
+    
+    template<typename T> 
+    T* GetFirstComponent() {
+        GameObject* obj = GetFirstObjectWithComponent(T::GetType());
+        if (!obj) return 0;
+        return obj->GetComponent<T>();
+    }
+
     /**
      * @brief Apply a function on all objects of the scene.
      * @param proc The procedure to be applied. 

@@ -41,7 +41,7 @@ public:
     fVec3 vertexAttributes; /**< Vertex attributes of the sprite */
     Shader* shader = nullptr;
     Quad container = Quad(16,16); /**< Container of the sprite */
-    int sortingLayer = 0; /**< Sorting layer of the sprite */
+    int64 sortingLayer = 0; /**< Sorting layer of the sprite */
     double zbuffer = 1.0; /**< Z-buffer value of the sprite */
 
     /**
