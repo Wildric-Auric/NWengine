@@ -12,7 +12,13 @@
 
 #ifdef NW_RELEASE
 #define NW_GL_TEST()
+#define NW_GL_ERROR_NO_CHECK(a)
 #else 
+#define NW_GL_ERROR_NO_CHECK(a) { \
+    NW_LOG_ERROR("\n---------------------\nOpenGL ERROR: "); NW_LOG_ERRORI(a);  NW_LOG_ERROR("; at line: "); NW_LOG_ERRORI(__LINE__); \
+    NW_LOG_ERROR("; at file: "); NW_LOG_ERROR(__FILE__); NW_LOG_ERROR("\n---------------------\n"); \
+}
+
 #define NW_GL_TEST() { \
 	int a; \
     do {\
