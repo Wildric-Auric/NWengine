@@ -1,0 +1,29 @@
+# .clang-format configuration
+
+BasedOnStyle: llvm 
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always
+ColumnLimit: 100
+
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+
+SpacesBeforeTrailingComments: 1
+AllowAllParametersOfDeclarationOnNextLine: false
+BreakBeforeBraces: Attach 
+SpaceBeforeParens: Never 
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: true
+
+# Optional, to enforce consistent use of braces even on one-liners:
+AlwaysBreakAfterReturnType: None
+
+
+
