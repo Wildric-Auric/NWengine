@@ -4,6 +4,7 @@
 #include "templates/LineTst.h"
 #include "templates/PrimitivesTst.h"
 #include "templates/InlineShaderTst.h"
+//#include "templates/UItst2.h"
 #include "templates/UItst.h"
 
 int main() {
