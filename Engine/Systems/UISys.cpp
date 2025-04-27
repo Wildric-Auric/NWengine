@@ -29,7 +29,7 @@ UISysCursorState UISys::curState = UISysCursorState::NONE;
 UISysCursorState curState;
 
 void UISys::SetCursorState(UISysCursorState s, int priority) {
-    //if (state :e)
+
 }
 
 void UISys::Init() {
@@ -49,9 +49,10 @@ int64 UISys::GetAvailableLayer() {
 void UISys::Update() {
     if (!isResposive) return;
     NWin::Window* win = ((NWin::Window*)(Context::window));
-    //TODO::World to viewport??
     curPos     = Inputs::GetMousePosition();
-    curPos     = NWCoordSys::WorldToViewportNonNormalized(curPos);
+    fVec2 scr;
+    Context::GetWinDrawAreaSize(&scr);
+    curPos     = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
     clickEvent = win->_getKeyboard().onKeyPress(clickKey);
     //-----------Set focus and hover logic-----------
     struct MapProcData {
@@ -85,11 +86,14 @@ void UISys::Update() {
     topMostHovered  = 0;
     topMostSelected = 0;
     //---------Cursor type logic-----------
+    bool iswinfr = 1;
+    if (focusedWindow) 
+        iswinfr = focusedWindow->GetState() == UIWindowState::NONE;
     win->setCursor(NWin::CursorIcon::ARROW);
     if (focusedWindow && focusedWindow->GetState() == UIWindowState::RESIZE) {
         win->setCursor(NWin::CursorIcon::RESIZE_WE);
     }
-    else if (hoveredWindow && hoveredWindow->IsCursorOnResize()) {
+    else if (iswinfr && hoveredWindow && hoveredWindow->IsCursorOnResize()) {
         win->setCursor(NWin::CursorIcon::RESIZE_WE);
     }
 }

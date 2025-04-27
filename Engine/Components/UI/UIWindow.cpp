@@ -21,6 +21,10 @@ bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) {
 
 int UIWindow::UIWindowDrawCallback(void* obj) {
     UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
+
+    fMat4 tempview = Camera::GetActiveCamera()->viewMatrix; //Temporary, should use UIManager instead
+    Camera::GetActiveCamera()->viewMatrix = fMat4(1.0f);
+
     Context::EnableStencilTest(1);
     Context::SetStencilMask(1);
     Context::ClearStencilBuff();
@@ -29,6 +33,9 @@ int UIWindow::UIWindowDrawCallback(void* obj) {
     Context::SetStencilFunc(NWStencilBehaviour::NW_EQUAL);
     win->DrawItems();
     Context::EnableStencilTest(0);
+
+    Camera::GetActiveCamera()->viewMatrix = tempview;
+
     return ret;
 }
 
@@ -204,7 +211,7 @@ void UIWindow::Update() {
 
     rpos = -tr->GetPosition() + UISys::curPos;
     bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON,NWin::KeyEventEnum::NWIN_KeyPressed); 
-
+    
     if (IsCursorOnWindow() && UISys::GetClickEvent()) {
         UISys::Focus(this);
     }

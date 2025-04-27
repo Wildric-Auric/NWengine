@@ -24,6 +24,7 @@ namespace NWCoordSys {
     fVec2 WorldToScreenNonNormalized(const fVec2&);
     fVec2 WorldToViewportNonNormalized(const fVec2&);
 
+    fVec2 ScreenNonNormalizedToWorld(const fVec2&);
     fVec2 ScreenToWorld(const fVec2&);
     fVec2 WorldToScreen(const fVec2&);
 

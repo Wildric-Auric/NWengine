@@ -10,6 +10,11 @@ fVec2 WorldToScreenNonNormalized(const fVec2& p) {
     return (p - cam->GetPosition());
 }
 
+fVec2 ScreenNonNormalizedToWorld(const fVec2& p) {
+    Camera* cam = Camera::GetActiveCamera();
+    return cam->GetPosition() + p;
+}
+
 fVec2 ScreenToWorld(const fVec2& p) {
     Camera* cam = Camera::GetActiveCamera();
     fVec2 size;

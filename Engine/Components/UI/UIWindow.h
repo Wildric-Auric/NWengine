@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+class UIManager;
+
 enum class UIWindowState {
     NONE,
     MOVE,
@@ -25,7 +27,6 @@ class UIItem {
     public:
     UIItemType type;
     GameObject obj;
-
     UIItemType GetType();
     int64 GetLayer();
     void _SetUp(UIItemType type, int64 layer, std::list<UIItem>::iterator);
@@ -74,6 +75,8 @@ class UIWindow : public GameComponent {
 
     UIWindowMetrics metrics;
     std::list<UIItem> items;
+
+    UIManager* attachedUIManager = 0;
 
     static bool CacheConditionHasUIWindow(GameObject* obj);
     static int UIWindowDrawCallback(void*);

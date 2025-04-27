@@ -8,10 +8,6 @@ Camera* UIManager::GetTmpCamera() {
     return _lastCam;
 }
 
-Camera* UIManager::SetCamera() {
-    
-}
-
 void UIManager::OnAdd() {
     _camContainer.AddComponent<Camera>();
 }
