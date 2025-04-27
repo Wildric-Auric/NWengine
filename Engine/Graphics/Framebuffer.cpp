@@ -30,8 +30,20 @@ void FrameBuffer::GenDepthStencilBuffer() {
     Bind();
     NW_GL_CALL(glGenRenderbuffers(1,&_renderbuffer));
     NW_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer));  
-    NW_GL_CALL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, attachments[0].tex._size.x, attachments[0].tex._size.y));
+    if (_msaaVal == NW_MSx1) {
+        NW_GL_CALL(
+        glRenderbufferStorage(
+            GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, attachments[0].tex._size.x, attachments[0].tex._size.y)
+        );
+    }
+    else {
+        NW_GL_CALL(
+        glRenderbufferStorageMultisample(
+            GL_RENDERBUFFER, _msaaVal, GL_DEPTH24_STENCIL8, attachments[0].tex._size.x, attachments[0].tex._size.y)
+        );
+    }
     NW_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _renderbuffer));  
+    if (!CheckCompleteness()) {NW_GL_ERROR_NO_CHECK(-1);}
     Unbind();
 }
 
@@ -70,6 +82,15 @@ uint32 FrameBuffer::GetAttNum() {
    return this->attachments.size(); 
 }
 
+bool FrameBuffer::CheckCompleteness() {
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+	    NW_LOG_ERROR("Framebuffer is incomplete: " );
+        NW_LOG_ERRORI(status);
+        NW_LOG_ERROR("\n");
+    }
+	return status == GL_FRAMEBUFFER_COMPLETE;
+}
 void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
 	if (Context::window == nullptr) return;
     if (msVal != NW_MSx1) {
@@ -79,8 +100,8 @@ void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
     }
 	NW_GL_CALL(glGenFramebuffers(1, &_framebuffer));
 	_msaaVal = msVal;
-
     AddAttachment(size); 
+    if (!CheckCompleteness()) { NW_GL_ERROR_NO_CHECK(-1); }
 }
 
 void FrameBuffer::Bind(RWFrameBuffer ro) {

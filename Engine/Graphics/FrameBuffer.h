@@ -95,6 +95,8 @@ public:
     */
     void ClearAttachment(int i, const fVec4& clearColor);
 
+    bool CheckCompleteness();
+
     
     /**
      * @brief Binds the framebuffer.
