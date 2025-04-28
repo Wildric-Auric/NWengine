@@ -6,9 +6,10 @@
 #include "templates/InlineShaderTst.h"
 //#include "templates/UItst2.h"
 #include "templates/UItst.h"
+#include "templates/RandomTst.h"
 
 int main() {
-    UITst::Run();
+    RandomTst::Run();
 	return 0;
 }
 

@@ -1,6 +1,4 @@
 #include "Wave.h"
-#include "Maths.h"
-#include <math.h>
 
 static constexpr float dpi = 2.0*PI;
 static constexpr float idpi = 0.5/PI;
@@ -91,4 +89,47 @@ float WaveComposer::Evaluate(const float t) {
         value += w->Evaluate(t); 
     }
     return value;
+}
+
+constexpr uint32 NWLcg(uint32 seed) {
+    return seed * 1664525u + 1013904223u;
+}
+
+constexpr uint64 NWLcg(uint64 seed) {
+    return seed * 1664525u + 1013904223u;
+};
+
+constexpr uint32 NWLcgI32(uint32 seed) {
+    return NWLcg(seed);
+}
+
+constexpr uint64 NWLcgI64(uint64 seed) {
+    return NWLcg(seed);
+}
+
+NWRandom::NWRandom(uint32 seed, uint32 (*f)(uint32)) {
+    SetRandomFunction(f);
+    SetSeed(seed);
+}
+
+void NWRandom::SetRandomFunction(uint32 (*f)(uint32)) {
+    randomFunction = f;
+}
+
+void   NWRandom::SetSeed(uint32 s) {
+    seed = s;
+    tmp  = s;
+}
+
+uint32 NWRandom::GetNext() {
+    return randomFunction(tmp);
+}
+
+
+ValueNoise::ValueNoise(const float freq, const float ampl, const float off) {
+    
+}
+
+float ValueNoise::Evaluate(const float) {
+
 }

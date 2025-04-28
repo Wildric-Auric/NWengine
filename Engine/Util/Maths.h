@@ -214,6 +214,11 @@ T Clamp(T num, T min, T max) {
 }
 
 template<typename T>
+T Normalize(T num, T maxx, T newRange) {
+    return ((double)num/maxx)*newRange;
+}
+
+template<typename T>
 class Vector3 {
 public:
 	union {
