@@ -54,82 +54,50 @@ public:
      */
     void SetMat4x4(int location, const float* value);
 
-    void SetUniform1f(int location, const float value);
-
     void SetVector2(int loc, float value0, float value1);
 
+    void SetUniform1f(int location, const float value);
+
     void SetUniform1i(int loc, const int value);
+
+    void SetUniform2f(int loc, float x, float y);
+
+    void SetUniform2i(int loc, int x, int y);
     
     void SetUniform3f(int loc, float x, float y, float z);
+
+    void SetUniform3i(int loc, int x, int y, int z);
     
     void SetUniform4f(int loc, float x, float y, float z, float w);
+
+    void SetUniform4i(int loc, int x, int y, int z, int w);
     
     void SetUniformArrayf(int loc, float* value, int size);
     
     void SetUniformArrayi(int loc, int* value, int size);
 
-    /**
-     * @brief Set a 4x4 matrix uniform in the shader.
-     * @param name The name of the uniform.
-     * @param value The value of the uniform.
-     */
     void SetMat4x4(const char* name, const float* value);
 
-    /**
-     * @brief Set a float uniform in the shader.
-     * @param name The name of the uniform.
-     * @param value The value of the uniform.
-     */
     void SetUniform1f(const char* name, const float value);
 
-    /**
-     * @brief Set a 3-component float vector uniform in the shader.
-     * @param name The name of the uniform.
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     */
-    void SetUniform3f(const char* name, float x, float y, float z);
-
-    /**
-     * @brief Set a 4-component float vector uniform in the shader.
-     * @param name The name of the uniform.
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     * @param w The w component of the vector.
-     */
-    void SetUniform4f(const char* name, float x, float y, float z, float w);
-
-    /**
-     * @brief Set a 2-component float vector uniform in the shader.
-     * @param name The name of the uniform.
-     * @param value0 The first component of the vector.
-     * @param value1 The second component of the vector.
-     */
-    void SetVector2(const char* name, float value0, float value1);
-
-    /**
-     * @brief Set an integer uniform in the shader.
-     * @param name The name of the uniform.
-     * @param value The value of the uniform.
-     */
     void SetUniform1i(const char* name, const int value);
 
-    /**
-     * @brief Set an array of float uniforms in the shader.
-     * @param name The name of the uniform.
-     * @param value The array of float values.
-     * @param size The size of the array.
-     */
+    void SetUniform2f(const char* name, float x, float y);
+
+    void SetUniform2i(const char* name, int x, int y);
+
+    void SetUniform3f(const char* name, float x, float y, float z);
+    
+    void SetUniform3i(const char* name, int x, int y, int z);
+
+    void SetUniform4f(const char* name, float x, float y, float z, float w);
+
+    void SetUniform4i(const char* name, int x, int y, int z, int w);
+
+    void SetVector2(const char* name, float value0, float value1);
+
     void SetUniformArrayf(const char* name, float* value, int size);
 
-    /**
-     * @brief Set an array of integer uniforms in the shader.
-     * @param name The name of the uniform.
-     * @param value The array of integer values.
-     * @param size The size of the array.
-     */
     void SetUniformArrayi(const char* name, int* value, int size);
 
     void SetUniformArray2f(const char* name, float* value, int size);

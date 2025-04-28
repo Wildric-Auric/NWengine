@@ -167,20 +167,36 @@ void Shader::SetUniform1f(int loc, float value) {
     NW_GL_CALL(glUniform1f(loc, value));
 }
 
-void Shader::SetVector2(int loc, float value0, float value1) {
-    NW_GL_CALL(glUniform2f(loc, value0, value1));
+void Shader::SetUniform1i(int loc, int value) {
+    NW_GL_CALL(glUniform1i(loc, value));
 }
 
-void Shader::SetUniform1i(int loc, const int value) {
-    NW_GL_CALL(glUniform1i(loc, value));
+void Shader::SetUniform2f(int loc, float x, float y) {
+    NW_GL_CALL(glUniform2f(loc, x, y));
+}
+
+void Shader::SetUniform2i(int loc, int x, int y) {
+    NW_GL_CALL(glUniform2i(loc, x, y));
+}
+
+void Shader::SetVector2(int loc, float value0, float value1) {
+    NW_GL_CALL(glUniform2f(loc, value0, value1));
 }
 
 void Shader::SetUniform3f(int loc, float x, float y, float z) {
     NW_GL_CALL(glUniform3f(loc, x, y, z));
 }
 
+void Shader::SetUniform3i(int loc, int x, int y, int z) {
+    NW_GL_CALL(glUniform3i(loc, x, y, z));
+}
+
 void Shader::SetUniform4f(int loc, float x, float y, float z, float w) {
     NW_GL_CALL(glUniform4f(loc, x, y, z, w));
+}
+
+void Shader::SetUniform4i(int loc, int x, int y, int z, int w) {
+    NW_GL_CALL(glUniform4i(loc, x, y, z, w));
 }
 
 void Shader::SetUniformArrayf(int loc, float* value, int size) {
@@ -212,6 +228,14 @@ void Shader::SetVector2(const char* name, float value0, float value1) {
 	SetVector2(glGetUniformLocation(_glID, name), value0, value1);
 }
 
+void Shader::SetUniform2i(const char* name, int x, int y) {
+	SetUniform2i(glGetUniformLocation(_glID, name), x, y);
+}
+
+void Shader::SetUniform2f(const char* name, float x, float y) {
+	SetUniform2i(glGetUniformLocation(_glID, name), x, y);
+}
+
 void Shader::SetUniform1i(const char* name, const int value) {
 	SetUniform1i(glGetUniformLocation(_glID, name), value);
 }
@@ -223,6 +247,10 @@ void Shader::SetUniform3f(const char* name, float x, float y, float z)
 
 void Shader::SetUniform4f(const char* name, float x, float y, float z, float w) {
 	SetUniform4f(glGetUniformLocation(_glID, name), x, y, z, w);
+}
+
+void Shader::SetUniform4i(const char* name, int x, int y, int z, int w) {
+	SetUniform4i(glGetUniformLocation(_glID, name), x, y, z, w);
 }
 
 void Shader::SetUniformArrayf(const char* name, float* value, int size) {
