@@ -44,7 +44,7 @@ public:
 	const static uint32 defaultStrideSize = 9;
 
 	std::string shader    = "";
-	int		    layer     = 0;
+	int64		layer     = 0;
 	bool		isDynamic = 1;
 
 	std::unordered_map<GameObject*, int> objs;       //The value is the offset in stride unit

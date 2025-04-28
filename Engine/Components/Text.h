@@ -171,7 +171,7 @@ public:
     /**
      * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
      */
-    int layerOrder = 0;
+    int64 layerOrder = 0;
 
     /**
      * @brief colors is the color of the text.
