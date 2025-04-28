@@ -127,6 +127,8 @@ public:
 
     void DontDraw();
 
+    fVec2 GetSize();
+
     /**
      * @brief Batches the sprite.
      * @param type The batch type to use.

@@ -19,6 +19,8 @@ bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) {
     return obj->GetComponent<UIWindow>();
 }
 
+
+
 int UIWindow::UIWindowDrawCallback(void* obj) {
     UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
 
@@ -77,7 +79,8 @@ void UIWindow::OnAdd() {
     Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
     spr->SetSortingLayerFull(UISys::GetAvailableLayer());
 
-    UIItem* item = AddItem(UIItemType::TITLE,-1);
+    UIItem* item = AddItem(UIItemType::TITLE,-UISys::layerConsts.windowRange+1);
+
 
     GameObject* obj = &item->obj;
     Text* te = obj->AddComponent<Text>();
@@ -87,8 +90,61 @@ void UIWindow::OnAdd() {
     GetSystemFontDir(&fdir); 
     fdir += "Arial.ttf";
 	te->SetFont({fdir.c_str(),15}, te->_shader);
-    te->layerOrder = spr->sortingLayer - 1;
+    te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange-1);
     attachedObject->SetDrawCallback(UIWindowDrawCallback);
+
+
+    UIItem* rect = AddItem(UIItemType::TEST_ZONE,-1);
+    Sprite* spr2 = rect->obj.AddComponent<Sprite>();
+    rect->obj.AddComponent<Transform>();
+    InlineShader colorShader;
+    colorShader.SetFragOut("vec4(1.0,0.0,1.0,1.0)");
+    colorShader.Generate();
+    spr2->SetShader(colorShader.GetShader());
+    spr2->sortingLayer = spr->sortingLayer - 1;
+
+    rect = AddItem(UIItemType::TEST_ZONE,-1);
+    spr2 = rect->obj.AddComponent<Sprite>();
+    rect->obj.AddComponent<Transform>();
+    spr2->SetShader(colorShader.GetShader());
+    spr2->sortingLayer = spr->sortingLayer - 1;
+    spr2->SetSize({30, 20});
+    
+    rect = AddItem(UIItemType::TEST_ZONE,-1);
+    spr2 = rect->obj.AddComponent<Sprite>();
+    rect->obj.AddComponent<Transform>();
+    spr2->SetShader(colorShader.GetShader());
+    spr2->sortingLayer = spr->sortingLayer - 1;
+}
+
+void UIWindow::SetCursor(const fVec2& pos) {
+    cursor = pos;
+}
+
+void UIWindow::IncCursor(const fVec2& p) {
+    cursor.x += p.x + metrics.itemSpacing.x;
+    cursor.y += p.y;
+    if (cursor.x < GetSize().x)
+        return;
+    cursor.x = 0;
+    
+}
+
+void UIWindow::GetCursorPositionFree(const fVec2& s) {
+    if (cursor.x + s.x < GetSize().x * 0.5)  
+        return;
+    cursor.x = 0;
+    cursor.y -= metrics.itemSpacing.y;
+}
+
+void UIWindow::SetCursorTopLeft() {
+    fVec2 s = GetSize();
+    cursor.x =-s.x* 0.5;
+    cursor.y = s.y * 0.5;
+}
+
+fVec2 UIWindow::GetCursor() {
+    return cursor;
 }
 
 UIItemType UIItem::GetType() {
@@ -96,7 +152,7 @@ UIItemType UIItem::GetType() {
 }
 
 int64 UIItem::GetLayer() {
-    return obj.GetComponent<Sprite>()->GetSortingLayer();
+    return _GetLayerProc(this);
 }
 
 void UIItem::_SetUp(UIItemType ptype, int64 layer, std::list<UIItem>::iterator it) {
@@ -196,11 +252,36 @@ void UIWindow::SetTitle(const char* c) {
     te->UpdateGlyphs(1);
 }
 
+void UIWindow::SetPosition(const fVec2& pos) {
+    Transform* tr = attachedObject->GetComponent<Transform>();
+    tr->SetPosition(pos);
+}
+
+void UIWindow::SetSize(const fVec2& pos) {
+    Sprite* spr = attachedObject->GetComponent<Sprite>();
+    spr->SetSize(pos);
+}
+
+fVec2 UIWindow::GetAbsoluteCursor() {
+    return GetPosition() + cursor;
+}
+
 void UIWindow::Update() {
+    SetCursorTopLeft();
+    IncCursor(fVec2(0.0,-metrics.titleBarHeight - metrics.itemSpacing.y));
+
     for (UIItem& item : items) {
         Text* t = item.obj.GetComponent<Text>();
         if (t) {_SetTitlePosition();t->Update();}
+        else {
+            Sprite* spr = item.obj.GetComponent<Sprite>();
+            fVec2 s = spr->GetSize();  
+            GetCursorPositionFree(s);
+            item.obj.GetComponent<Transform>()->SetPosition(GetAbsoluteCursor() + fVec2(s.x*0.5, -s.y*0.5));
+            IncCursor({s.x,0}); 
+        }
     }
+
 
     Sprite* spr = attachedObject->GetComponent<Sprite>();
     Transform* tr = attachedObject->GetComponent<Transform>();
@@ -253,6 +334,8 @@ void UIWindow::Update() {
         fVec2 newsize = lsize + ps;
         newsize.x = Max<int>(newsize.x, metrics.minSize.x);
         newsize.y = Max<int>(newsize.y, metrics.minSize.y);
+        SetSize(newsize);
+        SetPosition(lwinPos - m);
         spr->SetSize(newsize);
         tr->SetPosition(lwinPos - m);
 //      if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)

@@ -4,6 +4,10 @@
 #include "Batch.h"
 #include "DefaultAssets.h"
 
+fVec2 Sprite::GetSize() {
+    return fVec2(container.width,container.height);
+}
+
 Sprite::Sprite(GameObject* obj) {
 	attachedObject = obj;
 	obj->SetDrawCallback(Sprite::DefaultSpriteDrawCallback);

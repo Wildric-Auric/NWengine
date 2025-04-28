@@ -15,12 +15,14 @@ struct UIWindowMetrics {
     int titleBarHeight = 20;
     int resizeAreaWidth = 5;
     int borderWidth     = 2;
+    iVec2 itemSpacing   = fVec2(3,3);
     iVec2 minSize       = iVec2(20,20);
 };
 
 enum class UIItemType {
     NONE,
-    TITLE 
+    TITLE,
+    TEST_ZONE
 };
 
 class UIItem {
@@ -62,6 +64,15 @@ class UIWindow : public GameComponent {
     UIItem* AddItem(UIItemType, int64);
     void    DrawItems();
 
+    void SetPosition(const fVec2&);
+    void SetSize(const fVec2&);
+    void SetCursor(const fVec2&);
+    void SetCursorTopLeft();
+    void IncCursor(const fVec2&);
+    void GetCursorPositionFree(const fVec2&);
+    fVec2 GetAbsoluteCursor();
+    fVec2 GetCursor();
+
     UIWindowState state = UIWindowState::NONE;
     fVec2 relPos;
     fVec2 rpos;
@@ -74,6 +85,7 @@ class UIWindow : public GameComponent {
     bool _tmpisFocused = 0;
 
     UIWindowMetrics metrics;
+    fVec2 cursor = fVec2(0.0,0.0);
     std::list<UIItem> items;
 
     UIManager* attachedUIManager = 0;
