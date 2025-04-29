@@ -9,6 +9,7 @@ namespace RandomTst{
 
 RandomMatrix<500, 256, 1> mat;
 
+static Texture randTex;
 static void Init() {
 	Context::SetTitle("Sandbox");
 	Context::EnableVSync();
@@ -19,11 +20,10 @@ static void Init() {
     camC->Use();
     camC->SetClearColor(fVec4(0.2,0.0,1.0,1.0));
     camC->ChangeOrtho(720,480);
-    s.Start();
     Image im;
     im.width =  1000;
     im.height = 1000;
-    im.channels = 1;
+    im.channels = 3;
     im.alpha    = 0;
     im.Alloc();
     ValueNoise valueNoise = ValueNoise(10.0f, 255.0f, 0.0);
@@ -50,10 +50,18 @@ static void Init() {
         }
     }
 
-    im.SaveToFile("..\\noise.png");
+    randTex._size = {im.width, im.height};
+    randTex._GPUGen(im.pixelBuffer, TexChannelInfo::NW_RGB);
+	GameObject& obj = s.AddObject();
+	obj.AddComponent<Transform>();
+    obj.AddComponent<Sprite>()->SetTexture(&randTex);
+
     for (Wave* w : wc._data) {
         delete (ValueNoise*)w;
     }
+    //im.SaveToFile("..\\noise.png");
+    im.Clean();
+    s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
@@ -68,6 +76,7 @@ void Run() {
         NWenginePushFunction(ON_MAIN_CALL_LOCATION::FrameIntermediate, Render);
         NWengineInit();
         NWengineLoop();
+        randTex.Destroy();
         NWengineShutdown();
     }
 };
