@@ -793,6 +793,13 @@ void RotateMat(Matrix4<T>& matrix, float degAngle, const Vector3<T>& axis) {
 
 
 //Functions---------------------------------------
+template<typename T>
+T Smoothstep(T x, T edge0, T edge1) {
+    T t = Clamp<double>((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
+
 
 template<typename T, typename T1>
 T lerp(T source, T target, T1 percent) {

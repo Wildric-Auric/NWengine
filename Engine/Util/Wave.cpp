@@ -13,6 +13,10 @@ void Wave::SetFreq(const float v) {
     _freq = dpi*v;
 }
 
+void Wave::SetFreqDirect(const float v) {
+    _freq = v;
+}
+
 float Wave::GetFreq() {
     return idpi*_freq;
 }
@@ -91,6 +95,14 @@ float WaveComposer::Evaluate(const float t) {
     return value;
 }
 
+float WaveComposer::Evaluate(const float x, const float y) {
+    float value = 0.0f;
+    for (Wave* w : _data) {
+        value += ((Wave2*)w)->Evaluate(x,y); 
+    }
+    return value;
+}
+
 constexpr uint32 NWLcg(uint32 seed) {
     return seed * 1664525u + 1013904223u;
 }
@@ -99,12 +111,54 @@ constexpr uint64 NWLcg(uint64 seed) {
     return seed * 1664525u + 1013904223u;
 };
 
-constexpr uint32 NWLcgI32(uint32 seed) {
-    return NWLcg(seed);
+constexpr uint32 NWSplitMixI32(uint32 x) {
+    x += 0x9e3779b9;
+    x ^= x >> 16;
+    x *= 0x85ebca6b;
+    x ^= x >> 13;
+    x *= 0xc2b2ae35;
+    x ^= x >> 16;
+    return x;
 }
 
-constexpr uint64 NWLcgI64(uint64 seed) {
-    return NWLcg(seed);
+//https://prng.di.unimi.it/splitmix64.c
+constexpr uint64 NWSplitMixI64(uint64 x) {
+	uint64 z = x + 0x9e3779b97f4a7c15;
+	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
+	z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+	return z ^ (z >> 31);
+}
+
+
+constexpr uint32 NWSplitMix(uint32 x) { return NWSplitMixI32(x); }
+constexpr uint64 NWSplitMix(uint64 x) { return NWSplitMixI64(x); }
+constexpr uint32 NWLcgI32(uint32 seed)       { return NWLcg(seed); }
+constexpr uint64 NWLcgI64(uint64 seed)       { return NWLcg(seed); }
+
+constexpr uint32 NWFnva_2UI32_To_1UI32(uint32 a, uint32 b) {
+    const uint32  FNV_OFFSET_BASIS = 2166136261u;
+    const uint32  FNV_PRIME        = 16777619u;
+    uint32 hash = FNV_OFFSET_BASIS;
+    //first
+    hash ^= (a >> (0 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (a >> (1 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (a >> (2 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (a >> (3 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    //sec
+    hash ^= (b >> (0 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (b >> (1 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (b >> (2 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    hash ^= (b >> (3 * 8)) & 0xFF;
+    hash *= FNV_PRIME;
+    //ret
+    return hash;
 }
 
 NWRandom::NWRandom(uint32 seed, uint32 (*f)(uint32)) {
@@ -125,11 +179,50 @@ uint32 NWRandom::GetNext() {
     return randomFunction(tmp);
 }
 
-
-ValueNoise::ValueNoise(const float freq, const float ampl, const float off) {
-    
+uint32 NWRandom::Get(uint32 x) {
+    return randomFunction(x ^ seed);
 }
 
-float ValueNoise::Evaluate(const float) {
 
+ValueNoise::ValueNoise(const float freq, const float ampl, const float off) : Wave(freq, ampl, off)  {
+    _freq = freq;
 }
+
+float ValueNoise::Evaluate(const float v) {
+    uint32 ipt     = ((v+_off)/_freq);
+    double frac    = fmod(v+_off, _freq) / _freq;
+    float a        = Normalize<float>(_rand.Get(ipt),UINT32_MAX, 1.0f);
+    float b        = Normalize<float>(_rand.Get(ipt + 1),UINT32_MAX, 1.0f);
+    float t        = Smoothstep<float>(frac, 0.0, 1.0);
+    float value    = lerp(a,b,t);
+    return value * _ampl;
+}
+
+Wave2::Wave2(const float freq, const float ampl, const float off) : Wave(freq, ampl, off) {}
+
+float Wave2::Evaluate(float x, float y) { return _ampl; }
+
+ValueNoise2::ValueNoise2(const float freq, const float ampl, const float off) : Wave2(freq, ampl, off) {
+    _freq = freq;
+}
+
+float ValueNoise2::Evaluate(const float i, const float j) {
+    auto f       = NWFnva_2UI32_To_1UI32;
+    uint32 iptX  = (i+_off)/_freq;
+    uint32 iptY  = (j+_off)/_freq;
+    double fracX = fmod(i+_off, _freq)/_freq;
+    double fracY = fmod(j+_off2, _freq)/_freq;
+    float bl     = Normalize<float>(_rand.Get(f(iptX,iptY)), UINT32_MAX, 1.0f);
+    float br     = Normalize<float>(_rand.Get(f(iptX+1,iptY)), UINT32_MAX, 1.0f);
+    float tl     = Normalize<float>(_rand.Get(f(iptX,iptY+1)), UINT32_MAX, 1.0f);
+    float tr     = Normalize<float>(_rand.Get(f(iptX+1,iptY+1)), UINT32_MAX, 1.0f);
+
+    fracX = Smoothstep<float>(fracX, 0.0f, 1.0f);
+    fracY = Smoothstep<float>(fracY, 0.0f, 1.0f);
+    float xxb = lerp(bl,br,fracX);
+    float xxt = lerp(tl,tr,fracX);
+    float ret = lerp(xxb,xxt,fracY);
+
+    return ret * _ampl;
+};
+

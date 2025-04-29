@@ -15,8 +15,18 @@ class Wave {
     float GetAmpl();
     void SetOff(const float);
     float GetOff();
+    
+    void SetFreqDirect(const float);
+
     Wave(const float freq = 1.0, const float ampl = 0.0, const float off = 0.0);
     virtual float Evaluate(const float);
+};
+
+class Wave2 : public Wave {
+    public:
+    float _off2 = 0.0;
+    Wave2(const float freq = 1.0, const float ampl = 0.0, const float off = 0.0);
+    virtual float Evaluate(const float x, const float y);
 };
 
 class SineWave : public Wave {
@@ -43,15 +53,16 @@ class SawTooth : public Wave {
     float Evaluate(const float) override;
 };
 
-class WaveComposer : public Wave {
+class WaveComposer : public Wave2 {
+    public:
     std::vector<Wave*> _data; 
 
-    Wave* Add();
     Wave* Add(Wave* const wave);
     void Add(Wave** const, int num);
     void Remove(int index);
     void Remove();
     float Evaluate(const float t);
+    float Evaluate(const float x, const float y);
 };
 
 extern constexpr uint32 NWLcg(uint32 seed);
@@ -61,6 +72,16 @@ extern constexpr uint64 NWLcg(uint64 seed);
 extern constexpr uint32 NWLcgI32(uint32 seed);
 
 extern constexpr uint64 NWLcgI64(uint64 seed);
+
+extern constexpr uint32 NWSplitMixI32(uint32 seed);
+
+extern constexpr uint64 NWSplitMixI64(uint64 seed);
+
+extern constexpr uint32 NWSplitMix(uint32 x);
+
+extern constexpr uint64 NWSplitMix(uint64 x);
+
+extern constexpr uint32 NWFnva_2UI32_To_1UI32(uint32, uint32);
 
 template <int N, int seed>
 struct RandomArray {
@@ -90,10 +111,20 @@ class NWRandom {
     void   SetRandomFunction(uint32 (*)(uint32));
     void   SetSeed(uint32);
     uint32 GetNext();
+    uint32 Get(uint32 x);
 };
 
-class ValueNoise : Wave {
-    NWRandom _rand = NWRandom(10);
+class ValueNoise : public Wave {
+    public:
+    NWRandom _rand = NWRandom(69, NWSplitMixI32);
     ValueNoise(const float freq = 1.0, const float ampl=1.0, const float off = 0.0); 
     float Evaluate(const float) override;
 };
+
+class ValueNoise2 : public Wave2 {
+    public:
+    NWRandom _rand = NWRandom(69, NWSplitMixI32);
+    ValueNoise2(const float freq = 1.0, const float ampl=1.0, const float off = 0.0); 
+    float Evaluate(const float i, const float j) override;
+};
+
