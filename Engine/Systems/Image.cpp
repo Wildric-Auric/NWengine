@@ -18,7 +18,7 @@ void Image::Read(const iVec2& coord, ImageColor* color) {
 void Image::Write(const iVec2& coord, const ImageColor& color) {
     int x = coord.x * width + coord.y;
     int c = channels+alpha;
-    *((ImageColor*)(pixelBuffer+x*c)) = color;
+    memcpy(pixelBuffer+x*c, &color, sizeof(uint8) * c);
 }
 
 Asset* Image::LoadFromFile(const char* path, void* unused) {
