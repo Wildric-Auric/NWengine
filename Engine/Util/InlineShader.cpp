@@ -3,7 +3,7 @@
 uint32 InlineShader::_autoIncID = 1;
 
 const ShaderText Raw = {
-R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex
         #version 330 core
         #pragma def USR_BEG INLINE_VERT_BEG_USR
@@ -20,7 +20,7 @@ R"V0G0N(
             gl_Position = USR_OUT;
         };
 )V0G0N",
-R"V0G0N(        
+	R"V0G0N(        
         #pragma fragment
         #version 330 core
         #pragma def USR_BEG  INLINE_FRAG_BEG_USR
@@ -39,52 +39,35 @@ R"V0G0N(
 
 };
 
-        
-void InlineShader::AppFragGlobal(const char* txt) {
-    _data.frag += std::string(txt) + ";";
-}
+void InlineShader::AppFragGlobal(const char* txt) { _data.frag += std::string(txt) + ";"; }
 
-void  InlineShader::AppFragMain(const char* txt) {
-    _end.frag += std::string(txt) + ";";
-}
+void InlineShader::AppFragMain(const char* txt) { _end.frag += std::string(txt) + ";"; }
 
-void  InlineShader::AppVertGlobal(const char* txt) {
-    _data.vert += std::string(txt) + ";";
-}
+void InlineShader::AppVertGlobal(const char* txt) { _data.vert += std::string(txt) + ";"; }
 
-void  InlineShader::AppVertMain(const char* txt) {
-    _end.frag += std::string(txt) + ";";
-}
+void InlineShader::AppVertMain(const char* txt) { _end.frag += std::string(txt) + ";"; }
 
-void InlineShader::SetFragOut(const char* txt) {
-   _fragOut = txt; 
-}
+void InlineShader::SetFragOut(const char* txt) { _fragOut = txt; }
 
-void InlineShader::SetVertOut(const char* txt) {
-    _vertOut = txt;
-}
+void InlineShader::SetVertOut(const char* txt) { _vertOut = txt; }
 
 void InlineShader::Generate() {
-    auto consts = Shader::parser.constants;
+	auto consts = Shader::parser.constants;
 
-    Shader::parser.AddCnst("INLINE_VERT_BEG_USR", _data.vert.c_str());
-    Shader::parser.AddCnst("INLINE_VERT_MAIN_USR", _end.vert.c_str());
-    Shader::parser.AddCnst("INLINE_VERT_OUT_USR", _vertOut.c_str());
+	Shader::parser.AddCnst("INLINE_VERT_BEG_USR", _data.vert.c_str());
+	Shader::parser.AddCnst("INLINE_VERT_MAIN_USR", _end.vert.c_str());
+	Shader::parser.AddCnst("INLINE_VERT_OUT_USR", _vertOut.c_str());
 
-    Shader::parser.AddCnst("INLINE_FRAG_BEG_USR", _data.frag.c_str());
-    Shader::parser.AddCnst("INLINE_FRAG_MAIN_USR", _end.frag.c_str());
-    Shader::parser.AddCnst("INLINE_FRAG_OUT_USR", _fragOut.c_str());
-    _id += std::to_string(_autoIncID++);
-    auto loader = Loader<Shader>();
-    _shader = loader.LoadFromBuffer((void*)&Raw,&_id);
+	Shader::parser.AddCnst("INLINE_FRAG_BEG_USR", _data.frag.c_str());
+	Shader::parser.AddCnst("INLINE_FRAG_MAIN_USR", _end.frag.c_str());
+	Shader::parser.AddCnst("INLINE_FRAG_OUT_USR", _fragOut.c_str());
+	_id += std::to_string(_autoIncID++);
+	auto loader = Loader<Shader>();
+	_shader		= loader.LoadFromBuffer((void*)&Raw, &_id);
 
-    Shader::parser.constants = consts;
+	Shader::parser.constants = consts;
 }
 
-Shader* InlineShader::GetShader() {
-    return _shader;
-}
+Shader* InlineShader::GetShader() { return _shader; }
 
-void InlineShader::SetName(const char* txt) {
-    _id = txt;
-}
+void InlineShader::SetName(const char* txt) { _id = txt; }

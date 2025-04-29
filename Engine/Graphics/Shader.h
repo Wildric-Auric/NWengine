@@ -1,153 +1,146 @@
 #pragma once
 
+#include "Asset.h"
+#include "Globals.h"
+#include "ShaderParser.h"
 #include <string>
 #include <unordered_map>
-#include "Globals.h"
-#include "Asset.h"
-#include "ShaderParser.h"
 
 /**
  * @brief Struct representing the text of a shader.
  */
 struct ShaderText {
-    const char* vertex; /**< The vertex shader text. */
-    const char* fragment; /**< The fragment shader text. */
+	const char* vertex;	  /**< The vertex shader text. */
+	const char* fragment; /**< The fragment shader text. */
 };
 
 typedef std::string ShaderIdentifier; /**< The type for shader identifiers. */
-
-
-
-
-
 
 /**
  * @brief Class representing a shader asset.
  */
 class Shader : public Asset {
-public:
-    static ShaderParser parser;
+  public:
+	static ShaderParser parser;
 
-    uint32 _glID = 0; /**< The OpenGL ID of the shader. */
-    ShaderIdentifier _identifier; /**< The identifier of the shader. */
-    std::unordered_map<int,int> _enabledAtts{{0,0}};
-    std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
+	uint32													 _glID = 0;	  /**< The OpenGL ID of the shader. */
+	ShaderIdentifier										 _identifier; /**< The identifier of the shader. */
+	std::unordered_map<int, int>							 _enabledAtts{{0, 0}};
+	std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
 
-    void _EnableAtt(int i);
-    void _DisableAtt(int i);
+	void _EnableAtt(int i);
+	void _DisableAtt(int i);
 
-    void SetReflectedUniforms(const ShaderParser&); 
-    void SetEnabledAtts(const ShaderParser&);
+	void SetReflectedUniforms(const ShaderParser&);
+	void SetEnabledAtts(const ShaderParser&);
 
-    /**
-     * @brief Use this shader for rendering.
-     */
-    void Use();
+	/**
+	 * @brief Use this shader for rendering.
+	 */
+	void Use();
 
-    void Unuse();
+	void Unuse();
 
-    
-    /**
-     * @brief Set a 4x4 matrix uniform in the shader.
-     * @param location The location of the uniform.
-     * @param value The value of the uniform.
-     */
-    void SetMat4x4(int location, const float* value);
+	/**
+	 * @brief Set a 4x4 matrix uniform in the shader.
+	 * @param location The location of the uniform.
+	 * @param value The value of the uniform.
+	 */
+	void SetMat4x4(int location, const float* value);
 
-    void SetVector2(int loc, float value0, float value1);
+	void SetVector2(int loc, float value0, float value1);
 
-    void SetUniform1f(int location, const float value);
+	void SetUniform1f(int location, const float value);
 
-    void SetUniform1i(int loc, const int value);
+	void SetUniform1i(int loc, const int value);
 
-    void SetUniform2f(int loc, float x, float y);
+	void SetUniform2f(int loc, float x, float y);
 
-    void SetUniform2i(int loc, int x, int y);
-    
-    void SetUniform3f(int loc, float x, float y, float z);
+	void SetUniform2i(int loc, int x, int y);
 
-    void SetUniform3i(int loc, int x, int y, int z);
-    
-    void SetUniform4f(int loc, float x, float y, float z, float w);
+	void SetUniform3f(int loc, float x, float y, float z);
 
-    void SetUniform4i(int loc, int x, int y, int z, int w);
-    
-    void SetUniformArrayf(int loc, float* value, int size);
-    
-    void SetUniformArrayi(int loc, int* value, int size);
+	void SetUniform3i(int loc, int x, int y, int z);
 
-    void SetMat4x4(const char* name, const float* value);
+	void SetUniform4f(int loc, float x, float y, float z, float w);
 
-    void SetUniform1f(const char* name, const float value);
+	void SetUniform4i(int loc, int x, int y, int z, int w);
 
-    void SetUniform1i(const char* name, const int value);
+	void SetUniformArrayf(int loc, float* value, int size);
 
-    void SetUniform2f(const char* name, float x, float y);
+	void SetUniformArrayi(int loc, int* value, int size);
 
-    void SetUniform2i(const char* name, int x, int y);
+	void SetMat4x4(const char* name, const float* value);
 
-    void SetUniform3f(const char* name, float x, float y, float z);
-    
-    void SetUniform3i(const char* name, int x, int y, int z);
+	void SetUniform1f(const char* name, const float value);
 
-    void SetUniform4f(const char* name, float x, float y, float z, float w);
+	void SetUniform1i(const char* name, const int value);
 
-    void SetUniform4i(const char* name, int x, int y, int z, int w);
+	void SetUniform2f(const char* name, float x, float y);
 
-    void SetVector2(const char* name, float value0, float value1);
+	void SetUniform2i(const char* name, int x, int y);
 
-    void SetUniformArrayf(const char* name, float* value, int size);
+	void SetUniform3f(const char* name, float x, float y, float z);
 
-    void SetUniformArrayi(const char* name, int* value, int size);
+	void SetUniform3i(const char* name, int x, int y, int z);
 
-    void SetUniformArray2f(const char* name, float* value, int size);
+	void SetUniform4f(const char* name, float x, float y, float z, float w);
 
-    void SetUniformArray2f(int loc, float* value, int size);
+	void SetUniform4i(const char* name, int x, int y, int z, int w);
 
+	void SetVector2(const char* name, float value0, float value1);
 
-    /**
-     * @brief Get a shader asset from the cache.
-     * @param identifier The identifier of the shader.
-     * @return The shader asset if found in the cache, nullptr otherwise.
-     */
-    Asset* GetFromCache(void* identifier) override;
+	void SetUniformArrayf(const char* name, float* value, int size);
 
-    /**
-     * @brief Load a shader asset from a file.
-     * @param path The path to the shader file.
-     * @param identifier The identifier of the shader.
-     * @return The loaded shader asset.
-     */
-    Asset* LoadFromFile(const char* path, void* identifier) override;
+	void SetUniformArrayi(const char* name, int* value, int size);
 
-    /**
-     * @brief Load a shader asset from a buffer.
-     * @param shaderTextPtr A pointer to the ShaderText struct.
-     * @param identifier The identifier of the shader.
-     * @return The loaded shader asset.
-     */
-    Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier) override;
+	void SetUniformArray2f(const char* name, float* value, int size);
 
-    Asset* _LoadDirect(void* shaderTextPtr, void* identifier);
+	void SetUniformArray2f(int loc, float* value, int size);
 
-    void Move(Asset* other) override;
-    /**
-     * @brief Delete the shader.
-     */
-    void Delete();
+	/**
+	 * @brief Get a shader asset from the cache.
+	 * @param identifier The identifier of the shader.
+	 * @return The shader asset if found in the cache, nullptr otherwise.
+	 */
+	Asset* GetFromCache(void* identifier) override;
 
-    /**
-     * @brief Generate and bind the OpenGL shader program.
-     * @param shaderText A pointer to the ShaderText struct.
-     */
-    void _GlGen(ShaderText* shaderText);
+	/**
+	 * @brief Load a shader asset from a file.
+	 * @param path The path to the shader file.
+	 * @param identifier The identifier of the shader.
+	 * @return The loaded shader asset.
+	 */
+	Asset* LoadFromFile(const char* path, void* identifier) override;
 
-    /**
-     * @brief Parse a shader file and return the shader text.
-     * @param path The path to the shader file.
-     * @return The parsed shader text.
-     */
-    static ShaderText fastParseShader(const char* path);
+	/**
+	 * @brief Load a shader asset from a buffer.
+	 * @param shaderTextPtr A pointer to the ShaderText struct.
+	 * @param identifier The identifier of the shader.
+	 * @return The loaded shader asset.
+	 */
+	Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier) override;
 
-    NW_DECL_RES_LIST(ShaderIdentifier, Shader);
+	Asset* _LoadDirect(void* shaderTextPtr, void* identifier);
+
+	void Move(Asset* other) override;
+	/**
+	 * @brief Delete the shader.
+	 */
+	void Delete();
+
+	/**
+	 * @brief Generate and bind the OpenGL shader program.
+	 * @param shaderText A pointer to the ShaderText struct.
+	 */
+	void _GlGen(ShaderText* shaderText);
+
+	/**
+	 * @brief Parse a shader file and return the shader text.
+	 * @param path The path to the shader file.
+	 * @return The parsed shader text.
+	 */
+	static ShaderText fastParseShader(const char* path);
+
+	NW_DECL_RES_LIST(ShaderIdentifier, Shader);
 };

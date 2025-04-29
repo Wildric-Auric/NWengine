@@ -2,28 +2,24 @@
 #include "AudioEmitter.h"
 #include "Scene.h"
 
-AudioListener::AudioListener(GameObject* obj) {
-	this->attachedObject = obj;
-}
+AudioListener::AudioListener(GameObject* obj) { this->attachedObject = obj; }
 
-AudioListener::~AudioListener() {
+AudioListener::~AudioListener() {}
 
-}
-
-//TODO::All calculation for distance and direction for sound fading etc
+// TODO::All calculation for distance and direction for sound fading etc
 void AudioListener::Update() {
-    Scene* s = Scene::GetCurrent();
+	Scene* s = Scene::GetCurrent();
 
-    auto proc = [](GameObject* go, void* data) -> int {
+	auto proc = [](GameObject* go, void* data) -> int {
 		AudioEmitter* audioEmitter = go->GetComponent<AudioEmitter>();
-		float volume    = (float)(audioEmitter->volume);
-		float freq      = audioEmitter->frequency;	
+		float		  volume	   = (float)(audioEmitter->volume);
+		float		  freq		   = audioEmitter->frequency;
 		audioEmitter->SetVolume(volume);
 		audioEmitter->SetFrequency(freq);
 		audioEmitter->SetLooping(audioEmitter->isLooping);
-        audioEmitter->StopIfHasFinished();
-        return 1;
-    };
+		audioEmitter->StopIfHasFinished();
+		return 1;
+	};
 
-    s->CacheMap(AudioEmitter::ConditionHasAudioEmitter, proc, nullptr);
+	s->CacheMap(AudioEmitter::ConditionHasAudioEmitter, proc, nullptr);
 }

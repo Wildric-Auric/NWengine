@@ -1,12 +1,10 @@
 #include "Sprite.h"
-#include "Scene.h"
-#include "Script.h"
 #include "Batch.h"
 #include "DefaultAssets.h"
+#include "Scene.h"
+#include "Script.h"
 
-fVec2 Sprite::GetSize() {
-    return fVec2(container.width,container.height);
-}
+fVec2 Sprite::GetSize() { return fVec2(container.width, container.height); }
 
 Sprite::Sprite(GameObject* obj) {
 	attachedObject = obj;
@@ -14,38 +12,33 @@ Sprite::Sprite(GameObject* obj) {
 };
 
 void Sprite::OnAdd() {
-    SetTexture(NW_DEFAULT_TEXTURE);
-    SetShader(NW_DEFAULT_SHADER);
+	SetTexture(NW_DEFAULT_TEXTURE);
+	SetShader(NW_DEFAULT_SHADER);
 }
 
-
-int64 Sprite::GetSortingLayer() {
-    return sortingLayer;
-}
+int64 Sprite::GetSortingLayer() { return sortingLayer; }
 
 void Sprite::SetTexture(std::string path, bool alpha) {
-	//TODO::Add error handling
+	// TODO::Add error handling
 	Texture loader;
-	_texId				 = {path.c_str(), alpha};
-    texture              = (Texture*)loader.LoadFromFileOrGetFromCache((void*)&_texId, path.c_str(), nullptr);
+	_texId	= {path.c_str(), alpha};
+	texture = (Texture*)loader.LoadFromFileOrGetFromCache((void*)&_texId, path.c_str(), nullptr);
 	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
 void Sprite::SetTexture(Texture* tex) {
-	this->texture		 = tex;
+	this->texture = tex;
 	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
 void Sprite::SetTexture(const Image* im, TextureIdentifierPtr id) {
 	Loader<Texture> l;
-	_texId = *(TextureIdentifier*)id;
+	_texId	= *(TextureIdentifier*)id;
 	texture = l.LoadFromBufferOrGetFromCache(id, (void*)im, id);
 	container.UpdateSize(texture->_size.x, texture->_size.y);
 }
 
-Shader* Sprite::GetShader() {
-    return shader;
-}
+Shader* Sprite::GetShader() { return shader; }
 
 void Sprite::SetShader(std::string path) {
 	Loader<Shader> l;
@@ -53,31 +46,28 @@ void Sprite::SetShader(std::string path) {
 }
 
 void Sprite::SetShader(const ShaderText& st, ShaderIdentifier* id) {
-		Loader<Shader> l;
-		shader = l.LoadFromBufferOrGetFromCache(id, (void*)&st, id);
+	Loader<Shader> l;
+	shader = l.LoadFromBufferOrGetFromCache(id, (void*)&st, id);
 }
 
-void Sprite::SetShader(Shader* s) {
-	shader = s;
-}
+void Sprite::SetShader(Shader* s) { shader = s; }
 
 void Sprite::SetSortingLayerFull(int64 order) {
 	sortingLayer = order;
-	if (sortingLayer != _lastSortingLayer) {
+	if(sortingLayer != _lastSortingLayer) {
 		_lastSortingLayer = sortingLayer;
-		if (_isRendered)
+		if(_isRendered)
 			Scene::currentScene->Rearrange(this);
-	}	 
+	}
 }
 
-void Sprite::SetSortingLayer(int order) {
-    SetSortingLayerFull(order);
-}
+void Sprite::SetSortingLayer(int order) { SetSortingLayerFull(order); }
 
 void Sprite::Batch(BatchType type) {
-	if (type == BatchType::UNBATCHED) return;
+	if(type == BatchType::UNBATCHED)
+		return;
 	attachedObject->SetDrawCallback(Batch::DefaultBatchDrawCallback);
-	this->_isBatched = type; //TODO::Callsomething in Batch class maybe???
+	this->_isBatched = type; // TODO::Callsomething in Batch class maybe???
 }
 
 void Sprite::UnBatch() {
@@ -90,44 +80,38 @@ void Sprite::Render() {
 	_shouldDraw = 1;
 }
 
-void Sprite::StopRendering() {
-	_isRendered = 0;
-}
+void Sprite::StopRendering() { _isRendered = 0; }
 
-void Sprite::DontDraw() {
-    _shouldDraw = 0;
-}
+void Sprite::DontDraw() { _shouldDraw = 0; }
 
 void Sprite::Update() {
-	if (!_shouldDraw) return;
+	if(!_shouldDraw)
+		return;
 	Scene::currentScene->Rearrange(this);
 	_shouldDraw = 0;
 }
 
-Sprite::~Sprite() { 
-	for (auto iter = Scene::currentScene->drawList.begin(); iter != Scene::currentScene->drawList.end(); ++iter) {
-		if (*iter != this)
+Sprite::~Sprite() {
+	for(auto iter = Scene::currentScene->drawList.begin(); iter != Scene::currentScene->drawList.end(); ++iter) {
+		if(*iter != this)
 			continue;
 		Scene::currentScene->drawList.erase(iter);
 		return;
 	}
 }
 
-void Sprite::SetSize(const fVec2& s) {
-    container.UpdateSize(s.x, s.y);
-}
+void Sprite::SetSize(const fVec2& s) { container.UpdateSize(s.x, s.y); }
 
 void Sprite::PrepDefaultDrawCallback(void* data) {
-	GameObject* obj = (GameObject*)data;
-	Sprite* sprite = obj->GetComponent<Sprite>();
-	Scriptable temp;
+	GameObject* obj	   = (GameObject*)data;
+	Sprite*		sprite = obj->GetComponent<Sprite>();
+	Scriptable	temp;
 	Scriptable* scriptable;
-	Script* script = obj->GetComponent<Script>();
-	if ((script == nullptr) || (script->script == nullptr)) {
-		temp = Scriptable();
+	Script*		script = obj->GetComponent<Script>();
+	if((script == nullptr) || (script->script == nullptr)) {
+		temp	   = Scriptable();
 		scriptable = &temp;
-	}
-	else
+	} else
 		scriptable = script->script;
 
 	scriptable->goc = obj;
@@ -138,43 +122,45 @@ void Sprite::PrepDefaultDrawCallback(void* data) {
 }
 
 int Sprite::DefaultSpriteDrawCallback(void* data) {
-	GameObject* obj = (GameObject*)data;
-	Sprite* sprite = obj->GetComponent<Sprite>();
-    PrepDefaultDrawCallback(data);
+	GameObject* obj	   = (GameObject*)data;
+	Sprite*		sprite = obj->GetComponent<Sprite>();
+	PrepDefaultDrawCallback(data);
 	sprite->container.Draw();
 	sprite->shader->Unuse();
 	return sprite->sortingLayer;
 }
 
 void BatchExtra::AddAttribute(int num) {
-    rawData.resize(rawData.size() + num);
-    relativeIndex.push_back(num);
+	rawData.resize(rawData.size() + num);
+	relativeIndex.push_back(num);
 }
 
 void BatchExtra::SetAttribute(int index, void* data) {
-    int acc = 0;
-    for (int i = 0; i < index; ++i) {
-        acc += relativeIndex[i];
-    }
-    std::memcpy(&rawData[acc], data, sizeof(float) * relativeIndex[index]);
+	int acc = 0;
+	for(int i = 0; i < index; ++i) {
+		acc += relativeIndex[i];
+	}
+	std::memcpy(&rawData[acc], data, sizeof(float) * relativeIndex[index]);
 }
 
 void* BatchExtra::GetData(int num) {
-    int acc = 0;
-    for (int i = 0; i < num; ++i) {
-        acc += relativeIndex[i];
-    }
-    return &rawData[acc];
+	int acc = 0;
+	for(int i = 0; i < num; ++i) {
+		acc += relativeIndex[i];
+	}
+	return &rawData[acc];
 }
 
 bool BatchExtra::IsCompatible(BatchExtra* other) {
-    return IsCompatible(other->relativeIndex.data(), other->relativeIndex.size());
+	return IsCompatible(other->relativeIndex.data(), other->relativeIndex.size());
 }
 
 bool BatchExtra::IsCompatible(int* container, int size) {
-    if (this->relativeIndex.size() != size) return 0;
-    for (int i = 0; i < size; ++i) {
-        if (this->relativeIndex[i] != container[i]) return 0;
-    }
-    return 1;
+	if(this->relativeIndex.size() != size)
+		return 0;
+	for(int i = 0; i < size; ++i) {
+		if(this->relativeIndex[i] != container[i])
+			return 0;
+	}
+	return 1;
 }

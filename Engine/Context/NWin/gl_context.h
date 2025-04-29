@@ -1,8 +1,6 @@
 #pragma once
 #include "window.h"
 
-
-
 namespace NWin {
 
 typedef void* contextHandle;
@@ -10,8 +8,8 @@ typedef void* contextHandle;
 struct OpenGLInfo {
 	uchar minVersion = 3;
 	uchar maxVersion = 3;
-	//bool  profileCore = 1;
-	bool  disableCompatibility = 1;
+	// bool  profileCore = 1;
+	bool disableCompatibility = 1;
 };
 
 enum class NWIN_GL_STATUS {
@@ -24,21 +22,20 @@ enum class NWIN_GL_STATUS {
 };
 
 class GlContext {
-private:
+  private:
 	static GlContext* _current;
-	
-	Window*			_attachedWindow = nullptr;
-	contextHandle	_contextHandle  = nullptr;
-public:
 
-	bool			isCurrent();
-	NWIN_GL_STATUS	create(Window* window, const OpenGLInfo& glInfo);
-	NWIN_GL_STATUS  makeCurrent(bool noContext = 0);
-	Window*		    getWindow();
-	
+	Window*		  _attachedWindow = nullptr;
+	contextHandle _contextHandle  = nullptr;
+
+  public:
+	bool		   isCurrent();
+	NWIN_GL_STATUS create(Window* window, const OpenGLInfo& glInfo);
+	NWIN_GL_STATUS makeCurrent(bool noContext = 0);
+	Window*		   getWindow();
 
 	static GlContext* getCurrent();
-	static void setCurCtxVSync(int interval = 1);
+	static void		  setCurCtxVSync(int interval = 1);
 };
 
-};
+}; // namespace NWin

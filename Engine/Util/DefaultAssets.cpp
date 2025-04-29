@@ -1,7 +1,7 @@
 #include "DefaultAssets.h"
 
 const ShaderText ShaderTexturedDefaultStr = {
-R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex
         #version 330 core
         
@@ -17,7 +17,7 @@ R"V0G0N(
             uv = texCoord;
         };
 )V0G0N",
-R"V0G0N(        
+	R"V0G0N(        
         #pragma fragment
         #version 330 core
         
@@ -32,11 +32,10 @@ R"V0G0N(
             FragColor = col;
         };
         
-)V0G0N"
-};
+)V0G0N"};
 
 const ShaderText ShaderTexturedBatchedDefaultStr = {
-R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex 
         #version 330 core
         
@@ -54,7 +53,7 @@ R"V0G0N(
             sampleID  = sampleIDattrib;
         };
 )V0G0N",
-R"V0G0N(
+	R"V0G0N(
         #pragma fragment 
         #version 330 core
         #pragma def MAX_TEX MaxTexNum
@@ -69,8 +68,7 @@ R"V0G0N(
             vec4 col   = texture(uTex[texID], uv);
             FragColor  = col;
         }
-)V0G0N"
-};
+)V0G0N"};
 
 const ShaderText ShaderTextDefaultStr = {R"V0G0N( 
         #pragma vertex 
@@ -88,7 +86,7 @@ const ShaderText ShaderTextDefaultStr = {R"V0G0N(
             uv = texCoord;
         };
 )V0G0N",
-R"V0G0N(
+										 R"V0G0N(
         #pragma fragment 
         #version 330 core
 
@@ -103,11 +101,10 @@ R"V0G0N(
             vec4 col = vec4(color,texture(uTex0, vec2(uv.x, 1.0 - uv.y)).x);
             FragColor = col;
         }
-)V0G0N"
-};
+)V0G0N"};
 
 const ShaderText ShaderTextBatchedStr = {
-    R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex
         #version 330 core
         #define MAXUINT10 1023.0
@@ -133,7 +130,7 @@ const ShaderText ShaderTextBatchedStr = {
                              );
         };
 )V0G0N",
-R"V0G0N(
+	R"V0G0N(
         #pragma fragment 
         #version 330 core
         #pragma def MAX_TEX MaxTexNum
@@ -149,60 +146,40 @@ R"V0G0N(
             vec4 col  = vec4(color10bit.xyz, texture(uTex[int(sampleID)], vec2(uv.x, 1.0 - uv.y)).x * color10bit.a);
             FragColor = col;
         }
-)V0G0N"
-};
+)V0G0N"};
 
-
-#define W  255,255,255
-#define WA 255,255,255,255
-#define R  255,0,0
-#define ALPHA  false
+#define W	  255, 255, 255
+#define WA	  255, 255, 255, 255
+#define R	  255, 0, 0
+#define ALPHA false
 
 /*Pay attention to size as the spec says :
-    "Specifies the width of the texture image. 
-    All implementations support texture images that are at least 1024 texels wide."
+	"Specifies the width of the texture image.
+	All implementations support texture images that are at least 1024 texels wide."
 */
-static uint8 imageDefaultBuff[] =  { 
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
-     W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W
-};
+static uint8 imageDefaultBuff[] = {
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W,
+	W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W};
 
-const Image ImageDefault {
-    std::string(),
-    imageDefaultBuff,
-    3,
-    16, 
-    16,
-    ALPHA
-};
+const Image ImageDefault{std::string(), imageDefaultBuff, 3, 16, 16, ALPHA};
 
+TextureIdentifier TextureDefaultID		  = {"DefaultTexture", ALPHA};
+ShaderIdentifier  ShaderTexturedDefaultID = "DefaultShaderTextured";
 
-TextureIdentifier TextureDefaultID                  = { "DefaultTexture", ALPHA };
-ShaderIdentifier  ShaderTexturedDefaultID           = "DefaultShaderTextured";
+ShaderIdentifier ShaderTexturedBatchedDefaultID = "DefaultShaderTexturedBatched";
+ShaderIdentifier ShaderTextDefaultID			= "DefaultShaderText";
+ShaderIdentifier ShaderTextBatchedDefaultID		= "DefaultShaderTextBatched";
 
-ShaderIdentifier  ShaderTexturedBatchedDefaultID    = "DefaultShaderTexturedBatched";
-ShaderIdentifier  ShaderTextDefaultID               = "DefaultShaderText";
-ShaderIdentifier  ShaderTextBatchedDefaultID        = "DefaultShaderTextBatched";
+ShaderIdentifier ShaderTriangleDefaultID = "DefaultShaderTriangle";
 
-ShaderIdentifier  ShaderTriangleDefaultID = "DefaultShaderTriangle";
-
-ShaderIdentifier  ShaderCircleDefaultID = "DefaultShaderCircle";
+ShaderIdentifier ShaderCircleDefaultID	= "DefaultShaderCircle";
 const ShaderText ShaderCircleDefaultStr = {
-R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex
         #version 330 core
         
@@ -217,7 +194,7 @@ R"V0G0N(
             uv = texCoord;
         };
 )V0G0N",
-R"V0G0N(        
+	R"V0G0N(        
         #pragma fragment
         #version 330 core 
         uniform sampler2D uTex0;
@@ -233,13 +210,10 @@ R"V0G0N(
             vec4 col = texture(uTex0,uv) * aaval; 
             FragColor = col;
         } 
-)V0G0N"
-};
-
-
+)V0G0N"};
 
 const ShaderText ShaderTriangleDefaultStr = {
-R"V0G0N( 
+	R"V0G0N( 
         #pragma vertex
         #version 330 core
         
@@ -255,7 +229,7 @@ R"V0G0N(
             uv = texCoord;
         }
 )V0G0N",
-R"V0G0N(        
+	R"V0G0N(        
         #pragma fragment
         #version 330 core
         
@@ -269,5 +243,4 @@ R"V0G0N(
             FragColor = col;
         }
         
-)V0G0N"
-};
+)V0G0N"};

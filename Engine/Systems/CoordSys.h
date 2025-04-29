@@ -16,18 +16,18 @@ the world, or the viewport.
 */
 
 namespace NWCoordSys {
-    struct BoundingBox {
-        fVec2 center;
-        fVec2 size;
-    };
-
-    fVec2 WorldToScreenNonNormalized(const fVec2&);
-    fVec2 WorldToViewportNonNormalized(const fVec2&);
-
-    fVec2 ScreenNonNormalizedToWorld(const fVec2&);
-    fVec2 ScreenToWorld(const fVec2&);
-    fVec2 WorldToScreen(const fVec2&);
-
-    fVec2 ViewportToWorld(const fVec2&);
-    fVec2 WorldToViewport(const fVec2&);
+struct BoundingBox {
+	fVec2 center;
+	fVec2 size;
 };
+
+fVec2 WorldToScreenNonNormalized(const fVec2&);
+fVec2 WorldToViewportNonNormalized(const fVec2&);
+
+fVec2 ScreenNonNormalizedToWorld(const fVec2&);
+fVec2 ScreenToWorld(const fVec2&);
+fVec2 WorldToScreen(const fVec2&);
+
+fVec2 ViewportToWorld(const fVec2&);
+fVec2 WorldToViewport(const fVec2&);
+}; // namespace NWCoordSys
