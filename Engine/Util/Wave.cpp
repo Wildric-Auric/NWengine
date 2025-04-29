@@ -191,11 +191,11 @@ ValueNoise::ValueNoise(const float freq, const float ampl, const float off) : Wa
 float ValueNoise::Evaluate(const float v) {
     uint32 ipt     = ((v+_off)/_freq);
     double frac    = fmod(v+_off, _freq) / _freq;
-    float a        = Normalize<float>(_rand.Get(ipt),UINT32_MAX, 1.0f);
-    float b        = Normalize<float>(_rand.Get(ipt + 1),UINT32_MAX, 1.0f);
-    float t        = Smoothstep<float>(frac, 0.0, 1.0);
-    float value    = lerp(a,b,t);
-    return value * _ampl;
+    frac            = Smoothstep<double>(frac, 0.0, 1.0);
+    uint32 a        = (_rand.Get(ipt));
+    uint32 b        = (_rand.Get(ipt + 1));
+    uint32 value    = lerp(a,b,frac);
+    return Normalize<double>(value, NW_UI32_MAX, _ampl);
 }
 
 Wave2::Wave2(const float freq, const float ampl, const float off) : Wave(freq, ampl, off) {}
@@ -210,19 +210,20 @@ float ValueNoise2::Evaluate(const float i, const float j) {
     auto f       = NWFnva_2UI32_To_1UI32;
     uint32 iptX  = (i+_off)/_freq;
     uint32 iptY  = (j+_off)/_freq;
-    double fracX = fmod(i+_off, _freq)/_freq;
-    double fracY = fmod(j+_off2, _freq)/_freq;
-    float bl     = Normalize<float>(_rand.Get(f(iptX,iptY)), UINT32_MAX, 1.0f);
-    float br     = Normalize<float>(_rand.Get(f(iptX+1,iptY)), UINT32_MAX, 1.0f);
-    float tl     = Normalize<float>(_rand.Get(f(iptX,iptY+1)), UINT32_MAX, 1.0f);
-    float tr     = Normalize<float>(_rand.Get(f(iptX+1,iptY+1)), UINT32_MAX, 1.0f);
+    double fracX = fmod(i+_off, _freq) / _freq;
+    double fracY = fmod(j+_off2, _freq) / _freq;
+    fracX = Smoothstep<double>(fracX, 0.0, 1.0);
+    fracY = Smoothstep<double>(fracY, 0.0, 1.0);
 
-    fracX = Smoothstep<float>(fracX, 0.0f, 1.0f);
-    fracY = Smoothstep<float>(fracY, 0.0f, 1.0f);
-    float xxb = lerp(bl,br,fracX);
-    float xxt = lerp(tl,tr,fracX);
-    float ret = lerp(xxb,xxt,fracY);
+    uint32 bl     = (_rand.Get(f(iptX,iptY)));
+    uint32 br     = (_rand.Get(f(iptX+1,iptY)));
+    uint32 tl     = (_rand.Get(f(iptX,iptY+1)));
+    uint32 tr     = (_rand.Get(f(iptX+1,iptY+1)));
+    uint32 xxb2 = lerp(bl,br,fracX);
+    uint32 xxb  = lerp(bl,br,fracX);
+    uint32 xxt  = lerp(tl,tr,fracX);
+    uint32 ret  = lerp(xxb,xxt,fracY);
 
-    return ret * _ampl;
+    return Normalize<double>(ret, NW_UI32_MAX, _ampl);
 };
 
