@@ -264,7 +264,8 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	SET(2, vert0.z)
 	SET(3, 0.0)
 	SET(4, 0.0)
-	SET(5, sprite->vertexAttributes.x) SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(5, sprite->vertexAttributes.x)
+	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
 
 		offset += newStrSize;
 	SET(0, vert1.x)
@@ -272,7 +273,8 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	SET(2, vert0.z)
 	SET(3, 1.0)
 	SET(4, 0.0)
-	SET(5, sprite->vertexAttributes.x) SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(5, sprite->vertexAttributes.x)
+	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
 
 		offset += newStrSize;
 	SET(0, vert3.x)
@@ -280,7 +282,8 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	SET(2, vert0.z)
 	SET(3, 0.0)
 	SET(4, 1.0)
-	SET(5, sprite->vertexAttributes.x) SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(5, sprite->vertexAttributes.x)
+	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
 
 		offset += newStrSize;
 	SET(0, vert2.x)
@@ -288,7 +291,8 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	SET(2, vert0.z)
 	SET(3, 1.0)
 	SET(4, 1.0)
-	SET(5, sprite->vertexAttributes.x) SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(5, sprite->vertexAttributes.x)
+	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
 
 		if(c != 0) {
 		memcpy(stride + 8, extra->rawData.data(), extra->rawData.size() * sizeof(float));

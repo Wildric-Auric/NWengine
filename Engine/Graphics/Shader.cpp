@@ -7,6 +7,28 @@
 
 ShaderParser Shader::parser;
 
+void CheckShaderCompileError(int shader, const char* code, const char* txt) {
+	char log[512];
+	int	 successInfo;
+	NW_GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &successInfo));
+	if(!successInfo) {
+		NW_GL_CALL(glGetShaderInfoLog(shader, 512, NULL, log));
+		NW_LOG_ERROR((std::string(txt) + code).c_str());
+		NW_LOG_ERROR(log);
+	}
+}
+
+void CheckShaderLinkError(int prg) {
+	char log[512];
+	int	 successInfo;
+	NW_GL_CALL(glGetProgramiv(prg, GL_LINK_STATUS, &successInfo));
+	if(!successInfo) {
+		NW_GL_CALL(glGetProgramInfoLog(prg, 512, NULL, log));
+		NW_LOG_ERROR((std::string("SHADER::LINKAGE FAILED")).c_str());
+		NW_LOG_ERROR(log);
+	}
+}
+
 ShaderText Shader::fastParseShader(const char* path) {
 	std::string	  frag, vert = ""; // TODO:: Make it directly in the heap
 	uint8		  current = 0;
@@ -26,39 +48,19 @@ ShaderText Shader::fastParseShader(const char* path) {
 }
 
 void Shader::_GlGen(ShaderText* src) {
-
 	uint32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	NW_GL_CALL(glShaderSource(vertexShader, 1, &(src->vertex), NULL));
 	glCompileShader(vertexShader);
-	int	 successInfo;
-	char log[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &successInfo);
-	if(!successInfo) {
-		NW_GL_CALL(glGetShaderInfoLog(vertexShader, 512, NULL, log));
-		NW_LOG_ERROR((std::string("SHADER::VERTEX::COMPILATION FAILED AT: ") + src->vertex).c_str());
-		NW_LOG_ERROR(log);
-	}
+	CheckShaderCompileError(vertexShader, src->vertex, "SHADER::VERTEX::COMPILATION FAILED AT: ");
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	NW_GL_CALL(glShaderSource(fragmentShader, 1, &(src->fragment), NULL));
 	NW_GL_CALL(glCompileShader(fragmentShader));
-	NW_GL_CALL(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successInfo));
-	if(!successInfo) {
-		NW_GL_CALL(glGetShaderInfoLog(fragmentShader, 512, NULL, log));
-		NW_LOG_ERROR((std::string("SHADER::FRAGMENT::COMPILATION FAILED AT: ") + src->fragment).c_str());
-		NW_LOG_ERROR(log);
-	}
+	CheckShaderCompileError(fragmentShader, src->fragment, "SHADER::FRAGMENT::COMPILATION FAILED AT: ");
 	_glID = glCreateProgram();
 	NW_GL_CALL(glAttachShader(_glID, vertexShader));
 	NW_GL_CALL(glAttachShader(_glID, fragmentShader));
 	NW_GL_CALL(glLinkProgram(_glID));
-
-	glGetProgramiv(_glID, GL_LINK_STATUS, &successInfo);
-	if(!successInfo) {
-		NW_GL_CALL(glGetProgramInfoLog(_glID, 512, NULL, log));
-		NW_LOG_ERROR((std::string("SHADER::LINKAGE FAILED")).c_str());
-		NW_LOG_ERROR(log);
-	}
-
+	CheckShaderLinkError(_glID);
 	NW_GL_CALL(glDeleteShader(vertexShader));
 	NW_GL_CALL(glDeleteShader(fragmentShader));
 };
@@ -221,3 +223,100 @@ void Shader::SetUniformArrayi(const char* name, int* value, int size) {
 }
 
 void Shader::Delete() { NW_GL_CALL(glDeleteProgram(this->_glID)); }
+
+void Shader::Clean() {
+	--_usageCounter;
+	if(_usageCounter > 0)
+		return;
+	ShaderIdentifier id = GetIDWithAsset<Shader*, ShaderIdentifier>(this);
+	EraseRes<Shader>(id);
+}
+
+//------------------COMPUTE SHADER------------------
+
+bool ComputeShader::QueryCapabilities(ComputeShaderCapabilities* cap) {
+	if(Context::_glInfo.maxVersion < 4 || Context::_glInfo.minVersion < 3) {
+		cap->maxInvoc = 0;
+		return 0;
+	}
+	for(int i = 0; i < 3; ++i) {
+		NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, i, &cap->workGroupNum.x + i));
+		NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &cap->localSize.x + i));
+	}
+	NW_GL_CALL(glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &cap->maxInvoc));
+	return 1;
+}
+
+void ComputeShader::_GlGen(ComputeShaderText* src2) {
+	ComputeShaderText src  = *src2;
+	int				  comp = glCreateShader(GL_COMPUTE_SHADER);
+	NW_GL_CALL(glShaderSource(comp, 1, &src, NULL));
+	NW_GL_CALL(glCompileShader(comp));
+	CheckShaderCompileError(comp, src, "SHADER::COMPUTE::COMPILATION FAILED AT: ");
+	_glID = NW_GL_CALL(glCreateProgram());
+	NW_GL_CALL(glAttachShader(_glID, comp));
+	NW_GL_CALL(glLinkProgram(_glID));
+	CheckShaderLinkError(_glID);
+	NW_GL_CALL(glDeleteShader(comp));
+}
+
+Asset* ComputeShader::GetFromCache(void* identifier) {
+	if(identifier == nullptr)
+		return nullptr;
+	auto iter = ComputeShader::resList.find(*(ComputeShaderIdentifier*)identifier);
+	if(iter == ComputeShader::resList.end())
+		return nullptr;
+	return &iter->second;
+}
+
+void ComputeShader::SetReflectedUniforms(const ShaderParser& p) {
+	for(auto pp : p.GetUniforms()) {
+		reflectedUniforms.insert(pp);
+	}
+}
+
+Asset* ComputeShader::LoadFromFile(const char* path, void* identifier) {
+	parser.Reset();
+	ComputeShaderText res;
+	parser.ParseFromPath(path);
+	// res.vertex	 = parser.GetComputeTxt().c_str(); //TODO::
+	SetReflectedUniforms(parser);
+	return _LoadDirect(&res, identifier); // LoadFromBuffer(&res, identifier);
+}
+
+Asset* ComputeShader::LoadFromBuffer(void* shaderTextPtr, void* identifier) {
+	ComputeShaderIdentifier* idd = (ComputeShaderIdentifier*)identifier;
+	ComputeShaderText*		 raw = (ComputeShaderText*)shaderTextPtr;
+	ComputeShaderText		 parsed;
+	parser.Parse(*raw);
+	parsed = parser.frag.c_str();
+	SetReflectedUniforms(parser);
+	return _LoadDirect(&parsed, idd);
+}
+
+Asset* ComputeShader::_LoadDirect(void* shaderTextPtr, void* identifier) {
+	ComputeShader* shader = &resList.emplace(*(ComputeShaderIdentifier*)identifier, ComputeShader()).first->second;
+	shader->_identifier	  = *(ComputeShaderIdentifier*)identifier;
+	shader->_GlGen((ComputeShaderText*)shaderTextPtr);
+	Move(shader);
+	return shader;
+}
+
+void ComputeShader::Move(Asset* other) {
+	ComputeShader& otherS	 = *(ComputeShader*)other;
+	otherS.reflectedUniforms = std::move(reflectedUniforms);
+}
+
+void ComputeShader::Delete() { NW_GL_CALL(glDeleteProgram(_glID)); }
+
+void ComputeShader::Clean() {
+	--_usageCounter;
+	if(_usageCounter > 0)
+		return;
+	ComputeShaderIdentifier id = GetIDWithAsset<ComputeShader*, ComputeShaderIdentifier>(this);
+	EraseRes<ComputeShader>(id);
+}
+
+ShaderParser ComputeShader::parser;
+
+NW_IMPL_RES_LIST(ComputeShaderIdentifier, ComputeShader)

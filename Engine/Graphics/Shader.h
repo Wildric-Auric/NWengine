@@ -98,49 +98,57 @@ class Shader : public Asset {
 
 	void SetUniformArray2f(int loc, float* value, int size);
 
-	/**
-	 * @brief Get a shader asset from the cache.
-	 * @param identifier The identifier of the shader.
-	 * @return The shader asset if found in the cache, nullptr otherwise.
-	 */
 	Asset* GetFromCache(void* identifier) override;
 
-	/**
-	 * @brief Load a shader asset from a file.
-	 * @param path The path to the shader file.
-	 * @param identifier The identifier of the shader.
-	 * @return The loaded shader asset.
-	 */
 	Asset* LoadFromFile(const char* path, void* identifier) override;
 
-	/**
-	 * @brief Load a shader asset from a buffer.
-	 * @param shaderTextPtr A pointer to the ShaderText struct.
-	 * @param identifier The identifier of the shader.
-	 * @return The loaded shader asset.
-	 */
 	Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier) override;
 
 	Asset* _LoadDirect(void* shaderTextPtr, void* identifier);
 
+	void Clean() override;
+
 	void Move(Asset* other) override;
-	/**
-	 * @brief Delete the shader.
-	 */
+
 	void Delete();
 
-	/**
-	 * @brief Generate and bind the OpenGL shader program.
-	 * @param shaderText A pointer to the ShaderText struct.
-	 */
 	void _GlGen(ShaderText* shaderText);
 
-	/**
-	 * @brief Parse a shader file and return the shader text.
-	 * @param path The path to the shader file.
-	 * @return The parsed shader text.
-	 */
 	static ShaderText fastParseShader(const char* path);
 
 	NW_DECL_RES_LIST(ShaderIdentifier, Shader);
+};
+
+//------------------COMPUTE SHADER------------------
+
+typedef const char* ComputeShaderText;
+typedef std::string ComputeShaderIdentifier;
+
+struct ComputeShaderCapabilities {
+	iVec3 workGroupNum;
+	iVec3 localSize;
+	int32 maxInvoc;
+};
+
+class ComputeShader : public Asset {
+  public:
+	static ShaderParser										 parser;
+	int														 _glID = 0;
+	ComputeShaderIdentifier									 _identifier;
+	std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
+	void													 _GlGen(ComputeShaderText* src2);
+
+	Asset* GetFromCache(void* identifier) override;
+	Asset* LoadFromFile(const char* path, void* identifier) override;
+	Asset* LoadFromBuffer(void* shaderTextPtr, void* identifier) override;
+	Asset* _LoadDirect(void* shaderTextPtr, void* identifier);
+	void   SetReflectedUniforms(const ShaderParser& p);
+	void   Move(Asset* other) override;
+	void   Delete();
+
+	void Clean() override;
+
+	static bool QueryCapabilities(ComputeShaderCapabilities* cap);
+
+	NW_DECL_RES_LIST(ComputeShaderIdentifier, ComputeShader);
 };

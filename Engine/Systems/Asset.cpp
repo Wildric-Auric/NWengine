@@ -28,4 +28,6 @@ void Asset::Destroy() {
 	CLN_RES(Sound);
 	CLN_RES(DllScript);
 	CLN_RES(Font);
+	CLN_RES(Shader);
+	CLN_RES(ComputeShader);
 }
