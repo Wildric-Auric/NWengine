@@ -804,7 +804,7 @@ T Smoothstep(T x, T edge0, T edge1) {
 template<typename T, typename T1>
 T lerp(T source, T target, T1 percent) {
 	percent = Clamp<T1>(percent, (T1)0.0, (T1)1.0);
-	return source + (target - source) * percent;
+	return source * ((T1)1.0 - percent) + target * percent;
 }
 
 template<typename T, typename T1> Vector2<T> lerpVector2(const Vector2<T>& source, const Vector2<T>& target, const Vector2<T1>& percent) {
