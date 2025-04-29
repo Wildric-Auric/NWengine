@@ -4,25 +4,26 @@ BasedOnStyle: llvm
 IndentWidth: 4
 TabWidth: 4
 UseTab: Always
-ColumnLimit: 100
+ColumnLimit: 130
 
-AlignConsecutiveAssignments: true
+AlignConsecutiveAssignments:  true
 AlignConsecutiveDeclarations: true
-AlignAfterOpenBracket: Align
-AlignTrailingComments: true
+AlignAfterOpenBracket:     Align
+AlignTrailingComments:     true
+AlignConsecutiveMacros:    true
+AlignConsecutiveBitFields: true
 
 SpacesBeforeTrailingComments: 1
 AllowAllParametersOfDeclarationOnNextLine: false
-BreakBeforeBraces: Attach 
-SpaceBeforeParens: Never 
-PointerAlignment: Left
+BreakBeforeBraces:  Attach 
+SpaceBeforeParens:  Never 
+PointerAlignment:   Left
 ReferenceAlignment: Left
 
 BraceWrapping:
   AfterFunction: true
   AfterControlStatement: true
 
-# Optional, to enforce consistent use of braces even on one-liners:
 AlwaysBreakAfterReturnType: None
 
 
