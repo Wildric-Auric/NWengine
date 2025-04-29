@@ -25,7 +25,8 @@ static void	   Init() {
 	   im.channels = 3;
 	   im.alpha	   = 0;
 	   im.Alloc();
-	   ValueNoise valueNoise = ValueNoise(10.0f, 255.0f, 0.0);
+	   ValueNoise  valueNoise  = ValueNoise(10.0f, 255.0f, 0.0);
+	   ValueNoise2 valueNoise2 = ValueNoise2(0.1f, 255.0f, 0.0);
 
 	   float		f	 = 200.0;
 	   float		ampl = 150.0;
@@ -36,11 +37,6 @@ static void	   Init() {
 		   f /= 2.0;
 		   wc.Add(vn);
 	   }
-
-	   //    ValueNoise r;
-	   //    for (int i = 0; i < 100; ++i) {
-	   //        printf("%lf\n", Normalize<float>(r._rand.Get(i), NW_UI32_MAX, 1.0f));
-	   //    }
 
 	   for(int i = 0; i < im.height; ++i) {
 		   for(int j = 0; j < im.width; ++j) {
