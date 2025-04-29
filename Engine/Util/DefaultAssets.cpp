@@ -171,6 +171,8 @@ const Image ImageDefault{std::string(), imageDefaultBuff, 3, 16, 16, ALPHA};
 TextureIdentifier TextureDefaultID		  = {"DefaultTexture", ALPHA};
 ShaderIdentifier  ShaderTexturedDefaultID = "DefaultShaderTextured";
 
+ShaderIdentifier ShaderTexturedColoredDefaultID = "DefaultShaderColoredTextured";
+
 ShaderIdentifier ShaderTexturedBatchedDefaultID = "DefaultShaderTexturedBatched";
 ShaderIdentifier ShaderTextDefaultID			= "DefaultShaderText";
 ShaderIdentifier ShaderTextBatchedDefaultID		= "DefaultShaderTextBatched";
@@ -242,5 +244,39 @@ const ShaderText ShaderTriangleDefaultStr = {
             if (col.a < 0.1) discard;
             FragColor = col;
         }
+        
+)V0G0N"};
+
+const ShaderText ShaderTexturedColoredDefaultStr = {
+	R"V0G0N( 
+        #pragma vertex
+        #version 330 core
+        
+        layout(location = 0) in vec3 attribPos;
+        layout(location = 1) in vec2 texCoord;
+        
+        uniform mat4 uMvp = mat4(1.0);
+        
+        out vec2 uv;
+        
+        void main() {
+            gl_Position = uMvp * vec4(attribPos, 1.0);
+            uv = texCoord;
+        };
+)V0G0N",
+	R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        
+        uniform sampler2D  uTex0;
+        uniform vec3 uCol = vec3(1.0);
+        in vec2 uv;
+        
+        out vec4 FragColor;
+        
+        void main() {
+            vec4 col = texture(uTex0, uv);
+            FragColor = col * vec4(uCol,1.0);
+        };
         
 )V0G0N"};

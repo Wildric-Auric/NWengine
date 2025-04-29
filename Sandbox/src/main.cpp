@@ -9,6 +9,6 @@
 #include "templates/UItst.h"
 
 int main() {
-	Sandbox::Run();
+	RandomTst::Run();
 	return 0;
 }
