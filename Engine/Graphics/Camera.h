@@ -1,9 +1,9 @@
 #pragma once
-#include "Framebuffer.h"
-#include "Maths.h"
 #include "ComponentTypes.h"
+#include "Framebuffer.h"
 #include "GameObject.h"
 #include "Image.h"
+#include "Maths.h"
 
 /**
  * @brief The Camera class represents a camera in the game world.

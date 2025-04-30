@@ -279,7 +279,7 @@ Asset* ComputeShader::LoadFromFile(const char* path, void* identifier) {
 	parser.Reset();
 	ComputeShaderText res;
 	parser.ParseFromPath(path);
-	// res.vertex	 = parser.GetComputeTxt().c_str(); //TODO::
+	res = parser.GetComputeTxt().c_str(); // TODO::
 	SetReflectedUniforms(parser);
 	return _LoadDirect(&res, identifier); // LoadFromBuffer(&res, identifier);
 }

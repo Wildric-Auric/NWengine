@@ -184,6 +184,14 @@ void TokenDirective(void* ptr) {
 		p.curShaderTxt = &p.frag;
 	}
 
+	else if(container.size() >= 2 && prgma && container[1] == "compute") {
+		p.tokenIter	   = p.tokens.erase(p.tokenIter);
+		p.curType	   = ShaderType::COMPUTE;
+		p.dontInc	   = 1;
+		p.tokenFunc	   = TokenGeneral;
+		p.curShaderTxt = &p.comp;
+	}
+
 	else if(container.size() >= 3 && prgma && container[1] == "def") {
 		p.tokenIter++;
 		auto pp = p.constants.find(container[3]);
@@ -336,10 +344,15 @@ void ShaderParser::ParseFromPath(const char* path) {
 }
 
 void ShaderParser::OutputData() {
-	std::cout << "--------Vertex--------" << std::endl;
-	std::cout << vert << std::endl;
-	std::cout << "--------Fragment--------" << std::endl;
-	std::cout << frag << std::endl;
+	if(comp == "") {
+		std::cout << "--------Vertex--------" << std::endl;
+		std::cout << vert << std::endl;
+		std::cout << "--------Fragment--------" << std::endl;
+		std::cout << frag << std::endl;
+	} else {
+		std::cout << "--------Compute--------" << std::endl;
+		std::cout << comp << std::endl;
+	}
 
 	std::cout << "-------\nAtts Num: " << GetEnabledAtts().size() << std::endl;
 	std::cout << "-------Used Atts---------- " << std::endl;

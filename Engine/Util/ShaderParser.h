@@ -7,7 +7,7 @@ typedef void (*ShaderParserStateFunc)(void*);
 typedef void (*ShaderParserTokStateFunc)(void*);
 typedef bool (*ShaderParserGetNxtFunc)(void*);
 
-enum class ShaderType { NONE, VERT, FRAG };
+enum class ShaderType { NONE, VERT, FRAG, COMPUTE };
 
 struct ShaderParserUniformData {
 	std::string name		 = "";
@@ -44,6 +44,7 @@ class ShaderParser {
 	std::unordered_map<std::string, ShaderParserUniformData> uniformsData;
 	std::string												 vert		   = "";
 	std::string												 frag		   = "";
+	std::string												 comp		   = "";
 	std::string												 shaderVersion = "";
 	std::vector<uint16_t>									 enabledAtts;
 
@@ -63,6 +64,7 @@ class ShaderParser {
 
 	inline const std::string&											   GetVertTxt() const { return vert; }
 	inline const std::string&											   GetFragTxt() const { return frag; }
+	inline const std::string&											   GetComputeTxt() const { return comp; }
 	inline const std::vector<uint16_t>&									   GetEnabledAtts() const { return enabledAtts; }
 	inline const std::unordered_map<std::string, ShaderParserUniformData>& GetUniforms() const { return uniformsData; }
 	inline const std::string&											   GetShaderVersion() const { return shaderVersion; }
