@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "FrameBuffer.h"
+#include "Framebuffer.h"
 #include "Maths.h"
 #include "Image.h"
 #include "ComponentTypes.h"

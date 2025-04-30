@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera.h"
-#include "UISys.h"
 #include "keyboard.h"
 
 class UIWindow;
