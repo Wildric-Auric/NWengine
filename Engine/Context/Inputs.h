@@ -47,145 +47,145 @@ typedef int Input_Mode;
  * @brief The Inputs class represents the input state and provides methods to process and retrieve input.
  */
 class Inputs {
-public:
-    /**
-    *@brief Mouse cursor in window coordinates. 0,0 is the center of the window.
-    */
+  public:
+	/**
+	 *@brief Mouse cursor in window coordinates. 0,0 is the center of the window.
+	 */
 	static fVec2 _mousePos;
 
 	/**
-  * @brief Flag indicating if the left input key is pressed.
-  */
+	 * @brief Flag indicating if the left input key is pressed.
+	 */
 	static bool left;
 
 	/**
-  * @brief Flag indicating if the right input key is pressed.
-  */
+	 * @brief Flag indicating if the right input key is pressed.
+	 */
 	static bool right;
 
 	/**
-  * @brief Flag indicating if the up input key is pressed.
-  */
+	 * @brief Flag indicating if the up input key is pressed.
+	 */
 	static bool up;
 
 	/**
-  * @brief Flag indicating if the down input key is pressed.
-  */
+	 * @brief Flag indicating if the down input key is pressed.
+	 */
 	static bool down;
 
 	/**
-  * @brief Flag indicating if the d input key is pressed.
-  */
+	 * @brief Flag indicating if the d input key is pressed.
+	 */
 	static bool d;
 
 	/**
-  * @brief Flag indicating if the r input key is pressed.
-  */
+	 * @brief Flag indicating if the r input key is pressed.
+	 */
 	static bool r;
 
 	/**
-  * @brief Flag indicating if the s input key is pressed.
-  */
+	 * @brief Flag indicating if the s input key is pressed.
+	 */
 	static bool s;
 
 	/**
-  * @brief Flag indicating if the t input key is pressed.
-  */
+	 * @brief Flag indicating if the t input key is pressed.
+	 */
 	static bool t;
 
 	/**
-  * @brief Flag indicating if the control input key is pressed.
-  */
+	 * @brief Flag indicating if the control input key is pressed.
+	 */
 	static bool ctrl;
 
 	/**
-  * @brief Flag indicating if the left control input key is pressed.
-  */
+	 * @brief Flag indicating if the left control input key is pressed.
+	 */
 	static bool left_ctrl;
 
 	/**
-  * @brief Flag indicating if the right control input key is pressed.
-  */
+	 * @brief Flag indicating if the right control input key is pressed.
+	 */
 	static bool right_ctrl;
 
 	/**
-  * @brief Flag indicating if the left mouse button is clicked.
-  */
+	 * @brief Flag indicating if the left mouse button is clicked.
+	 */
 	static bool left_click;
 
 	/**
-  * @brief Flag indicating if the 0 input key is pressed.
-  */
+	 * @brief Flag indicating if the 0 input key is pressed.
+	 */
 	static bool n_0;
 
 	/**
-  * @brief Flag indicating if the 1 input key is pressed.
-  */
+	 * @brief Flag indicating if the 1 input key is pressed.
+	 */
 	static bool n_1;
 
 	/**
-  * @brief Flag indicating if the 2 input key is pressed.
-  */
+	 * @brief Flag indicating if the 2 input key is pressed.
+	 */
 	static bool n_2;
 
 	/**
-  * @brief Flag indicating if the 3 input key is pressed.
-  */
+	 * @brief Flag indicating if the 3 input key is pressed.
+	 */
 	static bool n_3;
 
 	/**
-  * @brief Flag indicating if the 4 input key is pressed.
-  */
+	 * @brief Flag indicating if the 4 input key is pressed.
+	 */
 	static bool n_4;
 
 	/**
-  * @brief Flag indicating if the enter input key is pressed.
-  */
+	 * @brief Flag indicating if the enter input key is pressed.
+	 */
 	static bool enter;
 
 	/**
-  * @brief Flag indicating if the F2 input key is pressed.
-  */
+	 * @brief Flag indicating if the F2 input key is pressed.
+	 */
 	static bool f2;
 
 	/**
-  * @brief Flag indicating if the space input key is pressed.
-  */
+	 * @brief Flag indicating if the space input key is pressed.
+	 */
 	static bool space;
 
 	/**
-  * @brief Flag indicating if a joystick is being used.
-  */
+	 * @brief Flag indicating if a joystick is being used.
+	 */
 	static bool usingJoystick;
 
 	/**
-  * @brief Process the input events.
-  * @param window A pointer to the window object.
-  */
+	 * @brief Process the input events.
+	 * @param window A pointer to the window object.
+	 */
 	static void Process(void* window);
 
 	/**
-  * @brief Get the state of the specified input key.
-  * @param key The input key number.
-  * @param mode The input mode.
-  * @return True if the input key is pressed, false otherwise.
-  */
+	 * @brief Get the state of the specified input key.
+	 * @param key The input key number.
+	 * @param mode The input mode.
+	 * @return True if the input key is pressed, false otherwise.
+	 */
 	static bool GetInputKey(Input_Number key, Input_Mode mode);
 
 	/**
-  * @brief Get the state of the specified mouse input.
-  * @param key The input key number.
-  * @param mode The input mode.
-  * @return True if the mouse input is pressed, false otherwise.
-  */
+	 * @brief Get the state of the specified mouse input.
+	 * @param key The input key number.
+	 * @param mode The input mode.
+	 * @return True if the mouse input is pressed, false otherwise.
+	 */
 	static bool GetInputMouse(Input_Number key, Input_Mode mode);
 
-    /**
-      @brief Get mouse position in window coordinates. See namespace CoordSys 
-    */
-    static fVec2 GetMousePosition();
 	/**
-  * @brief The array of joystick axis values.
-  */
+	  @brief Get mouse position in window coordinates. See namespace CoordSys
+	*/
+	static fVec2 GetMousePosition();
+	/**
+	 * @brief The array of joystick axis values.
+	 */
 	static float joystickAxis[6];
 };

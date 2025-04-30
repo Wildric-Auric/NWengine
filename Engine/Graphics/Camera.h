@@ -1,127 +1,127 @@
 #pragma once
-#include "GameObject.h"
 #include "Framebuffer.h"
 #include "Maths.h"
-#include "Image.h"
 #include "ComponentTypes.h"
+#include "GameObject.h"
+#include "Image.h"
 
 /**
  * @brief The Camera class represents a camera in the game world.
  */
 class Camera : public GameComponent {
-public:
-    /**
-     * @brief Gets the type of the camera.
-     * @return The type of the camera.
-     */
+  public:
+	/**
+	 * @brief Gets the type of the camera.
+	 * @return The type of the camera.
+	 */
 
-    NW_ST_GET_TYPE_IMPL(Camera);
-    /**
-     * @brief Updates the active camera.
-     *
-     * This static method calls capture on ActiveCamera if not null.
-     */
-    static void UpdateActiveCamera();
+	NW_ST_GET_TYPE_IMPL(Camera);
+	/**
+	 * @brief Updates the active camera.
+	 *
+	 * This static method calls capture on ActiveCamera if not null.
+	 */
+	static void UpdateActiveCamera();
 
-    Matrix4<float> projectionMatrix; /**< The projection matrix of the camera. */
-    Matrix4<float> viewMatrix = Matrix4<float>(1.0f); /**< The view matrix of the camera. */
+	Matrix4<float> projectionMatrix;				  /**< The projection matrix of the camera. */
+	Matrix4<float> viewMatrix = Matrix4<float>(1.0f); /**< The view matrix of the camera. */
 
-    fVec2 size; /**< The size of the camera. */
-    fVec2 viewPortSize; /**< The viewport size of the camera. */
-    fVec3 clearColor = fVec3(0.0,0.0, 0.0); /**< The clear color of the camera. */
-    float alpha = 1.0f; /**< The alpha value of the camera. */
-    bool isActive = 0; /**< Indicates whether the camera is active or not. */
-    std::unordered_map<int, fVec4> clearCols;
-    MSAAValue _msaa = NW_MSx1;
-    bool _wireframe = 0;
-    
-    void _ClearAtts();
-    /**
-     * @brief Default constructor for the Camera class.
-     */
-    Camera() = default;
+	fVec2						   size;							  /**< The size of the camera. */
+	fVec2						   viewPortSize;					  /**< The viewport size of the camera. */
+	fVec3						   clearColor = fVec3(0.0, 0.0, 0.0); /**< The clear color of the camera. */
+	float						   alpha	  = 1.0f;				  /**< The alpha value of the camera. */
+	bool						   isActive	  = 0;					  /**< Indicates whether the camera is active or not. */
+	std::unordered_map<int, fVec4> clearCols;
+	MSAAValue					   _msaa	  = NW_MSx1;
+	bool						   _wireframe = 0;
 
-    /**
-     * @brief Constructor for the
+	void _ClearAtts();
+	/**
+	 * @brief Default constructor for the Camera class.
+	 */
+	Camera() = default;
+
+	/**
+	 * @brief Constructor for the
  Camera class.
-     * @param go The game object to attach the camera to.
-     */
-    Camera(GameObject* go);
+	 * @param go The game object to attach the camera to.
+	 */
+	Camera(GameObject* go);
 
-    /**
-     * @brief Destructor for the Camera class.
-     */
-    ~Camera();
+	/**
+	 * @brief Destructor for the Camera class.
+	 */
+	~Camera();
 
-    /**
-     * @brief Captures the camera.
-     */
-    void Capture();
+	/**
+	 * @brief Captures the camera.
+	 */
+	void Capture();
 
-    /**
-     * @brief Updates the camera.
-     */
-    void Update() override;
+	/**
+	 * @brief Updates the camera.
+	 */
+	void Update() override;
 
-    /**
-     * @brief Changes the orthographic size of the camera.
-     * @param sizeX The new size along the X-axis.
-     * @param sizeY The new size along the Y-axis.
-     */
-    void ChangeOrtho(float sizeX, float sizeY);
+	/**
+	 * @brief Changes the orthographic size of the camera.
+	 * @param sizeX The new size along the X-axis.
+	 * @param sizeY The new size along the Y-axis.
+	 */
+	void ChangeOrtho(float sizeX, float sizeY);
 
-    /**
-     * @brief Changes the orthographic size and multisample value of the camera.
-     * @param sizeX The new size along the X-axis.
-     * @param sizeY The new size along the Y-axis.
-     * @param msaa The multisample value.
-     */
-    void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa);
+	/**
+	 * @brief Changes the orthographic size and multisample value of the camera.
+	 * @param sizeX The new size along the X-axis.
+	 * @param sizeY The new size along the Y-axis.
+	 * @param msaa The multisample value.
+	 */
+	void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa);
 
-    /**
-     * @brief Sets the general clear value.
-     * @param color RGBA color values.
-     */
-    void SetClearColor(const fVec4& color);
+	/**
+	 * @brief Sets the general clear value.
+	 * @param color RGBA color values.
+	 */
+	void SetClearColor(const fVec4& color);
 
-    /**
-     * @brief Sets the clear value for a specific attachment.
-     * @param i The index of the attachment.
-     * @param color RGBA color values.
-     */
-    void SetClearColor(int i, const fVec4& color);
+	/**
+	 * @brief Sets the clear value for a specific attachment.
+	 * @param i The index of the attachment.
+	 * @param color RGBA color values.
+	 */
+	void SetClearColor(int i, const fVec4& color);
 
-    void EnableWireframeRendering();
-    void DisableWireframeRendering();
+	void EnableWireframeRendering();
+	void DisableWireframeRendering();
 
-    fVec2 GetPosition();
-    fVec2 GetSize();
+	fVec2 GetPosition();
+	fVec2 GetSize();
 
-    FrameBuffer* GetFbo();
-    /**
-     * @brief Reset specific clear colors.
-     */
-    void ResetClearColors();
+	FrameBuffer* GetFbo();
+	/**
+	 * @brief Reset specific clear colors.
+	 */
+	void ResetClearColors();
 
-    /**
-     * @brief Moves the camera to the target position with interpolation.
-     * @param target The target position to move the camera to.
-     * @param interpolationTime The time taken for the interpolation.
-     */
-    void MoveTo(Vector2<int> target, float interpolationTime);
+	/**
+	 * @brief Moves the camera to the target position with interpolation.
+	 * @param target The target position to move the camera to.
+	 * @param interpolationTime The time taken for the interpolation.
+	 */
+	void MoveTo(Vector2<int> target, float interpolationTime);
 
-    /**
-     * @brief Uses the camera.
-     */
-    void Use();
+	/**
+	 * @brief Uses the camera.
+	 */
+	void Use();
 
-    fVec2 position = fVec2(0.0f,0.0f); /**< The position of the camera. */
-    float rotation = 0.0f; /**< The rotation of the camera. */
-    float zoom = 1.0; /**< The zoom level of the camera. */
+	fVec2 position = fVec2(0.0f, 0.0f); /**< The position of the camera. */
+	float rotation = 0.0f;				/**< The rotation of the camera. */
+	float zoom	   = 1.0;				/**< The zoom level of the camera. */
 
-    FrameBuffer fbo; /**< The frame buffer object of the camera. */
+	FrameBuffer fbo; /**< The frame buffer object of the camera. */
 
-    static Camera* GetActiveCamera();
+	static Camera* GetActiveCamera();
 
-    static Camera* ActiveCamera; /**< The active camera. */
+	static Camera* ActiveCamera; /**< The active camera. */
 };

@@ -3,7 +3,7 @@
 #define NW_TI_VECTOR
 #define NW_TI_MAP
 #define NW_TI_UNORDERED_HASHMAP
-#define NW_TI_DEQUE 
+#define NW_TI_DEQUE
 #define NW_TI_LIST
 #define TEMPLATES_INST_IMPL(type) template class type;
 #else

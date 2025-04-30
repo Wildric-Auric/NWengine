@@ -1,9 +1,11 @@
-//#pragma once
+// #pragma once
 #include "Globals.h"
 
 #ifdef GAME_OBJECT_IMPL
 uint32 CompID = 0;
-#define NW_COMPONENT_COMPILE_TIME_ID(comp) extern const uint32 comp##ID; const uint32 comp##ID = CompID++;
+#define NW_COMPONENT_COMPILE_TIME_ID(comp)                                                                                       \
+	extern const uint32 comp##ID;                                                                                                \
+	const uint32		comp##ID = CompID++;
 #else
 #define NW_COMPONENT_COMPILE_TIME_ID(comp) extern const uint32 comp##ID;
 #endif

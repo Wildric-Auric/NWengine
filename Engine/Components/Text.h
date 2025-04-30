@@ -1,36 +1,31 @@
 #pragma once
+#include "ComponentTypes.h"
+#include "CoordSys.h"
 #include "Font.h"
 #include "GameObject.h"
 #include "Shader.h"
-#include "CoordSys.h"
-#include <list>
-#include "ComponentTypes.h"
 #include "Utilities.h"
+#include <list>
 
-enum class TextHorizontalAlignment {
-    LEFT   = 0,
-    RIGHT  = 1,
-    CENTER = 1
-};
+enum class TextHorizontalAlignment { LEFT = 0, RIGHT = 1, CENTER = 1 };
 
 struct TextConstraint {
-    float boxHorizontalWrap = INFINITY;
-    float fixedLineSpacing = 0.0f; 
-    TextHorizontalAlignment halign  = TextHorizontalAlignment::LEFT;
+	float					boxHorizontalWrap = INFINITY;
+	float					fixedLineSpacing  = 0.0f;
+	TextHorizontalAlignment halign			  = TextHorizontalAlignment::LEFT;
 };
 
 struct TextIterData {
-    int chrNum   = 0;
-    int chrIndex = 0;
-    void* other = 0;
+	int	  chrNum   = 0;
+	int	  chrIndex = 0;
+	void* other	   = 0;
 };
 
 struct TextConstraintIterData {
-    fVec2 cur;
-    int lineNum = 1;
-    int lastBearing = 0;
+	fVec2 cur;
+	int	  lineNum	  = 1;
+	int	  lastBearing = 0;
 };
-
 
 typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
 
@@ -38,150 +33,150 @@ typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
  * @brief The Text class represents a text component that can be attached to a GameObject.
  */
 class Text : public GameComponent {
-public: 
-    /**
-     * @brief GetType returns the type of the Text component.
-     * @return The type of the Text component.
-     */
-    NW_ST_GET_TYPE_IMPL(Text);
+  public:
+	/**
+	 * @brief GetType returns the type of the Text component.
+	 * @return The type of the Text component.
+	 */
+	NW_ST_GET_TYPE_IMPL(Text);
 
-    /**
-     * @brief Text constructor.
-     */
-    Text() = default;
+	/**
+	 * @brief Text constructor.
+	 */
+	Text() = default;
 
-    /**
-     * @brief Text destructor.
-     */
-    ~Text();
+	/**
+	 * @brief Text destructor.
+	 */
+	~Text();
 
-    /**
-     * @brief Text constructor with GameObject parameter.
-     * @param go The GameObject to attach the Text component to.
-     */
-    Text(GameObject* go);
+	/**
+	 * @brief Text constructor with GameObject parameter.
+	 * @param go The GameObject to attach the Text component to.
+	 */
+	Text(GameObject* go);
 
-    /**
-     * @brief Update is called every frame to update the Text component.
-     */
-    void Update() override;
+	/**
+	 * @brief Update is called every frame to update the Text component.
+	 */
+	void Update() override;
 
-    /**
-     * @brief UpdateGlyphs updates the glyphs of the Text component.
-     */
-    void UpdateGlyphs(bool dontRender = 0);
+	/**
+	 * @brief UpdateGlyphs updates the glyphs of the Text component.
+	 */
+	void UpdateGlyphs(bool dontRender = 0);
 
-    void ApplyConstraint(Character*, TextConstraintIterData*);
-    void SetChrComps(Character* chr, char c);
+	void ApplyConstraint(Character*, TextConstraintIterData*);
+	void SetChrComps(Character* chr, char c);
 
-    void SetPosition(const fVec2&);
+	void SetPosition(const fVec2&);
 
-    void SetScale(const fVec2&);
-    
-    inline Shader* GetShader() {return _shader;};
+	void SetScale(const fVec2&);
 
-    void SetBoxHorizontalWrap(const float);
+	inline Shader* GetShader() { return _shader; };
 
-    void SetHorizontalAlignment(const TextHorizontalAlignment);
+	void SetBoxHorizontalWrap(const float);
 
-    void SetFixedLineSpacing(const float); 
+	void SetHorizontalAlignment(const TextHorizontalAlignment);
 
-    void MapOnChar(CharacterUpdateCallback, void*);
+	void SetFixedLineSpacing(const float);
 
-    fVec2 GetPosition();
-    fVec2 GetPostionTopLeft();
-    /**
-     * @brief SetFont sets the font of the Text component.
-     * @param path The path to the font file.
-     * @param shader The shader to use for rendering the text.
-     */
-    void SetFont(const FontIdentifier& id, Shader* shader);
+	void MapOnChar(CharacterUpdateCallback, void*);
 
-    void SetFont(const FontIdentifier& id);
+	fVec2 GetPosition();
+	fVec2 GetPostionTopLeft();
+	/**
+	 * @brief SetFont sets the font of the Text component.
+	 * @param path The path to the font file.
+	 * @param shader The shader to use for rendering the text.
+	 */
+	void SetFont(const FontIdentifier& id, Shader* shader);
 
-    void SetFont(const FontIdentifier& id, const std::string& shdrPath);
+	void SetFont(const FontIdentifier& id);
 
-    void SetFont(const FontIdentifier& fid, const ShaderText& st, ShaderIdentifier* id);
+	void SetFont(const FontIdentifier& id, const std::string& shdrPath);
 
-    void SetContent(const char*);
+	void SetFont(const FontIdentifier& fid, const ShaderText& st, ShaderIdentifier* id);
 
-    void SetContentAndUpdateGlyphs(const char*);
+	void SetContent(const char*);
 
-    void SetConstraint(const TextConstraint&);
+	void SetContentAndUpdateGlyphs(const char*);
 
-    void SetChrCallback(CharacterUpdateCallback);
+	void SetConstraint(const TextConstraint&);
 
-    /**
-     * @brief SetShader sets the shader of the Text component.
-     * @param shader The shader to use for rendering the text.
-     */
-    void SetShader(Shader* shader);
+	void SetChrCallback(CharacterUpdateCallback);
 
-    void SetShader(const ShaderText& st, ShaderIdentifier* id);
+	/**
+	 * @brief SetShader sets the shader of the Text component.
+	 * @param shader The shader to use for rendering the text.
+	 */
+	void SetShader(Shader* shader);
 
-    void SetShader(std::string path);
+	void SetShader(const ShaderText& st, ShaderIdentifier* id);
 
-    /**
-     * @brief Gets total size in pixels sets the shader of the text 
-     * @return vector of size in pixels.
-     * @note Only horizontal size is tested.
-     */
-    fVec2 GetSize();
+	void SetShader(std::string path);
 
-    float _bearing = 0.0f; 
+	/**
+	 * @brief Gets total size in pixels sets the shader of the text
+	 * @return vector of size in pixels.
+	 * @note Only horizontal size is tested.
+	 */
+	fVec2 GetSize();
 
-    NWCoordSys::BoundingBox& GetBBRef();
-    void GetBB(NWCoordSys::BoundingBox*);
+	float _bearing = 0.0f;
 
-    void CalcBB(TextConstraintIterData*);
-    void SetRelCharPos(Character*);
+	NWCoordSys::BoundingBox& GetBBRef();
+	void					 GetBB(NWCoordSys::BoundingBox*);
 
-    void Render();
-    void StopRendering();
+	void CalcBB(TextConstraintIterData*);
+	void SetRelCharPos(Character*);
 
-    void DirectDraw();
+	void Render();
+	void StopRendering();
 
-    CharacterUpdateCallback chrCbk = [](Character*,TextIterData*)->void {};
-    /**
-     * @brief characters is a list of characters that make up the text.
-     */
-    std::list<Character> characters;
+	void DirectDraw();
 
-    /**
-     * @brief _shader is a pointer to the shader used for rendering the text.
-     */
-    Shader* _shader = nullptr;
+	CharacterUpdateCallback chrCbk = [](Character*, TextIterData*) -> void {};
+	/**
+	 * @brief characters is a list of characters that make up the text.
+	 */
+	std::list<Character> characters;
 
-    /**
-     * @brief font is a pointer to the font used for rendering the text.
-     */
-    Font* font = nullptr;
+	/**
+	 * @brief _shader is a pointer to the shader used for rendering the text.
+	 */
+	Shader* _shader = nullptr;
 
-    TextConstraint constraints; 
-    /**
-     * @brief text is the string of text to be rendered.
-     */
-    std::string text = "";
+	/**
+	 * @brief font is a pointer to the font used for rendering the text.
+	 */
+	Font* font = nullptr;
 
-    /**
-     * @brief isBatched indicates whether the text is batched for rendering.
-     */
-    bool isBatched = true;
-    bool _isRendered = true;
-    /**
-     * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
-     */
-    int64 layerOrder = 0;
+	TextConstraint constraints;
+	/**
+	 * @brief text is the string of text to be rendered.
+	 */
+	std::string text = "";
 
-    /**
-     * @brief colors is the color of the text.
-     */
-    Vector4<float> colors = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f); // Each color is 10 bits
+	/**
+	 * @brief isBatched indicates whether the text is batched for rendering.
+	 */
+	bool isBatched	 = true;
+	bool _isRendered = true;
+	/**
+	 * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
+	 */
+	int64 layerOrder = 0;
 
-    /**
-     * @brief scale is the scale of the text.
-     */
-    fVec2 scale = fVec2(1.0f, 1.0f);
+	/**
+	 * @brief colors is the color of the text.
+	 */
+	Vector4<float> colors = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f); // Each color is 10 bits
 
-    NWCoordSys::BoundingBox _bb;
+	/**
+	 * @brief scale is the scale of the text.
+	 */
+	fVec2 scale = fVec2(1.0f, 1.0f);
+
+	NWCoordSys::BoundingBox _bb;
 };
