@@ -8,6 +8,7 @@
 #include "templates/ComputeShaderTst.h"
 #include "templates/RandomTst.h"
 #include "templates/UItst.h"
+
 int main() {
 	ComputeShaderTst::Run();
 	return 0;

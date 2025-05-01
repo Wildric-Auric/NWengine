@@ -130,6 +130,8 @@ void Shader::SetEnabledAtts(const ShaderParser& p) {
 
 NW_IMPL_RES_LIST(ShaderIdentifier, Shader)
 
+void Shader::DirectUse() { NW_GL_CALL(glUseProgram(_glID)); }
+
 void Shader::Use() {
 	NW_GL_CALL(glUseProgram(_glID));
 	FrameBuffer* fbo = FrameBuffer::GetCurrent();
@@ -316,6 +318,12 @@ void ComputeShader::Clean() {
 	ComputeShaderIdentifier id = GetIDWithAsset<ComputeShader*, ComputeShaderIdentifier>(this);
 	EraseRes<ComputeShader>(id);
 }
+
+void ComputeShader::Dispatch(const iVec3& s) { NW_GL_CALL(glDispatchCompute(s.x, s.y, s.z)); }
+
+void ComputeShader::Dispatch() { NW_GL_CALL(glDispatchCompute(_dispatchSize.x, _dispatchSize.y, _dispatchSize.z)); }
+
+void ComputeShader::SetDispatchSize(const iVec3& s) { _dispatchSize = s; }
 
 ShaderParser ComputeShader::parser;
 

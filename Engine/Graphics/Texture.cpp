@@ -50,6 +50,10 @@ void Texture::Bind(uint32 slot) {
 	NW_GL_CALL(glBindTexture(GL_TEXTURE_2D, _glID));
 }
 
+void Texture::BindImageTex(uint32 slot, RWImage access) {
+	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, 0, 0, access, GL_RGBA16F));
+}
+
 Asset* Texture::GetFromCache(void* identifier) {
 	auto iter = Texture::resList.find(*(TextureIdentifier*)(identifier));
 	if(iter == Texture::resList.end())

@@ -10,9 +10,6 @@ void* Context::window = nullptr;
 int Context::WINDOW_WIDTH  = 1080;
 int Context::WINDOW_HEIGHT = 720;
 
-int Context::NATIVE_WIDTH  = 1080;
-int Context::NATIVE_HEIGHT = 720;
-
 int Context::_vSync = 0;
 
 OpenGLInfo Context::_glInfo;
@@ -74,7 +71,7 @@ void*				   Context::InitContext(int scrWidth, int scrHeight) {
 		 NW_LOG_ERROR("Failed to init GLEW");
 		 return nullptr;
 	 }
-	 NW_GL_CALL(glViewport(0, 0, Context::NATIVE_WIDTH, Context::NATIVE_HEIGHT));
+	 NW_GL_CALL(glViewport(0, 0, scrWidth, scrHeight));
 
 	 return window;
 }
@@ -166,6 +163,8 @@ void Context::SetStencilWrite(bool val) {
 	}
 	NW_GL_CALL(glStencilMask(0xFF));
 }
+
+void Context::NWMemoryBarrier(int b) { NW_GL_CALL(glMemoryBarrier(b)); }
 
 void Context::SetTitle(const char* title) { ((NWin::Window*)Context::window)->setTitle(title); }
 

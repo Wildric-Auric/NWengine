@@ -55,6 +55,12 @@ enum TexMinFilter {
 	NW_NEAREST_MIPMAP_LINEAR  = 0x2702	/**< Nearest minification filter with linear mipmap. */
 };
 
+enum RWImage {
+	NW_IM_READ = 0x8CA8, // GL_READ_ONLY
+	NW_IM_WRT  = 0x88B9,
+	NW_IM_RW   = 0x88BA,
+};
+
 /**
  * @brief Enumeration of texture magnification filters.
  */
@@ -99,6 +105,8 @@ class Texture : public Asset {
 	 * @param slot The texture slot to bind the texture to.
 	 */
 	void Bind(uint32 slot = 0);
+
+	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
 
 	/**
 	 * @brief Generates the texture on the GPU.

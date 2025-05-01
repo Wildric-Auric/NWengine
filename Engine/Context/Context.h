@@ -18,6 +18,19 @@ enum NWStencilBehaviour {
 	NW_ALWAYS	  = 0x0207
 };
 
+enum NWMemoryBarrierBit {
+	VERTEX_ATTRIB_ARRAY_BARRIER_BIT = 0x00000001,
+	ELEMENT_ARRAY_BARRIER_BIT		= 0x00000002,
+	UNIFORM_BARRIER_BIT				= 0x00000004,
+	TEXTURE_FETCH_BARRIER_BIT		= 0x00000008,
+	SHADER_IMAGE_ACCESS_BARRIER_BIT = 0x00000020,
+	COMMAND_BARRIER_BIT				= 0x00000040,
+	PIXEL_BUFFER_BARRIER_BIT		= 0x00000080,
+	TEXTURE_UPDATE_BARRIER_BIT		= 0x00000100,
+	BUFFER_UPDATE_BARRIER_BIT		= 0x00000200,
+	FRAMEBUFFER_BARRIER_BIT			= 0x00000400
+};
+
 /**
  * @brief The Context class represents the application context.
  */
@@ -116,6 +129,8 @@ class Context {
 	 */
 	static void SetTitle(const char* title);
 
+	static void NWMemoryBarrier(int);
+
 	/**
 	 * @brief Destroys the application context.
 	 */
@@ -125,16 +140,6 @@ class Context {
 	 * @brief The vertical synchronization value.
 	 */
 	static int _vSync;
-
-	/**
-	 * @brief The native width of the application window.
-	 */
-	static int NATIVE_WIDTH;
-
-	/**
-	 * @brief The native height of the application window.
-	 */
-	static int NATIVE_HEIGHT;
 
 	/**
 	 * @brief The width of the application window.

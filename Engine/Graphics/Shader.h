@@ -39,6 +39,8 @@ class Shader : public Asset {
 	 */
 	void Use();
 
+	void DirectUse();
+
 	void Unuse();
 
 	/**
@@ -130,13 +132,12 @@ struct ComputeShaderCapabilities {
 	int32 maxInvoc;
 };
 
-class ComputeShader : public Asset {
+class ComputeShader : public Shader {
   public:
-	static ShaderParser										 parser;
-	int														 _glID = 0;
-	ComputeShaderIdentifier									 _identifier;
-	std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
-	void													 _GlGen(ComputeShaderText* src2);
+	static ShaderParser		parser;
+	iVec3					_dispatchSize;
+	ComputeShaderIdentifier _identifier;
+	void					_GlGen(ComputeShaderText* src2);
 
 	Asset* GetFromCache(void* identifier) override;
 	Asset* LoadFromFile(const char* path, void* identifier) override;
@@ -145,6 +146,9 @@ class ComputeShader : public Asset {
 	void   SetReflectedUniforms(const ShaderParser& p);
 	void   Move(Asset* other) override;
 	void   Delete();
+	void   Dispatch(const iVec3&);
+	void   Dispatch();
+	void   SetDispatchSize(const iVec3&);
 
 	void Clean() override;
 
