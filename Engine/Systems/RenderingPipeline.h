@@ -16,6 +16,9 @@ class RenderingPipeline {
 };
 
 namespace NWPPFX {
+
+extern int DrawCallback(GameObject*);
+
 class EffectIO {
   public:
 	Camera*	  _cam = nullptr;

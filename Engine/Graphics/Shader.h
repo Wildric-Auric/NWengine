@@ -149,6 +149,7 @@ class ComputeShader : public Shader {
 	void   Dispatch(const iVec3&);
 	void   Dispatch();
 	void   SetDispatchSize(const iVec3&);
+	void   BindBuffer(int bufferID, int slot = 0);
 
 	void Clean() override;
 

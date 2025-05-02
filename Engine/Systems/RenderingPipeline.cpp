@@ -281,6 +281,20 @@ void RenderingPipeline::CaptureAndDrawLast() {
 }
 
 namespace NWPPFX {
+
+int DrawCallback(void* obj) {
+	fMat4 tempview						  = Camera::GetActiveCamera()->viewMatrix;
+	Camera::GetActiveCamera()->viewMatrix = fMat4(1.0f);
+	int ret								  = Sprite::DefaultSpriteDrawCallback(obj);
+	Camera::GetActiveCamera()->viewMatrix = tempview;
+	return ret;
+}
+
+static void SetUpRnd(Renderer* r) {
+	r->SetUp();
+	r->componentContainer.SetDrawCallback(DrawCallback);
+}
+
 void EffectIO::SetInput(Camera* c) {
 	_cam = c;
 	_rnd = 0;
@@ -349,7 +363,7 @@ void Bloom::SetUp(const EffectIO* input) {
 	stThreshold.fragment = thresholdShaderSrc.c_str();
 	// First we get the threshold
 	rnd = &_pline.AddRenderer();
-	rnd->SetUp();
+	SetUpRnd(rnd);
 	rnd->SetOffScreenSizeMultiplier(fVec2(1.0, 1.0));
 	rnd->SetTexParams(TexMinFilter::NW_MIN_LINEAR, TexMaxFilter::NW_LINEAR);
 	rnd->SetShader(stThreshold, &sidThreshold);
@@ -358,12 +372,12 @@ void Bloom::SetUp(const EffectIO* input) {
 	_cascade.clear();
 	for(int i = 0; i < csNum; ++i) {
 		rnd = &_pline.AddRenderer();
-		rnd->SetUp();
+		SetUpRnd(rnd);
 		rnd->SetOffScreenSizeMultiplier(fVec2(0.5, 0.5));
 		rnd->SetTexParams(TexMinFilter::NW_MIN_LINEAR, TexMaxFilter::NW_LINEAR);
 
 		rnd = &_pline.AddRenderer();
-		rnd->SetUp();
+		SetUpRnd(rnd);
 		rnd->SetOffScreenSizeMultiplier(fVec2(1.0, 1.0));
 		rnd->SetTexParams(TexMinFilter::NW_MIN_LINEAR, TexMaxFilter::NW_LINEAR);
 		rnd->SetShader(stBlur, &sidBlur);
@@ -371,7 +385,7 @@ void Bloom::SetUp(const EffectIO* input) {
 	}
 	// Combine
 	rnd = &_pline.AddRenderer();
-	rnd->SetUp();
+	SetUpRnd(rnd);
 	rnd->SetOffScreenSizeMultiplier(fVec2(1.0, 1.0));
 	rnd->SetTexParams(TexMinFilter::NW_MIN_LINEAR, TexMaxFilter::NW_LINEAR);
 	rnd->SetShader(stCombine, &sidCombine);

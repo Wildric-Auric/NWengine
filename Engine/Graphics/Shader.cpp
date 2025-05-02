@@ -325,6 +325,8 @@ void ComputeShader::Dispatch() { NW_GL_CALL(glDispatchCompute(_dispatchSize.x, _
 
 void ComputeShader::SetDispatchSize(const iVec3& s) { _dispatchSize = s; }
 
+void ComputeShader::BindBuffer(int buffer, int slot) { NW_GL_CALL(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, slot, buffer)); }
+
 ShaderParser ComputeShader::parser;
 
 NW_IMPL_RES_LIST(ComputeShaderIdentifier, ComputeShader)
