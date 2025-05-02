@@ -1,7 +1,6 @@
 #include "gl_context.h"
-#include <GL/GL.h>
-#include <GL/GLU.h>
 #include <Windows.h>
+#include <GL/GLU.h>
 #include <wingdi.h>
 
 #define WGL_SAMPLE_BUFFERS_ARB			 0x2041
