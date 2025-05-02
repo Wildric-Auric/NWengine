@@ -83,15 +83,12 @@ void Batch::BindTextures() {
 }
 
 void Batch::Init() {
-	int maxUnits = 16;
-	Batch::ComputeIndices();
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
-	Batch::maxBatchTextures = maxUnits;
+	Batch::maxBatchTextures = GPUCap::QueryMaxTexture();
 	delete[] uniformTexArr;
 	uniformTexArr = new int[Batch::maxBatchTextures];
 	for(int i = 0; i < Batch::maxBatchTextures; ++i)
 		uniformTexArr[i] = i;
-	Shader::parser.AddCnst("MaxTexNum", std::to_string(maxUnits).c_str());
+	Shader::parser.AddCnst("MaxTexNum", std::to_string(Batch::maxBatchTextures).c_str());
 }
 
 void Batch::Clear() {

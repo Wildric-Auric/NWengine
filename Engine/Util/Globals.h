@@ -2,11 +2,12 @@
 
 #include "Maths.h"
 
+extern int print(const char *format, ...);
 // For now using just printf, should output to console later
-#define NW_LOG_ERROR(str)	printf("%s", str)
-#define NW_LOG_ERRORI(str)	printf("%d", str)
-#define NW_LOG_WARNING(str) printf("%s", str)
-#define NW_LOG(str)			printf("%s", str)
+#define NW_LOG_ERROR(str)	print("%s", str)
+#define NW_LOG_ERRORI(str)	print("%d", str)
+#define NW_LOG_WARNING(str) print("%s", str)
+#define NW_LOG(str)			print("%s", str)
 
 #ifdef NW_RELEASE
 #define NW_GL_TEST()
@@ -69,7 +70,7 @@ typedef long arch;
 #ifdef _MSC_VER
 
 typedef __int8	int8;
-typedef __int16 t16;
+typedef __int16 int16;
 typedef __int32 int32;
 typedef __int64 int64;
 
@@ -77,6 +78,16 @@ typedef unsigned __int8	 uint8;
 typedef unsigned __int16 uint16;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
+
+typedef __int8	i8;
+typedef __int16 i16;
+typedef __int32 i32;
+typedef __int64 i64;
+
+typedef unsigned __int8	 ui8;
+typedef unsigned __int16 ui16;
+typedef unsigned __int32 ui32;
+typedef unsigned __int64 ui64;
 
 #else
 typedef __INT8_TYPE__  int8;
@@ -88,6 +99,16 @@ typedef __UINT8_TYPE__	uint8;
 typedef __UINT16_TYPE__ uint16;
 typedef __UINT32_TYPE__ uint32;
 typedef __UINT64_TYPE__ uint64;
+
+typedef __INT8_TYPE__  i8;
+typedef __INT16_TYPE__ i16;
+typedef __INT32_TYPE__ i32;
+typedef __INT64_TYPE__ i64;
+
+typedef __UINT8_TYPE__	ui8;
+typedef __UINT16_TYPE__ ui16;
+typedef __UINT32_TYPE__ ui32;
+typedef __UINT64_TYPE__ ui64;
 #endif
 
 extern template class Vector2<int>;
@@ -118,6 +139,19 @@ typedef Vector4<float>	fVec4;
 typedef Vector2<double> dVec2;
 typedef Vector3<double> dVec3;
 typedef Vector4<double> dVec4;
+
+typedef Vector2<int>	v2i;
+typedef Vector3<int>	v3i;
+typedef Vector4<int>	v4i;
+typedef Vector2<uint32> v2ui;
+typedef Vector3<uint32> v3ui;
+typedef Vector4<int32>	v4i;
+typedef Vector2<float>	v2f;
+typedef Vector3<float>	v3f;
+typedef Vector4<float>	v4f;
+typedef Vector2<double> v2d;
+typedef Vector3<double> v3d;
+typedef Vector4<double> v4d;
 
 typedef Matrix2<int>   iMat2;
 typedef Matrix3<int>   iMat3;

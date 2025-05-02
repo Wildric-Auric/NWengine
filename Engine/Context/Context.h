@@ -28,7 +28,8 @@ enum NWMemoryBarrierBit {
 	PIXEL_BUFFER_BARRIER_BIT		= 0x00000080,
 	TEXTURE_UPDATE_BARRIER_BIT		= 0x00000100,
 	BUFFER_UPDATE_BARRIER_BIT		= 0x00000200,
-	FRAMEBUFFER_BARRIER_BIT			= 0x00000400
+	FRAMEBUFFER_BARRIER_BIT			= 0x00000400,
+    CLIENT_MAPPED_BUFFER_BARRIER_BIT = 0x00004000
 };
 
 /**
@@ -155,3 +156,15 @@ class Context {
 	 */
 	static OpenGLInfo _glInfo;
 };
+
+
+namespace GPUCap {
+    struct ComputeShaderCapabilities {
+    	iVec3 workGroupNum;
+    	iVec3 localSize;
+    	int32 maxInvoc;
+    };
+
+    int QueryMaxTexture();
+    bool QueryComputeShaderCap(ComputeShaderCapabilities*);
+}

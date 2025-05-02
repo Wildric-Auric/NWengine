@@ -126,12 +126,6 @@ class Shader : public Asset {
 typedef const char* ComputeShaderText;
 typedef std::string ComputeShaderIdentifier;
 
-struct ComputeShaderCapabilities {
-	iVec3 workGroupNum;
-	iVec3 localSize;
-	int32 maxInvoc;
-};
-
 class ComputeShader : public Shader {
   public:
 	static ShaderParser		parser;
@@ -152,8 +146,6 @@ class ComputeShader : public Shader {
 	void   BindBuffer(int bufferID, int slot = 0);
 
 	void Clean() override;
-
-	static bool QueryCapabilities(ComputeShaderCapabilities* cap);
 
 	NW_DECL_RES_LIST(ComputeShaderIdentifier, ComputeShader);
 };
