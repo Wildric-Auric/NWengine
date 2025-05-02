@@ -1,5 +1,6 @@
 #include "CircleRenderer.h"
 #include "DefaultAssets.h"
+#include "InlineShader.h"
 #include "NWengine.h"
 #include "Scene.h"
 #include "UISys.h"
@@ -7,7 +8,33 @@
 
 namespace UITst {
 
-Camera*		camC;
+Camera* camC;
+
+void AddItems(UIWindow& w) {
+	Sprite* spr	 = w.GetGameObject()->GetComponent<Sprite>();
+	UIItem* rect = w.AddItem(UIItemType::TEST_ZONE, -1);
+	Sprite* spr2 = rect->obj.AddComponent<Sprite>();
+	rect->obj.AddComponent<Transform>();
+	InlineShader colorShader;
+	colorShader.SetFragOut("vec4(1.0,0.0,1.0,1.0)");
+	colorShader.Generate();
+	spr2->SetShader(colorShader.GetShader());
+	spr2->sortingLayer = spr->sortingLayer - 1;
+
+	rect = w.AddItem(UIItemType::TEST_ZONE, -1);
+	spr2 = rect->obj.AddComponent<Sprite>();
+	rect->obj.AddComponent<Transform>();
+	spr2->SetShader(colorShader.GetShader());
+	spr2->sortingLayer = spr->sortingLayer - 1;
+	spr2->SetSize({30, 20});
+
+	rect = w.AddItem(UIItemType::TEST_ZONE, -1);
+	spr2 = rect->obj.AddComponent<Sprite>();
+	rect->obj.AddComponent<Transform>();
+	spr2->SetShader(colorShader.GetShader());
+	spr2->sortingLayer = spr->sortingLayer - 1;
+}
+
 static void Init() {
 	Context::SetTitle("Sandbox");
 	Context::EnableVSync();
@@ -33,6 +60,7 @@ static void Init() {
 
 	worldObj.AddComponent<CircleRenderer>();
 
+	AddItems(*uwin2.GetComponent<UIWindow>());
 	s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }

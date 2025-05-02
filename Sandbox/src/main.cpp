@@ -10,6 +10,6 @@
 #include "templates/UItst.h"
 
 int main() {
-	ComputeShaderTst::Run();
+	UITst::Run();
 	return 0;
 }

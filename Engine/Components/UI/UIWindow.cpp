@@ -85,54 +85,7 @@ void UIWindow::OnAdd() {
 	te->SetFont({fdir.c_str(), 15}, te->_shader);
 	te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
 	attachedObject->SetDrawCallback(UIWindowDrawCallback);
-
-	UIItem* rect = AddItem(UIItemType::TEST_ZONE, -1);
-	Sprite* spr2 = rect->obj.AddComponent<Sprite>();
-	rect->obj.AddComponent<Transform>();
-	InlineShader colorShader;
-	colorShader.SetFragOut("vec4(1.0,0.0,1.0,1.0)");
-	colorShader.Generate();
-	spr2->SetShader(colorShader.GetShader());
-	spr2->sortingLayer = spr->sortingLayer - 1;
-
-	rect = AddItem(UIItemType::TEST_ZONE, -1);
-	spr2 = rect->obj.AddComponent<Sprite>();
-	rect->obj.AddComponent<Transform>();
-	spr2->SetShader(colorShader.GetShader());
-	spr2->sortingLayer = spr->sortingLayer - 1;
-	spr2->SetSize({30, 20});
-
-	rect = AddItem(UIItemType::TEST_ZONE, -1);
-	spr2 = rect->obj.AddComponent<Sprite>();
-	rect->obj.AddComponent<Transform>();
-	spr2->SetShader(colorShader.GetShader());
-	spr2->sortingLayer = spr->sortingLayer - 1;
 }
-
-void UIWindow::SetCursor(const fVec2& pos) { cursor = pos; }
-
-void UIWindow::IncCursor(const fVec2& p) {
-	cursor.x += p.x + metrics.itemSpacing.x;
-	cursor.y += p.y;
-	if(cursor.x < GetSize().x)
-		return;
-	cursor.x = 0;
-}
-
-void UIWindow::GetCursorPositionFree(const fVec2& s) {
-	if(cursor.x + s.x < GetSize().x * 0.5)
-		return;
-	cursor.x = 0;
-	cursor.y -= metrics.itemSpacing.y;
-}
-
-void UIWindow::SetCursorTopLeft() {
-	fVec2 s	 = GetSize();
-	cursor.x = -s.x * 0.5;
-	cursor.y = s.y * 0.5;
-}
-
-fVec2 UIWindow::GetCursor() { return cursor; }
 
 UIItemType UIItem::GetType() { return type; }
 
@@ -241,11 +194,9 @@ void UIWindow::SetSize(const fVec2& pos) {
 	spr->SetSize(pos);
 }
 
-fVec2 UIWindow::GetAbsoluteCursor() { return GetPosition() + cursor; }
-
 void UIWindow::Update() {
-	SetCursorTopLeft();
-	IncCursor(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
+	cursor.SetCursorTopLeftWin();
+	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
 
 	for(UIItem& item : items) {
 		Text* t = item.obj.GetComponent<Text>();
@@ -255,9 +206,9 @@ void UIWindow::Update() {
 		} else {
 			Sprite* spr = item.obj.GetComponent<Sprite>();
 			fVec2	s	= spr->GetSize();
-			GetCursorPositionFree(s);
-			item.obj.GetComponent<Transform>()->SetPosition(GetAbsoluteCursor() + fVec2(s.x * 0.5, -s.y * 0.5));
-			IncCursor({s.x, 0});
+			cursor.CalcNextPosition(s);
+			item.obj.GetComponent<Transform>()->SetPosition(cursor.GetAbsolutePos() + fVec2(s.x * 0.5, -s.y * 0.5));
+			cursor.Advance({s.x, 0.0});
 		}
 	}
 
@@ -319,3 +270,51 @@ void UIWindow::Update() {
 		//      if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)
 	}
 }
+
+UICursor::UICursor(UIWindow* w) { SetWindow(w); }
+
+void UICursor::SetWindow(UIWindow* w) { win = w; }
+
+void UICursor::SetPos(const fVec2& p) { pos = p; }
+
+void UICursor::SetCursorTopLeftWin() {
+	fVec2 s = win->GetSize();
+	pos.x	= -s.x * 0.5;
+	pos.y	= s.y * 0.5;
+}
+
+void UICursor::Advance(const fVec2& p) {
+	pos.x += p.x + win->metrics.itemSpacing.x;
+	pos.y += p.y;
+	CalcAdvanceBr();
+}
+
+bool UICursor::CalcNextPosition(const fVec2 offset) {
+	fVec2 lpos = pos;
+	fVec2 temp = pos + offset;
+	pos		   = temp;
+	CalcAdvanceBr();
+	if(pos == temp) {
+		pos = lpos;
+		return 0;
+	}
+	return 1;
+}
+
+void UICursor::CalcAdvanceBr() {
+	if(strat == CurAdvanceStrat::None)
+		return;
+	if(strat == CurAdvanceStrat::BreakOnHorizontalEnd) {
+		if(pos.x < win->GetSize().x)
+			return;
+		pos.x = 0;
+		pos.y -= lineBreakSize;
+		pos.y -= win->metrics.itemSpacing.y;
+	}
+}
+
+void UICursor::SetLineBreakSize(const float v) { lineBreakSize = v; }
+
+fVec2 UICursor::GetAbsolutePos() { return win->GetPosition() + pos; }
+
+fVec2* UICursor::GetPos() { return &pos; }

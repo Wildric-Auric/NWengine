@@ -34,6 +34,32 @@ class UIItem {
 	static int64 (*DefaultUIItemGetLayerProc)(UIItem*);
 };
 
+enum class CurAdvanceStrat {
+	None,
+	BreakOnHorizontalEnd,
+};
+
+class UIWindow;
+class UICursor {
+  public:
+	UICursor() = default;
+	UICursor(UIWindow*);
+	fVec2			pos			  = fVec2(0.0, 0.0);
+	float			lineBreakSize = 0.0;
+	UIWindow*		win;
+	CurAdvanceStrat strat;
+	void			SetWindow(UIWindow*);
+	void			SetPos(const fVec2&);
+	void			SetCursorTopLeftWin();
+	void			Advance(const fVec2&);
+	void			SetLineBreakSize(const float);
+	fVec2			GetAbsolutePos();
+	fVec2*			GetPos();
+
+	bool CalcNextPosition(const fVec2 offset);
+	void CalcAdvanceBr();
+};
+
 class UIWindow : public GameComponent {
   public:
 	NW_ST_GET_TYPE_IMPL(UIWindow);
@@ -60,14 +86,9 @@ class UIWindow : public GameComponent {
 	UIItem* AddItem(UIItemType, int64);
 	void	DrawItems();
 
-	void  SetPosition(const fVec2&);
-	void  SetSize(const fVec2&);
-	void  SetCursor(const fVec2&);
-	void  SetCursorTopLeft();
-	void  IncCursor(const fVec2&);
-	void  GetCursorPositionFree(const fVec2&);
-	fVec2 GetAbsoluteCursor();
-	fVec2 GetCursor();
+	void			 SetPosition(const fVec2&);
+	void			 SetSize(const fVec2&);
+	inline UICursor* GetCursor() { return &cursor; }
 
 	UIWindowState state = UIWindowState::NONE;
 	fVec2		  relPos;
@@ -75,12 +96,12 @@ class UIWindow : public GameComponent {
 	fVec2		  lsize;
 	fVec2		  lpos;
 	fVec2		  lwinPos;
+	UICursor	  cursor = UICursor(this);
 
 	fVec4 bgCol			= fVec4(1.0, 1.0, 1.0, 1.0);
 	bool  _tmpisFocused = 0;
 
 	UIWindowMetrics	  metrics;
-	fVec2			  cursor = fVec2(0.0, 0.0);
 	std::list<UIItem> items;
 
 	UIManager* attachedUIManager = 0;
