@@ -174,22 +174,22 @@ void Context::Destroy() {
 }
 
 namespace GPUCap {
-    int QueryMaxTexture() {
-        int maxUnits = 16;
-        NW_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits));
-        return maxUnits;
-    }
-
-    bool QueryComputeShaderCap(ComputeShaderCapabilities* cap) {
-        if(Context::_glInfo.maxVersion < 4 || Context::_glInfo.minVersion < 3) {
-            cap->maxInvoc = 0;
-            return 0;
-        }
-        for(int i = 0; i < 3; ++i) {
-            NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, i, &cap->workGroupNum.x + i));
-            NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &cap->localSize.x + i));
-        }
-        NW_GL_CALL(glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &cap->maxInvoc));
-        return 1;
-    }
+int QueryMaxTexture() {
+	int maxUnits = 16;
+	NW_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits));
+	return maxUnits;
 }
+
+bool QueryComputeShaderCap(ComputeShaderCapabilities* cap) {
+	if(Context::_glInfo.maxVersion < 4 || Context::_glInfo.minVersion < 3) {
+		cap->maxInvoc = 0;
+		return 0;
+	}
+	for(int i = 0; i < 3; ++i) {
+		NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, i, &cap->workGroupNum.x + i));
+		NW_GL_CALL(glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &cap->localSize.x + i));
+	}
+	NW_GL_CALL(glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &cap->maxInvoc));
+	return 1;
+}
+} // namespace GPUCap

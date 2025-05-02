@@ -9,8 +9,8 @@ namespace ComputeShaderTst {
 
 ComputeShader* compShader;
 Sprite*		   spr;
-//We will create ssbo, the compute shader write to it, and we read and output
-//to the console the result in the cpu
+// We will create ssbo, the compute shader write to it, and we read and output
+// to the console the result in the cpu
 StorageBuffer ssbo;
 
 const char* TestShaderPath = "../Sandbox/src/templates/Test.comp.shader";
@@ -43,8 +43,8 @@ static void Init() {
 	compShader->Use();
 	compShader->SetUniform1f("t", 1.0f);
 	spr->texture->BindImageTex(0);
-    ssbo.SetUp(256*sizeof(float));
-    ssbo.Bind(1);
+	ssbo.SetUp(256 * sizeof(float));
+	ssbo.Bind(1);
 }
 
 static void Render() {
@@ -52,15 +52,16 @@ static void Render() {
 	compShader->Use();
 	compShader->Dispatch(iVec3(1, 1, 1));
 	Context::NWMemoryBarrier(NWMemoryBarrierBit::SHADER_IMAGE_ACCESS_BARRIER_BIT);
-    static float data[256] = {-1.0};
-    if (data[0] == -1.0) {
-        ssbo.Read(data, 256*sizeof(float));
-        for (int i = 0; i < 256; ++i) {
-            data[0] = 0;
-            if (i % 16 == 0) printf("\n");
-            printf("%d  ", (int)data[i]);
-        }
-    }
+	static float data[256] = {-1.0};
+	if(data[0] == -1.0) {
+		ssbo.Read(data, 256 * sizeof(float));
+		for(int i = 0; i < 256; ++i) {
+			data[0] = 0;
+			if(i % 16 == 0)
+				printf("\n");
+			printf("%d  ", (int)data[i]);
+		}
+	}
 }
 
 void Run() {

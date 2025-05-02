@@ -2,7 +2,7 @@
 
 #include "Maths.h"
 
-extern int print(const char *format, ...);
+extern int print(const char* format, ...);
 // For now using just printf, should output to console later
 #define NW_LOG_ERROR(str)	print("%s", str)
 #define NW_LOG_ERRORI(str)	print("%d", str)
