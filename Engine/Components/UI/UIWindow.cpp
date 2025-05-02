@@ -281,6 +281,7 @@ void UICursor::SetCursorTopLeftWin() {
 	fVec2 s = win->GetSize();
 	pos.x	= -s.x * 0.5;
 	pos.y	= s.y * 0.5;
+	origin	= pos;
 }
 
 void UICursor::Advance(const fVec2& p) {
@@ -293,7 +294,7 @@ bool UICursor::CalcNextPosition(const fVec2 offset) {
 	fVec2 lpos = pos;
 	fVec2 temp = pos + offset;
 	pos		   = temp;
-	CalcAdvanceBr();
+	// CalcAdvanceBr();
 	if(pos == temp) {
 		pos = lpos;
 		return 0;
@@ -305,9 +306,9 @@ void UICursor::CalcAdvanceBr() {
 	if(strat == CurAdvanceStrat::None)
 		return;
 	if(strat == CurAdvanceStrat::BreakOnHorizontalEnd) {
-		if(pos.x < win->GetSize().x)
+		if(pos.x < win->GetSize().x * 0.5)
 			return;
-		pos.x = 0;
+		pos.x = origin.x + win->metrics.itemSpacing.x;
 		pos.y -= lineBreakSize;
 		pos.y -= win->metrics.itemSpacing.y;
 	}

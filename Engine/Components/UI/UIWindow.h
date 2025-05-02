@@ -44,6 +44,7 @@ class UICursor {
   public:
 	UICursor() = default;
 	UICursor(UIWindow*);
+	fVec2			origin		  = 0;
 	fVec2			pos			  = fVec2(0.0, 0.0);
 	float			lineBreakSize = 0.0;
 	UIWindow*		win;

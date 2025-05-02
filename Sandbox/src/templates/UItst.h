@@ -11,9 +11,11 @@ namespace UITst {
 Camera* camC;
 
 void AddItems(UIWindow& w) {
-	Sprite* spr	 = w.GetGameObject()->GetComponent<Sprite>();
-	UIItem* rect = w.AddItem(UIItemType::TEST_ZONE, -1);
-	Sprite* spr2 = rect->obj.AddComponent<Sprite>();
+	w.GetCursor()->SetLineBreakSize(20);
+	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
+	Sprite* spr			 = w.GetGameObject()->GetComponent<Sprite>();
+	UIItem* rect		 = w.AddItem(UIItemType::TEST_ZONE, -1);
+	Sprite* spr2		 = rect->obj.AddComponent<Sprite>();
 	rect->obj.AddComponent<Transform>();
 	InlineShader colorShader;
 	colorShader.SetFragOut("vec4(1.0,0.0,1.0,1.0)");
@@ -28,11 +30,13 @@ void AddItems(UIWindow& w) {
 	spr2->sortingLayer = spr->sortingLayer - 1;
 	spr2->SetSize({30, 20});
 
-	rect = w.AddItem(UIItemType::TEST_ZONE, -1);
-	spr2 = rect->obj.AddComponent<Sprite>();
-	rect->obj.AddComponent<Transform>();
-	spr2->SetShader(colorShader.GetShader());
-	spr2->sortingLayer = spr->sortingLayer - 1;
+	for(int i = 0; i < 10; ++i) {
+		rect = w.AddItem(UIItemType::TEST_ZONE, -1);
+		spr2 = rect->obj.AddComponent<Sprite>();
+		rect->obj.AddComponent<Transform>();
+		spr2->SetShader(colorShader.GetShader());
+		spr2->sortingLayer = spr->sortingLayer - 1;
+	}
 }
 
 static void Init() {
