@@ -24,6 +24,9 @@ BraceWrapping:
   AfterFunction: true
   AfterControlStatement: true
 
+# Why is this not default? it breaks gl_context and includes glu.h before windows.h
+SortIncludes: false
+
 AlwaysBreakAfterReturnType: None
 
 
