@@ -8,8 +8,11 @@
 #include "templates/ComputeShaderTst.h"
 #include "templates/RandomTst.h"
 #include "templates/UItst.h"
+#include "templates/AudioTst.h"
+#include "templates/BatchTst.h"
+#include "templates/ColliderTst.h"
 
 int main() {
-	UITst::Run();
+	ColliderTst::Run();
 	return 0;
 }

@@ -10,18 +10,17 @@ static void Init() {
 	Scene& s = Scene::CreateNew("New Scene");
 	s.MakeCurrent();
 	GameObject& cam	 = s.AddObject();
-    GameObject& obj  = s.AddObject();
+	GameObject& obj	 = s.AddObject();
 	Camera*		camC = cam.AddComponent<Camera>();
 	camC->Use();
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
 	camC->ChangeOrtho(720, 480);
 	s.Start();
 
-    obj.AddComponent<Transform>();
-    Sprite* spr = obj.AddComponent<Sprite>();
-    spr->SetShader(ShaderTexturedBatchedDefaultStr, &ShaderTexturedBatchedDefaultID);
-    spr->Batch();
-    
+	obj.AddComponent<Transform>();
+	Sprite* spr = obj.AddComponent<Sprite>();
+	spr->SetShader(ShaderTexturedBatchedDefaultStr, &ShaderTexturedBatchedDefaultID);
+	spr->Batch();
 
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
@@ -37,4 +36,4 @@ void Run() {
 	NWengineLoop();
 	NWengineShutdown();
 }
-}; // namespace Simple
+}; // namespace BatchTst
