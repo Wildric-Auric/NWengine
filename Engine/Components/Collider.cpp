@@ -51,8 +51,6 @@ bool Collider::Sat(Collider* other, fVec2* depthBuffer) {
 		float max0	 = -INFINITY;
 
 		for(int j = 0; j < this->edges.size(); ++j) { // TODO::Improve this loop
-			if(j == i || j == ((i + 1) % edges.size()))
-				continue;
 			fVec2 vec  = GetEdgePosition(j) - GetEdgePosition(i);
 			float proj = vec.Dot(normal);
 
