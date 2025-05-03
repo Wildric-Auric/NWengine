@@ -46,7 +46,8 @@ void StorageBuffer::Read(void* data, ui32 size, ui32 offset) {
 void StorageBuffer::DirectRead(void* data, ui32 size, ui32 offset) { NWmemcpy((char*)data, (char*)ptr + offset, size); }
 
 void StorageBuffer::Unmap() {
-    if (!ptr) return;
+	if(!ptr)
+		return;
 	NW_GL_CALL(glBindBuffer(GL_SHADER_STORAGE_BUFFER, _glID));
 	NW_GL_CALL(glUnmapBuffer(GL_SHADER_STORAGE_BUFFER));
 	ptr = 0;

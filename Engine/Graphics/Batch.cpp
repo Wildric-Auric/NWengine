@@ -1,9 +1,9 @@
 #include <GL/glew.h>
 
 #include "Batch.h"
-#include "Camera.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "Camera.h"
 
 // TODO::Implement static batch
 
@@ -83,12 +83,15 @@ void Batch::BindTextures() {
 }
 
 void Batch::Init() {
-	Batch::maxBatchTextures = GPUCap::QueryMaxTexture();
+	int maxUnits = GPUCap::QueryMaxTexture();
+	Batch::ComputeIndices();
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
+	Batch::maxBatchTextures = maxUnits;
 	delete[] uniformTexArr;
 	uniformTexArr = new int[Batch::maxBatchTextures];
 	for(int i = 0; i < Batch::maxBatchTextures; ++i)
 		uniformTexArr[i] = i;
-	Shader::parser.AddCnst("MaxTexNum", std::to_string(Batch::maxBatchTextures).c_str());
+	Shader::parser.AddCnst("MaxTexNum", std::to_string(maxUnits).c_str());
 }
 
 void Batch::Clear() {
@@ -262,36 +265,44 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	SET(3, 0.0)
 	SET(4, 0.0)
 	SET(5, sprite->vertexAttributes.x)
-	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(6, sprite->vertexAttributes.y)
+	SET(7, sprite->vertexAttributes.z)
+	SET(8 + c, -1.0)
 
-		offset += newStrSize;
+	offset += newStrSize;
 	SET(0, vert1.x)
 	SET(1, vert1.y)
 	SET(2, vert0.z)
 	SET(3, 1.0)
 	SET(4, 0.0)
 	SET(5, sprite->vertexAttributes.x)
-	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(6, sprite->vertexAttributes.y)
+	SET(7, sprite->vertexAttributes.z)
+	SET(8 + c, -1.0)
 
-		offset += newStrSize;
+	offset += newStrSize;
 	SET(0, vert3.x)
 	SET(1, vert3.y)
 	SET(2, vert0.z)
 	SET(3, 0.0)
 	SET(4, 1.0)
 	SET(5, sprite->vertexAttributes.x)
-	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(6, sprite->vertexAttributes.y)
+	SET(7, sprite->vertexAttributes.z)
+	SET(8 + c, -1.0)
 
-		offset += newStrSize;
+	offset += newStrSize;
 	SET(0, vert2.x)
 	SET(1, vert2.y)
 	SET(2, vert0.z)
 	SET(3, 1.0)
 	SET(4, 1.0)
 	SET(5, sprite->vertexAttributes.x)
-	SET(6, sprite->vertexAttributes.y) SET(7, sprite->vertexAttributes.z) SET(8 + c, -1.0)
+	SET(6, sprite->vertexAttributes.y)
+	SET(7, sprite->vertexAttributes.z)
+	SET(8 + c, -1.0)
 
-		if(c != 0) {
+	if(c != 0) {
 		memcpy(stride + 8, extra->rawData.data(), extra->rawData.size() * sizeof(float));
 		memcpy(stride + newStrSize + 8, extra->rawData.data(), extra->rawData.size() * sizeof(float));
 		memcpy(stride + 2 * newStrSize + 8, extra->rawData.data(), extra->rawData.size() * sizeof(float));

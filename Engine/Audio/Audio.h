@@ -100,7 +100,7 @@ class Sound : public Asset {
 	/**
 	 * @brief Stops the sound and resets finish flag. Calling HasFinished will return false after this.
 	 */
-	void Sound::Reset();
+	void Reset();
 
 	/**
 	 * @brief Checks if the sound has finished playing.

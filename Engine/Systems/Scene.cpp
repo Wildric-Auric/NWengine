@@ -81,9 +81,7 @@ GameObject& Scene::AddObject() {
 
 std::list<GameObject>::iterator Scene::DeleteObject(std::list<GameObject>::iterator it) {
 	GameObject* ptr = &(*it);
-	for(auto pair : ptr->components) {
-		delete(GameComponent*)(pair.second);
-	}
+	ptr->DeleteComponents();
 	if(_autoCache)
 		DeleteFromCache(*ptr);
 	return sceneObjs.erase(it);
