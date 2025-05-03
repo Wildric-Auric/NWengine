@@ -1,5 +1,4 @@
 #include "timer.h"
-#include <windows.h>
 namespace NWin {
 
 void Timer::initialize() { _beg = std::chrono::high_resolution_clock::now(); }

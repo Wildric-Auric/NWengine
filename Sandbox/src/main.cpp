@@ -13,6 +13,6 @@
 #include "templates/ColliderTst.h"
 
 int main() {
-	ColliderTst::Run();
+	UITst::Run();
 	return 0;
 }

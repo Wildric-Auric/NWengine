@@ -54,6 +54,11 @@ void*				   Context::InitContext(int scrWidth, int scrHeight) {
 	 c.exStyle		= (NWin::Word)NWin::WindowExStyle::Default;
 	 w				= NWin::Window::stCreateWindow(c);
 
+	 NWin::Vec2 s;
+	 w->getDrawAreaSize(s);
+	 WINDOW_WIDTH  = s.x;
+	 WINDOW_HEIGHT = s.y;
+
 	 w->setResizeCallback(sizeCallBack);
 	 w->dwmDarkModeFrame(1);
 	 w->dwmDontRoundCorners(0);
