@@ -11,8 +11,9 @@
 #include "templates/AudioTst.h"
 #include "templates/BatchTst.h"
 #include "templates/ColliderTst.h"
+#include "triangulation/TriangulationPrj.h"
 
 int main() {
-	UITst::Run();
+	TriangulationPrj::Run();
 	return 0;
 }

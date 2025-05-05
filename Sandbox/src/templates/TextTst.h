@@ -16,7 +16,6 @@ static void Init() {
 	GameObject& cam		= s.AddObject();
 	GameObject& str		= s.AddObject();
 	GameObject& textBox = s.AddObject();
-	GameObject& bg		= s.AddObject();
 	Camera*		camC	= cam.AddComponent<Camera>();
 	camC->Use();
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
@@ -34,8 +33,9 @@ static void Init() {
 	te->SetContentAndUpdateGlyphs("Hello jiji");
 
 	te->colors = fVec4(1.0, 0.0, 1.0, 1.0);
-	bg.AddComponent<Transform>();
 
+	GameObject& bg		= s.AddObject();
+	bg.AddComponent<Transform>();
 	Sprite* spr = bg.AddComponent<Sprite>();
 	spr->SetTexture(NW_DEFAULT_TEXTURE);
 	spr->SetShader("../Sandbox/src/templates/Blueprint.shader");
