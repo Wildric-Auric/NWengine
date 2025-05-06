@@ -7,7 +7,7 @@
 #include "Utilities.h"
 #include <list>
 
-enum class TextHorizontalAlignment { LEFT = 0, RIGHT = 1, CENTER = 1 };
+enum class TextHorizontalAlignment { LEFT = 0, RIGHT = 1, CENTER = 2 };
 
 struct TextConstraint {
 	float					boxHorizontalWrap = INFINITY;

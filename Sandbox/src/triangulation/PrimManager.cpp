@@ -9,12 +9,12 @@
 #include "keyboard.h"
 
 void PrimManager::Start() {
-    TriPoint& pt = AddPoint();
-    TriPoint& pt1 = AddPoint();
-    pt.SetUp(v2f(0.0,0.0));
-    pt1.SetUp(v2f(100.0,0.0));
-    TriLine& l = AddLine();
-    l.SetUp(&pt, &pt1); 
+//    TriPoint& pt = AddPoint();
+//    TriPoint& pt1 = AddPoint();
+//    pt.SetUp(v2f(0.0,0.0));
+//    pt1.SetUp(v2f(100.0,0.0));
+//    TriLine& l = AddLine();
+//    l.SetUp(&pt, &pt1); 
 }
 
 static TriPoint* last;
