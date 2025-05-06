@@ -31,9 +31,9 @@ bool Inputs::GetInputOnKeyPress(keyN key) {
 bool Inputs::GetInputKey(keyN key, InputKeyEvent mode) {
 	NWin::Window* window = (NWin::Window*)Context::window;
 	if(mode == InputKeyEvent::KeyPressed)
-	    return window->_getKeyboard().isKeyPressed((NWin::Key)key);
-	if(mode == InputKeyEvent::OnKeyPress) 
-	    return window->_getKeyboard().onKeyPress((NWin::Key)key);
+		return window->_getKeyboard().isKeyPressed((NWin::Key)key);
+	if(mode == InputKeyEvent::OnKeyPress)
+		return window->_getKeyboard().onKeyPress((NWin::Key)key);
 	if(mode == InputKeyEvent::OnKeyRelease)
 		return window->_getKeyboard().onKeyRelease((NWin::Key)key);
 	return 0;

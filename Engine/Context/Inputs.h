@@ -37,9 +37,9 @@
 typedef int keyN;
 
 enum InputKeyEvent {
-    KeyPressed,
-    OnKeyRelease,
-    OnKeyPress,
+	KeyPressed,
+	OnKeyRelease,
+	OnKeyPress,
 };
 
 /**
@@ -169,11 +169,11 @@ class Inputs {
 	 */
 	static bool GetInputKey(keyN key, InputKeyEvent mode);
 
-    static bool GetInputKeyPressed(keyN);
+	static bool GetInputKeyPressed(keyN);
 
-    static bool GetInputOnKeyRelease(keyN);
+	static bool GetInputOnKeyRelease(keyN);
 
-    static bool GetInputOnKeyPress(keyN);
+	static bool GetInputOnKeyPress(keyN);
 
 	/**
 	 * @brief Get the state of the specified mouse input.
