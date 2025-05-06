@@ -7,6 +7,7 @@
 #include "CoordSys.h"
 #include "Maths.h"
 #include "keyboard.h"
+#include "NWTime.h"
 
 void PrimManager::Start() {
 //    TriPoint& pt = AddPoint();
@@ -15,10 +16,39 @@ void PrimManager::Start() {
 //    pt1.SetUp(v2f(100.0,0.0));
 //    TriLine& l = AddLine();
 //    l.SetUp(&pt, &pt1); 
+    edges.SetUp(sizeof(TriEdge), 0xFF);
 }
 
 static TriPoint* last;
-void PrimManager::Update() {
+static TriEdge* edge;
+static TriEdge* fedge; 
+
+void PrimManager::_TestEdges() {
+    if (Inputs::GetInputKey('C', NWin::KeyEventEnum::NWIN_KeyPressed)) {
+        addr e = edges.GetFirst();
+        int sss = 0;
+        while (e) {
+            if (sss == int(tmpf) - 1) {
+                TriEdge* ppp = CAST(TriEdge*, edges.GetContent(e));
+                ppp->line->obj->GetComponent<LineRenderer>()->SetWidth(ppp->line->_m->lineWidth);
+            }
+            if (sss == int(tmpf)) {
+                TriEdge* ppp = CAST(TriEdge*, edges.GetContent(e));
+                ppp->line->obj->GetComponent<LineRenderer>()->SetWidth(0);
+            }
+            e = edges.GetNext(e);
+            sss++;
+        }
+        tmpf += NWTime::GetDeltaTime();
+        if (tmpf >= edges._size) {
+            tmpf = 0.0;
+            TriEdge* ppp = CAST(TriEdge*, edges.GetContent(edges.GetLast()));
+            ppp->line->obj->GetComponent<LineRenderer>()->SetWidth(ppp->line->_m->lineWidth);
+        }
+    }
+}
+
+void PrimManager::MakeLineOnClick() {
     constexpr float tol = 0.5;
     bool click = Inputs::GetInputKey(NWin::NWIN_KEY_LBUTTON, NWin::KeyEventEnum::NWIN_KeyReleased);
     fVec2 cur = Inputs::GetMousePosition();
@@ -32,11 +62,24 @@ void PrimManager::Update() {
     if (click) {
        TriPoint& pt = AddPoint();
        pt.SetUp(nearest);
+       TriLine* line = 0;
+       TriEdge* edge = 0;
        if (last) {
-           AddLine().SetUp(last, &pt);
+           line = &AddLine();
+           line->SetUp(last, &pt);
        }
+       if (line) {
+            edge = CAST(TriEdge*,edges.GetContent(edges.tAddLast(TriEdge())));
+            edge->SetUp(line);
+       }
+       if (!fedge && edge) {fedge = edge; fedge->line = line;};
        last = &pt;
     }
+}
+
+void PrimManager::Update() {
+    MakeLineOnClick();
+    _TestEdges();
 }
 
 TriPoint& PrimManager::AddPoint() {
@@ -73,6 +116,19 @@ void TriLine::SetUp() {
     lr->SetWidth(_m->lineWidth); 
 }
 
+void TriTriangle::SetUp() {
+    obj = &Scene::GetCurrent()->AddObject();
+    obj->AddComponent<Transform>();
+}
+
+void TriTriangle::SetUp(TriPoint*, TriPoint*, TriPoint*) {
+
+}
+
+void TriTriangle::SetUp(const v2f&, const v2f&, const v2f&) {
+
+}
+
 void TriLine::SetUp(TriPoint* _pt0, TriPoint* _pt1) {
     pt0 = _pt0;
     pt1 = _pt1;
@@ -85,4 +141,8 @@ void TriLine::SetUp(const v2f& _pt0, const v2f& _pt1) {
     pt0->SetUp(_pt0);
     pt1->SetUp(_pt1);
     SetUp();
+}
+
+void TriEdge::SetUp(TriLine* l) {
+    line = l;
 }
