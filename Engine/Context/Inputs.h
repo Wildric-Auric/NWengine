@@ -34,13 +34,13 @@
  * @typedef Input_Number
  * @brief Alias for the input number type.
  */
-typedef int Input_Number;
+typedef int keyN;
 
-/**
- * @typedef Input_Mode
- * @brief Alias for the input mode type.
- */
-typedef int Input_Mode;
+enum InputKeyEvent {
+    KeyPressed,
+    OnKeyRelease,
+    OnKeyPress,
+};
 
 /**
  * @class Inputs
@@ -153,9 +153,6 @@ class Inputs {
 	 */
 	static bool space;
 
-	/**
-	 * @brief Flag indicating if a joystick is being used.
-	 */
 	static bool usingJoystick;
 
 	/**
@@ -170,7 +167,13 @@ class Inputs {
 	 * @param mode The input mode.
 	 * @return True if the input key is pressed, false otherwise.
 	 */
-	static bool GetInputKey(Input_Number key, Input_Mode mode);
+	static bool GetInputKey(keyN key, InputKeyEvent mode);
+
+    static bool GetInputKeyPressed(keyN);
+
+    static bool GetInputOnKeyRelease(keyN);
+
+    static bool GetInputOnKeyPress(keyN);
 
 	/**
 	 * @brief Get the state of the specified mouse input.
@@ -178,14 +181,11 @@ class Inputs {
 	 * @param mode The input mode.
 	 * @return True if the mouse input is pressed, false otherwise.
 	 */
-	static bool GetInputMouse(Input_Number key, Input_Mode mode);
+	static bool GetInputMouse(keyN key, InputKeyEvent mode);
 
 	/**
 	  @brief Get mouse position in window coordinates. See namespace CoordSys
 	*/
 	static fVec2 GetMousePosition();
-	/**
-	 * @brief The array of joystick axis values.
-	 */
 	static float joystickAxis[6];
 };

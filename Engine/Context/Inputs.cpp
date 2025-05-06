@@ -13,19 +13,33 @@ fVec2 Inputs::_mousePos;
 
 float Inputs::joystickAxis[6] = {0.0f};
 
-bool Inputs::GetInputKey(Input_Number key, Input_Mode mode) {
+bool Inputs::GetInputKeyPressed(keyN key) {
 	NWin::Window* window = (NWin::Window*)Context::window;
-	if(mode == NWin::KeyEventEnum::NWIN_KeyPressed) {
-		return window->_getKeyboard().isKeyPressed((NWin::Key)key);
-	}
-	if(mode == NWin::KeyEventEnum::NWIN_KeyReleased) {
+	return window->_getKeyboard().isKeyPressed((NWin::Key)key);
+}
+
+bool Inputs::GetInputOnKeyRelease(keyN key) {
+	NWin::Window* window = (NWin::Window*)Context::window;
+	return window->_getKeyboard().onKeyRelease((NWin::Key)key);
+}
+
+bool Inputs::GetInputOnKeyPress(keyN key) {
+	NWin::Window* window = (NWin::Window*)Context::window;
+	return window->_getKeyboard().onKeyPress((NWin::Key)key);
+}
+
+bool Inputs::GetInputKey(keyN key, InputKeyEvent mode) {
+	NWin::Window* window = (NWin::Window*)Context::window;
+	if(mode == InputKeyEvent::KeyPressed)
+	    return window->_getKeyboard().isKeyPressed((NWin::Key)key);
+	if(mode == InputKeyEvent::OnKeyPress) 
+	    return window->_getKeyboard().onKeyPress((NWin::Key)key);
+	if(mode == InputKeyEvent::OnKeyRelease)
 		return window->_getKeyboard().onKeyRelease((NWin::Key)key);
-	}
 	return 0;
 }
 
-// Legacy lol
-bool Inputs::GetInputMouse(Input_Number key, Input_Mode mode) { return Inputs::GetInputKey(key, mode); }
+bool Inputs::GetInputMouse(keyN key, InputKeyEvent mode) { return Inputs::GetInputKey(key, mode); }
 
 fVec2 Inputs::GetMousePosition() { return _mousePos; }
 
@@ -40,18 +54,6 @@ void Inputs::Process(void* window0) {
 	Inputs::_mousePos.x = _mousePos.x - winSize.x * 0.5;
 	Inputs::_mousePos.y = -_mousePos.y + winSize.y * 0.5;
 
-	usingJoystick = 0;
-	/*const unsigned char* buttons = 0;
-		if (usingJoystick) {
-			int count;
-			const float* local = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-			int buttonCount;
-			buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-			memcpy(joystickAxis, local, count * sizeof(float)); //TODO::See if memcpy is the  Best Solution here
-			for (int i = 0; i < count; i++) {
-				if (abs(joystickAxis[i]) < 0.01) joystickAxis[i] = 0;
-			}
-	}*/
 	NWin::Keyboard& kb = window->_getKeyboard();
 	left			   = kb.isKeyPressed(NWin::Key::NWIN_KEY_LEFT);
 	right			   = kb.isKeyPressed(NWin::Key::NWIN_KEY_RIGHT);

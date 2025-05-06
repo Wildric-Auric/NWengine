@@ -71,8 +71,8 @@ static void Init() {
 
 static void Render() {
 	(*Renderer::defaultRenderer)(true);
-	camC->position.x += (Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, NWin::KeyEventEnum::NWIN_KeyPressed) -
-						 Inputs::GetInputKey(NWin::NWIN_KEY_LEFT, NWin::KeyEventEnum::NWIN_KeyPressed)) *
+	camC->position.x += (Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, InputKeyEvent::KeyPressed) -
+						 Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LEFT)) *
 						100.0 * NWTime::GetDeltaTime();
 }
 

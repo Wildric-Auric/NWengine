@@ -139,20 +139,20 @@ void GameManager::Update() {
 	tr->Translate(depthBuff);
 	depthBuff = {0.0, 0.0};
 	tr->Translate(depthBuff);
-	if(Inputs::GetInputKey('X', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+	if(Inputs::GetInputKey('X', InputKeyEvent::OnKeyRelease)) {
 		// tm.spec.type = NWPPFX::TonemapperType::Reinhard;
 		cc.spec.brightness += 0.03;
 		cc.spec.contrast -= 0.1;
 	}
-	if(Inputs::GetInputKey('C', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+	if(Inputs::GetInputKey('C', InputKeyEvent::OnKeyPress)) {
 		// tm.spec.type = NWPPFX::TonemapperType::Uncharted;
 		cc.spec.brightness -= 0.03;
 		cc.spec.contrast += 0.1;
 	}
-	if(Inputs::GetInputKey('V', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+	if(Inputs::GetInputKey('V', InputKeyEvent::OnKeyPress)) {
 		tm.spec.type = NWPPFX::TonemapperType::ACESNrkz;
 	}
-	if(Inputs::GetInputKey('B', NWin::KeyEventEnum::NWIN_KeyReleased)) {
+	if(Inputs::GetInputKey('B', InputKeyEvent::OnKeyPress)) {
 		tm.spec.type = NWPPFX::TonemapperType::Uncharted;
 	}
 	auto tree = Scene::GetCurrent()->GetGameObject("TreeObj");
