@@ -15,10 +15,10 @@
 
 DynamicScript* dynScr;
 void		   bg(int offset) {
-	  Scene* s = Scene::GetCurrent();
-	  ADD_OBJ(s, "Bg0", bg);
-	  auto spr = bg.AddComponent<Sprite>();
-	  auto tr  = bg.AddComponent<Transform>();
+	  Scene*	  s	  = Scene::GetCurrent();
+	  GameObject& bg  = s->AddObject<Transform, Sprite>("Bg0");
+	  auto		  spr = bg.GetComponent<Sprite>();
+	  auto		  tr  = bg.GetComponent<Transform>();
 	  spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
 	  spr->SetTexture("../Sandbox/assets/Images/bg.png");
 	  spr->SetSortingLayer(BG_LAYER);

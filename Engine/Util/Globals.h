@@ -141,9 +141,9 @@ typedef Vector4<float>	fVec4;
 typedef Vector2<double> dVec2;
 typedef Vector3<double> dVec3;
 typedef Vector4<double> dVec4;
-typedef Vector2<real>   rVec2; 
-typedef Vector3<real>   rVec3; 
-typedef Vector4<real>   rVec4; 
+typedef Vector2<real>	rVec2;
+typedef Vector3<real>	rVec3;
+typedef Vector4<real>	rVec4;
 
 typedef Vector2<int>	v2i;
 typedef Vector3<int>	v3i;
@@ -157,9 +157,9 @@ typedef Vector4<float>	v4f;
 typedef Vector2<double> v2d;
 typedef Vector3<double> v3d;
 typedef Vector4<double> v4d;
-typedef Vector2<real>   v2r; 
-typedef Vector3<real>   v3r; 
-typedef Vector4<real>   v4r; 
+typedef Vector2<real>	v2r;
+typedef Vector3<real>	v3r;
+typedef Vector4<real>	v4r;
 
 typedef Matrix2<int>   iMat2;
 typedef Matrix3<int>   iMat3;

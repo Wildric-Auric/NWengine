@@ -11,8 +11,9 @@
 #include "templates/AudioTst.h"
 #include "templates/BatchTst.h"
 #include "templates/ColliderTst.h"
+#include "templates/GeometryTst.h"
 
 int main() {
-	Sandbox::Run();
+	GeometryTst::Run();
 	return 0;
 }

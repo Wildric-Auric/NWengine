@@ -4,32 +4,33 @@
 #include "LineRenderer.h"
 #include "CircleRenderer.h"
 #include "Sprite.h"
+#include "Geometry.h"
 
 namespace GeometryTst {
 
 struct Data {
-	LineRenderer*	lines[10];
+	LineRenderer*	lines[8];
 	CircleRenderer* pts[10];
-	Sprite*			markers[10];
+	Sprite*			markers[5];
 };
 
-v4f exts[8] = {
-	// 0: diagonal down-right (slope -1)
-	{0.0f, 0.0f, 56.0f, -56.0f},
-	// 1: diagonal up-right (slope ≈ 0.653)
-	{-53.0f, -50.0f, 100.0f, 50.0f},
-	// 2: horizontal at y=10
-	{10.0f, 10.0f, 200.0f, 10.0f},
-	// 3: horizontal at y=10, overlapping 2
-	{50.0f, 10.0f, 150.0f, 10.0f},
-	// 4: horizontal at y=10, disjoint from 2
-	{300.0f, 10.0f, 400.0f, 10.0f},
-	// 5: vertical at x=400
-	{400.0f, 0.0f, 400.0f, 800.0f},
-	// 6: horizontal at y=400, intersects 5
-	{0.0f, 400.0f, 800.0f, 400.0f},
-	// 7: diagonal slope +1, perpendicular to 0 but far apart
-	{500.0f, 500.0f, 600.0f, 600.0f}};
+v4f exts[10] = {
+	// joined
+	{-50.0f, -50.0f, 50.0f, 50.0f},
+	{-50.0f, 50.0f, 50.0f, -50.0f},
+	// perpendicular
+	{-150.0f, -20.0f, -100.0f, -20.0f},
+	{-125.0f, 50.0f, -125.0f, -50.0f},
+	// parallel
+	{100.0f, -50.0f, 100.0f, 50.0f},
+	{150.0f, -50.0f, 150.0f, 50.0f},
+	// Pendicular 2
+	{200.0f, 0.0f, 250.0f, 0.0f},
+	{225.0f, 50.0f, 225.0f, 0.0f},
+	// No intersectoin
+	{-300.0f, 0.0f, -250.0f, 100.0f},
+	{-275.0f, 0.0f, -275.0f, 40.0f},
+};
 
 Data data;
 
@@ -44,30 +45,71 @@ static void Init() {
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
 	camC->ChangeOrtho(800, 800);
 	//--------------
-	for(int i = 0; i < 8; i++) {
+	for(int i = 0; i < 10; i++) {
 		data.lines[i] = s.AddObject().AddComponent<LineRenderer>();
 		data.lines[i]->SetWidth(2);
 		data.lines[i]->SetExt({exts[i].x, exts[i].y}, {exts[i].z, exts[i].w});
 	}
 
-//	for(int i = 0; i < 10; i++) {
-//		data.pts[i] = s.AddObject().AddComponent<CircleRenderer>();
-//		data.pts[i]->SetRadius(5);
-//	}
-//
-//	for(int i = 0; i < 10; i++) {
-//		GameObject& obj = s.AddObject();
-//		obj.AddComponent<Transform>();
-//		data.markers[i] = obj.AddComponent<Sprite>();
-//		data.markers[i]->SetSize({10, 10});
-//	}
+	for(int i = 0; i < 10; i++) {
+		data.pts[i] = s.AddObject().AddComponent<CircleRenderer>();
+		data.pts[i]->SetRadius(5);
+	}
+
+	data.pts[0]->SetPosition({0, 110});
+	data.pts[1]->SetPosition({200, 110});
+	data.pts[2]->SetPosition({170, 200});
+
+	for(int i = 0; i < 5; i++) {
+		GameObject& obj = s.AddObject();
+		data.markers[i] = obj.AddComponents<Sprite, Transform>();
+		data.markers[i]->SetSize({10, 10});
+	}
 
 	//-------------
 	s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
-static void Render() { (*Renderer::defaultRenderer)(true); }
+static void Render() {
+	for(int i = 0; i < 5; ++i) {
+		Geo::Point pt;
+		Geo::Point pt1;
+		Geo::Point pt2;
+		Geo::Point pt3;
+		pt.Set(&data.lines[2 * i]->_start);
+		pt1.Set(&data.lines[2 * i]->_end);
+
+		pt2.Set(&data.lines[2 * i + 1]->_start);
+		pt3.Set(&data.lines[2 * i + 1]->_end);
+
+		Geo::Segment seg  = Geo::Segment();
+		Geo::Segment seg1 = Geo::Segment();
+		seg.Set(&pt, &pt1);
+		seg1.Set(&pt2, &pt3);
+
+		v2r	 inters;
+		bool a = seg.Intersect(seg1, &inters);
+		if(a) {
+			data.markers[i]->GetGameObject()->GetComponent<Transform>()->position = inters;
+		}
+	}
+
+	v2f curPos = Inputs::GetMousePosition();
+	curPos	   = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
+	Geo::Point pt, pt1, pt2;
+	pt.Set(&data.pts[0]->GetGameObject()->GetComponent<Transform>()->position);
+	pt1.Set(&data.pts[1]->GetGameObject()->GetComponent<Transform>()->position);
+	pt2.Set(&data.pts[2]->GetGameObject()->GetComponent<Transform>()->position);
+	Geo::Point*	  a[] = {&pt, &pt1, &pt2};
+	Geo::Triangle tri = Geo::Triangle(a);
+	if(tri.IsPtInside(curPos)) {
+		data.pts[3]->SetPosition(curPos);
+	}
+
+	//-------------------------
+	(*Renderer::defaultRenderer)(true);
+}
 
 void Run() {
 	Context::_glInfo.maxVersion = 4;
