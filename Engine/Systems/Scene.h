@@ -140,6 +140,19 @@ class Scene {
 	 */
 	GameObject& AddObject();
 
+	GameObject& AddObject(const char*);
+
+	template <typename... Types> GameObject& AddObject() {
+		GameObject& obj = AddObject();
+		obj.AddComponents<Types...>();
+		return obj;
+	}
+	template <typename... Types> GameObject& AddObject(const char* n) {
+		GameObject& obj = AddObject(n);
+		obj.AddComponents<Types...>();
+		return obj;
+	}
+
 	/**
 	 * @brief Deletes a GameObject from the scene objects container by index.
 	 * @param index The index of the GameObject to delete.
