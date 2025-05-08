@@ -220,7 +220,7 @@ void UIWindow::Update() {
 	SetShaderParams();
 
 	rpos   = -tr->GetPosition() + UISys::curPos;
-	bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON, NWin::KeyEventEnum::NWIN_KeyPressed);
+	bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON, InputKeyEvent::KeyPressed);
 
 	if(IsCursorOnWindow() && UISys::GetClickEvent()) {
 		UISys::Focus(this);

@@ -46,7 +46,7 @@ class ScriptTt : public Scriptable {
 
 static void Render() {
 	(*Renderer::defaultRenderer)(true);
-	if(Inputs::GetInputKey('A', NWin::NWIN_KeyReleased)) {
+	if(Inputs::GetInputKey('A', InputKeyEvent::OnKeyRelease)) {
 		GameObject&	  obj = Scene::GetCurrent()->AddObject();
 		AudioEmitter* ae  = obj.AddComponent<AudioEmitter>();
 		ae->SetSound("C:/Programming/Games/TopDownShooter/example/assets/Sounds/wilhelm.wav");

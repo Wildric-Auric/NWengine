@@ -74,8 +74,14 @@ GameObject* Scene::GetGameObject() {
 }
 
 GameObject& Scene::AddObject() {
-	sceneObjs.push_back(GameObject());
+	sceneObjs.emplace_back();
 	Rename("new GameObject", &sceneObjs.back());
+	return sceneObjs.back();
+}
+
+GameObject& Scene::AddObject(const char* n) {
+	sceneObjs.emplace_back();
+	Rename(n, &sceneObjs.back());
 	return sceneObjs.back();
 }
 

@@ -150,6 +150,14 @@ class GameObject {
 		return ptr;
 	};
 
+	void									  AddComponents() {}
+	template <typename T, typename... Nex> T* AddComponents() {
+		T*	ret		 = AddComponent<T>();
+		int unpack[] = {0, (AddComponent<Nex>(), 0)...};
+		(void)unpack;
+		return ret;
+	}
+
 	/**
 	 * @brief Add a component of the secified type name to the game object.
 	 * @tparam The component type name that should be attached; example: "Transform"
@@ -175,5 +183,11 @@ class GameObject {
 		iter->second->OnDelete();
 		delete components[T::GetType()];
 		components.erase(T::GetType());
+	}
+
+	template <typename T, typename... Nex> void DeleteComponents() {
+		DeleteComponent<T>();
+		int unpack[] = {0, (DeleteComponent<Nex>(), 0)...};
+		(void)unpack;
 	}
 };

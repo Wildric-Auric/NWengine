@@ -6,6 +6,7 @@
 
 #define PI		  3.14159265359
 #define ONEDIV180 0.00555555555
+#define EPSILON	  0.0000001
 
 inline float DegToRad(float degree) { return degree * PI * ONEDIV180; }
 
@@ -148,6 +149,13 @@ template <typename T> int Sign(T number) {
 		return -1;
 	return 1;
 }
+
+#define ABS(x)			 (((x) < 0) ? -(x) : (x))
+#define MMIN(x, y)		 ((x) <= (y) ? (x) : (y))
+#define MMAX(x, y)		 ((x) >= (y) ? (x) : (y))
+#define CLAMP(n, mi, ma) MIN((ma), MAX(n, mi))
+
+template <typename T> T Abs(T x) { return (x < (T)0) ? -x : x; }
 
 template <typename T> T Min(T x, T y) { return x <= y ? x : y; };
 

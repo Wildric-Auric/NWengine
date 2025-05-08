@@ -16,9 +16,7 @@ static void Init() {
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
 	camC->ChangeOrtho(720, 480);
 	s.Start();
-
-	obj.AddComponent<Transform>();
-	Sprite* spr = obj.AddComponent<Sprite>();
+	Sprite* spr = obj.AddComponents<Sprite, Transform>();
 	spr->SetShader(ShaderTexturedBatchedDefaultStr, &ShaderTexturedBatchedDefaultID);
 	spr->Batch();
 
