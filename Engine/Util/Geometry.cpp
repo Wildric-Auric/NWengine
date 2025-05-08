@@ -4,6 +4,8 @@ namespace Geo {
 
 void Point::Set(v2f* v) { _v = v; }
 
+//-----------------Segment-----------------
+
 Segment::Segment(Point* p0, Point* p1) { Set(p0, p1); }
 
 v2f* Segment::GetFstDef(Segment* s) { return ((Point*)s->_fpt)->Get(); }
@@ -66,6 +68,8 @@ int Segment::Intersect(const Segment& other, v2r* i) {
 			i->y <= Min(Max(GetFst()->y, GetSec()->y), Max(other.GetFst()->y, other.GetSec()->y)));
 }
 
+//-----------------Triangle-----------------
+
 v2f* Triangle::GetPtDef(void* pt) { return ((Point*)pt)->_v; }
 
 Triangle::Triangle(Point** v) { Set(v); }
@@ -87,5 +91,93 @@ bool Triangle::IsPtInside(const v2r& pt) {
 	bool   tmp = (d0 <= 0 || d1 <= 0 || d2 <= 0) && (d0 >= 0 || d1 >= 0 || d2 >= 0);
 	return !tmp;
 }
+#undef STMP
 
+//-----------------Polygon-----------------
+
+void Polygon::SetUp(void* first, void* last, void* (*f)(Polygon*, void*), void* (*g)(Polygon*, void*),
+					v2r* (*h)(Polygon*, void*)) {
+	_first		= first;
+	_last		= last;
+	GetNextProc = f;
+	GetPrevProc = g;
+	UnwrapProc	= h;
+}
+
+int Polygon::CalcOrientation() {
+	void* f	   = GetFirst();
+	void* c	   = f;
+	void* n	   = f;
+	real  area = 0;
+	do {
+		n = GetNext(c);
+		area += Det2(*Unwrap(c), *Unwrap(n));
+		c = n;
+	} while(c != f);
+	if(Abs(area) < EPSILON)
+		return PolyOrientation::Deg;
+	if(area < 0)
+		return PolyOrientation::CW;
+	return PolyOrientation::CCW;
+}
+
+bool Polygon::IsPtInside(const v2r& pt) {
+	void* f = GetFirst();
+	void* l = GetLast();
+	void* c = f;
+	void* n = 0;
+	v2f	  nu; // next unwrapped
+	v2f	  cu;
+	real  xi;	  // intersection abscissa
+	int	  ic = 0; // intersection count
+	do {
+		n  = GetNext(c);
+		cu = *Unwrap(c);
+		nu = *Unwrap(n);
+		if((cu.y > pt.y) == (nu.y > pt.y)) { // one pt above, the other below
+			c = n;
+			continue;
+		}
+		xi = cu.x + (pt.y - cu.y) * (nu.x - cu.x) / (nu.y - cu.y);
+		ic += xi > pt.x;
+		c = n;
+	} while(c != f);
+	return (ic % 2);
+}
+
+bool Polygon::IsConvex() {
+	void* f = GetFirst();
+	void* l = GetLast();
+
+	void* c = f;
+	void* n = GetNext(c);
+	void* p = l;
+	int	  d = Sign(Det2(*Unwrap(p) - *Unwrap(c), *Unwrap(n) - *Unwrap(c)));
+	p		= c;
+	c		= n;
+	do {
+		n = GetNext(c);
+		if(Sign(Det2(*Unwrap(p) - *Unwrap(c), *Unwrap(n) - *Unwrap(c))) != d)
+			return 0;
+		p = c;
+		c = n;
+	} while(c != f);
+	return 1;
+}
+
+void* Polygon::GetNextDef(Polygon* poly, void* val) {
+	if(val == poly->_last) {
+		return poly->_first;
+	}
+	return ((v2r*)(val)) + 1;
+}
+
+void* Polygon::GetPrevDef(Polygon* poly, void* val) {
+	if(val == poly->_first) {
+		return poly->_last;
+	}
+	return ((v2r*)(val)) - 1;
+}
+
+v2r* Polygon::UnwrapDef(Polygon*, void* v) { return (v2r*)(v); }
 } // namespace Geo

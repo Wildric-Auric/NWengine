@@ -52,4 +52,45 @@ class Triangle {
 	void Set(void**, v2f* (*)(void*));
 	bool IsPtInside(const v2r& pt);
 };
+
+enum PolyOrientation {
+	CCW = -1,
+	CW	= 1,
+	Deg = 0 // Degenerate
+};
+
+class Polygon {
+	void* _first;
+	void* _last;
+
+	void* (*GetNextProc)(Polygon*, void*) = GetNextDef;
+	void* (*GetPrevProc)(Polygon*, void*) = GetPrevDef;
+	v2r* (*UnwrapProc)(Polygon*, void*)	  = UnwrapDef;
+
+	inline v2r* GetFirstUnwrp() { return Unwrap(_first); }
+	inline v2r* GetLastUnwrp() { return Unwrap(_last); }
+	inline v2r* GetNextUnwrp(void* n) { return Unwrap(GetNext(n)); }
+	inline v2r* GetPrevUnwrp(void* n) { return Unwrap(GetPrev(n)); }
+
+	inline void* GetFirst() { return _first; }
+	inline void* GetLast() { return _last; }
+	inline void* GetNext(void* v) { return GetNextProc(this, v); }
+	inline void* GetPrev(void* v) { return GetPrevProc(this, v); }
+	inline v2r*	 Unwrap(void* v) { return UnwrapProc(this, v); }
+	inline void	 SetFirst(void* f) { _first = f; }
+	inline void	 SetLast(void* l) { _last = l; }
+	inline void	 SetGetNextProc(void* (*f)(Polygon*, void*)) { GetNextProc = f; }
+	inline void	 SetGetPrevProc(void* (*f)(Polygon*, void*)) { GetPrevProc = f; }
+	inline void	 SetUnwrapProc(v2r* (*f)(Polygon*, void*)) { UnwrapProc = f; }
+
+	void		 SetUp(void* first, void* last, void* (*getNext)(Polygon*, void*), void* (*)(Polygon* getPrev, void*),
+					   v2r* (*)(Polygon* getUnwrp, void*));
+	int			 CalcOrientation();
+	bool		 IsPtInside(const v2r& pt);
+	bool		 IsConvex();
+	static void* GetNextDef(Polygon*, void*);
+	static void* GetPrevDef(Polygon*, void*);
+	static v2r*	 UnwrapDef(Polygon*, void*);
+};
+
 } // namespace Geo
