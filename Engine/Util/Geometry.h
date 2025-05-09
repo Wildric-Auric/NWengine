@@ -60,8 +60,10 @@ enum PolyOrientation {
 };
 
 class Polygon {
+  public:
 	void* _first;
 	void* _last;
+	void* _data;
 
 	void* (*GetNextProc)(Polygon*, void*) = GetNextDef;
 	void* (*GetPrevProc)(Polygon*, void*) = GetPrevDef;
@@ -79,6 +81,7 @@ class Polygon {
 	inline v2r*	 Unwrap(void* v) { return UnwrapProc(this, v); }
 	inline void	 SetFirst(void* f) { _first = f; }
 	inline void	 SetLast(void* l) { _last = l; }
+	inline void	 SetData(void* d) { _data = d; }
 	inline void	 SetGetNextProc(void* (*f)(Polygon*, void*)) { GetNextProc = f; }
 	inline void	 SetGetPrevProc(void* (*f)(Polygon*, void*)) { GetPrevProc = f; }
 	inline void	 SetUnwrapProc(v2r* (*f)(Polygon*, void*)) { UnwrapProc = f; }
