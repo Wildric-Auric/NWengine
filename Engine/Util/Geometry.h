@@ -60,8 +60,10 @@ enum PolyOrientation {
 };
 
 class Polygon {
+  public:
 	void* _first;
 	void* _last;
+	void* _data;
 
 	void* (*GetNextProc)(Polygon*, void*) = GetNextDef;
 	void* (*GetPrevProc)(Polygon*, void*) = GetPrevDef;

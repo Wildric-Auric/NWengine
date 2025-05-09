@@ -5,13 +5,12 @@
 
 namespace TriangulationPrj {
 
-
 void Init() {
 	Context::SetTitle("Triangulation Project");
 	Context::EnableVSync();
 	Scene& s = Scene::CreateNew("New Scene");
 	s.MakeCurrent();
-    s.AddObject().AddComponent<SceneSet>();
+	s.AddObject().AddComponent<SceneSet>();
 	s.Start();
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
@@ -28,4 +27,4 @@ void Run() {
 	NWengineShutdown();
 }
 
-};
+}; // namespace TriangulationPrj
