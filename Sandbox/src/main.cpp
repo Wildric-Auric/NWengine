@@ -12,8 +12,9 @@
 #include "templates/BatchTst.h"
 #include "templates/ColliderTst.h"
 #include "templates/GeometryTst.h"
+#include "triangulation/TriangulationPrj.h"
 
 int main() {
-	GeometryTst::Run();
+	TriangulationPrj::Run();
 	return 0;
 }
