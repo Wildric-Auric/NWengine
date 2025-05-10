@@ -51,7 +51,7 @@ class Triangle {
 	void Set(Point**);
 	void Set(void**, v2f* (*)(void*));
 	bool IsPtInside(const v2r&);
-    bool IsPtInsideStrict(const v2r&);
+	bool IsPtInsideStrict(const v2r&);
 };
 
 enum PolyOrientation {

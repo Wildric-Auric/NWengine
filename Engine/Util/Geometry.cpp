@@ -285,7 +285,8 @@ void EarClippingTriangulator::Process(bool priorizeFans) {
 		c->last->next = c->next;
 		c->next->last = c->last;
 		c			  = c->next;
-        if (!priorizeFans) c = c->next;
+		if(!priorizeFans)
+			c = c->next;
 	}
 	_tris[ti]	  = c->last->data;
 	_tris[ti + 1] = c->data;
