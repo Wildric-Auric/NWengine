@@ -50,7 +50,8 @@ class Triangle {
 
 	void Set(Point**);
 	void Set(void**, v2f* (*)(void*));
-	bool IsPtInside(const v2r& pt);
+	bool IsPtInside(const v2r&);
+    bool IsPtInsideStrict(const v2r&);
 };
 
 enum PolyOrientation {
@@ -116,7 +117,7 @@ class EarClippingTriangulator {
 	inline v2f* GetTris() { return _tris; }
 	void		Alloc(Polygon* const, const PolyOrientation, const ui32 vertn);
 	void		Clean();
-	void		Process();
+	void		Process(bool priorizeFans = 0);
 	void		_SetUpCntFromPoly();
 };
 

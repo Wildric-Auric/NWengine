@@ -96,6 +96,13 @@ bool Triangle::IsPtInside(const v2r& pt) {
 	double d0  = STMP(pt, *GetPt(0), *GetPt(1));
 	double d1  = STMP(pt, *GetPt(1), *GetPt(2));
 	double d2  = STMP(pt, *GetPt(2), *GetPt(0));
+	bool   tmp = (d0 < 0 || d1 < 0 || d2 < 0) && (d0 > 0 || d1 > 0 || d2 > 0);
+	return !tmp;
+}
+bool Triangle::IsPtInsideStrict(const v2r& pt) {
+	double d0  = STMP(pt, *GetPt(0), *GetPt(1));
+	double d1  = STMP(pt, *GetPt(1), *GetPt(2));
+	double d2  = STMP(pt, *GetPt(2), *GetPt(0));
 	bool   tmp = (d0 <= 0 || d1 <= 0 || d2 <= 0) && (d0 >= 0 || d1 >= 0 || d2 >= 0);
 	return !tmp;
 }
@@ -228,7 +235,7 @@ void EarClippingTriangulator::Clean() {
 	vertNum = 0;
 }
 
-void EarClippingTriangulator::Process() {
+void EarClippingTriangulator::Process(bool priorizeFans) {
 	if(idx < 3)
 		return;
 	bool	fl;
@@ -278,6 +285,7 @@ void EarClippingTriangulator::Process() {
 		c->last->next = c->next;
 		c->next->last = c->last;
 		c			  = c->next;
+        if (!priorizeFans) c = c->next;
 	}
 	_tris[ti]	  = c->last->data;
 	_tris[ti + 1] = c->data;
