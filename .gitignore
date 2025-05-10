@@ -4,6 +4,7 @@ Dependencies/
 Template/
 Engine/Doc/
 BuildScripts/nwtmp/
+BuildScripts/Hdrasm/obj
 
 *.aps
 *.ico

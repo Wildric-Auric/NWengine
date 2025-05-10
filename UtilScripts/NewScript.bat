@@ -7,7 +7,6 @@ if "%~1"=="" (
     exit /b
 )
 
-
 REM Set the class name and directory
 set className=%~1
 set directory=%~2
@@ -16,7 +15,7 @@ if "%~2"=="" (
 )
 
 REM Call the Python script with class name and directory
-python "%~dp0create_user_scripts.py" "%className%" "%directory%"
+call "%~dp0create_user_scripts.bat" "%className%" "%directory%"
 
 if errorlevel 1 (
     echo Error: Python script execution failed.

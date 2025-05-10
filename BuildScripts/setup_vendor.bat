@@ -1,6 +1,8 @@
 @echo off
 
 set TOOLSET=%1
+pushd "%~dp0"
+
 if "%TOOLSET%"=="" (
     echo No toolset version specified. Set to hardcoded latest
     set TOOLSET=142
@@ -42,4 +44,6 @@ copy ..\\..\\lib\\Release\\x64\\glew32s.lib     ..\\..\\..\\..\\..\\Dependencies
 copy ..\\..\\lib\\Debug\\Win32\\glew32sd.lib   ..\\..\\..\\..\\..\\Dependencies\\glew\\lib\\debug\\win86\\glew32s.lib
 copy ..\\..\\lib\\Debug\\x64\\glew32sd.lib     ..\\..\\..\\..\\..\\Dependencies\\glew\\lib\\debug\\win64\\glew32s.lib
 xcopy ..\\..\\include ..\\..\\..\\..\\..\\Dependencies\\glew\\include /E /I /Y
-cd ../../../../...
+
+popd
+

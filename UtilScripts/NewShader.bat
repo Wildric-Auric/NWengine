@@ -66,13 +66,15 @@ if not exist "%directory%" (
 
 REM Check if the shader template file exists
 set templateFile=%shaderType%.shader
-set templateFileDir=%~dp0%shaderType%.shader
+set templateFileDir="%~dp0ShaderText\%shaderType%.shader"
 if not exist "%templateFileDir%" (
     echo Error: Template shader file "%templateFile%" not found in the directory.
     exit /b
 )
 
 REM Copy the template file to the target directory
+echo "%templateFileDir%"
+echo "%directory%"
 copy "%templateFileDir%" "%directory%" > nul
 if errorlevel 1 (
     echo Error: Could not copy template file to "%directory%".

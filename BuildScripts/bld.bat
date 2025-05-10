@@ -1,2 +1,2 @@
-python build_binaries.py 
+call "%~dp0%build_binaries.bat"
 
