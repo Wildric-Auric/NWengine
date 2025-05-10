@@ -86,14 +86,38 @@ class Polygon {
 	inline void	 SetGetPrevProc(void* (*f)(Polygon*, void*)) { GetPrevProc = f; }
 	inline void	 SetUnwrapProc(v2r* (*f)(Polygon*, void*)) { UnwrapProc = f; }
 
-	void		 SetUp(void* first, void* last, void* (*getNext)(Polygon*, void*), void* (*)(Polygon* getPrev, void*),
-					   v2r* (*)(Polygon* getUnwrp, void*));
-	int			 CalcOrientation();
-	bool		 IsPtInside(const v2r& pt);
-	bool		 IsConvex();
-	static void* GetNextDef(Polygon*, void*);
-	static void* GetPrevDef(Polygon*, void*);
-	static v2r*	 UnwrapDef(Polygon*, void*);
+	void			SetUp(void* first, void* last, void* (*getNext)(Polygon*, void*), void* (*)(Polygon* getPrev, void*),
+						  v2r* (*)(Polygon* getUnwrp, void*));
+	PolyOrientation CalcOrientation();
+	bool			IsPtInside(const v2r& pt);
+	bool			IsConvex();
+	static void*	GetNextDef(Polygon*, void*);
+	static void*	GetPrevDef(Polygon*, void*);
+	static v2r*		UnwrapDef(Polygon*, void*);
+};
+
+struct DirectedPoly {
+	v2f			  data;
+	DirectedPoly* next = 0;
+	DirectedPoly* last = 0;
+};
+
+class EarClippingTriangulator {
+  public:
+	DirectedPoly*	_cnt  = 0;
+	v2f*			_tris = 0;
+	Polygon*		_poly = 0;
+	PolyOrientation _ort;
+	ui32			idx		= 0;
+	ui32			triNum	= 0;
+	ui32			vertNum = 0;
+
+	inline ui32 GetTriNum() { return triNum; }
+	inline v2f* GetTris() { return _tris; }
+	void		Alloc(Polygon* const, const PolyOrientation, const ui32 vertn);
+	void		Clean();
+	void		Process();
+	void		_SetUpCntFromPoly();
 };
 
 } // namespace Geo

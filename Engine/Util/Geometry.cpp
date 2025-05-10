@@ -1,5 +1,13 @@
 #include "Geometry.h"
+#include <malloc.h>
 
+#define nwfree(c)                                                                                                                \
+	{                                                                                                                            \
+		if(c != 0) {                                                                                                             \
+			free((c));                                                                                                           \
+			c = 0;                                                                                                               \
+		}                                                                                                                        \
+	}
 namespace Geo {
 
 void Point::Set(v2f* v) { _v = v; }
@@ -104,7 +112,7 @@ void Polygon::SetUp(void* first, void* last, void* (*f)(Polygon*, void*), void* 
 	UnwrapProc	= h;
 }
 
-int Polygon::CalcOrientation() {
+PolyOrientation Polygon::CalcOrientation() {
 	void* f	   = GetFirst();
 	void* c	   = f;
 	void* n	   = f;
@@ -180,4 +188,102 @@ void* Polygon::GetPrevDef(Polygon* poly, void* val) {
 }
 
 v2r* Polygon::UnwrapDef(Polygon*, void* v) { return (v2r*)(v); }
+
+void EarClippingTriangulator::_SetUpCntFromPoly() {
+	DirectedPoly poly;
+
+	void* f = _poly->_first;
+	void* c = f;
+
+	_cnt[0].data = *_poly->Unwrap(c);
+	_cnt[0].last = 0;
+	c			 = _poly->GetNext(c);
+	idx			 = 1;
+
+	while(c != f) {
+		_cnt[idx].data	   = *_poly->Unwrap(c);
+		_cnt[idx].last	   = &_cnt[idx - 1];
+		_cnt[idx - 1].next = &_cnt[idx];
+		c				   = _poly->GetNext(c);
+		++idx;
+	}
+	_cnt[idx - 1].next = &_cnt[0];
+	_cnt[0].last	   = &_cnt[idx - 1];
+}
+
+void EarClippingTriangulator::Alloc(Geo::Polygon* const p, const PolyOrientation o, const ui32 vertn) {
+	_cnt	= (DirectedPoly*)calloc(vertn, sizeof(DirectedPoly));
+	_tris	= (v2f*)calloc((vertn - 2) * 3, sizeof(v2r));
+	_poly	= p;
+	_ort	= o;
+	vertNum = vertn;
+	_SetUpCntFromPoly();
+}
+
+void EarClippingTriangulator::Clean() {
+	nwfree(_cnt);
+	nwfree(_tris);
+	idx		= 0;
+	triNum	= 0;
+	vertNum = 0;
+}
+
+void EarClippingTriangulator::Process() {
+	if(idx < 3)
+		return;
+	bool	fl;
+	Point	pts0[3];
+	Point*	pts[3] = {&pts0[0], &pts0[1], &pts0[2]};
+	Point** ptsPtr = &pts[0];
+
+	Triangle	  tri;
+	v2f			  vec0;
+	v2f			  vec1;
+	i8			  s;
+	DirectedPoly* c = &_cnt[0];
+	DirectedPoly* tmp;
+	ui32		  ti = 0;
+
+	while(c->next->next != c->last) {
+		pts0[0].Set(&c->last->data);
+		pts0[1].Set(&c->data);
+		pts0[2].Set(&c->next->data);
+		vec0 = c->data - c->last->data;
+		vec1 = c->next->data - c->data;
+		s	 = Sign(Det2(vec0, vec1));
+		if((_ort == PolyOrientation::CW && s == 1) || (_ort == PolyOrientation::CCW && s != 1)) {
+			c = c->next;
+			continue;
+		}
+		vec1 = (c->next->data + c->last->data) * 0.5;
+		tri.Set(&pts[0]);
+		tmp = c->next->next;
+		fl	= 0;
+		while(tmp != c->last) {
+			if(!tri.IsPtInside(tmp->data)) {
+				tmp = tmp->next;
+				continue;
+			}
+			fl = 1;
+			break;
+		};
+		if(fl) {
+			c = c->next;
+			continue;
+		}
+		_tris[ti]	  = c->last->data;
+		_tris[ti + 1] = c->data;
+		_tris[ti + 2] = c->next->data;
+		ti += 3;
+		c->last->next = c->next;
+		c->next->last = c->last;
+		c			  = c->next;
+	}
+	_tris[ti]	  = c->last->data;
+	_tris[ti + 1] = c->data;
+	_tris[ti + 2] = c->next->data;
+	ti += 3;
+	triNum = ti / 3;
+}
 } // namespace Geo
+#undef nwfree
