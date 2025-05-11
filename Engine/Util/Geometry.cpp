@@ -108,6 +108,12 @@ bool Triangle::IsPtInsideStrict(const v2r& pt) {
 }
 #undef STMP
 
+bool Triangle::IsDegenerate() {
+	v2r a = *GetPt(0);
+	v2r b = *GetPt(1);
+	v2r c = *GetPt(2);
+	return ABS(Det2(b - a, b - c)) < GEO_EPS;
+}
 //-----------------Polygon-----------------
 
 void Polygon::SetUp(void* first, void* last, void* (*f)(Polygon*, void*), void* (*g)(Polygon*, void*),
@@ -303,8 +309,11 @@ void EarClippingTriangulator::Process(bool priorizeFans) {
 			c = c->next;
 			continue;
 		}
-		vec1 = (c->next->data + c->last->data) * 0.5;
 		tri.Set(&pts[0]);
+		if(tri.IsDegenerate()) {
+			c = c->next;
+			continue;
+		}
 		tmp = c->next->next;
 		fl	= 0;
 		while(tmp != c->last) {

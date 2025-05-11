@@ -1,9 +1,9 @@
 #pragma once
 #include "Globals.h"
-#include "ds.h"
+
+#define GEO_EPS 0.00001
 
 namespace Geo {
-extern MemoryRegion heap;
 
 class Point {
   public:
@@ -46,12 +46,13 @@ class Triangle {
 	Triangle(Point**);
 	Triangle() = default;
 
-	inline v2r* GetPt(const int index = 0) { return GetPtDef(_v[index]); }
+	inline v2r* GetPt(const int index = 0) { return GetPtProc(_v[index]); }
 
 	void Set(Point**);
 	void Set(void**, v2r* (*)(void*));
 	bool IsPtInside(const v2r&);
 	bool IsPtInsideStrict(const v2r&);
+	bool IsDegenerate();
 };
 
 enum PolyOrientation {

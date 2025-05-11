@@ -2,6 +2,7 @@
 #include "Script.h"
 #include "Globals.h"
 #include "Geometry.h"
+#include "ds.h"
 #include <list>
 
 enum LayerConstants {
