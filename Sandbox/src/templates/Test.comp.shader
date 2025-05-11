@@ -4,7 +4,7 @@
 #pragma def LOCAL_SIZE_Y LocalSizeY
 #pragma def LOCAL_SIZE_Z LocalSizeZ
 
-layout(local_size_x = LOCAL_SIZE_X, local_size_y = LOCAL_SIZE_X, local_size_z = LOCAL_SIZE_Z) in;
+layout(local_size_x = LOCAL_SIZE_X, local_size_y = LOCAL_SIZE_Y, local_size_z = LOCAL_SIZE_Z) in;
 
 layout(rgba16f, binding = 0) uniform image2D imgOutput;
 layout(std430, binding = 1) buffer data { float values[]; };
