@@ -175,6 +175,6 @@ class MSTexture {
 	uint16		 _samplesNum = 2; /**< Number of samples. */
 
 	void _GPUGen(TexChannelInfo channelInfo);
-	void MSTexture::Bind(bool unbind = 0);
+	void Bind(bool unbind = 0);
 	void Clean();
 };
