@@ -10,7 +10,7 @@ class Point {
 	v2r*		_v = 0;
 	inline v2r* Get() { return _v; }
 	inline v2r	GetUnwrp() { return *_v; }
-	void		Set(v2f*);
+	void		Set(v2r*);
 };
 
 class Segment {
@@ -18,17 +18,17 @@ class Segment {
 	void* _fpt = 0;
 	void* _spt = 0;
 
-	v2f* (*GetFstProc)(Segment*) = GetFstDef;
-	v2f* (*GetSecProc)(Segment*) = GetSecDef;
-	static v2f* GetFstDef(Segment*);
-	static v2f* GetSecDef(Segment*);
+	v2r* (*GetFstProc)(Segment*) = GetFstDef;
+	v2r* (*GetSecProc)(Segment*) = GetSecDef;
+	static v2r* GetFstDef(Segment*);
+	static v2r* GetSecDef(Segment*);
 
 	Segment(Point*, Point*);
 	Segment() = default;
-	inline v2f* GetFst() const { return GetFstProc((Segment*)this); }
-	inline v2f* GetSec() const { return GetSecProc((Segment*)this); }
+	inline v2r* GetFst() const { return GetFstProc((Segment*)this); }
+	inline v2r* GetSec() const { return GetSecProc((Segment*)this); }
 	void		Set(const Point*, const Point*);
-	void		Set(void* p0, void* p1, v2f* (*f)(Segment*), v2f* (*f2)(Segment*));
+	void		Set(void* p0, void* p1, v2r* (*f)(Segment*), v2r* (*f2)(Segment*));
 	real		GetSlope() const;
 	real		GetYIntercept() const; // ordinate at origin
 	real		Evaluate(real x) const;
@@ -40,16 +40,16 @@ class Triangle {
   public:
 	void* _v[3];
 
-	v2f* (*GetPtProc)(void*) = GetPtDef;
-	static v2f* GetPtDef(void*);
+	v2r* (*GetPtProc)(void*) = GetPtDef;
+	static v2r* GetPtDef(void*);
 
 	Triangle(Point**);
 	Triangle() = default;
 
-	inline v2f* GetPt(const int index = 0) { return GetPtDef(_v[index]); }
+	inline v2r* GetPt(const int index = 0) { return GetPtDef(_v[index]); }
 
 	void Set(Point**);
-	void Set(void**, v2f* (*)(void*));
+	void Set(void**, v2r* (*)(void*));
 	bool IsPtInside(const v2r&);
 	bool IsPtInsideStrict(const v2r&);
 };
@@ -58,6 +58,13 @@ enum PolyOrientation {
 	CCW = -1,
 	CW	= 1,
 	Deg = 0 // Degenerate
+};
+
+struct PolygonData {
+	PolyOrientation orientation;
+	ui32			verticesNumber;
+	bool			convexity;
+	v2r				centroid;
 };
 
 class Polygon {
@@ -86,6 +93,7 @@ class Polygon {
 	inline void	 SetGetNextProc(void* (*f)(Polygon*, void*)) { GetNextProc = f; }
 	inline void	 SetGetPrevProc(void* (*f)(Polygon*, void*)) { GetPrevProc = f; }
 	inline void	 SetUnwrapProc(v2r* (*f)(Polygon*, void*)) { UnwrapProc = f; }
+	inline void	 CalcData(PolygonData*);
 
 	void			SetUp(void* first, void* last, void* (*getNext)(Polygon*, void*), void* (*)(Polygon* getPrev, void*),
 						  v2r* (*)(Polygon* getUnwrp, void*));
@@ -98,7 +106,7 @@ class Polygon {
 };
 
 struct DirectedPoly {
-	v2f			  data;
+	v2r			  data;
 	DirectedPoly* next = 0;
 	DirectedPoly* last = 0;
 };
@@ -106,7 +114,7 @@ struct DirectedPoly {
 class EarClippingTriangulator {
   public:
 	DirectedPoly*	_cnt  = 0;
-	v2f*			_tris = 0;
+	v2r*			_tris = 0;
 	Polygon*		_poly = 0;
 	PolyOrientation _ort;
 	ui32			idx		= 0;
@@ -114,7 +122,9 @@ class EarClippingTriangulator {
 	ui32			vertNum = 0;
 
 	inline ui32 GetTriNum() { return triNum; }
-	inline v2f* GetTris() { return _tris; }
+	inline v2r* GetTris() { return _tris; }
+	void		GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2);
+	v2r			GetTri(ui32 index, ui32 pos);
 	void		Alloc(Polygon* const, const PolyOrientation, const ui32 vertn);
 	void		Clean();
 	void		Process(bool priorizeFans = 0);

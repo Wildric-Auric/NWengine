@@ -10,14 +10,14 @@
 	}
 namespace Geo {
 
-void Point::Set(v2f* v) { _v = v; }
+void Point::Set(v2r* v) { _v = v; }
 
 //-----------------Segment-----------------
 
 Segment::Segment(Point* p0, Point* p1) { Set(p0, p1); }
 
-v2f* Segment::GetFstDef(Segment* s) { return ((Point*)s->_fpt)->Get(); }
-v2f* Segment::GetSecDef(Segment* s) { return ((Point*)s->_spt)->Get(); }
+v2r* Segment::GetFstDef(Segment* s) { return ((Point*)s->_fpt)->Get(); }
+v2r* Segment::GetSecDef(Segment* s) { return ((Point*)s->_spt)->Get(); }
 
 void Segment::Set(const Point* p0, const Point* p1) {
 	_fpt	   = (void*)p0;
@@ -26,7 +26,7 @@ void Segment::Set(const Point* p0, const Point* p1) {
 	GetSecProc = GetSecDef;
 }
 
-void Segment::Set(void* p0, void* p1, v2f* (*f)(Segment*), v2f* (*f2)(Segment*)) {
+void Segment::Set(void* p0, void* p1, v2r* (*f)(Segment*), v2r* (*f2)(Segment*)) {
 	_fpt	   = p0;
 	_spt	   = p1;
 	GetFstProc = f;
@@ -78,13 +78,13 @@ int Segment::Intersect(const Segment& other, v2r* i) {
 
 //-----------------Triangle-----------------
 
-v2f* Triangle::GetPtDef(void* pt) { return ((Point*)pt)->_v; }
+v2r* Triangle::GetPtDef(void* pt) { return ((Point*)pt)->_v; }
 
 Triangle::Triangle(Point** v) { Set(v); }
 
 void Triangle::Set(Point** v) { Set((void**)v, Triangle::GetPtDef); }
 
-void Triangle::Set(void** v, v2f* (*f)(void*)) {
+void Triangle::Set(void** v, v2r* (*f)(void*)) {
 	_v[0]	  = v[0];
 	_v[1]	  = v[1];
 	_v[2]	  = v[2];
@@ -141,8 +141,8 @@ bool Polygon::IsPtInside(const v2r& pt) {
 	void* l = GetLast();
 	void* c = f;
 	void* n = 0;
-	v2f	  nu; // next unwrapped
-	v2f	  cu;
+	v2r	  nu; // next unwrapped
+	v2r	  cu;
 	real  xi;	  // intersection abscissa
 	int	  ic = 0; // intersection count
 	do {
@@ -194,7 +194,48 @@ void* Polygon::GetPrevDef(Polygon* poly, void* val) {
 	return ((v2r*)(val)) - 1;
 }
 
+inline void Polygon::CalcData(PolygonData* d) {
+	void* f			  = GetFirst();
+	void* l			  = GetLast();
+	void* c			  = f;
+	void* n			  = GetNext(c);
+	void* p			  = l;
+	int	  s			  = Sign(Det2(*Unwrap(p) - *Unwrap(c), *Unwrap(n) - *Unwrap(c)));
+	real  area		  = 0.0;
+	p				  = c;
+	c				  = n;
+	d->verticesNumber = 0;
+	d->centroid		  = 0.0;
+	do {
+		n = GetNext(c);
+		area += Det2(*Unwrap(c), *Unwrap(n));
+		if(Sign(Det2(*Unwrap(p) - *Unwrap(c), *Unwrap(n) - *Unwrap(c))) != s)
+			d->convexity = 0;
+		++d->verticesNumber;
+		d->centroid = d->centroid + *Unwrap(c);
+		p			= c;
+		c			= n;
+	} while(c != f);
+	d->centroid = d->centroid / (real)d->verticesNumber;
+	if(Abs(area) < EPSILON)
+		d->orientation = PolyOrientation::Deg;
+	else if(area < 0)
+		d->orientation = PolyOrientation::CW;
+	else
+		d->orientation = PolyOrientation::CCW;
+}
+
 v2r* Polygon::UnwrapDef(Polygon*, void* v) { return (v2r*)(v); }
+
+//---------------Ear Clipping------------------------
+
+void EarClippingTriangulator::GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2) {
+	*p0 = _tris[index * 3];
+	*p1 = _tris[index * 3 + 1];
+	*p2 = _tris[index * 3 + 2];
+}
+
+v2r EarClippingTriangulator::GetTri(ui32 index, ui32 pos) { return _tris[index * 3 + pos]; }
 
 void EarClippingTriangulator::_SetUpCntFromPoly() {
 	DirectedPoly poly;
@@ -220,7 +261,7 @@ void EarClippingTriangulator::_SetUpCntFromPoly() {
 
 void EarClippingTriangulator::Alloc(Geo::Polygon* const p, const PolyOrientation o, const ui32 vertn) {
 	_cnt	= (DirectedPoly*)calloc(vertn, sizeof(DirectedPoly));
-	_tris	= (v2f*)calloc((vertn - 2) * 3, sizeof(v2r));
+	_tris	= (v2r*)calloc((vertn - 2) * 3, sizeof(v2r));
 	_poly	= p;
 	_ort	= o;
 	vertNum = vertn;
@@ -244,8 +285,8 @@ void EarClippingTriangulator::Process(bool priorizeFans) {
 	Point** ptsPtr = &pts[0];
 
 	Triangle	  tri;
-	v2f			  vec0;
-	v2f			  vec1;
+	v2r			  vec0;
+	v2r			  vec1;
 	i8			  s;
 	DirectedPoly* c = &_cnt[0];
 	DirectedPoly* tmp;
