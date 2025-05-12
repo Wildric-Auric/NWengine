@@ -82,6 +82,9 @@ NW_PREFIX int NWengineInit() {
 	Batch::Init();
 	Renderer::Init();
 
+	// Other
+	UISys::Init();
+
 	NW_CALL_EX(ON_MAIN_CALL_LOCATION::InitEnd)
 
 	return 0;

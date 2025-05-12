@@ -2,7 +2,6 @@
 #include "Context.h"
 #include "CoordSys.h"
 #include "DefaultAssets.h"
-#include "InlineShader.h"
 #include "Inputs.h"
 #include "Scene.h"
 #include "Sprite.h"
@@ -11,20 +10,20 @@
 #include "UISys.h"
 #include "Utilities.h"
 #include "Window.h"
-#include "keyboard.h"
 
-int64 (*UIItem::DefaultUIItemGetLayerProc)(UIItem*) = [](UIItem* item) -> int64 {
-	return item->obj.GetComponent<Sprite>()->GetSortingLayer();
-};
+int64 UIItem::DefaultUIItemGetLayerProc(UIItem* item) { return item->obj.GetComponent<Sprite>()->GetSortingLayer(); };
+
+v2f UIItem::DefaultUIItemGetSizeProc(UIItem* item) { return item->obj.GetComponent<Sprite>()->GetSize(); }
 
 bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) { return obj->GetComponent<UIWindow>(); }
 
 int UIWindow::UIWindowDrawCallback(void* obj) {
 	UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
+	((GameObject*)obj)->GetComponent<Sprite>()->GetShader()->Use();
+	win->SetShaderParams();
 
 	fMat4 tempview						  = Camera::GetActiveCamera()->viewMatrix; // Temporary, should use UIManager instead
 	Camera::GetActiveCamera()->viewMatrix = fMat4(1.0f);
-
 	Context::EnableStencilTest(1);
 	Context::SetStencilMask(1);
 	Context::ClearStencilBuff();
@@ -33,18 +32,13 @@ int UIWindow::UIWindowDrawCallback(void* obj) {
 	Context::SetStencilFunc(NWStencilBehaviour::NW_EQUAL);
 	win->DrawItems();
 	Context::EnableStencilTest(0);
-
 	Camera::GetActiveCamera()->viewMatrix = tempview;
-
 	return ret;
 }
 
 void UIWindow::DrawItems() {
 	for(auto iter = this->items.begin(); iter != this->items.end(); iter++) {
-		if(iter->type == UIItemType::TITLE) {
-			iter->obj.GetComponent<Text>()->DirectDraw();
-		}
-		iter->obj.Draw();
+		iter->Draw();
 	}
 }
 
@@ -57,33 +51,10 @@ void UIWindow::OnAdd() {
 	Sprite* spr = NW_REQUIRE_COMP(attachedObject, Sprite);
 	spr->SetSize({100, 50});
 	// Set shader
-	InlineShader inlineShader;
-	inlineShader.AppFragGlobal("uniform vec2 uRes");
-	inlineShader.AppFragGlobal("uniform float uTitleHeight = 20.0;");
-	inlineShader.AppFragGlobal("uniform float uBorderWidth = 1.0;");
-	inlineShader.AppFragGlobal("uniform vec4  uCol = vec4(1.0);");
-	inlineShader.AppFragMain("bool ycond = (1.0-uv.y)*uRes.y < uTitleHeight;");
-	inlineShader.AppFragMain("bool condBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;");
-	inlineShader.AppFragMain("condBorder = condBorder || (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;");
-	inlineShader.AppFragMain("vec4 color = ycond ? vec4(1.0,0.0,0.0,1.0) : uCol;");
-	inlineShader.AppFragMain("color = condBorder ? vec4(0.0,0.0,0.0,1.0): color;");
-	inlineShader.SetFragOut("color");
-	inlineShader.Generate();
-	spr->SetShader(inlineShader.GetShader());
+	spr->SetShader(UISys::winShader);
 	Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
 	spr->SetSortingLayerFull(UISys::GetAvailableLayer());
-
-	UIItem* item = AddItem(UIItemType::TITLE, -UISys::layerConsts.windowRange + 1);
-
-	GameObject* obj = &item->obj;
-	Text*		te	= obj->AddComponent<Text>();
-	te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
-	te->isBatched = false;
-	std::string fdir;
-	GetSystemFontDir(&fdir);
-	fdir += "Arial.ttf";
-	te->SetFont({fdir.c_str(), 15}, te->_shader);
-	te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
+	AddItem(UIItemType::TITLE, -UISys::layerConsts.windowRange + 1);
 	attachedObject->SetDrawCallback(UIWindowDrawCallback);
 }
 
@@ -91,18 +62,10 @@ UIItemType UIItem::GetType() { return type; }
 
 int64 UIItem::GetLayer() { return _GetLayerProc(this); }
 
-void UIItem::_SetUp(UIItemType ptype, int64 layer, std::list<UIItem>::iterator it) {
-	if(ptype == UIItemType::TITLE)
-		_GetLayerProc = [](UIItem* item) -> int64 { return item->obj.GetComponent<Text>()->layerOrder; };
-	type  = ptype;
-	_iter = it;
-}
-
-UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
+UIItem* UIWindow::_PushItem(UIItemType type, int64 layer) {
 	// insert at beginning
 	if(items.size() == 0 || items.front().GetLayer() <= layer) {
-		items.push_front({});
-		items.front()._SetUp(type, layer, items.begin());
+		items.emplace_front();
 		return &items.front();
 	}
 	// insert at the middle
@@ -110,13 +73,88 @@ UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
 		if(it->GetLayer() > layer)
 			continue;
 		auto newIt = items.insert(it, {});
-		newIt->_SetUp(type, layer, newIt);
 		return &*newIt;
 	}
 	// insert at the end
-	items.push_back({});
-	(--items.end())->_SetUp(type, layer, --items.end());
+	items.emplace_back();
 	return &items.back();
+}
+
+UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
+	item->type	 = type;
+	item->_owner = this;
+	Sprite* spr	 = GetGameObject()->GetComponent<Sprite>();
+#define gllmbda [](UIItem * item) -> int64
+#define gslmbda [](UIItem * item) -> v2f
+	switch(type) {
+	case UIItemType::TEST_ZONE: {
+		Sprite* spr2 = item->obj.AddComponents<Sprite, Transform>();
+		spr2->SetShader(UISys::colShader);
+		spr2->sortingLayer = spr->sortingLayer + layer;
+		spr2->SetShader(UISys::colShader);
+		spr2->sortingLayer = spr->sortingLayer + layer;
+		break;
+	}
+	case UIItemType::TITLE: {
+		item->_DrawProc		= [](UIItem* item) { item->obj.GetComponent<Text>()->DirectDraw(); };
+		item->_GetLayerProc = gllmbda { return item->_owner->GetLayer(); };
+		item->_GetSizeProc	= gslmbda { return {0.0, 0.0}; };
+		item->_UpdateProc	= [](UIItem* item) {
+			  Text* te = item->obj.GetComponent<Text>();
+			  if(!te->text.size())
+				  return;
+			  fVec2					   s  = item->_owner->GetSize();
+			  NWCoordSys::BoundingBox& bb = te->GetBBRef();
+			  te->SetPosition(item->_owner->GetPosition() + fVec2(-s.x * 0.5 + bb.size.x * 0.5, s.y * 0.5 - bb.size.y * 0.5));
+			  te->UpdateGlyphs(1);
+			  item->obj.GetComponent<Text>()->Update();
+		};
+		GameObject* obj = &item->obj;
+		Text*		te	= obj->AddComponents<Text, Transform>();
+		te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
+		te->isBatched = false;
+		std::string fdir;
+		GetSystemFontDir(&fdir);
+		fdir += "Arial.ttf";
+		te->SetFont({fdir.c_str(), 15}, te->_shader);
+		te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
+		break;
+	}
+	case UIItemType::LABEL: {
+		item->_GetSizeProc	= gslmbda { return item->obj.GetComponent<Text>()->GetBBRef().size; };
+		item->_GetLayerProc = gllmbda { return item->obj.GetComponent<Text>()->layerOrder; };
+		item->_UpdateProc	= [](UIItem* item) {
+			  Text* te = item->obj.GetComponent<Text>();
+			  te->Update();
+			  te->UpdateGlyphs(1);
+			  te->SetPosition(item->obj.GetComponent<Transform>()->GetPosition());
+		};
+
+		item->_DrawProc = [](UIItem* item) { item->obj.GetComponent<Text>()->DirectDraw(); };
+		Text* te		= item->obj.AddComponents<Text, Transform>();
+		te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
+		te->isBatched = false;
+		std::string fdir;
+		GetSystemFontDir(&fdir);
+		fdir += "Arial.ttf";
+		te->SetFont({fdir.c_str(), 15}, te->_shader);
+		te->layerOrder = spr->sortingLayer + layer;
+		te->SetContent("Bombardino Crocodilo");
+		te->UpdateGlyphs(1);
+		break;
+	};
+	default: {
+		break;
+	}
+	}
+	return item;
+}
+#undef gllmbda
+#undef gslmbda
+
+UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
+	UIItem* item = _PushItem(type, layer);
+	return this->_SetUpItem(item, type, layer);
 }
 
 void UIWindow::OnDelete() { Scene::GetCurrent()->DeleteFromCache(UIWindow::CacheConditionHasUIWindow, *attachedObject); }
@@ -165,19 +203,6 @@ fVec2 UIWindow::GetPosition() {
 	return tr->GetPosition();
 }
 
-void UIWindow::_SetTitlePosition() {
-	if(items.size() == 0)
-		return;
-	UIItem& item = items.back();
-	if(item.type != UIItemType::TITLE)
-		return;
-	Text*					 te = item.obj.GetComponent<Text>();
-	fVec2					 s	= GetSize();
-	NWCoordSys::BoundingBox& bb = te->GetBBRef();
-	te->SetPosition(GetPosition() + fVec2(-s.x * 0.5 + bb.size.x * 0.5, s.y * 0.5 - bb.size.y * 0.5));
-	te->UpdateGlyphs(1);
-}
-
 void UIWindow::SetTitle(const char* c) {
 	Text* te = items.back().obj.GetComponent<Text>();
 	te->SetContent(c);
@@ -199,17 +224,11 @@ void UIWindow::Update() {
 	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
 
 	for(UIItem& item : items) {
-		Text* t = item.obj.GetComponent<Text>();
-		if(t) {
-			_SetTitlePosition();
-			t->Update();
-		} else {
-			Sprite* spr = item.obj.GetComponent<Sprite>();
-			fVec2	s	= spr->GetSize();
-			cursor.CalcNextPosition(s);
-			item.obj.GetComponent<Transform>()->SetPosition(cursor.GetAbsolutePos() + fVec2(s.x * 0.5, -s.y * 0.5));
-			cursor.Advance({s.x, 0.0});
-		}
+		fVec2 s = item.GetSize();
+		cursor.CalcNextPosition(s);
+		item.obj.GetComponent<Transform>()->SetPosition(cursor.GetAbsolutePos() + fVec2(s.x * 0.5, -s.y * 0.5));
+		item.Update();
+		cursor.Advance({s.x, 0.0});
 	}
 
 	Sprite*		  spr = attachedObject->GetComponent<Sprite>();
@@ -217,7 +236,6 @@ void UIWindow::Update() {
 	NWin::Window* win = ((NWin::Window*)(Context::window));
 	fVec2		  s	  = fVec2(spr->container.width, spr->container.height);
 	fVec2		  hs  = 0.5 * fVec2(spr->container.width, spr->container.height);
-	SetShaderParams();
 
 	rpos   = -tr->GetPosition() + UISys::curPos;
 	bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON, InputKeyEvent::KeyPressed);

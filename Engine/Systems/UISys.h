@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "keyboard.h"
+#include "Shader.h"
 
 class UIWindow;
 
@@ -13,8 +14,9 @@ struct UILayerConsts {
 
 class UISys {
   public:
-	static UILayerConsts layerConsts;
-
+	static UILayerConsts	layerConsts;
+	static Shader*			colShader;
+	static Shader*			winShader;
 	static GameObject		camContainer;
 	static fVec2			curPos;
 	static int				curStatePriority;

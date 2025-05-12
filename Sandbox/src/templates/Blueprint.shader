@@ -26,11 +26,15 @@ in vec2			  uv;
 out vec4 FragColor;
 
 void main() {
-	vec4 col   = vec4(0.0, 0.0, 1.0, 1.0);
-	vec2 coord = (uv - 0.5) * uResolution;
+	vec4 col		= vec4(0.0, 0.0, 1.0, 1.0);
+	vec2 coord		= (uv - 0.5) * uResolution;
+	vec2 orthocoord = (uv - 0.5);
+	orthocoord.y *= (uResolution.y / uResolution.x);
 	vec2 div   = mod(coord, uCell) / uCell;
 	vec2 tresh = vec2(0.02, 0.02);
 	if(div.x < tresh.x || div.x > 1.0 - tresh.x || div.y < tresh.y || div.y > 1.0 - tresh.y)
 		col = vec4(1.0, 1.0, 1.0, 0.5);
+	if(abs(orthocoord.x) < tresh.x * 0.1 || abs(orthocoord.y) < tresh.y * 0.1)
+		col = vec4(0.1, 1.0, 0.0, 0.8);
 	FragColor = col;
 }

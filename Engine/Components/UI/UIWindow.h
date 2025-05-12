@@ -19,19 +19,27 @@ struct UIWindowMetrics {
 	iVec2 minSize		  = iVec2(20, 20);
 };
 
-enum class UIItemType { NONE, TITLE, TEST_ZONE };
+enum class UIItemType { NONE, TITLE, LABEL, TEST_ZONE };
 
+class UIWindow;
 class UIItem {
   public:
-	UIItemType type;
-	GameObject obj;
-	UIItemType GetType();
-	int64	   GetLayer();
-	void	   _SetUp(UIItemType type, int64 layer, std::list<UIItem>::iterator);
+	UIItemType	type;
+	GameObject	obj;
+	UIWindow*	_owner;
+	UIItemType	GetType();
+	int64		GetLayer();
+	inline v2f	GetSize() { return _GetSizeProc(this); };
+	inline void Update() { _UpdateProc(this); }
+	inline void Draw() { _DrawProc(this); };
 	int64 (*_GetLayerProc)(UIItem*) = DefaultUIItemGetLayerProc;
+	v2f (*_GetSizeProc)(UIItem*)	= DefaultUIItemGetSizeProc;
+	void (*_UpdateProc)(UIItem*)	= [](UIItem*) {};
+	void (*_DrawProc)(UIItem*)		= [](UIItem* iter) { iter->obj.Draw(); };
 	std::list<UIItem>::iterator _iter;
 
-	static int64 (*DefaultUIItemGetLayerProc)(UIItem*);
+	static int64 DefaultUIItemGetLayerProc(UIItem*);
+	static v2f	 DefaultUIItemGetSizeProc(UIItem*);
 };
 
 enum class CurAdvanceStrat {
@@ -80,10 +88,11 @@ class UIWindow : public GameComponent {
 	fVec2		  GetPosition();
 	void		  SetShaderParams();
 	void		  SetTitle(const char* str);
-	void		  _SetTitlePosition();
 	int64		  GetLayer();
 	int64		  GetUIItemLayer(int64 relative);
 
+	UIItem* _PushItem(UIItemType, int64);
+	UIItem* _SetUpItem(UIItem*, UIItemType, int64);
 	UIItem* AddItem(UIItemType, int64);
 	void	DrawItems();
 
