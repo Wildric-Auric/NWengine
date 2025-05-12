@@ -3,13 +3,15 @@
 #include "DefaultAssets.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "InlineShader.h"
 
 // TODO::Default constructor creates the gameobject
+
 void Renderer::SetUp() {
 	Sprite* spr;
 	spr = componentContainer.AddComponent<Sprite>();
 	componentContainer.AddComponent<Transform>();
-	spr->SetShader(ShaderTexturedDefaultStr, &ShaderTexturedDefaultID);
+	spr->SetShader(NW_DEFAULT_SHADER_NO_ALPHA);
 	componentContainer.AddComponent<Camera>();
 	Clear();
 }
