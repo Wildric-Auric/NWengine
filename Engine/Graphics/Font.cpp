@@ -48,8 +48,10 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 	FT_Face f  = (FT_Face)font._face;
 
 	FT_Set_Pixel_Sizes(f, 0, _nativeSize);
+	int tmp;
 	for(uint8 i = 0; i < 128; ++i) {
-		if(FT_Load_Char(f, i, FT_LOAD_RENDER)) {
+		tmp = FT_Load_Char(f, i, FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT);
+		if(tmp) {
 			printf("Error loading character");
 			continue;
 		}
