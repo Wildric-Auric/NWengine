@@ -1,4 +1,4 @@
-#pragma "once"
+#pragma once
 #include "Script.h"
 #include "Globals.h"
 #include "Geometry.h"
