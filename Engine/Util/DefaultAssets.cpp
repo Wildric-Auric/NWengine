@@ -1,10 +1,8 @@
 #include "DefaultAssets.h"
-
-const ShaderText ShaderTexturedDefaultStr = {
+const char* ShaderDefVert =
 	R"V0G0N( 
         #pragma vertex
         #version 330 core
-        
         layout(location = 0) in vec3 attribPos;
         layout(location = 1) in vec2 texCoord;
         
@@ -16,44 +14,40 @@ const ShaderText ShaderTexturedDefaultStr = {
             gl_Position = uMvp * vec4(attribPos, 1.0);
             uv = texCoord;
         };
-)V0G0N",
-	R"V0G0N(        
-        #pragma fragment
-        #version 330 core
-        
-        uniform sampler2D uTex0;
-        in vec2 uv;
-        
-        out vec4 FragColor;
-        
-        void main() {
-            vec4 col = texture(uTex0, uv);
-            if (col.a < 0.1) discard;
-            FragColor = col;
-        };
-        
-)V0G0N"};
-
-const ShaderText ShaderTexturedBatchedDefaultStr = {
+)V0G0N";
+const char* ShaderDefVerBatched =
 	R"V0G0N( 
         #pragma vertex 
         #version 330 core
-        
         layout(location = 0) in vec3  attribPos;
         layout(location = 1) in vec2  texCoord;
         layout(location = 2) in vec3  usrData;
         layout(location = 3) in float sampleIDattrib;
-        
         out vec2  uv;
         out float sampleID;
-        
         void main() {
             gl_Position = vec4(attribPos, 1.0);
             uv = texCoord;
             sampleID  = sampleIDattrib;
         };
-)V0G0N",
-	R"V0G0N(
+)V0G0N";
+
+const ShaderText ShaderTexturedDefaultStr = {ShaderDefVert,
+											 R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        uniform sampler2D uTex0;
+        in vec2 uv;
+        out vec4 FragColor;
+        void main() {
+            vec4 col = texture(uTex0, uv);
+            if (col.a < 0.1) discard;
+            FragColor = col;
+        };
+)V0G0N"};
+
+const ShaderText ShaderTexturedBatchedDefaultStr = {ShaderDefVerBatched,
+													R"V0G0N(
         #pragma fragment 
         #version 330 core
         #pragma def MAX_TEX MaxTexNum
@@ -70,33 +64,14 @@ const ShaderText ShaderTexturedBatchedDefaultStr = {
         }
 )V0G0N"};
 
-const ShaderText ShaderTextDefaultStr = {R"V0G0N( 
-        #pragma vertex 
-        #version 330 core
-
-        layout (location = 0) in vec3 attribPos;
-        layout(location = 1) in vec2 texCoord;
-
-        uniform mat4 uMvp = mat4(1.0);
-
-        out vec2 uv;
-
-        void main() {
-            gl_Position = uMvp * vec4(attribPos, 1.0);
-            uv = texCoord;
-        };
-)V0G0N",
+const ShaderText ShaderTextDefaultStr = {ShaderDefVert,
 										 R"V0G0N(
         #pragma fragment 
         #version 330 core
-
         uniform sampler2D uTex0;
         in vec2 uv;
-
         out vec4 FragColor;
-
         vec3 color = vec3(1.0);
-
         void main(){
             vec4 col = vec4(color,texture(uTex0, vec2(uv.x, 1.0 - uv.y)).x);
             FragColor = col;
@@ -148,6 +123,19 @@ const ShaderText ShaderTextBatchedStr = {
         }
 )V0G0N"};
 
+const ShaderText ShaderTexturedNoAlphaStr{ShaderDefVert,
+										  R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        uniform sampler2D uTex0;
+        in vec2 uv;
+        out vec4 FragColor;
+        void main() {
+            vec3 col  = texture(uTex0, uv).xyz;
+            FragColor = vec4(col,1.0);
+        };
+)V0G0N"};
+
 #define W	  255, 255, 255
 #define WA	  255, 255, 255, 255
 #define R	  255, 0, 0
@@ -168,35 +156,19 @@ static uint8 imageDefaultBuff[] = {
 
 const Image ImageDefault{std::string(), imageDefaultBuff, 3, 16, 16, ALPHA};
 
-TextureIdentifier TextureDefaultID		  = {"DefaultTexture", ALPHA};
-ShaderIdentifier  ShaderTexturedDefaultID = "DefaultShaderTextured";
+TextureIdentifier TextureDefaultID				 = {"DefaultTexture", ALPHA};
+ShaderIdentifier  ShaderTexturedDefaultID		 = "DefaultShaderTextured";
+ShaderIdentifier  ShaderTexturedColoredDefaultID = "DefaultShaderColoredTextured";
+ShaderIdentifier  ShaderTexturedBatchedDefaultID = "DefaultShaderTexturedBatched";
+ShaderIdentifier  ShaderTextDefaultID			 = "DefaultShaderText";
+ShaderIdentifier  ShaderTextBatchedDefaultID	 = "DefaultShaderTextBatched";
+ShaderIdentifier  ShaderTriangleDefaultID		 = "DefaultShaderTriangle";
+ShaderIdentifier  ShaderCircleDefaultID			 = "DefaultShaderCircle";
+ShaderIdentifier  ShaderTexturedNoAlphaID		 = "DefaultShaderTexturedNoAlphaID";
+ShaderIdentifier  ShaderUIWindowID				 = "DefaultShaderUIWindowID";
 
-ShaderIdentifier ShaderTexturedColoredDefaultID = "DefaultShaderColoredTextured";
-
-ShaderIdentifier ShaderTexturedBatchedDefaultID = "DefaultShaderTexturedBatched";
-ShaderIdentifier ShaderTextDefaultID			= "DefaultShaderText";
-ShaderIdentifier ShaderTextBatchedDefaultID		= "DefaultShaderTextBatched";
-
-ShaderIdentifier ShaderTriangleDefaultID = "DefaultShaderTriangle";
-
-ShaderIdentifier ShaderCircleDefaultID	= "DefaultShaderCircle";
-const ShaderText ShaderCircleDefaultStr = {
-	R"V0G0N( 
-        #pragma vertex
-        #version 330 core
-        
-        layout(location = 0) in vec3 attribPos;
-        layout(location = 1) in vec2 texCoord;
-        
-        uniform mat4 uMvp = mat4(1.0); 
-        out vec2 uv;
-        
-        void main() {
-            gl_Position = uMvp * vec4(attribPos, 1.0);
-            uv = texCoord;
-        };
-)V0G0N",
-	R"V0G0N(        
+const ShaderText ShaderCircleDefaultStr = {ShaderDefVert,
+										   R"V0G0N(        
         #pragma fragment
         #version 330 core 
         uniform sampler2D uTex0;
@@ -218,14 +190,11 @@ const ShaderText ShaderTriangleDefaultStr = {
 	R"V0G0N( 
         #pragma vertex
         #version 330 core
-        
         layout(location = 0) in vec3 attribPos;
         layout(location = 1) in vec2 texCoord;
-        
         uniform vec2 uVert[3];
         uniform mat4 uMvp = mat4(1.0); 
         out vec2 uv;
-        
         void main() {
             gl_Position = uMvp * vec4(uVert[gl_VertexID], attribPos.z, 1.0);
             uv = texCoord;
@@ -247,36 +216,38 @@ const ShaderText ShaderTriangleDefaultStr = {
         
 )V0G0N"};
 
-const ShaderText ShaderTexturedColoredDefaultStr = {
-	R"V0G0N( 
-        #pragma vertex
-        #version 330 core
-        
-        layout(location = 0) in vec3 attribPos;
-        layout(location = 1) in vec2 texCoord;
-        
-        uniform mat4 uMvp = mat4(1.0);
-        
-        out vec2 uv;
-        
-        void main() {
-            gl_Position = uMvp * vec4(attribPos, 1.0);
-            uv = texCoord;
-        };
-)V0G0N",
-	R"V0G0N(        
+const ShaderText ShaderTexturedColoredDefaultStr = {ShaderDefVert,
+													R"V0G0N(        
         #pragma fragment
         #version 330 core
-        
         uniform sampler2D  uTex0;
         uniform vec3 uCol = vec3(1.0);
         in vec2 uv;
-        
         out vec4 FragColor;
-        
         void main() {
             vec4 col = texture(uTex0, uv);
             FragColor = col * vec4(uCol,1.0);
         };
-        
+)V0G0N"};
+
+const ShaderText ShaderUIWindowStr{ShaderDefVert,
+								   R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        uniform sampler2D uTex0;
+        uniform vec2 uRes;
+        uniform float uTitleHeight = 20.0;
+        uniform float uBorderWidth = 1.0;
+        uniform vec4  uCol = vec4(1.0);
+        in vec2 uv;
+        out vec4 FragColor;
+        void main() {
+            vec4 col = texture(uTex0, uv);
+            bool ycond = (1.0-uv.y)*uRes.y < uTitleHeight;
+            bool condBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;
+            condBorder = condBorder || (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;
+            vec4 color = ycond ? vec4(1.0,0.0,0.0,1.0) : uCol;
+            color = condBorder ? vec4(0.0,0.0,0.0,1.0) : color;
+            FragColor = color;
+        };
 )V0G0N"};

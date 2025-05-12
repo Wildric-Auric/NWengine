@@ -13,8 +13,6 @@
 // other layers are allocated to the window content.
 //
 
-Shader*		  UISys::winShader;
-Shader*		  UISys::colShader;
 GameObject	  UISys::camContainer;
 fVec2		  UISys::curPos;
 bool		  UISys::clickEvent		 = 0;
@@ -33,26 +31,7 @@ UISysCursorState curState;
 
 void UISys::SetCursorState(UISysCursorState s, int priority) {}
 
-void UISys::Init() {
-	InlineShader colorShader;
-	colorShader.SetFragOut("vec4(1.0,0.0,1.0,1.0)");
-	colorShader.Generate();
-	colShader = colorShader.GetShader();
-
-	InlineShader inlineShader;
-	inlineShader.AppFragGlobal("uniform vec2 uRes");
-	inlineShader.AppFragGlobal("uniform float uTitleHeight = 20.0;");
-	inlineShader.AppFragGlobal("uniform float uBorderWidth = 1.0;");
-	inlineShader.AppFragGlobal("uniform vec4  uCol = vec4(1.0);");
-	inlineShader.AppFragMain("bool ycond = (1.0-uv.y)*uRes.y < uTitleHeight;");
-	inlineShader.AppFragMain("bool condBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;");
-	inlineShader.AppFragMain("condBorder = condBorder || (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;");
-	inlineShader.AppFragMain("vec4 color = ycond ? vec4(1.0,0.0,0.0,1.0) : uCol;");
-	inlineShader.AppFragMain("color = condBorder ? vec4(0.0,0.0,0.0,1.0): color;");
-	inlineShader.SetFragOut("color");
-	inlineShader.Generate();
-	winShader = inlineShader.GetShader();
-}
+void UISys::Init() {}
 
 void UISys::UnFocus() { focusedWindow = 0; }
 

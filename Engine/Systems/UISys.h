@@ -15,8 +15,6 @@ struct UILayerConsts {
 class UISys {
   public:
 	static UILayerConsts	layerConsts;
-	static Shader*			colShader;
-	static Shader*			winShader;
 	static GameObject		camContainer;
 	static fVec2			curPos;
 	static int				curStatePriority;

@@ -51,7 +51,7 @@ void UIWindow::OnAdd() {
 	Sprite* spr = NW_REQUIRE_COMP(attachedObject, Sprite);
 	spr->SetSize({100, 50});
 	// Set shader
-	spr->SetShader(UISys::winShader);
+	spr->SetShader(NW_DEFAULT_SHADER_UI_WINDOW);
 	Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
 	spr->SetSortingLayerFull(UISys::GetAvailableLayer());
 	AddItem(UIItemType::TITLE, -UISys::layerConsts.windowRange + 1);
@@ -88,10 +88,15 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 #define gslmbda [](UIItem * item) -> v2f
 	switch(type) {
 	case UIItemType::TEST_ZONE: {
-		Sprite* spr2 = item->obj.AddComponents<Sprite, Transform>();
-		spr2->SetShader(UISys::colShader);
-		spr2->sortingLayer = spr->sortingLayer + layer;
-		spr2->SetShader(UISys::colShader);
+		Sprite* spr2	= item->obj.AddComponents<Sprite, Transform>();
+		item->_DrawProc = [](UIItem* item) {
+			Sprite* spr2 = item->obj.GetComponent<Sprite>();
+			spr2->SetShader(NW_DEFAULT_SHADER_COLORED);
+			spr2->GetShader()->Use();
+			spr2->GetShader()->SetUniform3f("uCol", 1.0, 0.0, 0.6);
+			item->obj.Draw();
+		};
+		spr2->GetShader()->SetUniform3f("uCol", 1.0, 0.0, 0.0);
 		spr2->sortingLayer = spr->sortingLayer + layer;
 		break;
 	}
@@ -190,8 +195,8 @@ fVec2 UIWindow::GetSize() {
 
 void UIWindow::SetShaderParams() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
+	fVec2	s	= fVec2(spr->container.width, spr->container.height);
 	spr->GetShader()->Use();
-	fVec2 s = fVec2(spr->container.width, spr->container.height);
 	spr->GetShader()->SetVector2("uRes", s.x, s.y);
 	spr->GetShader()->SetUniform1f("uTitleHeight", metrics.titleBarHeight);
 	spr->GetShader()->SetUniform1f("uBorderWidth", metrics.borderWidth);
