@@ -84,9 +84,9 @@ void UISys::Update() {
 	//---------Cursor type logic-----------
 	bool iswinfr = 1;
 	if(focusedWindow)
-		iswinfr = focusedWindow->GetState() == UIWindowState::NONE;
+		iswinfr = focusedWindow->GetState() == 0;
 	win->setCursor(NWin::CursorIcon::ARROW);
-	if(focusedWindow && focusedWindow->GetState() == UIWindowState::RESIZE) {
+	if(focusedWindow && (focusedWindow->GetState() & (Window_State_RESIZE_X | Window_State_RESIZE_Y))) {
 		win->setCursor(NWin::CursorIcon::RESIZE_WE);
 	} else if(iswinfr && hoveredWindow && hoveredWindow->IsCursorOnResize()) {
 		win->setCursor(NWin::CursorIcon::RESIZE_WE);

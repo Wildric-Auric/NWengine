@@ -173,10 +173,36 @@ int UIWindow::IsCursorOnTitleBar() {
 	return lsize.y * 0.5 - relPos.y <= metrics.titleBarHeight;
 }
 
+i32 UIWindow::ComputeResizeState() {
+	Sprite* spr = attachedObject->GetComponent<Sprite>();
+	if(!IsCursorOnWindow())
+		return 0;
+	bool rx = (abs(rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
+	bool ry = (abs(rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
+	i32	 ret;
+	if(rx)
+		ret = ret | (UIWindowState::Window_State_RESIZE_X * ((prop & Window_Prop_ResizableX) != 0));
+	if(ry)
+		ret = ret | (UIWindowState::Window_State_RESIZE_Y * ((prop & Window_Prop_ResizableY) != 0));
+	return ret;
+}
+
+i32 UIWindow::ComputeMoveState() {
+	bool b	 = IsCursorOnTitleBar();
+	i32	 ret = 0;
+	if(b)
+		ret = (Window_State_MOVE_X * ((prop & Window_Prop_MovableX) != 0)) |
+			  (Window_State_MOVE_Y * ((prop & Window_Prop_MovableY) != 0));
+	return ret;
+}
+
 int UIWindow::IsCursorOnResize() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
-	return IsCursorOnWindow() && abs(rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth) ||
-		   abs(rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth);
+	if(!IsCursorOnWindow())
+		return 0;
+	bool rx = (abs(rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
+	bool ry = (abs(rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
+	return (int)rx * ((prop & Window_Prop_ResizableX) != 0) + 2 * (int)ry * ((prop & Window_Prop_ResizableY) != 0);
 }
 
 int UIWindow::IsCursorOnWindow() {
@@ -186,7 +212,7 @@ int UIWindow::IsCursorOnWindow() {
 
 bool UIWindow::IsFocused() { return UISys::focusedWindow == this; }
 
-UIWindowState UIWindow::GetState() { return state; }
+i32 UIWindow::GetState() { return state; }
 
 fVec2 UIWindow::GetSize() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
@@ -225,6 +251,7 @@ void UIWindow::SetSize(const fVec2& pos) {
 }
 
 void UIWindow::Update() {
+	bgCol.x = IsFocused();
 	cursor.SetCursorTopLeftWin();
 	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
 
@@ -242,37 +269,34 @@ void UIWindow::Update() {
 	fVec2		  s	  = fVec2(spr->container.width, spr->container.height);
 	fVec2		  hs  = 0.5 * fVec2(spr->container.width, spr->container.height);
 
-	rpos   = -tr->GetPosition() + UISys::curPos;
-	bool m = Inputs::GetInputMouse(NWin::Key::NWIN_KEY_LBUTTON, InputKeyEvent::KeyPressed);
+	rpos	= -tr->GetPosition() + UISys::curPos;
+	bool m	= UISys::GetClickEvent();
+	bool m1 = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LBUTTON); // UISys::GetIsClick();
 
-	if(IsCursorOnWindow() && UISys::GetClickEvent()) {
+	if(IsCursorOnWindow() && m) {
 		UISys::Focus(this);
 	}
 	if(IsCursorOnWindow()) {
 		UISys::Hover(this);
 	}
 
-	bgCol.x = IsFocused();
-
-	if(state == UIWindowState::NONE && m && IsCursorOnWindow() && UISys::focusedWindow == this) {
-		relPos	= rpos;
-		lsize	= fVec2(spr->container.width, spr->container.height);
-		lpos	= UISys::curPos;
-		lwinPos = tr->GetPosition();
-		if(IsCursorOnTitleBar())
-			state = UIWindowState::MOVE;
-		if(IsCursorOnResize()) {
-			state = UIWindowState::RESIZE;
-		}
+	if(state == 0 && m1 && IsCursorOnWindow() && UISys::focusedWindow == this) {
+		relPos		 = rpos;
+		lsize		 = fVec2(spr->container.width, spr->container.height);
+		lpos		 = UISys::curPos;
+		lwinPos		 = tr->GetPosition();
+		i32 mvState	 = ComputeMoveState();
+		i32 resState = ComputeResizeState();
+		state		 = state | mvState;
+		state		 = state | resState;
 	}
-	if((state != UIWindowState::NONE) && !m) {
-		state = UIWindowState::NONE;
+	if((state != 0) && !m1) {
+		state = 0;
 	}
-	if(state == UIWindowState::MOVE) {
+	if(state & (Window_State_MOVE_X | Window_State_MOVE_Y)) {
 		tr->SetPosition(UISys::GetCurPos() - relPos);
 	}
-	if(state == UIWindowState::RESIZE) {
-		((NWin::Window*)(Context::window))->setCursor(NWin::CursorIcon::RESIZE_WE);
+	if(state & (Window_State_RESIZE_X | Window_State_RESIZE_Y)) {
 		fVec2 ps = UISys::curPos - lpos;
 		ps.x	 = (ps.x);
 		ps.y	 = (ps.y);

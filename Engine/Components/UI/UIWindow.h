@@ -3,12 +3,19 @@
 
 class UIManager;
 
-enum class UIWindowState {
-	NONE,
-	MOVE,
-	RESIZE,
-	RESIZE_X,
-	RESIZE_Y,
+#define SetBitFieldVal(token, off) token = 0x1 << off
+enum UIWindowState : i32 {
+	SetBitFieldVal(Window_State_MOVE_X, 1),
+	SetBitFieldVal(Window_State_MOVE_Y, 2),
+	SetBitFieldVal(Window_State_RESIZE_X, 3),
+	SetBitFieldVal(Window_State_RESIZE_Y, 4),
+};
+
+enum WindowProp : i32 {
+	SetBitFieldVal(Window_Prop_ResizableX, 1),
+	SetBitFieldVal(Window_Prop_ResizableY, 2),
+	SetBitFieldVal(Window_Prop_MovableX, 3),
+	SetBitFieldVal(Window_Prop_MovableY, 4),
 };
 
 struct UIWindowMetrics {
@@ -79,17 +86,19 @@ class UIWindow : public GameComponent {
 
 	void Update() override;
 
-	int			  IsCursorOnTitleBar();
-	int			  IsCursorOnResize();
-	int			  IsCursorOnWindow();
-	bool		  IsFocused();
-	UIWindowState GetState();
-	fVec2		  GetSize();
-	fVec2		  GetPosition();
-	void		  SetShaderParams();
-	void		  SetTitle(const char* str);
-	int64		  GetLayer();
-	int64		  GetUIItemLayer(int64 relative);
+	i32	  ComputeResizeState();
+	i32	  ComputeMoveState();
+	int	  IsCursorOnTitleBar();
+	int	  IsCursorOnWindow();
+	int	  IsCursorOnResize();
+	bool  IsFocused();
+	i32	  GetState();
+	fVec2 GetSize();
+	fVec2 GetPosition();
+	void  SetShaderParams();
+	void  SetTitle(const char* str);
+	int64 GetLayer();
+	int64 GetUIItemLayer(int64 relative);
 
 	UIItem* _PushItem(UIItemType, int64);
 	UIItem* _SetUpItem(UIItem*, UIItemType, int64);
@@ -99,14 +108,18 @@ class UIWindow : public GameComponent {
 	void			 SetPosition(const fVec2&);
 	void			 SetSize(const fVec2&);
 	inline UICursor* GetCursor() { return &cursor; }
+	inline i32		 GetProp() { return prop; }
+	inline i32*		 GetPropRef() { return &prop; }
 
-	UIWindowState state = UIWindowState::NONE;
-	fVec2		  relPos;
-	fVec2		  rpos;
-	fVec2		  lsize;
-	fVec2		  lpos;
-	fVec2		  lwinPos;
-	UICursor	  cursor = UICursor(this);
+	i32 state = 0; // UIWindowState
+	i32 prop  = Window_Prop_ResizableX | Window_Prop_ResizableY;
+
+	fVec2	 relPos;
+	fVec2	 rpos;
+	fVec2	 lsize;
+	fVec2	 lpos;
+	fVec2	 lwinPos;
+	UICursor cursor = UICursor(this);
 
 	fVec4 bgCol			= fVec4(1.0, 1.0, 1.0, 1.0);
 	bool  _tmpisFocused = 0;
