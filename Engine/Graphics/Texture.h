@@ -52,7 +52,9 @@ enum TexMinFilter {
 	NW_MIN_LINEAR			  = 0x2601, /**< Linear minification filter. */
 	NW_MIN_NEAREST			  = 0x2600, /**< Nearest minification filter. */
 	NW_NEAREST_MIPMAP_NEAREST = 0x2700, /**< Nearest minification filter with nearest mipmap. */
-	NW_NEAREST_MIPMAP_LINEAR  = 0x2702	/**< Nearest minification filter with linear mipmap. */
+	NW_NEAREST_MIPMAP_LINEAR  = 0x2702, /**< Nearest minification filter with linear mipmap. */
+	NW_LINEAR_MIPMAP_NEAREST  = 0x2701,
+	NW_LINEAR_MIPMAP_LINEAR	  = 0x2703
 };
 
 enum RWImage {
