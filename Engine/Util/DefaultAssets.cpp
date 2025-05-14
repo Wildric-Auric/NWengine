@@ -71,9 +71,9 @@ const ShaderText ShaderTextDefaultStr = {ShaderDefVert,
         uniform sampler2D uTex0;
         in vec2 uv;
         out vec4 FragColor;
-        vec3 color = vec3(1.0);
+        uniform vec4 uCol = vec4(1.0);
         void main(){
-            vec4 col = vec4(color,texture(uTex0, vec2(uv.x, 1.0 - uv.y)).x);
+            vec4 col = vec4(uCol.xyz, texture(uTex0, vec2(uv.x, 1.0 - uv.y)).x * uCol.a);
             FragColor = col;
         }
 )V0G0N"};
