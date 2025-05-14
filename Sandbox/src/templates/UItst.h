@@ -14,14 +14,16 @@ void AddItems(UIWindow& w) {
 	w.GetCursor()->SetLineBreakSize(20);
 	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
 	Sprite* spr			 = w.GetGameObject()->GetComponent<Sprite>();
-	UIItem* rect		 = w.AddItem(UIItemType::TEST_ZONE, -1);
-	Sprite* spr2		 = rect->obj.GetComponent<Sprite>();
-	rect				 = w.AddItem(UIItemType::TEST_ZONE, -1);
-	w.AddItem(UIItemType::LABEL, -2);
-	spr2->SetSize({30, 20});
+	UIItem* rect;
+	UIItemLabel* label = w.AddItem(UIItemType_Label, -2);
+    label->obj.GetComponent<Text>()->colors = v4f(1.0,0.1,0.0,1.0);
+    label->obj.GetComponent<Text>()->SetContent("Crocodilo");
 
+	rect = w.AddItem(UIItemType_TestZone, -1);
+    rect->_LateUpdateProc = [](UIItem* item) {item->_owner->cursor.SetCursorOnNextLineBeg();};
+    rect->obj.GetComponent<Sprite>()->SetSize({60,10});
 	for(int i = 0; i < 10; ++i) {
-		rect = w.AddItem(UIItemType::TEST_ZONE, -1);
+		rect = w.AddItem(UIItemType_TestZone, -1);
 	}
 }
 

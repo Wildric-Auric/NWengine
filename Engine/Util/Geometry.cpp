@@ -1,5 +1,7 @@
 #include "Geometry.h"
 #include <malloc.h>
+#include <list>
+#include <vector>
 
 #define nwfree(c)                                                                                                                \
 	{                                                                                                                            \
@@ -67,7 +69,7 @@ int Segment::Intersect(const Segment& other, v2r* i) {
 		real b1	 = other.GetYIntercept();
 		bool ret = 0;
 		i->x	 = (b1 - b0) / (m0 - m1);
-		i->y	 = Evaluate(i->y);
+		i->y	 = Evaluate(i->x);
 	}
 
 	return (i->x >= Max(Min(GetFst()->x, GetSec()->x), Min(other.GetFst()->x, other.GetSec()->x)) &&
@@ -113,6 +115,29 @@ bool Triangle::IsDegenerate() {
 	v2r b = *GetPt(1);
 	v2r c = *GetPt(2);
 	return ABS(Det2(b - a, b - c)) < GEO_EPS;
+}
+
+v2r  Triangle::CalcCircCenter() {
+	v2r a = *GetPt(0);
+	v2r b = *GetPt(1);
+	v2r c = *GetPt(2);
+    v2r va= (a-b);
+    v2r vb= (a-c);
+    v2r mpa = (a+b)*0.5;
+    v2r mpb = (a+c)*0.5;
+    va = v2r(-va.y,va.x);
+    vb = v2r(-vb.y,vb.x);
+    v2r mpas = mpa + va;
+    v2r mpbs = mpb + vb;
+    Point mpapt0; mpapt0.Set(&mpa);
+    Point mpapt1; mpapt1.Set(&mpas);
+    Segment la(&mpapt0, &mpapt1);
+    Point mpbpt0; mpbpt0.Set(&mpb);
+    Point mpbpt1; mpbpt1.Set(&mpbs);
+    Segment lb(&mpbpt0, &mpbpt1);
+    v2r insct;
+    la.Intersect(lb, &insct);
+    return insct;
 }
 //-----------------Polygon-----------------
 
@@ -344,5 +369,122 @@ void EarClippingTriangulator::Process(bool priorizeFans) {
 	ti += 3;
 	triNum = ti / 3;
 }
+
+//---------------Delaunay---------------
+
+void DelaunayTriangulator::GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2) {
+    *p0 = _tris[index * 3 + 0];
+    *p1 = _tris[index * 3 + 1];
+    *p2 = _tris[index * 3 + 2];
+}
+void DelaunayTriangulator::Alloc(PointSet* const s, const ui32 num) {
+    ptsNum = num;
+    _ptSet = s;
+    _tris = (v2r*)calloc((2*num+1)*3, sizeof(v2r));
+}
+void DelaunayTriangulator::Clean() {
+    nwfree(_tris);
+}
+void DelaunayTriangulator::Process() {
+    TriangleData trid;
+    ComputeSuperTriangle(&trid);
+    Process(trid);
+}
+
+void DelaunayTriangulator::_AddTri(Triangle& tri) {
+    _tris[triNum*3+0] = *tri.GetPt(0); 
+    _tris[triNum*3+1] = *tri.GetPt(1); 
+    _tris[triNum*3+2] = *tri.GetPt(2); 
+    triNum = triNum+3;
+}
+
+void DelaunayTriangulator::_AddTri(TriangleData& tri) {
+    _tris[triNum*3+0] = tri.pts[0]; 
+    _tris[triNum*3+1] = tri.pts[1]; 
+    _tris[triNum*3+2] = tri.pts[2]; 
+    triNum = triNum+3;
+}
+
+void DelaunayTriangulator::Process(TriangleData& superTri) {
+    void* f = _ptSet->GetFirst();
+    void* l = _ptSet->GetLast();
+    void* c = f;
+    void* n;
+    v2r uc;
+    TriangleData tri    = superTri;
+    std::list<TriangleData> tris;
+    std::vector<v2r> pttmp;
+    tris.push_back(superTri);
+    Point pt[3];
+    Point* ptr[3];
+    Triangle tr;
+    v2r center;
+    real dist;
+    real rad;
+    for (int i = 0; i < ptsNum; ++i) {
+        n = _ptSet->GetNext(c);
+        uc = *_ptSet->Unwrap(c);
+        pttmp.clear();
+        for (auto tri = tris.begin(); tri != tris.end();) {
+            pt[0].Set(&tri->pts[0]);
+            pt[1].Set(&tri->pts[1]);
+            pt[2].Set(&tri->pts[2]);
+            ptr[0] = &pt[0]; ptr[1] = &pt[1]; ptr[2] = &pt[2];
+            tr.Set(ptr);
+            center = tr.CalcCircCenter();
+            dist = (center - uc).magnitude();
+            rad  = (center - *tr.GetPt(0)).magnitude();
+            if (dist >= rad) {++tri; continue;}
+            tri = tris.erase(tri);
+            pttmp.push_back(*pt[0].Get()); 
+            pttmp.push_back(*pt[1].Get()); 
+            pttmp.push_back(*pt[2].Get());
+        }
+        if (pttmp.size() == 0) {
+            c = n;
+            continue; 
+        }
+        for (int x = 0; x < pttmp.size()-1; x++) {
+            for (int y = x+1; y < pttmp.size(); y++) {
+                tris.push_back({{uc,pttmp[x],pttmp[y]}}) ;
+            }
+        }
+    } 
+    for (TriangleData& d : tris) {
+        _tris[index++] = d.pts[0];
+        _tris[index++] = d.pts[1];
+        _tris[index++] = d.pts[2];
+    }
+}
+
+void DelaunayTriangulator::ComputeSuperTriangle(TriangleData* tri) {
+    void* f = _ptSet->GetFirst();
+    void* c = f; 
+    void* n; ;
+    v2r v; //unwrapped value
+    v2r rx; //range of x
+    v2r ry; //range of y
+    do {
+        n = _ptSet->GetNext(c);
+        v = *_ptSet->Unwrap(c);
+        rx.x = MMIN(rx.x, v.x);
+        rx.y = MMAX(rx.y, v.x);
+        ry.x = MMIN(ry.x, v.y);
+        ry.y = MMAX(ry.y, v.y);
+        c = n;
+    } while(c != f);
+    tri->pts[0].x = (rx.x + rx.y)*0.5;
+    tri->pts[0].y = (-ry.x + ry.y) + ry.y;
+    tri->pts[1].x = rx.y + (rx.y-rx.x)*0.5;
+    tri->pts[1].y = ry.x;
+    tri->pts[2].x = rx.x - (rx.y-rx.x)*0.5;
+    tri->pts[2].y = ry.x;
+    
+    tri->pts[2].x -= supOffset;
+    tri->pts[2].y -= supOffset;
+    tri->pts[1].x += supOffset;
+    tri->pts[1].y -= supOffset;
+}
+
 } // namespace Geo
 #undef nwfree

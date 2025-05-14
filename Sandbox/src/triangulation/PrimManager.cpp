@@ -25,8 +25,13 @@ static TriEdge*	 edge;
 static TriEdge*	 fedge;
 
 void PrimManager::_TestEdges() {
-	if(!Inputs::GetInputOnKeyRelease('B') && !Inputs::GetInputKeyPressed('X') && !Inputs::GetInputOnKeyRelease('T'))
+	if(!Inputs::GetInputOnKeyRelease('B') 
+    && !Inputs::GetInputKeyPressed('X') 
+    && !Inputs::GetInputOnKeyRelease('T')
+    && !Inputs::GetInputOnKeyRelease('S')
+    && !Inputs::GetInputOnKeyRelease('A'))
 		return;
+    if (!lines.size()) return;
 	if(Inputs::GetInputKeyPressed('C')) {
 		addr e	 = edges.GetFirst();
 		int	 sss = 0;
@@ -87,6 +92,70 @@ void PrimManager::_TestEdges() {
 		Triangulate(poly);
 		return;
 	}
+
+    if (Inputs::GetInputOnKeyRelease('S')) {
+        Geo::DelaunayTriangulator ttr;
+        Geo::TriangleData trid;
+        Geo::Triangle tri;
+        ttr.Alloc(&poly, pts.size());
+        ttr.ComputeSuperTriangle(&trid);
+        AddPoint().SetUp(trid.pts[0]); 
+        AddPoint().SetUp(trid.pts[1]); 
+        AddPoint().SetUp(trid.pts[2]); 
+#define UNW(i) trid.pts[i].x, trid.pts[i].y
+        printf("%lf %lf | %lf %lf | %lf %lf\n", UNW(0), UNW(1), UNW(2));
+#undef UNW
+        ttr.Clean();
+        Geo::Point pts[3];
+        Geo::Point* ptr[3];
+        pts[0].Set(&trid.pts[0]);
+        pts[1].Set(&trid.pts[1]);
+        pts[2].Set(&trid.pts[2]);
+        ptr[0] = &pts[0];
+        ptr[1] = &pts[1];
+        ptr[2] = &pts[2];
+        tri.Set(ptr);
+        GameObject* obj = Scene::currentScene->GetGameObject("disc");
+        if (obj) {
+            v2r cntr = tri.CalcCircCenter();
+            obj->GetComponent<CircleRenderer>()->SetPosition(cntr); 
+            obj->GetComponent<CircleRenderer>()->SetRadius((cntr - *tri.GetPt(0)).magnitude());
+            obj->GetComponent<Sprite>()->Render();
+        }
+        return;
+    }
+
+    if (Inputs::GetInputOnKeyRelease('A')) {
+        Geo::DelaunayTriangulator ttr;
+        Geo::TriangleData trid;
+        Geo::Triangle tri;
+
+        trid.pts[0] = *(this->pts.front().GetRef());
+        trid.pts[1] = *((++this->pts.begin())->GetRef());
+        trid.pts[2] = *((++(++this->pts.begin()))->GetRef());
+
+        printf("%d\n", this->pts.size()); //TODO::Del
+        AddPoint().SetUp(trid.pts[0]); 
+        AddPoint().SetUp(trid.pts[1]); 
+        AddPoint().SetUp(trid.pts[2]); 
+        Geo::Point pts[3];
+        Geo::Point* ptr[3];
+        pts[0].Set(&trid.pts[0]);
+        pts[1].Set(&trid.pts[1]);
+        pts[2].Set(&trid.pts[2]);
+        ptr[0] = &pts[0];
+        ptr[1] = &pts[1];
+        ptr[2] = &pts[2];
+        tri.Set(ptr);
+        GameObject* obj = Scene::currentScene->GetGameObject("disc");
+        if (obj) {
+            v2r cntr = tri.CalcCircCenter();
+            obj->GetComponent<CircleRenderer>()->SetPosition(cntr); 
+            obj->GetComponent<CircleRenderer>()->SetRadius((cntr - *tri.GetPt(0)).magnitude());
+            obj->GetComponent<Sprite>()->Render();
+        }
+
+    }
 
 	//---------
 	if(Inputs::GetInputOnKeyRelease('B')) {
@@ -156,6 +225,10 @@ void PrimManager::Clean() {
 	last  = 0;
 	edge  = 0;
 	fedge = 0;
+    
+    GameObject* obj = Scene::currentScene->GetGameObject("disc");
+    if (obj)
+        obj->GetComponent<Sprite>()->StopRendering();
 }
 
 void PrimManager::Process() {

@@ -15,13 +15,14 @@
 
 GameObject	  UISys::camContainer;
 fVec2		  UISys::curPos;
-bool		  UISys::clickEvent		 = 0;
-bool		  UISys::isResposive	 = 1;
-NWin::Key	  UISys::clickKey		 = NWin::Key::NWIN_KEY_LBUTTON;
-UIWindow*	  UISys::focusedWindow	 = 0;
-UIWindow*	  UISys::topMostSelected = 0;
-UIWindow*	  UISys::hoveredWindow	 = 0;
-UIWindow*	  UISys::topMostHovered	 = 0;
+bool		  UISys::clickEvent			  = 0;
+bool		  UISys::clickContinuousEvent = 0;
+bool		  UISys::isResposive		  = 1;
+NWin::Key	  UISys::clickKey			  = NWin::Key::NWIN_KEY_LBUTTON;
+UIWindow*	  UISys::focusedWindow		  = 0;
+UIWindow*	  UISys::topMostSelected	  = 0;
+UIWindow*	  UISys::hoveredWindow		  = 0;
+UIWindow*	  UISys::topMostHovered		  = 0;
 UILayerConsts UISys::layerConsts;
 
 int				 UISys::curStatePriority = 0;
@@ -48,8 +49,9 @@ void UISys::Update() {
 	curPos			  = Inputs::GetMousePosition();
 	fVec2 scr;
 	Context::GetWinDrawAreaSize(&scr);
-	curPos	   = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
-	clickEvent = win->_getKeyboard().onKeyPress(clickKey);
+	curPos				 = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
+	clickEvent			 = Inputs::GetInputOnKeyPress(clickKey);
+	clickContinuousEvent = Inputs::GetInputKeyPressed(clickKey);
 	//-----------Set focus and hover logic-----------
 	struct MapProcData {
 		UIWindow* win;
@@ -94,6 +96,7 @@ void UISys::Update() {
 }
 
 bool UISys::GetClickEvent() { return clickEvent; }
+bool UISys::GetIsClicking() { return clickContinuousEvent; }
 
 fVec2 UISys::GetCurPos() { return curPos; }
 

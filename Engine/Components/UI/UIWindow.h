@@ -18,6 +18,29 @@ enum WindowProp : i32 {
 	SetBitFieldVal(Window_Prop_MovableY, 4),
 };
 
+enum ItemProp : i32 {
+    SetBitFieldVal(Item_Prop_Selectable,1)
+};
+
+enum UIItemState : i32 {
+    SetBitFieldVal(Item_State_Selected,1)
+};
+
+#undef SetBitFieldVal
+
+enum class CurAdvanceStrat {
+	None,
+	BreakOnHorizontalEnd,
+    FixedWidth
+};
+
+enum UIItemType { UIItemType_None, UIItemType_Title, UIItemType_Label, UIItemType_TestZone };
+
+class UIItem;
+
+typedef UIItem UIItemLabel;
+typedef UIItem UIItemTestZone;
+
 struct UIWindowMetrics {
 	int	  titleBarHeight  = 20;
 	int	  resizeAreaWidth = 5;
@@ -26,32 +49,28 @@ struct UIWindowMetrics {
 	iVec2 minSize		  = iVec2(20, 20);
 };
 
-enum class UIItemType { NONE, TITLE, LABEL, TEST_ZONE };
-
 class UIWindow;
 class UIItem {
   public:
 	UIItemType	type;
+    ItemProp    prop;
 	GameObject	obj;
 	UIWindow*	_owner;
 	UIItemType	GetType();
 	int64		GetLayer();
 	inline v2f	GetSize() { return _GetSizeProc(this); };
 	inline void Update() { _UpdateProc(this); }
+    inline void LateUpdate() {_LateUpdateProc(this);}
 	inline void Draw() { _DrawProc(this); };
 	int64 (*_GetLayerProc)(UIItem*) = DefaultUIItemGetLayerProc;
-	v2f (*_GetSizeProc)(UIItem*)	= DefaultUIItemGetSizeProc;
+	v2f  (*_GetSizeProc)(UIItem*)	= DefaultUIItemGetSizeProc;
 	void (*_UpdateProc)(UIItem*)	= [](UIItem*) {};
+	void (*_LateUpdateProc)(UIItem*)= [](UIItem*) {};
 	void (*_DrawProc)(UIItem*)		= [](UIItem* iter) { iter->obj.Draw(); };
 	std::list<UIItem>::iterator _iter;
 
 	static int64 DefaultUIItemGetLayerProc(UIItem*);
 	static v2f	 DefaultUIItemGetSizeProc(UIItem*);
-};
-
-enum class CurAdvanceStrat {
-	None,
-	BreakOnHorizontalEnd,
 };
 
 class UIWindow;
@@ -61,12 +80,14 @@ class UICursor {
 	UICursor(UIWindow*);
 	fVec2			origin		  = 0;
 	fVec2			pos			  = fVec2(0.0, 0.0);
+    float           fixedWidth    = 200.0f;
 	float			lineBreakSize = 0.0;
 	UIWindow*		win;
 	CurAdvanceStrat strat;
 	void			SetWindow(UIWindow*);
 	void			SetPos(const fVec2&);
 	void			SetCursorTopLeftWin();
+    void            SetCursorOnNextLineBeg();
 	void			Advance(const fVec2&);
 	void			SetLineBreakSize(const float);
 	fVec2			GetAbsolutePos();
@@ -112,20 +133,24 @@ class UIWindow : public GameComponent {
 	inline i32*		 GetPropRef() { return &prop; }
 
 	i32 state = 0; // UIWindowState
-	i32 prop  = Window_Prop_ResizableX | Window_Prop_ResizableY;
+	i32 prop  = Window_Prop_MovableX | Window_Prop_MovableY | Window_Prop_ResizableX | Window_Prop_ResizableY;
 
-	fVec2	 relPos;
-	fVec2	 rpos;
-	fVec2	 lsize;
-	fVec2	 lpos;
-	fVec2	 lwinPos;
+    v2f     relPos;
+	v2f     rpos;
+	v2f     lsize;
+	v2f     lpos;
+	v2f     lwinPos;
+
+    v2f     lPosItemBfSelect;
+    
 	UICursor cursor = UICursor(this);
 
 	fVec4 bgCol			= fVec4(1.0, 1.0, 1.0, 1.0);
 	bool  _tmpisFocused = 0;
 
 	UIWindowMetrics	  metrics;
-	std::list<UIItem> items;
+	std::list<UIItem>   items;
+    std::vector<UIItem*> itemsOrd;
 
 	UIManager* attachedUIManager = 0;
 

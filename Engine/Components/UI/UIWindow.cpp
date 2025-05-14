@@ -54,7 +54,7 @@ void UIWindow::OnAdd() {
 	spr->SetShader(NW_DEFAULT_SHADER_UI_WINDOW);
 	Scene::GetCurrent()->AddToCache(UIWindow::CacheConditionHasUIWindow, *attachedObject);
 	spr->SetSortingLayerFull(UISys::GetAvailableLayer());
-	AddItem(UIItemType::TITLE, -UISys::layerConsts.windowRange + 1);
+	AddItem(UIItemType_Title, -UISys::layerConsts.windowRange + 1);
 	attachedObject->SetDrawCallback(UIWindowDrawCallback);
 }
 
@@ -87,7 +87,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 #define gllmbda [](UIItem * item) -> int64
 #define gslmbda [](UIItem * item) -> v2f
 	switch(type) {
-	case UIItemType::TEST_ZONE: {
+	case UIItemType_TestZone: {
 		Sprite* spr2	= item->obj.AddComponents<Sprite, Transform>();
 		item->_DrawProc = [](UIItem* item) {
 			Sprite* spr2 = item->obj.GetComponent<Sprite>();
@@ -100,8 +100,13 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		spr2->sortingLayer = spr->sortingLayer + layer;
 		break;
 	}
-	case UIItemType::TITLE: {
-		item->_DrawProc		= [](UIItem* item) { item->obj.GetComponent<Text>()->DirectDraw(); };
+	case UIItemType_Title: {
+		item->_DrawProc	= [](UIItem* item) { 
+            Text* te = item->obj.GetComponent<Text>();
+            te->GetShader()->Use();
+            te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z, te->colors.a);
+            te->DirectDraw(); 
+        };
 		item->_GetLayerProc = gllmbda { return item->_owner->GetLayer(); };
 		item->_GetSizeProc	= gslmbda { return {0.0, 0.0}; };
 		item->_UpdateProc	= [](UIItem* item) {
@@ -125,7 +130,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
 		break;
 	}
-	case UIItemType::LABEL: {
+	case UIItemType_Label: {
 		item->_GetSizeProc	= gslmbda { return item->obj.GetComponent<Text>()->GetBBRef().size; };
 		item->_GetLayerProc = gllmbda { return item->obj.GetComponent<Text>()->layerOrder; };
 		item->_UpdateProc	= [](UIItem* item) {
@@ -135,7 +140,13 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 			  te->SetPosition(item->obj.GetComponent<Transform>()->GetPosition());
 		};
 
-		item->_DrawProc = [](UIItem* item) { item->obj.GetComponent<Text>()->DirectDraw(); };
+		item->_DrawProc = [](UIItem* item) { 
+            Text* te = item->obj.GetComponent<Text>();
+            te->GetShader()->Use();
+            te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z,
+                    te->colors.a); //TODO::Make this automatic
+            te->DirectDraw(); 
+        };
 		Text* te		= item->obj.AddComponents<Text, Transform>();
 		te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
 		te->isBatched = false;
@@ -144,8 +155,6 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		fdir += "Arial.ttf";
 		te->SetFont({fdir.c_str(), 15}, te->_shader);
 		te->layerOrder = spr->sortingLayer + layer;
-		te->SetContent("Bombardino Crocodilo");
-		te->UpdateGlyphs(1);
 		break;
 	};
 	default: {
@@ -159,6 +168,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 
 UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
 	UIItem* item = _PushItem(type, layer);
+    itemsOrd.push_back(item);
 	return this->_SetUpItem(item, type, layer);
 }
 
@@ -251,27 +261,28 @@ void UIWindow::SetSize(const fVec2& pos) {
 }
 
 void UIWindow::Update() {
+	bool m	= UISys::GetClickEvent();
+	bool m1 = UISys::GetIsClicking();
+
 	bgCol.x = IsFocused();
 	cursor.SetCursorTopLeftWin();
 	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
-
-	for(UIItem& item : items) {
+	for(UIItem* it: itemsOrd) {
+        UIItem& item = *it;
 		fVec2 s = item.GetSize();
 		cursor.CalcNextPosition(s);
 		item.obj.GetComponent<Transform>()->SetPosition(cursor.GetAbsolutePos() + fVec2(s.x * 0.5, -s.y * 0.5));
 		item.Update();
 		cursor.Advance({s.x, 0.0});
+        item.LateUpdate();
 	}
 
 	Sprite*		  spr = attachedObject->GetComponent<Sprite>();
 	Transform*	  tr  = attachedObject->GetComponent<Transform>();
-	NWin::Window* win = ((NWin::Window*)(Context::window));
 	fVec2		  s	  = fVec2(spr->container.width, spr->container.height);
 	fVec2		  hs  = 0.5 * fVec2(spr->container.width, spr->container.height);
 
 	rpos	= -tr->GetPosition() + UISys::curPos;
-	bool m	= UISys::GetClickEvent();
-	bool m1 = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LBUTTON); // UISys::GetIsClick();
 
 	if(IsCursorOnWindow() && m) {
 		UISys::Focus(this);
@@ -338,27 +349,32 @@ void UICursor::Advance(const fVec2& p) {
 }
 
 bool UICursor::CalcNextPosition(const fVec2 offset) {
-	fVec2 lpos = pos;
-	fVec2 temp = pos + offset;
-	pos		   = temp;
-	// CalcAdvanceBr();
-	if(pos == temp) {
-		pos = lpos;
-		return 0;
-	}
+    lineBreakSize = Max(lineBreakSize,offset.y);
 	return 1;
 }
 
 void UICursor::CalcAdvanceBr() {
-	if(strat == CurAdvanceStrat::None)
-		return;
-	if(strat == CurAdvanceStrat::BreakOnHorizontalEnd) {
-		if(pos.x < win->GetSize().x * 0.5)
-			return;
-		pos.x = origin.x + win->metrics.itemSpacing.x;
-		pos.y -= lineBreakSize;
-		pos.y -= win->metrics.itemSpacing.y;
-	}
+    switch (strat) {
+        case CurAdvanceStrat::None:
+		    return;
+        case CurAdvanceStrat::BreakOnHorizontalEnd:
+            if(pos.x < win->GetSize().x * 0.5)
+                return;
+            SetCursorOnNextLineBeg();
+            break;
+        case CurAdvanceStrat::FixedWidth:
+            if (pos.x < fixedWidth)
+                return;
+            SetCursorOnNextLineBeg();
+            break;
+    }
+}
+
+void UICursor::SetCursorOnNextLineBeg() {
+    pos.x = origin.x + win->metrics.itemSpacing.x;
+    pos.y -= lineBreakSize;
+    pos.y -= win->metrics.itemSpacing.y;
+    lineBreakSize = 0;
 }
 
 void UICursor::SetLineBreakSize(const float v) { lineBreakSize = v; }
