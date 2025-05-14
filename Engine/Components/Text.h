@@ -25,6 +25,7 @@ struct TextConstraintIterData {
 	fVec2 cur;
 	int	  lineNum	  = 1;
 	int	  lastBearing = 0;
+	int	  br		  = 0;
 };
 
 typedef void (*CharacterUpdateCallback)(Character*, TextIterData*);
@@ -178,5 +179,6 @@ class Text : public GameComponent {
 	 */
 	fVec2 scale = fVec2(1.0f, 1.0f);
 
+	float					lngstline = 0.0f;
 	NWCoordSys::BoundingBox _bb;
 };
