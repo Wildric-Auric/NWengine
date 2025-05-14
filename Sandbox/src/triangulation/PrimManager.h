@@ -73,6 +73,7 @@ class PrimManager : public Scriptable {
 	void	  Update() override;
 	void	  MakeLineOnClick();
 	void	  Process();
+    TriPoint* FindPt(const v2r&);
 	void	  Triangulate(Geo::Polygon&);
 	void	  Clean();
 
