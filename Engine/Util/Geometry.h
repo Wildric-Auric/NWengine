@@ -37,7 +37,7 @@ class Segment {
 };
 
 struct TriangleData {
-    v2r pts[3];
+	v2r pts[3];
 };
 
 class Triangle {
@@ -57,7 +57,7 @@ class Triangle {
 	bool IsPtInside(const v2r&);
 	bool IsPtInsideStrict(const v2r&);
 	bool IsDegenerate();
-    v2r  CalcCircCenter();
+	v2r	 CalcCircCenter();
 };
 
 enum PolyOrientation {
@@ -140,25 +140,25 @@ class EarClippingTriangulator {
 };
 
 class DelaunayTriangulator {
-    public:
-    PointSet* _ptSet;
-    v2r* _tris;
-    ui32 triNum = 0;
-    ui32 index  = 0;
-    ui32 ptsNum = 0;
-    real supOffset = 10.0f;
+  public:
+	PointSet* _ptSet;
+	v2r*	  _tris;
+	ui32	  triNum	= 0;
+	ui32	  index		= 0;
+	ui32	  ptsNum	= 0;
+	real	  supOffset = 10.0f;
 
-    inline ui32 GetTriNum() { return triNum;}
-    inline v2r* GetTris() {return _tris;}
-    inline v2r GetTri(ui32 index, ui32 pos) {return _tris[index * 3 + pos];}
-    void _AddTri(Triangle& tri);
-    void _AddTri(TriangleData& tri);
-    void GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2);
-    void Alloc(PointSet* const, const ui32 num);
-    void Clean();
-    void Process();
-    void Process(TriangleData& tri);
-    void ComputeSuperTriangle(TriangleData*);
+	inline ui32 GetTriNum() { return triNum; }
+	inline v2r* GetTris() { return _tris; }
+	inline v2r	GetTri(ui32 index, ui32 pos) { return _tris[index * 3 + pos]; }
+	void		_AddTri(Triangle& tri);
+	void		_AddTri(TriangleData& tri);
+	void		GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2);
+	void		Alloc(PointSet* const, const ui32 num);
+	void		Clean();
+	void		Process();
+	void		Process(TriangleData& tri);
+	void		ComputeSuperTriangle(TriangleData*);
 };
 
 } // namespace Geo

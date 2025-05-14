@@ -13,15 +13,15 @@ Camera* camC;
 void AddItems(UIWindow& w) {
 	w.GetCursor()->SetLineBreakSize(20);
 	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
-	Sprite* spr			 = w.GetGameObject()->GetComponent<Sprite>();
-	UIItem* rect;
-	UIItemLabel* label = w.AddItem(UIItemType_Label, -2);
-    label->obj.GetComponent<Text>()->colors = v4f(1.0,0.1,0.0,1.0);
-    label->obj.GetComponent<Text>()->SetContent("Crocodilo");
+	Sprite*		 spr	 = w.GetGameObject()->GetComponent<Sprite>();
+	UIItem*		 rect;
+	UIItemLabel* label						= w.AddItem(UIItemType_Label, -2);
+	label->obj.GetComponent<Text>()->colors = v4f(1.0, 0.1, 0.0, 1.0);
+	label->obj.GetComponent<Text>()->SetContent("Crocodilo");
 
-	rect = w.AddItem(UIItemType_TestZone, -1);
-    rect->_LateUpdateProc = [](UIItem* item) {item->_owner->cursor.SetCursorOnNextLineBeg();};
-    rect->obj.GetComponent<Sprite>()->SetSize({60,10});
+	rect				  = w.AddItem(UIItemType_TestZone, -1);
+	rect->_LateUpdateProc = [](UIItem* item) { item->_owner->cursor.SetCursorOnNextLineBeg(); };
+	rect->obj.GetComponent<Sprite>()->SetSize({60, 10});
 	for(int i = 0; i < 10; ++i) {
 		rect = w.AddItem(UIItemType_TestZone, -1);
 	}

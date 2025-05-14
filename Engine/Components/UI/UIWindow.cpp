@@ -101,12 +101,12 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		break;
 	}
 	case UIItemType_Title: {
-		item->_DrawProc	= [](UIItem* item) { 
-            Text* te = item->obj.GetComponent<Text>();
-            te->GetShader()->Use();
-            te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z, te->colors.a);
-            te->DirectDraw(); 
-        };
+		item->_DrawProc = [](UIItem* item) {
+			Text* te = item->obj.GetComponent<Text>();
+			te->GetShader()->Use();
+			te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z, te->colors.a);
+			te->DirectDraw();
+		};
 		item->_GetLayerProc = gllmbda { return item->_owner->GetLayer(); };
 		item->_GetSizeProc	= gslmbda { return {0.0, 0.0}; };
 		item->_UpdateProc	= [](UIItem* item) {
@@ -140,14 +140,14 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 			  te->SetPosition(item->obj.GetComponent<Transform>()->GetPosition());
 		};
 
-		item->_DrawProc = [](UIItem* item) { 
-            Text* te = item->obj.GetComponent<Text>();
-            te->GetShader()->Use();
-            te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z,
-                    te->colors.a); //TODO::Make this automatic
-            te->DirectDraw(); 
-        };
-		Text* te		= item->obj.AddComponents<Text, Transform>();
+		item->_DrawProc = [](UIItem* item) {
+			Text* te = item->obj.GetComponent<Text>();
+			te->GetShader()->Use();
+			te->GetShader()->SetUniform4f("uCol", te->colors.x, te->colors.y, te->colors.z,
+										  te->colors.a); // TODO::Make this automatic
+			te->DirectDraw();
+		};
+		Text* te = item->obj.AddComponents<Text, Transform>();
 		te->SetShader(ShaderTextDefaultStr, &ShaderTextDefaultID);
 		te->isBatched = false;
 		std::string fdir;
@@ -168,7 +168,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 
 UIItem* UIWindow::AddItem(UIItemType type, int64 layer) {
 	UIItem* item = _PushItem(type, layer);
-    itemsOrd.push_back(item);
+	itemsOrd.push_back(item);
 	return this->_SetUpItem(item, type, layer);
 }
 
@@ -267,22 +267,22 @@ void UIWindow::Update() {
 	bgCol.x = IsFocused();
 	cursor.SetCursorTopLeftWin();
 	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
-	for(UIItem* it: itemsOrd) {
-        UIItem& item = *it;
-		fVec2 s = item.GetSize();
+	for(UIItem* it : itemsOrd) {
+		UIItem& item = *it;
+		fVec2	s	 = item.GetSize();
 		cursor.CalcNextPosition(s);
 		item.obj.GetComponent<Transform>()->SetPosition(cursor.GetAbsolutePos() + fVec2(s.x * 0.5, -s.y * 0.5));
 		item.Update();
 		cursor.Advance({s.x, 0.0});
-        item.LateUpdate();
+		item.LateUpdate();
 	}
 
-	Sprite*		  spr = attachedObject->GetComponent<Sprite>();
-	Transform*	  tr  = attachedObject->GetComponent<Transform>();
-	fVec2		  s	  = fVec2(spr->container.width, spr->container.height);
-	fVec2		  hs  = 0.5 * fVec2(spr->container.width, spr->container.height);
+	Sprite*	   spr = attachedObject->GetComponent<Sprite>();
+	Transform* tr  = attachedObject->GetComponent<Transform>();
+	fVec2	   s   = fVec2(spr->container.width, spr->container.height);
+	fVec2	   hs  = 0.5 * fVec2(spr->container.width, spr->container.height);
 
-	rpos	= -tr->GetPosition() + UISys::curPos;
+	rpos = -tr->GetPosition() + UISys::curPos;
 
 	if(IsCursorOnWindow() && m) {
 		UISys::Focus(this);
@@ -349,32 +349,32 @@ void UICursor::Advance(const fVec2& p) {
 }
 
 bool UICursor::CalcNextPosition(const fVec2 offset) {
-    lineBreakSize = Max(lineBreakSize,offset.y);
+	lineBreakSize = Max(lineBreakSize, offset.y);
 	return 1;
 }
 
 void UICursor::CalcAdvanceBr() {
-    switch (strat) {
-        case CurAdvanceStrat::None:
-		    return;
-        case CurAdvanceStrat::BreakOnHorizontalEnd:
-            if(pos.x < win->GetSize().x * 0.5)
-                return;
-            SetCursorOnNextLineBeg();
-            break;
-        case CurAdvanceStrat::FixedWidth:
-            if (pos.x < fixedWidth)
-                return;
-            SetCursorOnNextLineBeg();
-            break;
-    }
+	switch(strat) {
+	case CurAdvanceStrat::None:
+		return;
+	case CurAdvanceStrat::BreakOnHorizontalEnd:
+		if(pos.x < win->GetSize().x * 0.5)
+			return;
+		SetCursorOnNextLineBeg();
+		break;
+	case CurAdvanceStrat::FixedWidth:
+		if(pos.x < fixedWidth)
+			return;
+		SetCursorOnNextLineBeg();
+		break;
+	}
 }
 
 void UICursor::SetCursorOnNextLineBeg() {
-    pos.x = origin.x + win->metrics.itemSpacing.x;
-    pos.y -= lineBreakSize;
-    pos.y -= win->metrics.itemSpacing.y;
-    lineBreakSize = 0;
+	pos.x = origin.x + win->metrics.itemSpacing.x;
+	pos.y -= lineBreakSize;
+	pos.y -= win->metrics.itemSpacing.y;
+	lineBreakSize = 0;
 }
 
 void UICursor::SetLineBreakSize(const float v) { lineBreakSize = v; }

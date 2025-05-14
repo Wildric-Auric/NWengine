@@ -103,9 +103,7 @@ bool Collider::isColliding(Collider* other, fVec2* depthBuffer) {
 	return true;
 }
 
-void Collider::AddVertex(const fVec2& v) {
-    edges.push_back(v);
-}
+void Collider::AddVertex(const fVec2& v) { edges.push_back(v); }
 
 bool Collider::isInside(const fVec2& point) {
 	fVec2* cur;
@@ -214,67 +212,67 @@ bool CircleCollider::isColliding(CircleCollider* other, fVec2* depthBuffer) {
 }
 
 bool ConcaveCollider::isColliding(Collider* other, v2f* depth) {
-    bool b = 0;
-    for (Collider& col : cvxCols) {
-        b = col.isColliding(other, depth);
-        if (b) return b;
-    }
-    return b;
+	bool b = 0;
+	for(Collider& col : cvxCols) {
+		b = col.isColliding(other, depth);
+		if(b)
+			return b;
+	}
+	return b;
 };
 
 bool ConcaveCollider::isColliding(CircleCollider* other, v2f* depth) {
-    bool b = 0;
-    for (Collider& col : cvxCols) {
-        b = other->isColliding(&col, depth);
-        if (b) return b;
-    }
-    return b;
+	bool b = 0;
+	for(Collider& col : cvxCols) {
+		b = other->isColliding(&col, depth);
+		if(b)
+			return b;
+	}
+	return b;
 };
 
 bool ConcaveCollider::isColliding(ConcaveCollider* cols, v2f* depth) {
-    bool b = 0;
-    for (Collider& col : cvxCols) {
-        for (Collider& other : cols->cvxCols) {
-            b = col.isColliding(&other, depth);
-            if (b) return b;
-        }
-    }
-    return b;
+	bool b = 0;
+	for(Collider& col : cvxCols) {
+		for(Collider& other : cols->cvxCols) {
+			b = col.isColliding(&other, depth);
+			if(b)
+				return b;
+		}
+	}
+	return b;
 };
 
 bool ConcaveCollider::isInside(const fVec2& pt) {
-    for (Collider& col : cvxCols) {
-       if (col.isInside(pt)) return 1;
-    }
-    return 0;
+	for(Collider& col : cvxCols) {
+		if(col.isInside(pt))
+			return 1;
+	}
+	return 0;
 };
 
-void ConcaveCollider::AddVertex(const fVec2& v) {
-    vertices.push_back(v);
-}
+void ConcaveCollider::AddVertex(const fVec2& v) { vertices.push_back(v); }
 
-void ConcaveCollider::Partition() {
+void ConcaveCollider::Partition() {}
 
-}
-    
 void ConcaveCollider::Partition(Geo::Polygon& poly) {
-	Geo::PolyOrientation		 ori = poly.CalcOrientation();
-    Partition(poly, ori);
+	Geo::PolyOrientation ori = poly.CalcOrientation();
+	Partition(poly, ori);
 }
 
 void ConcaveCollider::Partition(Geo::Polygon& poly, const Geo::PolyOrientation ori) {
 	Geo::EarClippingTriangulator ttr;
-    Collider* col;
-    cvxCols.clear();
+	Collider*					 col;
+	cvxCols.clear();
 	ttr.Alloc(&poly, ori, vertices.size());
 	ttr.Process();
 	for(int i = 0; i < ttr.triNum * 3; i += 3) {
 		cvxCols.emplace_back();
-        col = &cvxCols.back();
-        col->SetGameObject(attachedObject);
-        col->edges.emplace_back(ttr.GetTri(i,0));
-        col->edges.emplace_back(ttr.GetTri(i,1));
-        col->edges.emplace_back(ttr.GetTri(i,2));
+		col = &cvxCols.back();
+		col->SetGameObject(attachedObject);
+		col->edges.emplace_back(ttr.GetTri(i, 0));
+		col->edges.emplace_back(ttr.GetTri(i, 1));
+		col->edges.emplace_back(ttr.GetTri(i, 2));
 	}
-    ttr.Clean();
+	ttr.Clean();
 }

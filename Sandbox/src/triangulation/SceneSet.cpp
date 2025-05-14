@@ -30,41 +30,40 @@ static void SetCam() {
 }
 
 static void SetText() {
-    Scene& s = *Scene::GetCurrent();
-    GameObject& obj = s.AddObject<Sprite,Transform,Text>();
-    Text* te = obj.GetComponent<Text>();
-    std::string fdir;
-    GetSystemFontDir(&fdir); fdir += "Arial.ttf";
-    te->isBatched = 1;
-    te->layerOrder = 0;
+	Scene&		s	= *Scene::GetCurrent();
+	GameObject& obj = s.AddObject<Sprite, Transform, Text>();
+	Text*		te	= obj.GetComponent<Text>();
+	std::string fdir;
+	GetSystemFontDir(&fdir);
+	fdir += "Arial.ttf";
+	te->isBatched  = 1;
+	te->layerOrder = 0;
 	te->SetShader(NW_DEFAULT_SHADER_TEXT_BATCHED);
-    te->colors = v4f(1.0,0.0,0.0,1.0);
-    te->SetFont({fdir.c_str(), 15});
-    te->SetContent(
-    "   'T': triangulate\n"
-    " | 'S': convex hull triangle"
-    " | 'R': reset "
-    " | 'X': circumcircle."
-    );
-    te->UpdateGlyphs();
-    v2f camS = Camera::ActiveCamera->GetSize();
-    v2f tep  = te->GetPosition();
-    v2f ts   = te->GetSize();
-    te->SetPosition(tep + camS * 0.5 - ts * 0.5); 
-    te->UpdateGlyphs();
-    obj.GetComponent<Sprite>()->SetSize(ts);
-    obj.GetComponent<Transform>()->SetPosition(te->_bb.center);
+	te->colors = v4f(1.0, 0.0, 0.0, 1.0);
+	te->SetFont({fdir.c_str(), 15});
+	te->SetContent("'T': triangulate\n\n"
+				   "'S': convex hull triangle\n\n"
+				   "'R': reset\n\n"
+				   "'A': circumcircle of a triangle.");
+	te->UpdateGlyphs();
+	v2f camS = Camera::ActiveCamera->GetSize();
+	v2f tep	 = te->GetPosition();
+	v2f ts	 = te->GetSize();
+	te->SetPosition(tep + camS * 0.5 - ts * 0.5);
+	te->UpdateGlyphs();
+	obj.GetComponent<Sprite>()->SetSize(ts);
+	obj.GetComponent<Transform>()->SetPosition(te->_bb.center);
 
-    GameObject& obj2 = s.AddObject<CircleRenderer>("disc");
-    Sprite* spr = obj2.GetComponent<Sprite>();
-    spr->SetShader("../Sandbox/src/triangulation/disc.shader");
-    spr->StopRendering();
+	GameObject& obj2 = s.AddObject<CircleRenderer>("disc");
+	Sprite*		spr	 = obj2.GetComponent<Sprite>();
+	spr->SetShader("../Sandbox/src/triangulation/disc.shader");
+	spr->StopRendering();
 }
 
 void SceneSet::Start() {
 	Scene& s = *Scene::GetCurrent();
 	SetCam();
 	SetBg();
-    SetText();
+	SetText();
 	s.AddObject().AddComponent<Script>()->SetScript<PrimManager>();
 }

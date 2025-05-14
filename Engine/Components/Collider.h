@@ -45,7 +45,7 @@ class Collider : public GameComponent {
 	std::vector<fVec2> edges = {fVec2(100, 100), fVec2(-100, 100), fVec2(-100, -100),
 								fVec2(100, -100)}; // Trigonometric orientation
 
-    void AddVertex(const fVec2& v);
+	void AddVertex(const fVec2& v);
 	/**
 	 * @brief Checks if this collider is colliding with another collider using the Separating Axis Theorem (SAT).
 	 * @note SAT is applied only on the current Collider, objects may collide even though return value
@@ -103,17 +103,17 @@ class CircleCollider : public GameComponent {
 };
 
 class ConcaveCollider : public GameComponent {
-    public:
-    NW_ST_GET_TYPE_IMPL(CircleCollider);
-    std::vector<Collider> cvxCols;
-    std::vector<v2f> vertices;
+  public:
+	NW_ST_GET_TYPE_IMPL(CircleCollider);
+	std::vector<Collider> cvxCols;
+	std::vector<v2f>	  vertices;
 
-    bool isColliding(Collider*, v2f*);
-    bool isColliding(CircleCollider*, v2f* = nullptr);
-    bool isColliding(ConcaveCollider*, v2f* = nullptr);
-    bool isInside(const fVec2&); 
-    void AddVertex(const fVec2&);
-    void Partition();
-    void Partition(Geo::Polygon&);
-    void Partition(Geo::Polygon&, Geo::PolyOrientation orientation);
+	bool isColliding(Collider*, v2f*);
+	bool isColliding(CircleCollider*, v2f* = nullptr);
+	bool isColliding(ConcaveCollider*, v2f* = nullptr);
+	bool isInside(const fVec2&);
+	void AddVertex(const fVec2&);
+	void Partition();
+	void Partition(Geo::Polygon&);
+	void Partition(Geo::Polygon&, Geo::PolyOrientation orientation);
 };

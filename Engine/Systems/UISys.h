@@ -20,7 +20,7 @@ class UISys {
 	static int				curStatePriority;
 	static UISysCursorState curState;
 	static bool				clickEvent;
-    static bool             clickContinuousEvent;
+	static bool				clickContinuousEvent;
 	static bool				isResposive;
 	static NWin::Key		clickKey;
 	static UIWindow*		focusedWindow;
@@ -38,7 +38,7 @@ class UISys {
 	static void	 ForceHover(UIWindow*);
 	static void	 UnFocus();
 	static bool	 GetClickEvent();
-    static bool  GetIsClicking();
+	static bool	 GetIsClicking();
 	static fVec2 GetCurPos();
 	static int64 GetAvailableLayer();
 };
