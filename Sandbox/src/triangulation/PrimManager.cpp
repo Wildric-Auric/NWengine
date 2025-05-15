@@ -105,12 +105,6 @@ void PrimManager::_TestEdges() {
 		Geo::Triangle			  tri;
 		ttr.Alloc(&poly, pts.size());
 		ttr.ComputeSuperTriangle(&trid);
-		AddPoint().SetUp(trid.pts[0]);
-		AddPoint().SetUp(trid.pts[1]);
-		AddPoint().SetUp(trid.pts[2]);
-#define UNW(i) trid.pts[i].x, trid.pts[i].y
-		printf("%lf %lf | %lf %lf | %lf %lf\n", UNW(0), UNW(1), UNW(2));
-#undef UNW
         ttr.Process();
         for (int i = 0; i < ttr.triNum; ++i) {
             TriPoint* pt  = FindPt(ttr._tris[i*3]);

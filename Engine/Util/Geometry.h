@@ -1,6 +1,5 @@
 #pragma once
 #include "Globals.h"
-#include <vector>
 
 #define GEO_EPS 0.00001
 
@@ -159,8 +158,9 @@ class DelaunayTriangulator {
 	void		Clean();
 	void		Process();
 	void		Process(TriangleData& tri);
-    void _ProcessBadTris(std::vector<v2r>* tris);
 	void		ComputeSuperTriangle(TriangleData*);
+
+    void DeleteSuper(const TriangleData& tri);
 };
 
 } // namespace Geo

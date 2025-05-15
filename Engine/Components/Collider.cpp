@@ -253,7 +253,12 @@ bool ConcaveCollider::isInside(const fVec2& pt) {
 
 void ConcaveCollider::AddVertex(const fVec2& v) { vertices.push_back(v); }
 
-void ConcaveCollider::Partition() {}
+void ConcaveCollider::Partition() {
+	Geo::Polygon poly;
+	poly.SetFirst(vertices.data());
+	poly.SetLast(&vertices.back());
+	Partition(poly);
+}
 
 void ConcaveCollider::Partition(Geo::Polygon& poly) {
 	Geo::PolyOrientation ori = poly.CalcOrientation();
