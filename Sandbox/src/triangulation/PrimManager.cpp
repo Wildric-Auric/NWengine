@@ -23,13 +23,13 @@ void PrimManager::Start() {
 static TriPoint* last;
 static TriEdge*	 edge;
 static TriEdge*	 fedge;
-    
+
 TriPoint* PrimManager::FindPt(const v2r& p) {
-    for (TriPoint& pt : pts) {
-        if (pt.Get() == p)
-            return &pt; 
-    }
-    return 0;
+	for(TriPoint& pt : pts) {
+		if(pt.Get() == p)
+			return &pt;
+	}
+	return 0;
 }
 
 void PrimManager::_TestEdges() {
@@ -105,36 +105,36 @@ void PrimManager::_TestEdges() {
 		Geo::Triangle			  tri;
 		ttr.Alloc(&poly, pts.size());
 		ttr.ComputeSuperTriangle(&trid);
-        ttr.Process();
-        for (int i = 0; i < ttr.triNum; ++i) {
-            TriPoint* pt  = FindPt(ttr._tris[i*3]);
-            TriPoint* pt1 = FindPt(ttr._tris[i*3+1]);
-            TriPoint* pt2 = FindPt(ttr._tris[i*3+2]);
+		ttr.Process();
+		for(int i = 0; i < ttr.triNum; ++i) {
+			TriPoint* pt  = FindPt(ttr._tris[i * 3]);
+			TriPoint* pt1 = FindPt(ttr._tris[i * 3 + 1]);
+			TriPoint* pt2 = FindPt(ttr._tris[i * 3 + 2]);
 #define CHK(pt) pt->Get() == trid.pts[0] || pt->Get() == trid.pts[1] || pt->Get() == trid.pts[2]
-            if (CHK(pt) || CHK(pt1) || CHK(pt2))
-                continue;
-            AddLine().SetUp(pt,pt1);
-            AddLine().SetUp(pt,pt2);
-            AddLine().SetUp(pt2,pt1);
-        }
+			if(CHK(pt) || CHK(pt1) || CHK(pt2))
+				continue;
+			AddLine().SetUp(pt, pt1);
+			AddLine().SetUp(pt, pt2);
+			AddLine().SetUp(pt2, pt1);
+		}
 
 		ttr.Clean();
-//		Geo::Point	pts[3];
-//		Geo::Point* ptr[3];
-//		pts[0].Set(&trid.pts[0]);
-//		pts[1].Set(&trid.pts[1]);
-//		pts[2].Set(&trid.pts[2]);
-//		ptr[0] = &pts[0];
-//		ptr[1] = &pts[1];
-//		ptr[2] = &pts[2];
-//		tri.Set(ptr);
-//		GameObject* obj = Scene::currentScene->GetGameObject("disc");
-//		if(obj) {
-//			v2r cntr = tri.CalcCircCenter();
-//			obj->GetComponent<CircleRenderer>()->SetPosition(cntr);
-//			obj->GetComponent<CircleRenderer>()->SetRadius((cntr - *tri.GetPt(0)).magnitude());
-//			obj->GetComponent<Sprite>()->Render();
-//		}
+		//		Geo::Point	pts[3];
+		//		Geo::Point* ptr[3];
+		//		pts[0].Set(&trid.pts[0]);
+		//		pts[1].Set(&trid.pts[1]);
+		//		pts[2].Set(&trid.pts[2]);
+		//		ptr[0] = &pts[0];
+		//		ptr[1] = &pts[1];
+		//		ptr[2] = &pts[2];
+		//		tri.Set(ptr);
+		//		GameObject* obj = Scene::currentScene->GetGameObject("disc");
+		//		if(obj) {
+		//			v2r cntr = tri.CalcCircCenter();
+		//			obj->GetComponent<CircleRenderer>()->SetPosition(cntr);
+		//			obj->GetComponent<CircleRenderer>()->SetRadius((cntr - *tri.GetPt(0)).magnitude());
+		//			obj->GetComponent<Sprite>()->Render();
+		//		}
 		return;
 	}
 
@@ -182,14 +182,14 @@ void PrimManager::_TestEdges() {
 }
 
 void PrimManager::MakeLineOnClick() {
-	constexpr float tol	  = 0.5;
-	bool			click = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON);
-	bool			rclick= Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_RBUTTON);
-	fVec2			cur	  = Inputs::GetMousePosition();
-	cur					  = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
-	v2f s				  = v2i(Sign(cur.x), Sign(cur.y));
-	v2f f				  = v2f(fmodf(cur.x, grid.x), fmodf(cur.y, grid.y));
-	v2f i				  = v2i(cur.x / grid.x, cur.y / grid.y) + s;
+	constexpr float tol	   = 0.5;
+	bool			click  = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON);
+	bool			rclick = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_RBUTTON);
+	fVec2			cur	   = Inputs::GetMousePosition();
+	cur					   = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
+	v2f s				   = v2i(Sign(cur.x), Sign(cur.y));
+	v2f f				   = v2f(fmodf(cur.x, grid.x), fmodf(cur.y, grid.y));
+	v2f i				   = v2i(cur.x / grid.x, cur.y / grid.y) + s;
 	v2f nearest;
 	nearest.x = (i.x - (abs(f.x) < 0.5 * grid.x) * s.x) * grid.x;
 	nearest.y = (i.y - (abs(f.y) < 0.5 * grid.y) * s.y) * grid.y;
@@ -219,7 +219,7 @@ void PrimManager::MakeLineOnClick() {
 		};
 		last = &pt;
 	}
-    if (rclick) {
+	if(rclick) {
 		TriPoint* ptptr = 0;
 		for(auto& pttmp : pts) {
 			if(pttmp.Get() == nearest) {
@@ -234,7 +234,7 @@ void PrimManager::MakeLineOnClick() {
 		if(last) {
 			line = &AddLine();
 			line->SetUp(last, &pt);
-            line->obj->GetComponent<Sprite>()->StopRendering();
+			line->obj->GetComponent<Sprite>()->StopRendering();
 		}
 		if(line) {
 			edge = CAST(TriEdge*, edges.GetContent(edges.tAddLast(TriEdge())));
@@ -245,8 +245,7 @@ void PrimManager::MakeLineOnClick() {
 			fedge->line = line;
 		};
 		last = &pt;
-
-    }
+	}
 }
 
 void PrimManager::Clean() {

@@ -390,22 +390,22 @@ void DelaunayTriangulator::Alloc(PointSet* const s, const ui32 num) {
 
 #define CHK(pt) (pt) == tri.pts[0] || (pt) == tri.pts[1] || (pt) == tri.pts[2]
 void DelaunayTriangulator::DeleteSuper(const TriangleData& tri) {
-    int n = triNum;
-    int c = 0;
-    int indx = 0;
-    v2r* ntris = (v2r*)calloc(triNum * 3, sizeof(v2r));
-    for (int i = 0; i < n; ++i) {
-        if (CHK(_tris[i*3 + 0]) || (CHK(_tris[i*3 + 1])) || (CHK(_tris[i*3 + 2]))) {
-            continue;  
-        }
-        ntris[indx++]   = _tris[i*3]; 
-        ntris[indx++] = _tris[i*3+1];
-        ntris[indx++] = _tris[i*3+2]; 
-        c++;
-    }
-    nwfree(_tris);
-    _tris = ntris;
-    triNum = c;
+	int	 n	   = triNum;
+	int	 c	   = 0;
+	int	 indx  = 0;
+	v2r* ntris = (v2r*)calloc(triNum * 3, sizeof(v2r));
+	for(int i = 0; i < n; ++i) {
+		if(CHK(_tris[i * 3 + 0]) || (CHK(_tris[i * 3 + 1])) || (CHK(_tris[i * 3 + 2]))) {
+			continue;
+		}
+		ntris[indx++] = _tris[i * 3];
+		ntris[indx++] = _tris[i * 3 + 1];
+		ntris[indx++] = _tris[i * 3 + 2];
+		c++;
+	}
+	nwfree(_tris);
+	_tris  = ntris;
+	triNum = c;
 }
 #undef CHK
 
@@ -414,7 +414,7 @@ void DelaunayTriangulator::Process() {
 	TriangleData trid;
 	ComputeSuperTriangle(&trid);
 	Process(trid);
-    DeleteSuper(trid);
+	DeleteSuper(trid);
 }
 
 void DelaunayTriangulator::_AddTri(Triangle& tri) {
@@ -432,37 +432,40 @@ void DelaunayTriangulator::_AddTri(TriangleData& tri) {
 }
 
 struct EdgeComp {
-  bool operator()(std::pair<v2r,v2r> const& p1, std::pair<v2r,v2r> const& p2) const {
-    // compare p1.first agnst p2.first, then p1.second against p2.second
-    if(p1.first.x<p2.first.x) return true;
-    if(p1.first.x>p2.first.x) return false;
-    if(p1.first.y<p2.first.y) return true;
-    if(p1.first.y>p2.first.y) return false;
-    return p1.second.x<p2.second.x || (p1.second.x==p2.second.x && p1.second.y<p2.second.y);
-  }
+	bool operator()(std::pair<v2r, v2r> const& p1, std::pair<v2r, v2r> const& p2) const {
+		// compare p1.first agnst p2.first, then p1.second against p2.second
+		if(p1.first.x < p2.first.x)
+			return true;
+		if(p1.first.x > p2.first.x)
+			return false;
+		if(p1.first.y < p2.first.y)
+			return true;
+		if(p1.first.y > p2.first.y)
+			return false;
+		return p1.second.x < p2.second.x || (p1.second.x == p2.second.x && p1.second.y < p2.second.y);
+	}
 };
 
-
-static std::pair<v2r,v2r> MakeKey (const v2r& p, const v2r& q) {
-    return (p.x < q.x || (p.x == q.x && p.y < q.y)) ? 
-    std::make_pair(p, q) : std::make_pair(q, p);
+static std::pair<v2r, v2r> MakeKey(const v2r& p, const v2r& q) {
+	return (p.x < q.x || (p.x == q.x && p.y < q.y)) ? std::make_pair(p, q) : std::make_pair(q, p);
 }
 
 void ProcessBadTris(std::vector<v2r>* tris) {
-    auto& pts = *tris;
-    std::map<std::pair<v2r,v2r>, int,EdgeComp> edgeCount;
-    for (size_t i = 0; i + 2 < pts.size(); i += 3) {
-        edgeCount[MakeKey(pts[i], pts[i+1])]++;
-        edgeCount[MakeKey(pts[i+1], pts[i+2])]++;
-        edgeCount[MakeKey(pts[i+2], pts[i])]++;
-    }
-    tris->clear();
-    tris->reserve(edgeCount.size() * 2);
-    for (const auto& kv : edgeCount) {
-        if (kv.second != 1) continue;
-        tris->push_back(kv.first.first);
-        tris->push_back(kv.first.second);
-    }
+	auto&										 pts = *tris;
+	std::map<std::pair<v2r, v2r>, int, EdgeComp> edgeCount;
+	for(size_t i = 0; i + 2 < pts.size(); i += 3) {
+		edgeCount[MakeKey(pts[i], pts[i + 1])]++;
+		edgeCount[MakeKey(pts[i + 1], pts[i + 2])]++;
+		edgeCount[MakeKey(pts[i + 2], pts[i])]++;
+	}
+	tris->clear();
+	tris->reserve(edgeCount.size() * 2);
+	for(const auto& kv : edgeCount) {
+		if(kv.second != 1)
+			continue;
+		tris->push_back(kv.first.first);
+		tris->push_back(kv.first.second);
+	}
 }
 
 void DelaunayTriangulator::Process(TriangleData& superTri) {
@@ -473,7 +476,7 @@ void DelaunayTriangulator::Process(TriangleData& superTri) {
 	v2r						uc;
 	TriangleData			tri = superTri;
 	std::list<TriangleData> tris;
-    std::vector<v2r> badtris; 
+	std::vector<v2r>		badtris;
 	tris.push_back(superTri);
 	Point	 pt[3];
 	Point*	 ptr[3];
@@ -484,7 +487,7 @@ void DelaunayTriangulator::Process(TriangleData& superTri) {
 	for(int i = 0; i < ptsNum; ++i) {
 		n  = _ptSet->GetNext(c);
 		uc = *_ptSet->Unwrap(c);
-        badtris.clear();
+		badtris.clear();
 		for(auto tri = tris.begin(); tri != tris.end();) {
 			pt[0].Set(&tri->pts[0]);
 			pt[1].Set(&tri->pts[1]);
@@ -500,25 +503,27 @@ void DelaunayTriangulator::Process(TriangleData& superTri) {
 				++tri;
 				continue;
 			}
-            badtris.push_back(*pt[0].Get());
-            badtris.push_back(*pt[1].Get());
-            badtris.push_back(*pt[2].Get());
+			badtris.push_back(*pt[0].Get());
+			badtris.push_back(*pt[1].Get());
+			badtris.push_back(*pt[2].Get());
 			tri = tris.erase(tri);
 		}
 		if(badtris.size() == 0) {
 			c = n;
 			continue;
 		}
-        ProcessBadTris(&badtris);
-        for(size_t i = 0; i + 1 < badtris.size(); i += 2) { tris.push_back({{ uc, badtris[i], badtris[i+1] }});}     
-        c = n;
+		ProcessBadTris(&badtris);
+		for(size_t i = 0; i + 1 < badtris.size(); i += 2) {
+			tris.push_back({{uc, badtris[i], badtris[i + 1]}});
+		}
+		c = n;
 	}
 	for(TriangleData& d : tris) {
 		_tris[index++] = d.pts[0];
 		_tris[index++] = d.pts[1];
 		_tris[index++] = d.pts[2];
 	}
-    triNum = tris.size();
+	triNum = tris.size();
 }
 
 void DelaunayTriangulator::ComputeSuperTriangle(TriangleData* tri) {

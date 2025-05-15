@@ -41,9 +41,9 @@ static void SetText() {
 	te->SetShader(NW_DEFAULT_SHADER_TEXT_BATCHED);
 	te->colors = v4f(1.0, 0.0, 0.0, 1.0);
 	te->SetFont({fdir.c_str(), 15});
-	te->SetContent("'T': triangulate\n\n"
-				   "'S': convex hull triangle\n\n"
-				   "'R': reset\n\n"
+	te->SetContent("'T': triangulate\n"
+				   "'S': convex hull triangle\n"
+				   "'R': reset\n"
 				   "'A': circumcircle of a triangle.");
 	te->UpdateGlyphs();
 	v2f camS = Camera::ActiveCamera->GetSize();

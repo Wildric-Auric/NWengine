@@ -160,7 +160,7 @@ class DelaunayTriangulator {
 	void		Process(TriangleData& tri);
 	void		ComputeSuperTriangle(TriangleData*);
 
-    void DeleteSuper(const TriangleData& tri);
+	void DeleteSuper(const TriangleData& tri);
 };
 
 } // namespace Geo
