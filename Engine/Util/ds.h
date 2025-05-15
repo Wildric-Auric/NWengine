@@ -23,6 +23,7 @@ class MemoryRegion {
 	void SetUp(ui32 unitSize, ui32 size);
 	void SetUp(ui32 unitSize, ui32 size, const AllocStrat&);
 	void SetAllocationStrat(const AllocStrat&);
+	void Clear();
 	void Clean();
 	addr Alloc();
 	void Dealloc(addr ptr);
@@ -36,6 +37,7 @@ class MemoryRegion {
 	void _PushStack(ui32 index);
 	void _AttachNext();
 	void _CleanNext();
+	void _ClearNext();
 
 	ui64 _GetIndexFromAddr(addr);
 };
@@ -51,6 +53,8 @@ class Deque {
 	addr GetFront();
 	addr GetBack();
 	addr Get(ui32);
+	void Clean();
+	void Clear();
 
 	MemoryRegion  _ownedRgn;
 	MemoryRegion* rgn;
@@ -79,6 +83,8 @@ class Stack {
 	void PopBack();
 	addr GetBack();
 	addr Get(ui32);
+	void Clean();
+	void Clear();
 
 	MemoryRegion  _ownedRgn;
 	MemoryRegion* rgn;
@@ -126,6 +132,8 @@ class DList {
 	ui32  GetPrevIdx(addr);
 	ui32  GetNextIdx(addr);
 	void* GetContent(addr);
+	void  Clean();
+	void  Clear();
 	addr  _AddDetached(void*);
 	addr  _AddDetachedNode(const DlistNode* n, addr loc);
 	void  _AttachPrev(addr ad, ui32 p);
@@ -168,6 +176,8 @@ class HashMap {
 	bool  Erase(void* key);
 	void* ReadKey(addr);
 	void* ReadValue(addr);
+	void  Clean();
+	void  Clear();
 	addr  _Add(const HashData&);
 	addr  _Set(const HashData&);
 	bool  _Erase(const HashData&);
@@ -206,5 +216,7 @@ class String {
 	void		Insert(char c);
 	void		Concat(String&);
 	void		Concat(const char*);
+	void		Clean();
+	void		Clear();
 	const char* GetData();
 };

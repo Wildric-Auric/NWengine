@@ -40,6 +40,20 @@ void MemoryRegion::Clean() {
 	_CleanNext();
 }
 
+void MemoryRegion::Clear() {
+	for(int i = 0; i <= _sp; ++i) {
+		Dealloc(Get(0x0 + i));
+	}
+	_sp = 0;
+	_ClearNext();
+}
+
+void MemoryRegion::_ClearNext() {
+	if(!_next)
+		return;
+	_next->Clear();
+}
+
 addr MemoryRegion::Alloc() {
 	if(_sp == -1) {
 		if(_subOptMemStrat == AllocStrat::NONE) {
@@ -160,6 +174,25 @@ addr Deque::GetBack() { return rgn->Get(_back); }
 
 addr Deque::Get(ui32 idx) { return rgn->Get(_front + idx); }
 
+void Deque::Clean() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clean();
+	_cap   = 0;
+	_size  = 0;
+	_front = 0;
+	_back  = 0;
+}
+
+void Deque::Clear() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clear();
+	_front = _cap / 2 + 1;
+	_back  = _cap / 2 - 1;
+	_size  = 0;
+}
+
 //-------Stack-------
 
 void Stack::SetUp(MemoryRegion* memReg, ui32 begIdx, ui32 endIdx) {
@@ -187,6 +220,25 @@ void Stack::PopBack() { --_back; }
 addr Stack::GetBack() { return rgn->Get(_back); }
 
 addr Stack::Get(ui32 idx) { return rgn->Get(_base + idx); }
+
+void Stack::Clean() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clean();
+	_back = 0;
+	_base = 0;
+	_cap  = 0;
+	_size = 0;
+}
+
+void Stack::Clear() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clear();
+	_back = 0;
+	_base = 0;
+	_size = 0;
+}
 
 //-------Doubly linked list-----------
 
@@ -345,6 +397,28 @@ addr DList::IterateAndGet(ui32 i) {
 		p = GetNext(p);
 	}
 	return p;
+}
+
+void DList::Clean() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clean();
+	rgn	   = 0;
+	_first = -1;
+	_last  = -1;
+	_base  = 0;
+	_size  = 0;
+	_cap   = 0;
+}
+
+void DList::Clear() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clear();
+	_first = -1;
+	_last  = -1;
+	_base  = 0;
+	_size  = 0;
 }
 
 //---------------HashMaps------------------
@@ -541,6 +615,20 @@ ui32 HashMap::_DecPtr(ui32 idx) { return *(CAST(ui32*, rgn->_data) + idx) = _Get
 
 ui32 HashMap::_GetPtr(ui32 idx) { return *(CAST(ui32*, rgn->_data) + idx); }
 
+void HashMap::Clean() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clean();
+}
+
+void HashMap::Clear() {
+	if(rgn != &_ownedRgn)
+		return;
+	rgn->Clear();
+}
+
+//---------------String------------------
+
 void String::SetUp(MemoryRegion* memReg, ui32 begIdx, ui32 endIdx) { return container.SetUp(memReg, begIdx, endIdx); }
 
 void String::SetUp(ui32 cap) { return container.SetUp(sizeof(char), cap); }
@@ -566,5 +654,9 @@ void String::Concat(const char* other) {
 	char endc = '\0';
 	container.PushBack(&endc);
 }
+
+void String::Clean() { container.Clean(); }
+
+void String::Clear() { container.Clear(); }
 
 const char* String::GetData() { return (const char*)container.Get(0); }
