@@ -23,8 +23,20 @@ UIColorScheme uiColorSchemePreset_Test = {
 	{1, 1, 1, 1},		  // titleText;
 };
 UIColorScheme uiColorSchemePreset_Light = {};
-UIColorScheme uiColorSchemePreset_Dark	= {};
-UIColorScheme currentUIColorScheme		= uiColorSchemePreset_Test;
+UIColorScheme uiColorSchemePreset_Dark	= {
+	{1, 1, 1, 1},		  // bg;
+	{0, 0, 1, 1},		  // fg;
+	{0, 0, 0, 0},		  // win;
+	{0.0, 0., 0., 0.5}, // winRest;
+	{0.5, 0.5, 0.6, 1.0}, // winHover;
+	{0, 0, 0, 1},		  // winSelect;
+	{0, 0, 0.4, 1},		  // winBar;
+	{1, 1, 1, 1},		  // winBrdr;
+	{0, 0, 1, 1},		  // winBrdrResize;
+	{1, 1, 1, 1},		  // text;
+	{1, 1, 1, 1},		  // titleText;
+};
+UIColorScheme currentUIColorScheme		= uiColorSchemePreset_Dark;
 
 int64 UIItem::DefaultUIItemGetLayerProc(UIItem* item) { return item->obj.GetComponent<Sprite>()->GetSortingLayer(); };
 
