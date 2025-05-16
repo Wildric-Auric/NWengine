@@ -8,7 +8,7 @@
 static void SetBg() {
 	Scene&		s	= *Scene::GetCurrent();
 	Camera&		cam = *Camera::GetActiveCamera();
-	GameObject& bg	= s.AddObject();
+	GameObject& bg	= s.AddObject("blueprint");
 	bg.AddComponent<Transform>();
 
 	Sprite* spr = bg.AddComponent<Sprite>();

@@ -18,6 +18,9 @@ void PrimManager::Start() {
 	//    TriLine& l = AddLine();
 	//    l.SetUp(&pt, &pt1);
 	edges.SetUp(sizeof(TriEdge), 0xFF);
+	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
+	sh->Use();
+	sh->SetUniform2f("uCell", grid.x, grid.y);
 }
 
 static TriPoint* last;

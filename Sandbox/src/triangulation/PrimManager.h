@@ -60,8 +60,8 @@ class TriEdge {
 class PrimManager : public Scriptable {
   public:
 	SCRIPT_CONSTR(PrimManager)
-	float				lineWidth = 4.0f;
-	float				ptRad	  = 8.0f;
+	float				lineWidth = 1.0f;
+	float				ptRad	  = 5.0f;
 	v2f					grid	  = v2f(50.0f, 50.0f);
 	std::list<TriPoint> pts;
 	std::list<TriLine>	lines;

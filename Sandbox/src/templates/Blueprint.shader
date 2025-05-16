@@ -20,7 +20,8 @@ void main() {
 uniform float	  uTime;
 uniform sampler2D uTex0;
 uniform vec2	  uResolution;
-uniform vec2	  uCell;
+uniform vec2	  uCell	  = vec2(50, 50);
+uniform vec2	  uThresh = vec2(1, 1);
 in vec2			  uv;
 
 out vec4 FragColor;
@@ -30,11 +31,10 @@ void main() {
 	vec2 coord		= (uv - 0.5) * uResolution;
 	vec2 orthocoord = (uv - 0.5);
 	orthocoord.y *= (uResolution.y / uResolution.x);
-	vec2 div   = mod(coord, uCell) / uCell;
-	vec2 tresh = vec2(0.02, 0.02);
-	if(div.x < tresh.x || div.x > 1.0 - tresh.x || div.y < tresh.y || div.y > 1.0 - tresh.y)
+	vec2 div = mod(coord, uCell);
+	if(div.x < uThresh.x || div.x > uCell.x - uThresh.x || div.y < uThresh.y || div.y > uCell.y - uThresh.y)
 		col = vec4(1.0, 1.0, 1.0, 0.5);
-	if(abs(orthocoord.x) < tresh.x * 0.1 || abs(orthocoord.y) < tresh.y * 0.1)
+	if(abs(coord.x) < uThresh.x * 2.0 || abs(coord.y) < uThresh.y * 2.0)
 		col = vec4(0.1, 1.0, 0.0, 0.8);
 	FragColor = col;
 }
