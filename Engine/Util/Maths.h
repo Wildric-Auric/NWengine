@@ -153,7 +153,7 @@ template <typename T> int Sign(T number) {
 #define ABS(x)			 (((x) < 0) ? -(x) : (x))
 #define MMIN(x, y)		 ((x) <= (y) ? (x) : (y))
 #define MMAX(x, y)		 ((x) >= (y) ? (x) : (y))
-#define CLAMP(n, mi, ma) MIN((ma), MAX(n, mi))
+#define CLAMP(n, mi, ma) MMIN((ma), MMAX(n, mi))
 
 template <typename T> T Abs(T x) { return (x < (T)0) ? -x : x; }
 
