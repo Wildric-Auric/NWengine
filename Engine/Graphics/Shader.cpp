@@ -200,7 +200,7 @@ void Shader::SetVector2(const char* name, float value0, float value1) {
 
 void Shader::SetUniform2i(const char* name, int x, int y) { SetUniform2i(glGetUniformLocation(_glID, name), x, y); }
 
-void Shader::SetUniform2f(const char* name, float x, float y) { SetUniform2i(glGetUniformLocation(_glID, name), x, y); }
+void Shader::SetUniform2f(const char* name, float x, float y) { SetUniform2f(glGetUniformLocation(_glID, name), x, y); }
 
 void Shader::SetUniform1i(const char* name, const int value) { SetUniform1i(glGetUniformLocation(_glID, name), value); }
 
