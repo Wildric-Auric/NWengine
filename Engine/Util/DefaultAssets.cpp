@@ -248,8 +248,9 @@ const ShaderText ShaderUIWindowStr{ShaderDefVert,
         void main() {
             vec4 col = texture(uTex0, uv);
             bool ycond = (1.0-uv.y)*uRes.y < uTitleHeight;
-            bool condBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;
-            condBorder = condBorder || (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;
+            bool ycondBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;
+            bool xcondBorder = (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;
+            bool condBorder = ycondBorder || xcondBorder;
             vec4 color = ycond ? uBarCol               : uCol;
             color = condBorder ? uBorderCol            : color;
             FragColor = color;

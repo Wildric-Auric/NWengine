@@ -4,14 +4,17 @@
 #include "RenderingPipeline.h"
 #include "Scene.h"
 #include "UIWindow.h"
+#include "NWTime.h"
+#include "Inputs.h"
+#include "NWin/keys.h"
 
-RenderingPipeline		rpline;
-NWPPFX::Bloom			bloomTst;
-NWPPFX::ColorCorrection cc;
-NWPPFX::Tonemapper		tm;
+RenderingPipeline		rpline2;
+NWPPFX::Bloom			bloomTst2;
+NWPPFX::ColorCorrection cc2;
+NWPPFX::Tonemapper		tm2;
 
-Renderer*		   CRT;
-static float	   t = 0.0;
+Renderer*		   CRT2;
+static float	   t2 = 0.0;
 extern FrameBuffer waterFbo;
 
 namespace UItst2 {
@@ -44,48 +47,48 @@ static void Init() {
 	s.Rename("GameManagerObj", &manager);
 	manager.AddComponent<Script>()->SetScript<GameManager>();
 
-	CRT = &rpline.AddRenderer();
-	CRT->SetShader("../Sandbox/assets/Shaders/MattiasCRT.shader");
-	CRT->stretchCoeff.x = 1.3;
-	CRT->stretchCoeff.y = 1.3;
+	CRT2 = &rpline2.AddRenderer();
+	CRT2->SetShader("../Sandbox/assets/Shaders/MattiasCRT.shader");
+	CRT2->stretchCoeff.x = 1.3;
+	CRT2->stretchCoeff.y = 1.3;
 	s.Start();
 	UIInit(s, s.GetFirstComponent<Camera>());
-	bloomTst.luminanceThreshold = 1.0;
-	bloomTst.SetUp();
+	bloomTst2.luminanceThreshold = 1.0;
+	bloomTst2.SetUp();
 
 	NWPPFX::EffectIO io;
-	io.SetInput(bloomTst._fxio.GetOutput());
-	cc.SetUp(&io);
+	io.SetInput(bloomTst2._fxio.GetOutput());
+	cc2.SetUp(&io);
 
 	io = {};
-	io.SetInput(cc._fxio.GetOutput());
-	tm.SetUp(&io);
+	io.SetInput(cc2._fxio.GetOutput());
+	tm2.SetUp(&io);
 
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 
 static void Render() {
-	static bool tmp = 1;
+	static bool tm2p = 1;
 
-	t += NWTime::GetDeltaTime();
-	CRT->componentContainer.GetComponent<Sprite>()->shader->Use();
-	CRT->componentContainer.GetComponent<Sprite>()->shader->SetUniform1f("uTime", t);
-	CRT->componentContainer.GetComponent<Sprite>()->shader->Unuse();
+	t2 += NWTime::GetDeltaTime();
+	CRT2->componentContainer.GetComponent<Sprite>()->shader->Use();
+	CRT2->componentContainer.GetComponent<Sprite>()->shader->SetUniform1f("uTime", t2);
+	CRT2->componentContainer.GetComponent<Sprite>()->shader->Unuse();
 	Camera::GetActiveCamera()->fbo.Blit(&waterFbo);
 
 	fVec2 winSize;
 	fVec2 camSize = Camera::GetActiveCamera()->GetSize();
 	Context::GetWinDrawAreaSize(&winSize);
-	tm._fxio.GetOutput()->SetStretch(winSize / camSize);
+	tm2._fxio.GetOutput()->SetStretch(winSize / camSize);
 
-	bloomTst.Capture();
-	cc.Capture();
-	tm.Capture();
-	tm.DrawLast();
-	//(*CRT)(tm._fxio.GetOutput(), true);
+	bloomTst2.Capture();
+	cc2.Capture();
+	tm2.Capture();
+	tm2.DrawLast();
+	//(*CRT2)(tm2._fxio.GetOutput(), true);
 
-	Camera::GetActiveCamera()->position.x += (Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, NWin::KeyEventEnum::NWIN_KeyPressed) -
-											  Inputs::GetInputKey(NWin::NWIN_KEY_LEFT, NWin::KeyEventEnum::NWIN_KeyPressed)) *
+	Camera::GetActiveCamera()->position.x += (Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, InputKeyEvent::KeyPressed) -
+											  Inputs::GetInputKey(NWin::NWIN_KEY_LEFT, InputKeyEvent::KeyPressed)) *
 											 10.0 * NWTime::GetDeltaTime();
 }
 

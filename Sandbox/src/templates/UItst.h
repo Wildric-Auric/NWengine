@@ -44,7 +44,7 @@ static void Init() {
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
 	camC->ChangeOrthoWithMSAA(900, 500, MSAAValue::NW_MSx8);
 	camC->GetFbo()->GenDepthStencilBuffer();
-	Renderer::defaultRenderer->SetStretch({1.0, 1.0});
+	Renderer::defaultRenderer->SetStretch({1, 1});
 
 	uwin.AddComponent<UIWindow>()->SetTitle("Hello Window");
 	uwin2.AddComponent<UIWindow>();
