@@ -1,4 +1,16 @@
+#include <string>
+#include <unordered_map>
+#include "Audio.h"
+#include "Context.h"
+#include "NWTime.h"
+#include "Primitives.h"
+#include "UISys.h"
+#include "Batch.h"
+#include "Renderer.h"
+#include "Scene.h"
+#include "Font.h"
 #include "NWengine.h"
+#include "Inputs.h"
 
 #define NW_CALL_EX(locatinon)                                                                                                    \
 	for(void (*func)() : functionMap[locatinon])                                                                                 \

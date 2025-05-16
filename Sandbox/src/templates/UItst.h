@@ -4,27 +4,28 @@
 #include "NWengine.h"
 #include "Scene.h"
 #include "UISys.h"
+#include "Text.h"
+#include "Renderer.h"
+#include "Components.h"
+#include "Inputs.h"
 #include "UIWindow.h"
+#include "NWTime.h"
 
 namespace UITst {
 
 Camera* camC;
-
-void AddItems(UIWindow& w) {
-	w.GetCursor()->SetLineBreakSize(20);
-	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
-	Sprite*		 spr	 = w.GetGameObject()->GetComponent<Sprite>();
-	UIItem*		 rect;
-	UIItemLabel* label						= w.AddItem(UIItemType_Label, -2);
-	label->obj.GetComponent<Text>()->colors = v4f(1.0, 0.1, 0.0, 1.0);
-	label->obj.GetComponent<Text>()->SetContent("Crocodilo");
-
-	rect				  = w.AddItem(UIItemType_TestZone, -1);
-	rect->_LateUpdateProc = [](UIItem* item) { item->_owner->cursor.SetCursorOnNextLineBeg(); };
-	rect->obj.GetComponent<Sprite>()->SetSize({60, 10});
-	for(int i = 0; i < 10; ++i) {
-		rect = w.AddItem(UIItemType_TestZone, -1);
-	}
+void	AddItems(UIWindow& w) {
+	   w.GetCursor()->SetLineBreakSize(20);
+	   w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
+	   Sprite*		spr		= w.GetGameObject()->GetComponent<Sprite>();
+	   UIItem*		rect;
+	   UIItemLabel* label = w.AddItem(UIItemType_Label, -2);
+	   label->obj.GetComponent<Text>()->SetContent("Slider: ");
+	   rect = w.AddItem(UIItemType_Slider, -1, 2);
+	   rect = w.AddItem(UIItemType_Checkbox, -1);
+	   for(int i = 0; i < 10; ++i) {
+		   rect = w.AddItem(UIItemType_TestZone, -1);
+	   }
 }
 
 static void Init() {

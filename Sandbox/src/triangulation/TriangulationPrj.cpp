@@ -2,6 +2,7 @@
 #include "NWengine.h"
 #include "Scene.h"
 #include "SceneSet.h"
+#include "Renderer.h"
 
 namespace TriangulationPrj {
 

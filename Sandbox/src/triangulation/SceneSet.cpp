@@ -41,8 +41,8 @@ static void SetText() {
 	te->SetShader(NW_DEFAULT_SHADER_TEXT_BATCHED);
 	te->colors = v4f(1.0, 0.0, 0.0, 1.0);
 	te->SetFont({fdir.c_str(), 15});
-	te->SetContent("'T': triangulate\n"
-				   "'S': convex hull triangle\n"
+	te->SetContent("'T': Ear Clipping Triangulation\n"
+				   "'S': Delaunay Triangulation\n"
 				   "'R': reset\n"
 				   "'A': circumcircle of a triangle.");
 	te->UpdateGlyphs();

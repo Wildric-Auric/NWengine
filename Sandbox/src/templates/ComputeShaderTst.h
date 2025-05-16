@@ -4,6 +4,18 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "StorageBuffer.h"
+#include "CircleRenderer.h"
+#include "DefaultAssets.h"
+#include "InlineShader.h"
+#include "NWengine.h"
+#include "Scene.h"
+#include "UISys.h"
+#include "Text.h"
+#include "Renderer.h"
+#include "Components.h"
+#include "Inputs.h"
+#include "UIWindow.h"
+#include "NWTime.h"
 
 namespace ComputeShaderTst {
 
