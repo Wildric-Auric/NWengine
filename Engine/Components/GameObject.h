@@ -190,4 +190,10 @@ class GameObject {
 		int unpack[] = {0, (DeleteComponent<Nex>(), 0)...};
 		(void)unpack;
 	}
+
+	template <typename T> T&					Add() { return *AddComponent<T>(); }
+	template <typename T, typename... Nex> T&	Add() { return *AddComponents<T, Nex...>(); }
+	template <typename T> T*					Get() { return GetComponent<T>(); }
+	template <typename T> void					Del() { DeleteComponent<T>(); }
+	template <typename T, typename... Nex> void Del() { DeleteComponents<T, Nex...>(); }
 };
