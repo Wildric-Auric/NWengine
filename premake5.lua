@@ -20,8 +20,6 @@ workspace "NWengine"
 
     project "NWEngineCore"
                     kind "StaticLib"
-                    defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
-
                     includedirs {
                         "./",
                         "Dependencies/glew/include",
@@ -42,8 +40,6 @@ workspace "NWengine"
 
     project "NWEngineCoreUnityBuild"
                     kind "StaticLib"
-                    defines { "NW_GAME_BUILD" } --Doing it thrhough a macro is deprecated see Script.cpp update()
-
                     includedirs {
                         "./",
                         "Dependencies/glew/include",
@@ -84,8 +80,6 @@ workspace "NWengine"
                     links {
                         "dwmapi.lib"
                     }
-                    --removefiles { "%{prj.location}/Engine/NWengine.cpp", "%{prj.location}/Engine/Game.cpp", "%{prj.location}/Engine/Source.cpp"}
-                    
     workspace "*"
         links {
             "opengl32.lib",

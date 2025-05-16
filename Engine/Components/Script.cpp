@@ -1,9 +1,7 @@
 #include "Script.h"
 #include "Camera.h"
-#include "Context.h"
 #include "Sprite.h"
 #include "Transform.h"
-#include "Utilities.h"
 
 Script::Script(GameObject* obj) { this->attachedObject = obj; }
 
@@ -18,10 +16,6 @@ void Script::Update() {
 		return;
 	this->script->Update();
 }
-
-// void Script::SetScript(Scriptable* scr) {
-//	this->script = scr;
-// }
 
 void Scriptable::ShaderCode(void* sprite) {
 	Sprite*	   sprite0	 = (Sprite*)sprite;
