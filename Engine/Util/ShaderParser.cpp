@@ -5,6 +5,7 @@
 
 static bool isCommentBeg(const std::string& s) { return s == "/*"; }
 static bool isCommentEnd(const std::string& s) { return s == "*/"; }
+static bool isSpace(char c) { return c == ' ' || c == '\t'; }
 
 void General(void* ptr);
 void Comment0(void* ptr);
@@ -36,7 +37,7 @@ void Preprocessor(void* ptr) {
 	if(p.c == '\\') {
 		p.macroNxt = 1;
 		return;
-	} else if((p.c == ' ' || p.c == '\t') && p.curToken.back() != ' ') {
+	} else if(isSpace(p.c) && !isSpace(p.curToken.back())) {
 		p.curToken += ' ';
 		return;
 	} else if((p.c == ' ' || p.c == '\t')) {
