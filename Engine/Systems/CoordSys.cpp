@@ -44,4 +44,14 @@ fVec2 WorldToViewport(const fVec2& p) {
 	return WorldToViewportNonNormalized(p) / size;
 }
 
+bool IsPointInside(const v2f& pt, const BoundingBox& bb) { return IsPointInside(pt, bb.center, bb.size); }
+
+bool IsPointInside(const v2f& pt, const v2f& center, const v2f& size) {
+	v2f rel = pt - center;
+	v2f hs	= size * 0.5;
+	return ABS(rel.x) < hs.x && ABS(rel.y) < hs.y;
+}
+
+v2f GetRelativePosition(const v2f& pt, const v2f& center) { return pt - center; }
+
 }; // namespace NWCoordSys

@@ -11,7 +11,6 @@
 #define NW_DEFAULT_SHADER_TRIANGLE	   ShaderTriangleDefaultStr, &ShaderTriangleDefaultID
 #define NW_DEFAULT_SHADER_CIRCLE	   ShaderCircleDefaultStr, &ShaderCircleDefaultID
 #define NW_DEFAULT_SHADER_NO_ALPHA	   ShaderTexturedNoAlphaStr, &ShaderTexturedNoAlphaID
-#define NW_DEFAULT_SHADER_UI_WINDOW	   ShaderUIWindowStr, &ShaderUIWindowID
 
 #define NW_DEFAULT_TEXTURE &ImageDefault, &TextureDefaultID
 
@@ -23,7 +22,6 @@ extern const ShaderText ShaderTexturedBatchedDefaultStr;
 extern const ShaderText ShaderTextDefaultStr;
 extern const ShaderText ShaderTextBatchedStr;
 extern const ShaderText ShaderTexturedNoAlphaStr;
-extern const ShaderText ShaderUIWindowStr;
 
 extern const Image ImageDefault;
 
@@ -36,4 +34,16 @@ extern ShaderIdentifier	 ShaderCircleDefaultID;
 extern ShaderIdentifier	 ShaderTriangleDefaultID;
 extern ShaderIdentifier	 ShaderTexturedColoredDefaultID;
 extern ShaderIdentifier	 ShaderTexturedNoAlphaID;
-extern ShaderIdentifier	 ShaderUIWindowID;
+
+//-----------Extra----------------
+#define NW_INTERNAL_DEFAULT_SHADER_UI_WINDOW   ShaderUIWindowStr, &ShaderUIWindowID
+#define NW_INTERNAL_DEFAULT_SHADER_UI_SLIDER   ShaderUISliderStr, &ShaderUISliderID
+#define NW_INTERNAL_DEFAULT_SHADER_UI_CHECKBOX ShaderUICheckboxStr, &ShaderUICheckboxID
+
+extern const ShaderText ShaderUIWindowStr;
+extern const ShaderText ShaderUISliderStr;
+extern const ShaderText ShaderUICheckboxStr;
+
+extern ShaderIdentifier ShaderUIWindowID;
+extern ShaderIdentifier ShaderUISliderID;
+extern ShaderIdentifier ShaderUICheckboxID;

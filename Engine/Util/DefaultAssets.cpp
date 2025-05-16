@@ -165,7 +165,6 @@ ShaderIdentifier  ShaderTextBatchedDefaultID	 = "DefaultShaderTextBatched";
 ShaderIdentifier  ShaderTriangleDefaultID		 = "DefaultShaderTriangle";
 ShaderIdentifier  ShaderCircleDefaultID			 = "DefaultShaderCircle";
 ShaderIdentifier  ShaderTexturedNoAlphaID		 = "DefaultShaderTexturedNoAlphaID";
-ShaderIdentifier  ShaderUIWindowID				 = "DefaultShaderUIWindowID";
 
 const ShaderText ShaderCircleDefaultStr = {ShaderDefVert,
 										   R"V0G0N(        
@@ -230,6 +229,7 @@ const ShaderText ShaderTexturedColoredDefaultStr = {ShaderDefVert,
         };
 )V0G0N"};
 
+//---------------------------
 const ShaderText ShaderUIWindowStr{ShaderDefVert,
 								   R"V0G0N(        
         #pragma fragment
@@ -238,7 +238,11 @@ const ShaderText ShaderUIWindowStr{ShaderDefVert,
         uniform vec2 uRes;
         uniform float uTitleHeight = 20.0;
         uniform float uBorderWidth = 1.0;
-        uniform vec4  uCol = vec4(1.0);
+        //----Colors----
+        uniform vec4  uCol       = vec4(1.0);
+        uniform vec4  uBarCol    = vec4(1.0,0.0,0.0,1.0);
+        uniform vec4  uBorderCol = vec4(vec3(0.0),1.0);
+        //------------
         in vec2 uv;
         out vec4 FragColor;
         void main() {
@@ -246,8 +250,53 @@ const ShaderText ShaderUIWindowStr{ShaderDefVert,
             bool ycond = (1.0-uv.y)*uRes.y < uTitleHeight;
             bool condBorder = (1.0-uv.y)*uRes.y <= uBorderWidth || uv.y * uRes.y <= uBorderWidth;
             condBorder = condBorder || (1.0-uv.x)*uRes.x <= uBorderWidth || uv.x * uRes.x <= uBorderWidth;
-            vec4 color = ycond ? vec4(1.0,0.0,0.0,1.0) : uCol;
-            color = condBorder ? vec4(0.0,0.0,0.0,1.0) : color;
+            vec4 color = ycond ? uBarCol               : uCol;
+            color = condBorder ? uBorderCol            : color;
             FragColor = color;
         };
 )V0G0N"};
+ShaderIdentifier ShaderUIWindowID = "DefaultShaderUIWindowID";
+
+const ShaderText ShaderUISliderStr{ShaderDefVert,
+								   R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        uniform sampler2D uTex0;
+        uniform vec2 uRes;
+        uniform float uPosX  = 0.0;
+        uniform vec4  uCol   = vec4(vec3(0.0),1.0);
+        in vec2 uv;
+        out vec4 FragColor;
+        void main() {
+            vec2 coord = uRes * (uv-0.5);
+            vec4 color = uCol;
+            if (abs(coord.y) > 2 && abs(coord.x + uPosX) > 5) 
+                color.a = 0.0;
+            FragColor = color;
+        };
+)V0G0N"};
+
+ShaderIdentifier ShaderUISliderID = "DefaultShaderUISliderID";
+
+const ShaderText ShaderUICheckboxStr{ShaderDefVert,
+									 R"V0G0N(        
+        #pragma fragment
+        #version 330 core
+        uniform sampler2D uTex0;
+        uniform vec2 uRes;
+        uniform int  uState = 0;
+        uniform vec4 uBgCol = vec4(vec3(0.0),1.0);
+        uniform vec4 uFgCol = vec4(vec3(1.0),1.0);
+        in vec2 uv;
+        out vec4 FragColor;
+        void main() {
+            vec2 coord = uv - 0.5;
+            vec4 color = uBgCol;
+            if (uState == 1 && length(coord) < 0.25) {
+                color = uFgCol;
+            }
+            FragColor = color;
+        };
+)V0G0N"};
+
+ShaderIdentifier ShaderUICheckboxID = "DefaultShaderUICheckboxID";

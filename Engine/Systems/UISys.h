@@ -16,7 +16,7 @@ class UISys {
   public:
 	static UILayerConsts	layerConsts;
 	static GameObject		camContainer;
-	static fVec2			curPos;
+	static v2f				curPos;
 	static int				curStatePriority;
 	static UISysCursorState curState;
 	static bool				clickEvent;

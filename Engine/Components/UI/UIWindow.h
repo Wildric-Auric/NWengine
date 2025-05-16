@@ -1,7 +1,32 @@
 #pragma once
 #include "GameObject.h"
+#include "Camera.h"
+#include "ds.h"
+
+#define UI_ITEM_HEAP_UNIT_SIZE 512
+#define UNWRP_COL(col)		   (col).x, (col).y, (col).z, (col).a
 
 class UIManager;
+
+struct UIColorScheme {
+	v4f bg;
+	v4f fg;
+	v4f win;
+	v4f winRest;
+	v4f winHover;
+	v4f winSelect;
+	v4f winBar;
+	v4f winBrdr;
+	v4f winBrdrResize;
+	v4f text;
+	v4f titleText;
+};
+
+extern UIColorScheme uiColorSchemePreset_Test;
+extern UIColorScheme uiColorSchemePreset_Light;
+extern UIColorScheme uiColorSchemePreset_Dark;
+
+extern UIColorScheme currentUIColorScheme;
 
 #define SetBitFieldVal(token, off) token = 0x1 << off
 enum UIWindowState : i32 {
@@ -26,13 +51,21 @@ enum UIItemState : i32 { SetBitFieldVal(Item_State_Selected, 1) };
 
 enum class CurAdvanceStrat { None, BreakOnHorizontalEnd, FixedWidth };
 
-enum UIItemType { UIItemType_None, UIItemType_Title, UIItemType_Label, UIItemType_TestZone };
+enum UIItemType {
+	UIItemType_None,
+	UIItemType_Title,
+	UIItemType_Label,
+	UIItemType_TestZone,
+	UIItemType_Slider,
+	UIItemType_Checkbox
+};
 
 class UIItem;
 
 typedef UIItem UIItemLabel;
 typedef UIItem UIItemTestZone;
-
+typedef i32	   UIItemProp;
+typedef i32	   UIWindowProp;
 struct UIWindowMetrics {
 	int	  titleBarHeight  = 20;
 	int	  resizeAreaWidth = 5;
@@ -44,21 +77,23 @@ struct UIWindowMetrics {
 class UIWindow;
 class UIItem {
   public:
-	UIItemType	type;
-	ItemProp	prop;
-	GameObject	obj;
-	UIWindow*	_owner;
-	UIItemType	GetType();
-	int64		GetLayer();
-	inline v2f	GetSize() { return _GetSizeProc(this); };
-	inline void Update() { _UpdateProc(this); }
-	inline void LateUpdate() { _LateUpdateProc(this); }
-	inline void Draw() { _DrawProc(this); };
-	int64 (*_GetLayerProc)(UIItem*)	 = DefaultUIItemGetLayerProc;
-	v2f (*_GetSizeProc)(UIItem*)	 = DefaultUIItemGetSizeProc;
-	void (*_UpdateProc)(UIItem*)	 = [](UIItem*) {};
-	void (*_LateUpdateProc)(UIItem*) = [](UIItem*) {};
-	void (*_DrawProc)(UIItem*)		 = [](UIItem* iter) { iter->obj.Draw(); };
+	UIItemType	 type;
+	UIWindowProp prop;
+	GameObject	 obj;
+	int8		 endln = 0;
+	UIWindow*	 _owner;
+	void*		 data = 0;
+	UIItemType	 GetType();
+	int64		 GetLayer();
+	inline v2f	 GetSize() { return _GetSizeProc(this); };
+	inline int	 Update() { return _UpdateProc(this); }
+	inline int	 LateUpdate() { return _LateUpdateProc(this); }
+	inline void	 Draw() { _DrawProc(this); };
+	int64 (*_GetLayerProc)(UIItem*) = DefaultUIItemGetLayerProc;
+	v2f (*_GetSizeProc)(UIItem*)	= DefaultUIItemGetSizeProc;
+	int (*_UpdateProc)(UIItem*)		= [](UIItem*) -> int { return 0; };
+	int (*_LateUpdateProc)(UIItem*) = [](UIItem* it) -> int { return it->endln; };
+	void (*_DrawProc)(UIItem*)		= [](UIItem* iter) { iter->obj.Draw(); };
 	std::list<UIItem>::iterator _iter;
 
 	static int64 DefaultUIItemGetLayerProc(UIItem*);
@@ -116,16 +151,17 @@ class UIWindow : public GameComponent {
 	UIItem* _PushItem(UIItemType, int64);
 	UIItem* _SetUpItem(UIItem*, UIItemType, int64);
 	UIItem* AddItem(UIItemType, int64);
+	UIItem* AddItem(UIItemType type, int64 layer, uint8 endln);
 	void	DrawItems();
 
-	void			 SetPosition(const fVec2&);
-	void			 SetSize(const fVec2&);
-	inline UICursor* GetCursor() { return &cursor; }
-	inline i32		 GetProp() { return prop; }
-	inline i32*		 GetPropRef() { return &prop; }
+	void					   SetPosition(const fVec2&);
+	void					   SetSize(const fVec2&);
+	inline UICursor*		   GetCursor() { return &cursor; }
+	inline const UIWindowProp& GetProp() { return prop; }
+	inline UIWindowProp*	   GetPropRef() { return &prop; }
 
-	i32 state = 0; // UIWindowState
-	i32 prop  = Window_Prop_MovableX | Window_Prop_MovableY | Window_Prop_ResizableX | Window_Prop_ResizableY;
+	i32			 state = 0; // UIWindowState
+	UIWindowProp prop  = Window_Prop_MovableX | Window_Prop_MovableY | Window_Prop_ResizableX | Window_Prop_ResizableY;
 
 	v2f relPos;
 	v2f rpos;
@@ -135,10 +171,14 @@ class UIWindow : public GameComponent {
 
 	v2f lPosItemBfSelect;
 
-	UICursor cursor = UICursor(this);
+	MemoryRegion itemsHeap;
+	UICursor	 cursor		  = UICursor(this);
+	UIItem*		 hoveredItem  = 0;
+	UIItem*		 selectedItem = 0;
+	UIItem*		 draggedItem  = 0;
+	UIItem*		 clickedItem  = 0;
 
-	fVec4 bgCol			= fVec4(1.0, 1.0, 1.0, 1.0);
-	bool  _tmpisFocused = 0;
+	bool _tmpisFocused = 0;
 
 	UIWindowMetrics		 metrics;
 	std::list<UIItem>	 items;
@@ -148,4 +188,24 @@ class UIWindow : public GameComponent {
 
 	static bool CacheConditionHasUIWindow(GameObject* obj);
 	static int	UIWindowDrawCallback(void*);
+};
+
+inline const float& GetSliderPosX(UIItem* it) { return READ(float, it->data); }
+inline void			SetSliderPosX(UIItem* it, float val) { READ(float, it->data) = val; }
+inline const bool&	GetCheckBoxState(UIItem* it) { return READ(bool, it->data); }
+inline void			SetCheckBoxState(UIItem* it, float val) { READ(bool, it->data) = val; }
+
+//-------------------UIManager-------------------
+
+class UIManager : public GameComponent {
+  public:
+	GameObject _camContainer;
+	Camera*	   _lastCam = 0;
+
+	Camera* GetCamera();
+	Camera* GetTmpCamera();
+	void	OnAdd() override;
+	void	Update() override;
+	void	Bind();
+	void	Unbind();
 };

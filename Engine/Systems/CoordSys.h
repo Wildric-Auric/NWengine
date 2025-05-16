@@ -30,4 +30,9 @@ fVec2 WorldToScreen(const fVec2&);
 
 fVec2 ViewportToWorld(const fVec2&);
 fVec2 WorldToViewport(const fVec2&);
+
+bool IsPointInside(const v2f&, const BoundingBox&);
+bool IsPointInside(const v2f&, const v2f& center, const v2f& size);
+v2f	 GetRelativePosition(const v2f&, const v2f& center);
+
 }; // namespace NWCoordSys
