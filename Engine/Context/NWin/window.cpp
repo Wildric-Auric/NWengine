@@ -107,22 +107,8 @@ LRESULT CALLBACK defaultWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-static HCURSOR loadCursor(CursorIcon c) {
-	LPSTR cur = IDC_ARROW;
-	switch(c) {
-	case CursorIcon::RESIZE_NE:
-		cur = IDC_SIZENESW;
-	case CursorIcon::RESIZE_SW:
-		cur = IDC_SIZENWSE;
-	case CursorIcon::RESIZE_NS:
-		cur = IDC_SIZENS;
-	case CursorIcon::RESIZE_WE:
-		cur = IDC_SIZEWE;
-	default:
-		break;
-	}
-	return LoadCursor(0, cur);
-}
+static LPSTR   curLookup[] = {IDC_ARROW, IDC_SIZENS, IDC_SIZEWE, IDC_SIZENESW, IDC_SIZENWSE};
+static HCURSOR loadCursor(CursorIcon c) { return LoadCursor(0, curLookup[(int)c]); }
 
 void Window::setCursor(CursorIcon c) {
 	HCURSOR cur = loadCursor(c);

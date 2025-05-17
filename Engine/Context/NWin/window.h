@@ -20,12 +20,12 @@ typedef void* applicationInstance;
 typedef void (*procResizeCallback)(winHandle, Vec2 newSize);
 typedef void (*procDrawCallback)(winHandle);
 
-enum class CursorIcon {
+enum class CursorIcon : uint {
 	ARROW,
-	RESIZE_WE,
-	RESIZE_NS,
-	RESIZE_NE,
-	RESIZE_SW,
+	RESIZE_VERT,
+	RESIZE_HORIZONTAL,
+	RESIZE_DIAG_RIGHT,
+	RESIZE_DIAG_LEFT,
 };
 
 enum class WindowStyle : Word { Default = (0x00000000L | 0x00C00000L | 0x00080000L | 0x00040000L | 0x00020000L | 0x00010000L) };
