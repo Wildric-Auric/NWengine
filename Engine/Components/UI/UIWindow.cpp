@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "UISys.h"
 #include "Utilities.h"
+#include "window.h"
 
 UIColorScheme uiColorSchemePreset_Test = {
 	{0, 0, 0, 1},		  // bg;
@@ -24,19 +25,19 @@ UIColorScheme uiColorSchemePreset_Test = {
 };
 UIColorScheme uiColorSchemePreset_Light = {};
 UIColorScheme uiColorSchemePreset_Dark	= {
-	{1, 1, 1, 1},		  // bg;
-	{0, 0, 1, 1},		  // fg;
-	{0, 0, 0, 0},		  // win;
-	{0.0, 0., 0., 0.5}, // winRest;
-	{0.5, 0.5, 0.6, 1.0}, // winHover;
-	{0, 0, 0, 1},		  // winSelect;
-	{0, 0, 0.4, 1},		  // winBar;
-	{1, 1, 1, 1},		  // winBrdr;
-	{0, 0, 1, 1},		  // winBrdrResize;
-	{1, 1, 1, 1},		  // text;
-	{1, 1, 1, 1},		  // titleText;
+	 {1, 1, 1, 1},		   // bg;
+	 {0, 0, 1, 1},		   // fg;
+	 {0, 0, 0, 0},		   // win;
+	 {0.0, 0., 0., 0.5},   // winRest;
+	 {0.5, 0.5, 0.6, 1.0}, // winHover;
+	 {0, 0, 0, 1},		   // winSelect;
+	 {0, 0, 0.4, 1},	   // winBar;
+	 {1, 1, 1, 1},		   // winBrdr;
+	 {0, 0, 1, 1},		   // winBrdrResize;
+	 {1, 1, 1, 1},		   // text;
+	 {1, 1, 1, 1},		   // titleText;
 };
-UIColorScheme currentUIColorScheme		= uiColorSchemePreset_Dark;
+UIColorScheme currentUIColorScheme = uiColorSchemePreset_Test;
 
 int64 UIItem::DefaultUIItemGetLayerProc(UIItem* item) { return item->obj.GetComponent<Sprite>()->GetSortingLayer(); };
 
@@ -272,22 +273,25 @@ UIWindow::UIWindow(GameObject* go) { attachedObject = go; }
 
 int UIWindow::IsCursorOnTitleBar() {
 	// dist from top
-	if(relPos.y < 0.0)
+	if(rpos.y < 0.0)
 		return 0;
-	return lsize.y * 0.5 - relPos.y <= metrics.titleBarHeight;
+	v2f s = GetSize();
+	return s.y * 0.5 - rpos.y <= metrics.titleBarHeight;
 }
 
 i32 UIWindow::ComputeResizeState() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
 	if(!IsCursorOnWindow())
 		return 0;
-	bool rx = (abs(rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
-	bool ry = (abs(rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
+	bool rxr = ((rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
+	bool rxl = ((rpos.x) < (-spr->container.width * 0.5 + metrics.resizeAreaWidth));
+	bool ryu = ((rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
+	bool ryd = ((rpos.y) < (-spr->container.height * 0.5 + metrics.resizeAreaWidth));
 	i32	 ret;
-	if(rx)
-		ret = ret | (UIWindowState::Window_State_RESIZE_X * ((prop & Window_Prop_ResizableX) != 0));
-	if(ry)
-		ret = ret | (UIWindowState::Window_State_RESIZE_Y * ((prop & Window_Prop_ResizableY) != 0));
+	ret = ret | (UIWindowState::Window_State_ResizeXR * ((prop & Window_Prop_ResizableXR) != 0) * rxr);
+	ret = ret | (UIWindowState::Window_State_ResizeXL * ((prop & Window_Prop_ResizableXL) != 0) * rxl);
+	ret = ret | (UIWindowState::Window_State_ResizeYU * ((prop & Window_Prop_ResizableYU) != 0) * ryu);
+	ret = ret | (UIWindowState::Window_State_ResizeYD * ((prop & Window_Prop_ResizableYD) != 0) * ryd);
 	return ret;
 }
 
@@ -295,8 +299,7 @@ i32 UIWindow::ComputeMoveState() {
 	bool b	 = IsCursorOnTitleBar();
 	i32	 ret = 0;
 	if(b)
-		ret = (Window_State_MOVE_X * ((prop & Window_Prop_MovableX) != 0)) |
-			  (Window_State_MOVE_Y * ((prop & Window_Prop_MovableY) != 0));
+		ret = (Window_State_Move * ((prop & Window_Prop_Movable) != 0));
 	return ret;
 }
 
@@ -304,9 +307,29 @@ int UIWindow::IsCursorOnResize() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
 	if(!IsCursorOnWindow())
 		return 0;
-	bool rx = (abs(rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
-	bool ry = (abs(rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
-	return (int)rx * ((prop & Window_Prop_ResizableX) != 0) + 2 * (int)ry * ((prop & Window_Prop_ResizableY) != 0);
+	bool rxr = ((rpos.x) > (spr->container.width * 0.5 - metrics.resizeAreaWidth));
+	bool rxl = ((rpos.x) < (-spr->container.width * 0.5 + metrics.resizeAreaWidth));
+	bool ryu = ((rpos.y) > (spr->container.height * 0.5 - metrics.resizeAreaWidth));
+	bool ryd = ((rpos.y) < (-spr->container.height * 0.5 + metrics.resizeAreaWidth));
+	rxr *= (prop & Window_Prop_ResizableXR) != 0;
+	rxl *= (prop & Window_Prop_ResizableXL) != 0;
+	ryu *= (prop & Window_Prop_ResizableYU) != 0;
+	ryd *= (prop & Window_Prop_ResizableYD) != 0;
+	bool ne = rxr && ryu;
+	bool sw = rxl && ryd;
+	bool nw = rxl && ryu;
+	bool se = rxr && ryd;
+	bool we = rxl || rxr;
+	bool ns = ryu || ryd;
+	if(ne || sw)
+		return (int)NWin::CursorIcon::RESIZE_DIAG_RIGHT;
+	else if(nw || se)
+		return (int)NWin::CursorIcon::RESIZE_DIAG_LEFT;
+	else if(we)
+		return (int)NWin::CursorIcon::RESIZE_HORIZONTAL;
+	else if(ns)
+		return (int)NWin::CursorIcon::RESIZE_VERT;
+	return 0;
 }
 
 int UIWindow::IsCursorOnWindow() {
@@ -315,8 +338,6 @@ int UIWindow::IsCursorOnWindow() {
 }
 
 bool UIWindow::IsFocused() { return UISys::focusedWindow == this; }
-
-i32 UIWindow::GetState() { return state; }
 
 fVec2 UIWindow::GetSize() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
@@ -363,10 +384,19 @@ void UIWindow::SetSize(const fVec2& pos) {
 }
 
 void UIWindow::Update() {
-	bool m	   = UISys::GetClickEvent();
-	bool m1	   = UISys::GetIsClicking();
-	v2f	 mp	   = UISys::curPos;
-	bool hitbs = 0; // has item been selected this frame?
+	bool m		 = UISys::GetClickEvent();
+	bool m1		 = UISys::GetIsClicking();
+	v2f	 mp		 = UISys::curPos;
+	bool hitbs	 = 0; // has item been selected this frame?
+	bool isOnRes = IsCursorOnResize();
+	bool isOnBar = IsCursorOnTitleBar();
+	if(isOnRes && m) {
+		lclick = UILastRgnClicked::Resize;
+	} else if(isOnBar && m) {
+		lclick = UILastRgnClicked::Move;
+	} else if(m) {
+		lclick = UILastRgnClicked::None;
+	}
 
 	cursor.SetCursorTopLeftWin();
 	cursor.Advance(fVec2(0.0, -metrics.titleBarHeight - metrics.itemSpacing.y));
@@ -382,11 +412,11 @@ void UIWindow::Update() {
 		item.obj.GetComponent<Transform>()->SetPosition(itp);
 
 		clickedItem = 0;
-		if(m1 && !m && selectedItem == it) { // Items may be dragged without cursor being inside
+		if(m1 && !m && selectedItem == it) {
+			// Items may be dragged without cursor being inside
 			draggedItem = selectedItem;
-			// printf("Dragged!");
 		}
-		if(NWCoordSys::IsPointInside(mp, itp, s)) {
+		if(NWCoordSys::IsPointInside(mp, itp, s) && !isOnRes) {
 			if(m && (it->prop & Item_Prop_Selectable)) {
 				selectedItem = it;
 				clickedItem	 = it;
@@ -419,7 +449,7 @@ void UIWindow::Update() {
 		UISys::Hover(this);
 	}
 
-	if(state == 0 && m1 && IsCursorOnWindow() && UISys::focusedWindow == this) {
+	if(state == 0 && m1 && lclick != UILastRgnClicked::None && IsCursorOnWindow() && UISys::focusedWindow == this) {
 		relPos		 = rpos;
 		lsize		 = fVec2(spr->container.width, spr->container.height);
 		lpos		 = UISys::curPos;
@@ -429,31 +459,43 @@ void UIWindow::Update() {
 		state		 = state | mvState;
 		state		 = state | resState;
 	}
+	if(lclick == UILastRgnClicked::None) {
+		state = 0;
+	}
+	if((state & (Window_State_ResizeXR | Window_State_ResizeXL | Window_State_ResizeYD | Window_State_ResizeYU))) {
+		state &= ~Window_State_Move;
+	}
 	if((state != 0) && !m1) {
 		state = 0;
 	}
-	if(state & (Window_State_MOVE_X | Window_State_MOVE_Y)) {
+	if(state & Window_State_Move) {
 		tr->SetPosition(UISys::GetCurPos() - relPos);
 	}
-	if(state & (Window_State_RESIZE_X | Window_State_RESIZE_Y)) {
-		fVec2 ps = UISys::curPos - lpos;
-		ps.x	 = (ps.x);
-		ps.y	 = (ps.y);
-		fVec2 m	 = -0.5 * ps;
+	v2f newp;
+	v2f news;
+	if(state & (Window_State_ResizeXR | Window_State_ResizeXL)) {
+		float ps  = UISys::curPos.x - lpos.x;
+		float mps = -0.5 * ps;
 		if(relPos.x < 0.0) {
-			ps.x = -(ps.x);
+			ps = -(ps);
 		}
+		news.x				 = lsize.x + ps;
+		news.x				 = Max<int>(news.x, metrics.minSize.x);
+		newp.x				 = lwinPos.x - mps;
+		spr->container.width = news.x;
+		tr->position.x		 = newp.x;
+	}
+	if(state & (Window_State_ResizeYU | Window_State_ResizeYD)) {
+		float ps  = UISys::curPos.y - lpos.y;
+		float mps = -0.5 * ps;
 		if(relPos.y < 0.0) {
-			ps.y = -(ps.y);
+			ps = -(ps);
 		}
-		fVec2 newsize = lsize + ps;
-		newsize.x	  = Max<int>(newsize.x, metrics.minSize.x);
-		newsize.y	  = Max<int>(newsize.y, metrics.minSize.y);
-		SetSize(newsize);
-		SetPosition(lwinPos - m);
-		spr->SetSize(newsize);
-		tr->SetPosition(lwinPos - m);
-		//      if (newsize.x != metrics.minSize.x && newsize.y != metrics.minSize.y)
+		news.y				  = lsize.y + ps;
+		news.y				  = Max<int>(news.y, metrics.minSize.y);
+		newp.y				  = lwinPos.y - mps;
+		spr->container.height = news.y;
+		tr->position.y		  = newp.y;
 	}
 }
 

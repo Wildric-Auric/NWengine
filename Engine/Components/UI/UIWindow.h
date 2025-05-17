@@ -30,22 +30,24 @@ extern UIColorScheme currentUIColorScheme;
 
 #define SetBitFieldVal(token, off) token = 0x1 << off
 enum UIWindowState : i32 {
-	SetBitFieldVal(Window_State_MOVE_X, 1),
-	SetBitFieldVal(Window_State_MOVE_Y, 2),
-	SetBitFieldVal(Window_State_RESIZE_X, 3),
-	SetBitFieldVal(Window_State_RESIZE_Y, 4),
+	SetBitFieldVal(Window_State_Move, 1),
+	SetBitFieldVal(Window_State_ResizeXR, 2),
+	SetBitFieldVal(Window_State_ResizeXL, 3),
+	SetBitFieldVal(Window_State_ResizeYU, 4),
+	SetBitFieldVal(Window_State_ResizeYD, 5),
 };
 
 enum WindowProp : i32 {
-	SetBitFieldVal(Window_Prop_ResizableX, 1),
-	SetBitFieldVal(Window_Prop_ResizableY, 2),
-	SetBitFieldVal(Window_Prop_MovableX, 3),
-	SetBitFieldVal(Window_Prop_MovableY, 4),
+	SetBitFieldVal(Window_Prop_ResizableXR, 1),
+	SetBitFieldVal(Window_Prop_ResizableXL, 2),
+	SetBitFieldVal(Window_Prop_ResizableYU, 3),
+	SetBitFieldVal(Window_Prop_ResizableYD, 4),
+	SetBitFieldVal(Window_Prop_Movable, 5),
+	SetBitFieldVal(Window_Prop_HasBorders, 6),
+	SetBitFieldVal(Window_Prop_HasBar, 7),
 };
 
 enum ItemProp : i32 { SetBitFieldVal(Item_Prop_Selectable, 1) };
-
-enum UIItemState : i32 { SetBitFieldVal(Item_State_Selected, 1) };
 
 #undef SetBitFieldVal
 
@@ -60,12 +62,19 @@ enum UIItemType {
 	UIItemType_Checkbox
 };
 
+enum UILastRgnClicked {
+	None   = 0,
+	Resize = 1,
+	Move   = 2,
+};
+
 class UIItem;
 
 typedef UIItem UIItemLabel;
 typedef UIItem UIItemTestZone;
 typedef i32	   UIItemProp;
 typedef i32	   UIWindowProp;
+typedef i32	   UIWindowStateField;
 struct UIWindowMetrics {
 	int	  titleBarHeight  = 20;
 	int	  resizeAreaWidth = 5;
@@ -134,19 +143,19 @@ class UIWindow : public GameComponent {
 
 	void Update() override;
 
-	i32	  ComputeResizeState();
-	i32	  ComputeMoveState();
-	int	  IsCursorOnTitleBar();
-	int	  IsCursorOnWindow();
-	int	  IsCursorOnResize();
-	bool  IsFocused();
-	i32	  GetState();
-	fVec2 GetSize();
-	fVec2 GetPosition();
-	void  SetShaderParams();
-	void  SetTitle(const char* str);
-	int64 GetLayer();
-	int64 GetUIItemLayer(int64 relative);
+	i32						  ComputeResizeState();
+	i32						  ComputeMoveState();
+	int						  IsCursorOnTitleBar();
+	int						  IsCursorOnWindow();
+	int						  IsCursorOnResize();
+	bool					  IsFocused();
+	inline UIWindowStateField GetState() { return state; };
+	fVec2					  GetSize();
+	fVec2					  GetPosition();
+	void					  SetShaderParams();
+	void					  SetTitle(const char* str);
+	int64					  GetLayer();
+	int64					  GetUIItemLayer(int64 relative);
 
 	UIItem* _PushItem(UIItemType, int64);
 	UIItem* _SetUpItem(UIItem*, UIItemType, int64);
@@ -161,7 +170,8 @@ class UIWindow : public GameComponent {
 	inline UIWindowProp*	   GetPropRef() { return &prop; }
 
 	i32			 state = 0; // UIWindowState
-	UIWindowProp prop  = Window_Prop_MovableX | Window_Prop_MovableY | Window_Prop_ResizableX | Window_Prop_ResizableY;
+	UIWindowProp prop  = Window_Prop_Movable | Window_Prop_ResizableXR | Window_Prop_ResizableXL | Window_Prop_ResizableYU |
+						Window_Prop_ResizableYD;
 
 	v2f relPos;
 	v2f rpos;
@@ -171,12 +181,13 @@ class UIWindow : public GameComponent {
 
 	v2f lPosItemBfSelect;
 
-	MemoryRegion itemsHeap;
-	UICursor	 cursor		  = UICursor(this);
-	UIItem*		 hoveredItem  = 0;
-	UIItem*		 selectedItem = 0;
-	UIItem*		 draggedItem  = 0;
-	UIItem*		 clickedItem  = 0;
+	MemoryRegion	 itemsHeap;
+	UICursor		 cursor		  = UICursor(this);
+	UIItem*			 hoveredItem  = 0;
+	UIItem*			 selectedItem = 0;
+	UIItem*			 draggedItem  = 0;
+	UIItem*			 clickedItem  = 0;
+	UILastRgnClicked lclick		  = UILastRgnClicked::None;
 
 	bool _tmpisFocused = 0;
 

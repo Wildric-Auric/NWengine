@@ -5,7 +5,6 @@
 #include "Sprite.h"
 #include "UIWindow.h"
 #include "window.h"
-#include "InlineShader.h"
 
 // Range of each window layers is of 0x10000 = 65536
 // r:      b ---> l: b + 0x10000
@@ -88,10 +87,28 @@ void UISys::Update() {
 	if(focusedWindow)
 		iswinfr = focusedWindow->GetState() == 0;
 	win->setCursor(NWin::CursorIcon::ARROW);
-	if(focusedWindow && (focusedWindow->GetState() & (Window_State_RESIZE_X | Window_State_RESIZE_Y))) {
-		win->setCursor(NWin::CursorIcon::RESIZE_WE);
-	} else if(iswinfr && hoveredWindow && hoveredWindow->IsCursorOnResize()) {
-		win->setCursor(NWin::CursorIcon::RESIZE_WE);
+	if(focusedWindow) {
+		UIWindowStateField st = focusedWindow->GetState();
+		bool			   we = st & (Window_State_ResizeXL | Window_State_ResizeXR);
+		bool			   ns = st & (Window_State_ResizeYD | Window_State_ResizeYU);
+		bool			   ne = (st & Window_State_ResizeXR) && (st & Window_State_ResizeYU);
+		bool			   nw = (st & Window_State_ResizeXL) && (st & Window_State_ResizeYU);
+		bool			   se = (st & Window_State_ResizeXR) && (st & Window_State_ResizeYD);
+		bool			   sw = (st & Window_State_ResizeXL) && (st & Window_State_ResizeYD);
+		if(ne || sw)
+			win->setCursor(NWin::CursorIcon::RESIZE_DIAG_RIGHT);
+		else if(nw || se)
+			win->setCursor(NWin::CursorIcon::RESIZE_DIAG_LEFT);
+		else if(we)
+			win->setCursor(NWin::CursorIcon::RESIZE_HORIZONTAL);
+		else if(ns)
+			win->setCursor(NWin::CursorIcon::RESIZE_VERT);
+	}
+	if(hoveredWindow) {
+		int cur = hoveredWindow->IsCursorOnResize();
+		if(iswinfr && cur != 0) {
+			win->setCursor((NWin::CursorIcon)cur);
+		}
 	}
 }
 
