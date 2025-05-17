@@ -4,7 +4,7 @@
 #include "templates/Sandbox.h"
 #include "templates/Simple.h"
 #include "templates/TextTst.h"
-// #include "templates/UItst2.h"
+#include "templates/UItst2.h"
 #include "templates/ComputeShaderTst.h"
 #include "templates/RandomTst.h"
 #include "templates/UItst.h"
@@ -15,6 +15,6 @@
 #include "triangulation/TriangulationPrj.h"
 
 int main() {
-	TriangulationPrj::Run();
+	UITst::Run();
 	return 0;
 }

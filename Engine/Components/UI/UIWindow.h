@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "ds.h"
+#include "Text.h"
 
 #define UI_ITEM_HEAP_UNIT_SIZE 512
 #define UNWRP_COL(col)		   (col).x, (col).y, (col).z, (col).a
@@ -201,10 +202,20 @@ class UIWindow : public GameComponent {
 	static int	UIWindowDrawCallback(void*);
 };
 
-inline const float& GetSliderPosX(UIItem* it) { return READ(float, it->data); }
-inline void			SetSliderPosX(UIItem* it, float val) { READ(float, it->data) = val; }
-inline const bool&	GetCheckBoxState(UIItem* it) { return READ(bool, it->data); }
-inline void			SetCheckBoxState(UIItem* it, float val) { READ(bool, it->data) = val; }
+//---------UI Items utilities---------
+struct SliderData {
+	float curPercent;
+	float maxx;
+	float minn;
+};
+struct CheckboxData {
+	bool value;
+};
+
+inline SliderData*	 UIGetSliderData(UIItem* it) { return CAST(SliderData*, it->data); }
+inline CheckboxData* UIGetCheckboxData(UIItem* it) { return CAST(CheckboxData*, it->data); }
+inline void			 UISetLabel(UIItem* it, const char* label) { it->obj.Get<Text>()->SetContent(label); }
+extern float		 UIGetSliderValue(UIItem* it);
 
 //-------------------UIManager-------------------
 

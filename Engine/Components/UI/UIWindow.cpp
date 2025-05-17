@@ -10,6 +10,11 @@
 #include "Utilities.h"
 #include "window.h"
 
+float UIGetSliderValue(UIItem* it) {
+	SliderData* d = UIGetSliderData(it);
+	return d->minn + (d->curPercent * (d->maxx - d->minn));
+}
+
 UIColorScheme uiColorSchemePreset_Test = {
 	{0, 0, 0, 1},		  // bg;
 	{1, 1, 1, 1},		  // fg;
@@ -198,23 +203,26 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 			v2f& cp		   = UISys::curPos;
 			v2f	 s		   = item->GetSize();
 			if(isDragged) {
-				SetSliderPosX(item, CLAMP(p.x - cp.x, -0.5 * s.x, 0.5 * s.x));
+				float		value = Clamp<float>(-p.x + cp.x, -0.5 * s.x, 0.5 * s.x);
+				SliderData* d	  = UIGetSliderData(item);
+				d->curPercent	  = (value + s.x * 0.5) / s.x;
 			}
 			return 0;
 		};
 		item->_DrawProc = dplmbda {
 			Shader* sh = item->obj.Get<Sprite>()->GetShader();
+			v2f		s  = item->GetSize();
 			sh->Use();
 			sh->SetUniform2f("uRes", item->GetSize().x, item->GetSize().y);
 			sh->SetUniform4f("uCol", UNWRP_COL(currentUIColorScheme.bg));
-			sh->SetUniform1f("uPosX", READ(float, item->data));
+			sh->SetUniform1f("uPosX", -UIGetSliderData(item)->curPercent * s.x + 0.5 * s.x);
 			item->obj.Draw();
 		};
 		spr.SetShader(NW_INTERNAL_DEFAULT_SHADER_UI_SLIDER);
 		spr.SetSize({100.0, 20});
-		spr.sortingLayer = spr.sortingLayer + layer;
-		item->data		 = itemsHeap.Alloc();
-		SetSliderPosX(item, 0.0f);
+		spr.sortingLayer				  = spr.sortingLayer + layer;
+		item->data						  = itemsHeap.Alloc();
+		UIGetSliderData(item)->curPercent = 0.0f;
 		item->prop |= ItemProp::Item_Prop_Selectable;
 		break;
 	}
@@ -224,22 +232,23 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 			bool isClicked = item->_owner->clickedItem == item;
 			v2f	 s		   = item->GetSize();
 			if(isClicked) {
-				SetCheckBoxState(item, !GetCheckBoxState(item));
+				CheckboxData* d = UIGetCheckboxData(item);
+				d->value		= !d->value;
 			}
 			return 0;
 		};
 		item->_DrawProc = dplmbda {
 			Shader* sh = item->obj.Get<Sprite>()->GetShader();
 			sh->Use();
-			sh->SetUniform1i("uState", GetCheckBoxState(item));
+			sh->SetUniform1i("uState", UIGetCheckboxData(item)->value);
 			sh->SetUniform4f("uBgCol", UNWRP_COL(currentUIColorScheme.bg));
 			sh->SetUniform4f("uFgCol", UNWRP_COL(currentUIColorScheme.fg));
 			item->obj.Draw();
 		};
 		spr.SetShader(NW_INTERNAL_DEFAULT_SHADER_UI_CHECKBOX);
-		spr.sortingLayer = spr.sortingLayer + layer;
-		item->data		 = itemsHeap.Alloc();
-		SetCheckBoxState(item, 0);
+		spr.sortingLayer			   = spr.sortingLayer + layer;
+		item->data					   = itemsHeap.Alloc();
+		UIGetCheckboxData(item)->value = 0;
 		item->prop |= ItemProp::Item_Prop_Selectable;
 		break;
 	}

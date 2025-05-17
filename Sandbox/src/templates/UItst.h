@@ -12,20 +12,23 @@
 #include "NWTime.h"
 
 namespace UITst {
-
-Camera* camC;
-void	AddItems(UIWindow& w) {
-	   w.GetCursor()->SetLineBreakSize(20);
-	   w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
-	   Sprite*		spr		= w.GetGameObject()->GetComponent<Sprite>();
-	   UIItem*		rect;
-	   UIItemLabel* label = w.AddItem(UIItemType_Label, -2);
-	   label->obj.GetComponent<Text>()->SetContent("Slider: ");
-	   rect = w.AddItem(UIItemType_Slider, -1, 2);
-	   rect = w.AddItem(UIItemType_Checkbox, -1);
-	   for(int i = 0; i < 10; ++i) {
-		   rect = w.AddItem(UIItemType_TestZone, -1);
-	   }
+UIItemLabel* label;
+UIItem*		 slider;
+Camera*		 camC;
+void		 AddItems(UIWindow& w) {
+	w.GetCursor()->SetLineBreakSize(20);
+	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
+	Sprite* spr			 = w.GetGameObject()->GetComponent<Sprite>();
+	UIItem* rect;
+	label = w.AddItem(UIItemType_Label, -2);
+	UISetLabel(label, "Slider Value: ");
+	slider						  = w.AddItem(UIItemType_Slider, -1, 2);
+	UIGetSliderData(slider)->minn = -100.0f;
+	UIGetSliderData(slider)->maxx = 100.0f;
+	rect						  = w.AddItem(UIItemType_Checkbox, -1);
+	for(int i = 0; i < 10; ++i) {
+		rect = w.AddItem(UIItemType_TestZone, -1);
+	}
 }
 
 static void Init() {
@@ -71,6 +74,8 @@ static void Render() {
 	static float t = 0.0;
 	t += NWTime::GetDeltaTime();
 	Scene::GetCurrent()->GetGameObject("WorldObj1")->GetComponent<Transform>()->rotation = t;
+
+	UISetLabel(label, (std::string("Slider Value: ") + std::to_string(UIGetSliderValue(slider)).substr(0, 5)).c_str());
 }
 
 void Run() {
