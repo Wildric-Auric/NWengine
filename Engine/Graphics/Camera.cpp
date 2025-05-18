@@ -24,7 +24,7 @@ void Camera::EnableWireframeRendering() { _wireframe = 1; }
 
 void Camera::DisableWireframeRendering() { _wireframe = 0; }
 
-Camera* Camera::BeginCap() {
+Camera* Camera::BeginCap(bool dontClear) {
 	Camera* temp = ActiveCamera;
 	ActiveCamera = this;
 	lfbo		 = FrameBuffer::_current;
@@ -32,7 +32,8 @@ Camera* Camera::BeginCap() {
 	this->fbo.Bind();
 	if(_wireframe)
 		Context::EnableWireframe(1);
-	Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
+	if(!dontClear)
+		Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
 	_ClearAtts();
 	return temp;
 }
@@ -97,12 +98,7 @@ void Camera::SetClearColor(int i, const fVec4& color) { clearCols[i] = color; }
 
 void Camera::ResetClearColors() { clearCols.clear(); }
 
-void Camera::Use() {
-	if(Camera::ActiveCamera != nullptr)
-		Camera::ActiveCamera->isActive = 0;
-	this->isActive		 = 1;
-	Camera::ActiveCamera = this;
-}
+void Camera::Use() { Camera::ActiveCamera = this; }
 
 Camera::~Camera() {
 	this->fbo.Delete();

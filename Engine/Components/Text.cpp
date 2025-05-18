@@ -2,6 +2,35 @@
 #include "Scene.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "Context.h"
+#include "Batch.h"
+#include "Sprite.h"
+#include "Context.h"
+
+// TODO::Make it work for batched text
+// This is used for better text rendering to avoid artefact when performing blending twice
+int TextDrawCallback(void* data) {
+	GameObject* obj = (GameObject*)data;
+	Sprite*		spr = obj->Get<Sprite>();
+	if(spr->_isBatched) {
+		Batch::DefaultBatchDrawCallback(data);
+		return -1;
+	}
+	// fitst pass, alpha update
+	Sprite::DefaultSpriteDrawCallback(data);
+	// second pass, force alpha to to 1
+	spr->shader->disablePerChannelWrts = 1 << 3 | 1 << 2 | 1 << 1;
+	Context::SetBlendFunc(NWBlend::SRC_ALPHA, NWBlend::ONE_MINUS_SRC_ALPHA, NWBlend::ONE, NWBlend::ZERO);
+	spr->shader->Use();
+	spr->shader->SetUniform1i("uForceNoAlpha", 1);
+	Sprite::DefaultSpriteDrawCallback(data);
+	spr->shader->Use();
+	spr->shader->SetUniform1i("uForceNoAlpha", 0);
+	// reset
+	spr->shader->disablePerChannelWrts = 0;
+	Context::EnableBlend(1);
+	return 0;
+}
 
 #define MAX_BIT_10 1023.0
 Text::Text(GameObject* go) { this->attachedObject = go; };
@@ -194,7 +223,9 @@ void Text::ApplyConstraint(Character* chr, TextConstraintIterData* data) {
 void Text::SetChrComps(Character* chr, char c) {
 	chr->go.AddComponent<Transform>();
 	Sprite* sprite = chr->go.AddComponent<Sprite>();
-	chr->glyph	   = &this->font->charactersMap.find(c)->second;
+	if(fixBlending)
+		chr->go.SetDrawCallback(TextDrawCallback);
+	chr->glyph = &this->font->charactersMap.find(c)->second;
 	sprite->SetShader(_shader);
 	if(this->isBatched)
 		sprite->Batch();

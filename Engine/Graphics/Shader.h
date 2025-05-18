@@ -27,6 +27,7 @@ class Shader : public Asset {
 	ShaderIdentifier										 _identifier; /**< The identifier of the shader. */
 	std::unordered_map<int, int>							 _enabledAtts{{0, 0}};
 	std::unordered_map<std::string, ShaderParserUniformData> reflectedUniforms;
+	int8													 disablePerChannelWrts = 0;
 
 	void _EnableAtt(int i);
 	void _DisableAtt(int i);

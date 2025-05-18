@@ -588,6 +588,8 @@ void UIManager::OnAdd() {
 void UIManager::Update() {
 	Camera* cam	 = Camera::ActiveCamera;
 	Camera* tcam = rnd.GetCamera();
+	_first		 = 0;
+
 	if(cam->size.x != tcam->size.x || cam->size.y != tcam->size.y) {
 		tcam->ChangeOrtho(cam->size.x, cam->size.y);
 		tcam->GetFbo()->GenDepthStencilBuffer();
@@ -595,8 +597,9 @@ void UIManager::Update() {
 }
 
 void UIManager::Begin() {
-	_lastCam = GetCamera()->BeginCap();
+	_lastCam = GetCamera()->BeginCap(_first);
 	GetCamera()->SetClearColor({0.0, 0.0, 0.0, 0.0});
+	_first = 1;
 }
 
 void UIManager::End() { GetCamera()->EndCap(_lastCam); }

@@ -225,6 +225,7 @@ class UIManager : public GameComponent {
 	NW_ST_GET_TYPE_IMPL(UIManager);
 	Renderer rnd;
 	Camera*	 _lastCam = 0;
+	bool	 _first	  = 0;
 
 	UIManager(GameObject*);
 	Camera* GetCamera();

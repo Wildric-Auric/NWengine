@@ -139,7 +139,8 @@ void Shader::Use() {
 		return;
 	for(int i = 0; i < fbo->GetAttNum(); ++i) {
 		if(_enabledAtts.find(i) != _enabledAtts.end()) {
-			NW_GL_CALL(glColorMaski(i, 1, 1, 1, 1));
+			NW_GL_CALL(glColorMaski(i, !(disablePerChannelWrts & (1 << 3)), !(disablePerChannelWrts & (1 << 2)),
+									!(disablePerChannelWrts & (1 << 1)), !(disablePerChannelWrts & 1)));
 		} else {
 			NW_GL_CALL(glColorMaski(i, 0, 0, 0, 0));
 		}

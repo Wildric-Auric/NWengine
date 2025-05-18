@@ -30,7 +30,6 @@ class Camera : public GameComponent {
 	fVec2						   viewPortSize;					  /**< The viewport size of the camera. */
 	fVec3						   clearColor = fVec3(0.0, 0.0, 0.0); /**< The clear color of the camera. */
 	float						   alpha	  = 1.0f;				  /**< The alpha value of the camera. */
-	bool						   isActive	  = 0;					  /**< Indicates whether the camera is active or not. */
 	std::unordered_map<int, fVec4> clearCols;
 	MSAAValue					   _msaa	  = NW_MSx1;
 	bool						   _wireframe = 0;
@@ -53,7 +52,7 @@ class Camera : public GameComponent {
 	 */
 	~Camera();
 
-	Camera* BeginCap();
+	Camera* BeginCap(bool dontClear = 0);
 	void	EndCap(Camera* oldCam);
 
 	void Capture();

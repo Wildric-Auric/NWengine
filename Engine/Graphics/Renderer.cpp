@@ -51,11 +51,8 @@ void Renderer::SetStretch(const fVec2& v) { stretchCoeff = v; }
 bool Renderer::_DrawPrep() {
 	Camera* cam	   = componentContainer.AddComponent<Camera>();
 	Sprite* sprite = componentContainer.GetComponent<Sprite>();
-
-	// set up renderer quad
-	Camera* temp = Camera::ActiveCamera;
 	if(target == nullptr)
-		target = temp;
+		target = Camera::ActiveCamera;
 	if(target == nullptr)
 		return 0;
 
@@ -95,11 +92,9 @@ void Renderer::DrawOnDefaultFrame() {
 }
 
 void Renderer::CaptureOnCamFrame() {
-	// Adding or getting components
 	Camera*	   cam		 = componentContainer.AddComponent<Camera>();
 	Transform* transform = componentContainer.AddComponent<Transform>();
-	// set up renderer quad
-	Camera* temp = Camera::ActiveCamera;
+	Camera*	   temp		 = Camera::ActiveCamera;
 
 	bool ready = _DrawPrep();
 	if(!ready)
@@ -120,19 +115,21 @@ void Renderer::Composit(Renderer* other) {
 	Transform* transform = componentContainer.AddComponent<Transform>();
 	Camera*	   temp		 = Camera::ActiveCamera;
 	Sprite&	   spr		 = componentContainer.Add<Sprite>();
-	Camera::ActiveCamera = other->GetCamera();
-	Shader* lsh			 = spr.GetShader();
+	other->GetCamera()->Use();
+	Shader* lsh = spr.GetShader();
 	spr.SetShader(NW_DEFAULT_SHADER);
 	bool ready = _DrawPrep();
-	if(!ready)
+	if(!ready) {
+		temp->Use();
 		return;
+	}
 	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	cam->fbo.Bind();
 	componentContainer.Draw();
 	cam->fbo.Unbind();
-	Camera::ActiveCamera = temp;
 	spr.SetShader(lsh);
 	target = nullptr;
+	temp->Use();
 }
 
 Renderer::~Renderer() {

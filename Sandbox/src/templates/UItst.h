@@ -1,5 +1,4 @@
 #include "CircleRenderer.h"
-#include "DefaultAssets.h"
 #include "InlineShader.h"
 #include "NWengine.h"
 #include "Scene.h"
@@ -68,34 +67,41 @@ static void Init() {
 	camC->GetFbo()->GenDepthStencilBuffer();
 	Renderer::defaultRenderer->SetStretch({1, 1});
 
-	uwin.AddComponent<UIWindow>()->SetTitle("Hello Window");
-	uwin2.AddComponent<UIWindow>();
-	uwin2.GetComponent<Transform>()->Translate({-150, 0});
-	uwin3.AddComponent<UIWindow>();
-	uwin3.GetComponent<Transform>()->Translate({150, 0});
+	//	uwin.AddComponent<UIWindow>()->SetTitle("Hello Window");
+	//	uwin2.AddComponent<UIWindow>();
+	//	uwin2.GetComponent<Transform>()->Translate({-150, 0});
+	//	uwin3.AddComponent<UIWindow>();
+	//	uwin3.GetComponent<Transform>()->Translate({150, 0});
 
 	worldObj.AddComponents<CircleRenderer>()->SetRadius(100);
 	worldObj.GetComponent<CircleRenderer>()->SetPosition({200.0, 0.0});
 	worldObj.GetComponent<CircleRenderer>()->SetRenderingAA(0.2);
 	worldObj1.AddComponents<Sprite, Transform>()->SetSize({200, 200});
 
-	UIWindow*  w = uwin2.Get<UIWindow>();
-	UIManager& m = uwin2.Add<UIManager>();
-	man			 = &m;
-	SetWin(w);
-	AddItems(*uwin2.GetComponent<UIWindow>());
-	s.Start();
-	w->attachedUIManager = &m;
-	printf("NW_VERSION: %s\n", NWengineGetVersionString());
+	//	UIWindow*  w = uwin2.Get<UIWindow>();
+	//	UIManager& m = uwin2.Add<UIManager>();
+	//	man			 = &m;
+	//	SetWin(w);
+	//	AddItems(*uwin2.GetComponent<UIWindow>());
+	//
+	//	s.Start();
+	//	w->attachedUIManager = &m;
+	//    uwin.Get<UIWindow>()->attachedUIManager = &m;
+	//    uwin3.Get<UIWindow>()->attachedUIManager = &m;
+
+	//  printf("NW_VERSION: %s\n", NWengineGetVersionString());
 	compositor.SetUp();
 	rnd.SetUp();
 	rnd.Use();
+	// compositor.Use();
 }
 
 static void Render() {
 	rnd(false);
-	rnd.Composit(&man->rnd);
-	compositor(&rnd, true);
+	// rnd.Composit(&man->rnd);
+	// compositor(&rnd, true);
+	// compositor(true);
+	//(*Renderer::currentRenderer)(true);
 
 	camC->position.x +=
 		(Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, InputKeyEvent::KeyPressed) - Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LEFT)) *
@@ -105,7 +111,7 @@ static void Render() {
 	t += NWTime::GetDeltaTime();
 	Scene::GetCurrent()->GetGameObject("WorldObj1")->GetComponent<Transform>()->rotation = t;
 
-	UISetLabel(label, (std::string("Slider Value: ") + std::to_string(UIGetSliderValue(slider)).substr(0, 5)).c_str());
+	//	UISetLabel(label, (std::string("Slider Value: ") + std::to_string(UIGetSliderValue(slider)).substr(0, 5)).c_str());
 }
 
 void Run() {

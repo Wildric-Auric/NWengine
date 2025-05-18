@@ -107,6 +107,10 @@ void Context::EnableBlend(bool status) {
 	NW_GL_CALL(glDisable(GL_BLEND));
 }
 
+void Context::SetBlendFunc(int srcrgb, int dstrgb, int srcalpha, int dstalpha) {
+	NW_GL_CALL(glBlendFuncSeparate(srcrgb, dstrgb, srcalpha, dstalpha));
+}
+
 void Context::EnableDepthTest(bool status) {
 	if(status) {
 		NW_GL_CALL(glEnable(GL_DEPTH_TEST));

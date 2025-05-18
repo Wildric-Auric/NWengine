@@ -32,6 +32,8 @@ enum NWMemoryBarrierBit {
 	CLIENT_MAPPED_BUFFER_BARRIER_BIT = 0x00004000
 };
 
+enum NWBlend { SRC_ALPHA = 0x0302, ONE_MINUS_SRC_ALPHA = 0x0303, ONE = 1, ZERO = 0 };
+
 /**
  * @brief The Context class represents the application context.
  */
@@ -89,6 +91,8 @@ class Context {
 	static void EnableDepthTest(bool status = true);
 
 	static void EnableStencilTest(bool status = true);
+
+	static void SetBlendFunc(int srcrgb, int dstrgb, int srcalpha, int dstalpha);
 
 	static void SetStencilWrite(bool val);
 
