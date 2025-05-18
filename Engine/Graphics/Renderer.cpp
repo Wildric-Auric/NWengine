@@ -100,8 +100,9 @@ void Renderer::CaptureOnCamFrame() {
 	if(!ready)
 		return;
 
-	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
+    cam->Use();
 	cam->fbo.Bind();
+	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
 	componentContainer.Draw();
 	cam->fbo.Unbind();
@@ -110,7 +111,7 @@ void Renderer::CaptureOnCamFrame() {
 	target				 = nullptr;
 }
 
-void Renderer::Composit(Renderer* other) {
+void Renderer::Composite(Renderer* other) {
 	Camera*	   cam		 = componentContainer.AddComponent<Camera>();
 	Transform* transform = componentContainer.AddComponent<Transform>();
 	Camera*	   temp		 = Camera::ActiveCamera;
