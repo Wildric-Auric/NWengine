@@ -52,6 +52,8 @@ bool UIWindow::CacheConditionHasUIWindow(GameObject* obj) { return obj->GetCompo
 
 int UIWindow::UIWindowDrawCallback(void* obj) {
 	UIWindow* win = ((GameObject*)obj)->GetComponent<UIWindow>();
+	if(win->attachedUIManager)
+		win->attachedUIManager->Begin();
 	((GameObject*)obj)->GetComponent<Sprite>()->GetShader()->Use();
 	win->SetShaderParams();
 
@@ -65,7 +67,8 @@ int UIWindow::UIWindowDrawCallback(void* obj) {
 	Context::SetStencilFunc(NWStencilBehaviour::NW_EQUAL);
 	win->DrawItems();
 	Context::EnableStencilTest(0);
-	Camera::GetActiveCamera()->viewMatrix = tempview;
+	if(win->attachedUIManager)
+		win->attachedUIManager->End();
 	return ret;
 }
 
@@ -430,7 +433,6 @@ void UIWindow::Update() {
 				selectedItem = it;
 				clickedItem	 = it;
 				hitbs		 = 1;
-				printf("Selected Item, %d\n", it);
 			}
 			hoveredItem = it;
 		}
@@ -483,25 +485,33 @@ void UIWindow::Update() {
 	v2f newp;
 	v2f news;
 	if(state & (Window_State_ResizeXR | Window_State_ResizeXL)) {
-		float ps  = UISys::curPos.x - lpos.x;
-		float mps = -0.5 * ps;
+		float ps   = UISys::curPos.x - lpos.x;
+		float mps  = -0.5 * ps;
+		float diff = abs(lsize.x - metrics.minSize.x);
 		if(relPos.x < 0.0) {
 			ps = -(ps);
 		}
-		news.x				 = lsize.x + ps;
-		news.x				 = Max<int>(news.x, metrics.minSize.x);
+		news.x = lsize.x + ps;
+		news.x = Max<int>(news.x, metrics.minSize.x);
+		if(abs(mps) * 2.0 > diff && news.x == metrics.minSize.x) {
+			mps = Sign(mps) * diff * 0.5;
+		}
 		newp.x				 = lwinPos.x - mps;
 		spr->container.width = news.x;
 		tr->position.x		 = newp.x;
 	}
 	if(state & (Window_State_ResizeYU | Window_State_ResizeYD)) {
-		float ps  = UISys::curPos.y - lpos.y;
-		float mps = -0.5 * ps;
+		float ps   = UISys::curPos.y - lpos.y;
+		float mps  = -0.5 * ps;
+		float diff = abs(lsize.y - metrics.minSize.y);
 		if(relPos.y < 0.0) {
 			ps = -(ps);
 		}
-		news.y				  = lsize.y + ps;
-		news.y				  = Max<int>(news.y, metrics.minSize.y);
+		news.y = lsize.y + ps;
+		news.y = Max<int>(news.y, metrics.minSize.y);
+		if(abs(mps) * 2.0 > diff && news.y == metrics.minSize.y) { // was quite painful, can't find anything better but must exist
+			mps = Sign(mps) * diff * 0.5;
+		}
 		newp.y				  = lwinPos.y - mps;
 		spr->container.height = news.y;
 		tr->position.y		  = newp.y;
@@ -564,20 +574,31 @@ fVec2* UICursor::GetPos() { return &pos; }
 
 //-------------------UIManager-------------------
 
-Camera* UIManager::GetCamera() { return _camContainer.GetComponent<Camera>(); }
+UIManager::UIManager(GameObject* obj) { attachedObject = obj; }
+
+Camera* UIManager::GetCamera() { return rnd.GetCamera(); }
 
 Camera* UIManager::GetTmpCamera() { return _lastCam; }
 
-void UIManager::OnAdd() { _camContainer.AddComponent<Camera>(); }
-
-void UIManager::Update() {}
-
-void UIManager::Bind() {
-	_lastCam = Camera::GetActiveCamera();
-	GetCamera()->Use();
+void UIManager::OnAdd() {
+	rnd.SetUp();
+	rnd.SetShader(NW_DEFAULT_SHADER);
 }
 
-void UIManager::Unbind() {
-	if(_lastCam)
-		_lastCam->Use();
+void UIManager::Update() {
+	Camera* cam	 = Camera::ActiveCamera;
+	Camera* tcam = rnd.GetCamera();
+	if(cam->size.x != tcam->size.x || cam->size.y != tcam->size.y) {
+		tcam->ChangeOrtho(cam->size.x, cam->size.y);
+		tcam->GetFbo()->GenDepthStencilBuffer();
+	}
 }
+
+void UIManager::Begin() {
+	_lastCam = GetCamera()->BeginCap();
+	GetCamera()->SetClearColor({0.0, 0.0, 0.0, 0.0});
+}
+
+void UIManager::End() { GetCamera()->EndCap(_lastCam); }
+
+void UIManager::OnDelete() { rnd.Clean(); }

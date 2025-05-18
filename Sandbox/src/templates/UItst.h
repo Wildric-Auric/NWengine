@@ -15,20 +15,39 @@ namespace UITst {
 UIItemLabel* label;
 UIItem*		 slider;
 Camera*		 camC;
-void		 AddItems(UIWindow& w) {
-	w.GetCursor()->SetLineBreakSize(20);
-	w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
-	Sprite* spr			 = w.GetGameObject()->GetComponent<Sprite>();
-	UIItem* rect;
-	label = w.AddItem(UIItemType_Label, -2);
-	UISetLabel(label, "Slider Value: ");
-	slider						  = w.AddItem(UIItemType_Slider, -1, 2);
-	UIGetSliderData(slider)->minn = -100.0f;
-	UIGetSliderData(slider)->maxx = 100.0f;
-	rect						  = w.AddItem(UIItemType_Checkbox, -1);
-	for(int i = 0; i < 10; ++i) {
-		rect = w.AddItem(UIItemType_TestZone, -1);
-	}
+
+static Renderer	  rnd;
+static Renderer	  compositor;
+static UIManager* man;
+void			  AddItems(UIWindow& w) {
+	 w.GetCursor()->SetLineBreakSize(20);
+	 w.GetCursor()->strat = CurAdvanceStrat::BreakOnHorizontalEnd;
+	 Sprite* spr		  = w.GetGameObject()->GetComponent<Sprite>();
+	 UIItem* rect;
+	 label = w.AddItem(UIItemType_Label, -2, 1);
+	 UISetLabel(label, "Slider Value: ");
+	 slider						   = w.AddItem(UIItemType_Slider, -1, 2);
+	 UIGetSliderData(slider)->minn = -100.0f;
+	 UIGetSliderData(slider)->maxx = 100.0f;
+	 rect						   = w.AddItem(UIItemType_Checkbox, -1, 1);
+	 for(int i = 0; i < 10; ++i) {
+		 rect = w.AddItem(UIItemType_TestZone, -1);
+	 }
+}
+
+void SetWin(UIWindow* win) {
+	Camera*	   cam	= Camera::ActiveCamera;
+	Transform* tr	= win->attachedObject->Get<Transform>();
+	UIWindow*  uwin = win->attachedObject->Get<UIWindow>();
+	v2f		   s;
+	s = cam->GetSize();
+	s.x *= 0.15;
+	uwin->SetTitle("Docked Win");
+	uwin->SetSize(s);
+	uwin->SetPosition({-cam->GetSize().x * 0.5f + s.x * 0.5f, 0.0});
+	uwin->prop &= ~Window_Prop_ResizableXL;
+	uwin->prop &= ~Window_Prop_ResizableYU;
+	uwin->prop &= ~Window_Prop_Movable;
 }
 
 static void Init() {
@@ -60,13 +79,24 @@ static void Init() {
 	worldObj.GetComponent<CircleRenderer>()->SetRenderingAA(0.2);
 	worldObj1.AddComponents<Sprite, Transform>()->SetSize({200, 200});
 
+	UIWindow*  w = uwin2.Get<UIWindow>();
+	UIManager& m = uwin2.Add<UIManager>();
+	man			 = &m;
+	SetWin(w);
 	AddItems(*uwin2.GetComponent<UIWindow>());
 	s.Start();
+	w->attachedUIManager = &m;
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
+	compositor.SetUp();
+	rnd.SetUp();
+	rnd.Use();
 }
 
 static void Render() {
-	(*Renderer::defaultRenderer)(true);
+	rnd(false);
+	rnd.Composit(&man->rnd);
+	compositor(&rnd, true);
+
 	camC->position.x +=
 		(Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, InputKeyEvent::KeyPressed) - Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LEFT)) *
 		100.0 * NWTime::GetDeltaTime();

@@ -115,6 +115,26 @@ void Renderer::CaptureOnCamFrame() {
 	target				 = nullptr;
 }
 
+void Renderer::Composit(Renderer* other) {
+	Camera*	   cam		 = componentContainer.AddComponent<Camera>();
+	Transform* transform = componentContainer.AddComponent<Transform>();
+	Camera*	   temp		 = Camera::ActiveCamera;
+	Sprite&	   spr		 = componentContainer.Add<Sprite>();
+	Camera::ActiveCamera = other->GetCamera();
+	Shader* lsh			 = spr.GetShader();
+	spr.SetShader(NW_DEFAULT_SHADER);
+	bool ready = _DrawPrep();
+	if(!ready)
+		return;
+	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
+	cam->fbo.Bind();
+	componentContainer.Draw();
+	cam->fbo.Unbind();
+	Camera::ActiveCamera = temp;
+	spr.SetShader(lsh);
+	target = nullptr;
+}
+
 Renderer::~Renderer() {
 	if(Renderer::currentRenderer == this)
 		Renderer::currentRenderer = Renderer::defaultRenderer;

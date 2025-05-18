@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "ds.h"
 #include "Text.h"
+#include "Renderer.h"
 
 #define UI_ITEM_HEAP_UNIT_SIZE 512
 #define UNWRP_COL(col)		   (col).x, (col).y, (col).z, (col).a
@@ -221,13 +222,16 @@ extern float		 UIGetSliderValue(UIItem* it);
 
 class UIManager : public GameComponent {
   public:
-	GameObject _camContainer;
-	Camera*	   _lastCam = 0;
+	NW_ST_GET_TYPE_IMPL(UIManager);
+	Renderer rnd;
+	Camera*	 _lastCam = 0;
 
+	UIManager(GameObject*);
 	Camera* GetCamera();
 	Camera* GetTmpCamera();
 	void	OnAdd() override;
+	void	OnDelete() override;
 	void	Update() override;
-	void	Bind();
-	void	Unbind();
+	void	Begin();
+	void	End();
 };

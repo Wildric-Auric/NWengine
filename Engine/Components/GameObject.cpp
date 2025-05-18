@@ -67,6 +67,7 @@ GameComponent* GameObject::AddComponent(const std::string& type) {
 	ADD_COMPONENT(LineRenderer, type);
 	ADD_COMPONENT(CircleRenderer, type);
 	ADD_COMPONENT(UIWindow, type);
+	ADD_COMPONENT(UIManager, type);
 	return nullptr;
 };
 

@@ -24,21 +24,33 @@ void Camera::EnableWireframeRendering() { _wireframe = 1; }
 
 void Camera::DisableWireframeRendering() { _wireframe = 0; }
 
-void Camera::Capture() { /// Captures  current scene (see currentScene variable in Scene class)
+Camera* Camera::BeginCap() {
+	Camera* temp = ActiveCamera;
+	ActiveCamera = this;
+	lfbo		 = FrameBuffer::_current;
 	Context::SetViewPort(0, 0, viewPortSize.x, viewPortSize.y);
 	this->fbo.Bind();
 	if(_wireframe)
 		Context::EnableWireframe(1);
 	Context::Clear(clearColor.x, clearColor.y, clearColor.z, alpha);
 	_ClearAtts();
-	Camera* temp = ActiveCamera;
-	ActiveCamera = this;
-	if(Scene::currentScene != nullptr)
-		Scene::currentScene->Draw();
-	ActiveCamera = temp;
+	return temp;
+}
+
+void Camera::EndCap(Camera* oldCam) {
+	ActiveCamera = oldCam;
 	if(_wireframe)
 		Context::EnableWireframe(0);
 	this->fbo.Unbind();
+	if(lfbo)
+		lfbo->Bind(); // TODO::Maybe put the correct rw it may be write only?
+}
+
+void Camera::Capture() { /// Captures  current scene (see currentScene variable in Scene class)
+	Camera* old = BeginCap();
+	if(Scene::currentScene != nullptr)
+		Scene::currentScene->Draw();
+	EndCap(old);
 }
 
 FrameBuffer* Camera::GetFbo() { return &fbo; }

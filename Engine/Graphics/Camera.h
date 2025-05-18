@@ -53,9 +53,9 @@ class Camera : public GameComponent {
 	 */
 	~Camera();
 
-	/**
-	 * @brief Captures the camera.
-	 */
+	Camera* BeginCap();
+	void	EndCap(Camera* oldCam);
+
 	void Capture();
 
 	/**
@@ -119,7 +119,8 @@ class Camera : public GameComponent {
 	float rotation = 0.0f;				/**< The rotation of the camera. */
 	float zoom	   = 1.0;				/**< The zoom level of the camera. */
 
-	FrameBuffer fbo; /**< The frame buffer object of the camera. */
+	FrameBuffer	 fbo;  /**< The frame buffer object of the camera. */
+	FrameBuffer* lfbo; // last bound before capture
 
 	static Camera* GetActiveCamera();
 

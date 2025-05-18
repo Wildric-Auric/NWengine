@@ -191,7 +191,6 @@ class GameObject {
 		(void)unpack;
 	}
 
-	template <typename T> T&					Add() { return *AddComponent<T>(); }
 	template <typename T, typename... Nex> T&	Add() { return *AddComponents<T, Nex...>(); }
 	template <typename T> T*					Get() { return GetComponent<T>(); }
 	template <typename T> void					Del() { DeleteComponent<T>(); }

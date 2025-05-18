@@ -65,6 +65,7 @@ class Renderer {
 	 */
 	Renderer* operator()(Renderer* renderer, bool captureOnDefaultFrame = 0);
 
+	void Composit(Renderer*);
 	/**
 	 * @brief Operator overload for adding a renderer as a decorator.
 	 * @param captureOnDefaultFrame Boolean indicating if the renderer should capture on the default framebuffer.
