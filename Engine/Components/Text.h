@@ -164,7 +164,7 @@ class Text : public GameComponent {
 	 */
 	bool isBatched	 = true;
 	bool _isRendered = true;
-	bool fixBlending = true;
+	bool fixBlending = false;
 	/**
 	 * @brief layerOrder indicates the layer order of each glyph, changing this requires calling UpdateGlyph()
 	 */

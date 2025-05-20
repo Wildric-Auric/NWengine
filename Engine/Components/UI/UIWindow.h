@@ -217,6 +217,7 @@ inline SliderData*	 UIGetSliderData(UIItem* it) { return CAST(SliderData*, it->d
 inline CheckboxData* UIGetCheckboxData(UIItem* it) { return CAST(CheckboxData*, it->data); }
 inline void			 UISetLabel(UIItem* it, const char* label) { it->obj.Get<Text>()->SetContent(label); }
 extern float		 UIGetSliderValue(UIItem* it);
+extern void			 UISetSliderValue(UIItem* it, float value);
 
 //-------------------UIManager-------------------
 

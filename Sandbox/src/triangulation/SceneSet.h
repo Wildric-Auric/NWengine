@@ -6,4 +6,5 @@ class SceneSet : public Script {
 	SCRIPT_CONSTR(SceneSet)
 
 	void Start() override;
+    void Update() override;
 };

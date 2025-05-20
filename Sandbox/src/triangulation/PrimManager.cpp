@@ -6,9 +6,21 @@
 #include "Inputs.h"
 #include "CoordSys.h"
 #include "Maths.h"
-#include "keyboard.h"
 #include "NWTime.h"
 #include "Geometry.h"
+#include "keys.h"
+#include "UIWindow.h"
+
+struct GuiItems {
+    UIItemLabel* gridSizeLabel;
+    UIItem* gridSize  ;
+    UIItemLabel* lwidthLabel;
+    UIItem* lineWidth ;
+    UIItemLabel* pointRadLabel;
+    UIItem* pointRad  ;
+    UIItem* update;
+};
+extern GuiItems guiItems;
 
 void PrimManager::Start() {
 	//    TriPoint& pt = AddPoint();
@@ -20,7 +32,7 @@ void PrimManager::Start() {
 	edges.SetUp(sizeof(TriEdge), 0xFF);
 	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
-	sh->SetUniform2f("uCell", grid.x, grid.y);
+	sh->SetUniform2f("uCell", UIGetSliderValue(guiItems.gridSize), UIGetSliderValue(guiItems.gridSize));
 }
 
 static TriPoint* last;
@@ -186,8 +198,9 @@ void PrimManager::_TestEdges() {
 
 void PrimManager::MakeLineOnClick() {
 	constexpr float tol	   = 0.5;
-	bool			click  = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON);
-	bool			rclick = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_RBUTTON);
+    bool keyclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_SHIFT);
+	bool			click  = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON) && keyclick;
+	bool			rclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_RBUTTON) && keyclick;
 	fVec2			cur	   = Inputs::GetMousePosition();
 	cur					   = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
 	v2f s				   = v2i(Sign(cur.x), Sign(cur.y));
@@ -306,6 +319,26 @@ void PrimManager::Update() {
 	MakeLineOnClick();
 	Process();
 	_TestEdges();
+
+    float gs = UIGetSliderValue(guiItems.gridSize);
+    float lw = UIGetSliderValue(guiItems.lineWidth);
+    float ps = UIGetSliderValue(guiItems.pointRad);
+    CheckboxData* ref = UIGetCheckboxData(guiItems.update);
+    grid = {gs,gs};
+    ptRad = ps;
+    lineWidth = lw;
+	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
+	sh->Use();
+	sh->SetUniform2f("uCell",gs,gs);
+    if (ref->value) {
+        for (TriPoint& pt : pts) {
+            pt.obj->Get<CircleRenderer>()->SetRadius(ps);
+        }
+        for (TriLine& line : lines) {
+            line.obj->Get<LineRenderer>()->SetWidth(lw);
+        }
+        ref->value = 0;
+    }
 }
 
 TriPoint& PrimManager::AddPoint() {
