@@ -3,7 +3,6 @@
 #include "DefaultAssets.h"
 #include "Sprite.h"
 #include "Transform.h"
-#include "InlineShader.h"
 
 // TODO::Default constructor creates the gameobject
 
