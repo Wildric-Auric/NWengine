@@ -3,8 +3,8 @@
 
 namespace Geo {
 class ConstEarClippingTriangulator {
-    public:
-    Geo::EarClippingTriangulator tlgr;   
-    void Process(bool(*)(Point*,Point*));
+  public:
+	Geo::EarClippingTriangulator tlgr;
+	void						 Process(bool (*)(Point*, Point*));
 };
-}
+} // namespace Geo

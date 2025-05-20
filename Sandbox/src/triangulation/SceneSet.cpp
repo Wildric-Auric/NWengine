@@ -7,16 +7,16 @@
 #include "UIWindow.h"
 
 struct GuiItems {
-    UIWindow* win;
-    UIItemLabel* gridSizeLabel;
-    UIItem* gridSize  ;
-    UIItemLabel* lwidthLabel;
-    UIItem* lineWidth ;
-    UIItemLabel* pointRadLabel;
-    UIItem* pointRad  ;
-    UIItem* update;
-    UIItem* disableGrid;
-    UIItem* blackBg;
+	UIWindow*	 win;
+	UIItemLabel* gridSizeLabel;
+	UIItem*		 gridSize;
+	UIItemLabel* lwidthLabel;
+	UIItem*		 lineWidth;
+	UIItemLabel* pointRadLabel;
+	UIItem*		 pointRad;
+	UIItem*		 update;
+	UIItem*		 disableGrid;
+	UIItem*		 blackBg;
 };
 GuiItems guiItems = {};
 
@@ -35,13 +35,13 @@ UIColorScheme customColScheme = {
 };
 
 void SetWin() {
-    currentUIColorScheme = customColScheme;
-    GameObject* obj  = &Scene::currentScene->AddObject("uiwin");
-	Camera*	   cam	= Camera::ActiveCamera;
-	Transform* tr	= obj->Get<Transform>();
-	UIWindow*  uwin = &obj->Add<UIWindow>();
-    uwin->cursor.strat = CurAdvanceStrat::BreakOnHorizontalEnd;
-	v2f		   s;
+	currentUIColorScheme = customColScheme;
+	GameObject* obj		 = &Scene::currentScene->AddObject("uiwin");
+	Camera*		cam		 = Camera::ActiveCamera;
+	Transform*	tr		 = obj->Get<Transform>();
+	UIWindow*	uwin	 = &obj->Add<UIWindow>();
+	uwin->cursor.strat	 = CurAdvanceStrat::BreakOnHorizontalEnd;
+	v2f s;
 	s = cam->GetSize();
 	s.x *= 0.15;
 	uwin->SetTitle("Docked Win");
@@ -50,40 +50,39 @@ void SetWin() {
 	uwin->prop &= ~Window_Prop_ResizableXL;
 	uwin->prop &= ~Window_Prop_ResizableYU;
 	uwin->prop &= ~Window_Prop_Movable;
-    guiItems.gridSizeLabel = uwin->AddItem(UIItemType_Label,-1, 1);
-    UISetLabel(guiItems.gridSizeLabel, "Grid Size: ");
-    guiItems.gridSize = uwin->AddItem(UIItemType_Slider,-1, 1);
+	guiItems.gridSizeLabel = uwin->AddItem(UIItemType_Label, -1, 1);
+	UISetLabel(guiItems.gridSizeLabel, "Grid Size: ");
+	guiItems.gridSize = uwin->AddItem(UIItemType_Slider, -1, 1);
 
-    guiItems.lwidthLabel = uwin->AddItem(UIItemType_Label,-1, 1);
-    UISetLabel(guiItems.lwidthLabel, "Line Width: ");
-    guiItems.lineWidth = uwin->AddItem(UIItemType_Slider,-1, 1);
+	guiItems.lwidthLabel = uwin->AddItem(UIItemType_Label, -1, 1);
+	UISetLabel(guiItems.lwidthLabel, "Line Width: ");
+	guiItems.lineWidth = uwin->AddItem(UIItemType_Slider, -1, 1);
 
-    guiItems.pointRadLabel = uwin->AddItem(UIItemType_Label,-1, 1);
-    UISetLabel(guiItems.pointRadLabel, "Line Width: ");
-    guiItems.pointRad = uwin->AddItem(UIItemType_Slider,-1, 1); 
+	guiItems.pointRadLabel = uwin->AddItem(UIItemType_Label, -1, 1);
+	UISetLabel(guiItems.pointRadLabel, "Line Width: ");
+	guiItems.pointRad = uwin->AddItem(UIItemType_Slider, -1, 1);
 
-    UIItemLabel* label = uwin->AddItem(UIItemType_Label,-1, 1);
-    UISetLabel(label, "Refresh: ");
-    guiItems.update = uwin->AddItem(UIItemType_Checkbox,-1, 1); 
-    guiItems.win = uwin;
-    label = uwin->AddItem(UIItemType_Label,-1,0);
-    UISetLabel(label, "Disable Background Lines ");
-    guiItems.disableGrid = uwin->AddItem(UIItemType_Checkbox,-1,1);
-    label = uwin->AddItem(UIItemType_Label,-1,0);
-    UISetLabel(label, "Black Background ");
-    guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1,1);
-    
+	UIItemLabel* label = uwin->AddItem(UIItemType_Label, -1, 1);
+	UISetLabel(label, "Refresh: ");
+	guiItems.update = uwin->AddItem(UIItemType_Checkbox, -1, 1);
+	guiItems.win	= uwin;
+	label			= uwin->AddItem(UIItemType_Label, -1, 0);
+	UISetLabel(label, "Disable Background Lines ");
+	guiItems.disableGrid = uwin->AddItem(UIItemType_Checkbox, -1, 1);
+	label				 = uwin->AddItem(UIItemType_Label, -1, 0);
+	UISetLabel(label, "Black Background ");
+	guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1, 1);
 
-    UIGetSliderData(guiItems.pointRad)->minn = 0;
-    UIGetSliderData(guiItems.pointRad)->maxx = 8;
-    UIGetSliderData(guiItems.lineWidth)->minn= 0;
-    UIGetSliderData(guiItems.lineWidth)->maxx= 5;
-    UIGetSliderData(guiItems.gridSize)->minn = 3;
-    UIGetSliderData(guiItems.gridSize)->maxx = 100;
+	UIGetSliderData(guiItems.pointRad)->minn  = 0;
+	UIGetSliderData(guiItems.pointRad)->maxx  = 8;
+	UIGetSliderData(guiItems.lineWidth)->minn = 0;
+	UIGetSliderData(guiItems.lineWidth)->maxx = 5;
+	UIGetSliderData(guiItems.gridSize)->minn  = 3;
+	UIGetSliderData(guiItems.gridSize)->maxx  = 100;
 
-    UISetSliderValue(guiItems.gridSize, 50);
-    UIGetSliderData(guiItems.pointRad)->curPercent = 0.5;
-    UIGetSliderData(guiItems.lineWidth)->curPercent= 0.5;
+	UISetSliderValue(guiItems.gridSize, 50);
+	UIGetSliderData(guiItems.pointRad)->curPercent	= 0.5;
+	UIGetSliderData(guiItems.lineWidth)->curPercent = 0.5;
 }
 
 static void SetBg() {
@@ -108,7 +107,7 @@ static void SetCam() {
 	camC->Use();
 	camC->SetClearColor(fVec4(0.2, 0.0, 1.0, 1.0));
 	camC->ChangeOrtho(1080, 720);
-    camC->fbo.GenDepthStencilBuffer();
+	camC->fbo.GenDepthStencilBuffer();
 }
 
 static void SetText() {
@@ -143,21 +142,21 @@ static void SetText() {
 }
 
 void SceneSet::Update() {
-    UISetLabel(guiItems.gridSizeLabel, 
-    (std::string("Grid Size: ") + std::to_string((int)UIGetSliderValue(guiItems.gridSize))).c_str());
+	UISetLabel(guiItems.gridSizeLabel,
+			   (std::string("Grid Size: ") + std::to_string((int)UIGetSliderValue(guiItems.gridSize))).c_str());
 
-    UISetLabel(guiItems.lwidthLabel, 
-    (std::string("Line Width: ") + std::to_string((int)UIGetSliderValue(guiItems.lineWidth))).c_str());
+	UISetLabel(guiItems.lwidthLabel,
+			   (std::string("Line Width: ") + std::to_string((int)UIGetSliderValue(guiItems.lineWidth))).c_str());
 
-    UISetLabel(guiItems.pointRadLabel, 
-    (std::string("Point Radius: ") + std::to_string((int)UIGetSliderValue(guiItems.pointRad))).c_str());
+	UISetLabel(guiItems.pointRadLabel,
+			   (std::string("Point Radius: ") + std::to_string((int)UIGetSliderValue(guiItems.pointRad))).c_str());
 }
 
 void SceneSet::Start() {
 	Scene& s = *Scene::GetCurrent();
 	SetCam();
 	SetBg();
-    SetWin();
+	SetWin();
 	SetText();
 	s.AddObject().AddComponent<Script>()->SetScript<PrimManager>();
 }

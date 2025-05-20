@@ -13,16 +13,16 @@
 #include "UIWindow.h"
 
 struct GuiItems {
-    UIWindow* win;
-    UIItemLabel* gridSizeLabel;
-    UIItem* gridSize  ;
-    UIItemLabel* lwidthLabel;
-    UIItem* lineWidth ;
-    UIItemLabel* pointRadLabel;
-    UIItem* pointRad  ;
-    UIItem* update;
-    UIItem* disableGrid;
-    UIItem* blackBg;
+	UIWindow*	 win;
+	UIItemLabel* gridSizeLabel;
+	UIItem*		 gridSize;
+	UIItemLabel* lwidthLabel;
+	UIItem*		 lineWidth;
+	UIItemLabel* pointRadLabel;
+	UIItem*		 pointRad;
+	UIItem*		 update;
+	UIItem*		 disableGrid;
+	UIItem*		 blackBg;
 };
 
 extern GuiItems guiItems;
@@ -38,8 +38,8 @@ void PrimManager::Start() {
 	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
 	sh->SetUniform2f("uCell", UIGetSliderValue(guiItems.gridSize), UIGetSliderValue(guiItems.gridSize));
-    sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
-    sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
+	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+	sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
 }
 
 static TriPoint* last;
@@ -204,15 +204,15 @@ void PrimManager::_TestEdges() {
 }
 
 void PrimManager::MakeLineOnClick() {
-	constexpr float tol	   = 0.5;
-    bool keyclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_SHIFT);
-	bool			click  = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON) && keyclick;
-	bool			rclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_RBUTTON) && keyclick;
-	fVec2			cur	   = Inputs::GetMousePosition();
-	cur					   = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
-	v2f s				   = v2i(Sign(cur.x), Sign(cur.y));
-	v2f f				   = v2f(fmodf(cur.x, grid.x), fmodf(cur.y, grid.y));
-	v2f i				   = v2i(cur.x / grid.x, cur.y / grid.y) + s;
+	constexpr float tol		 = 0.5;
+	bool			keyclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_SHIFT);
+	bool			click	 = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON) && keyclick;
+	bool			rclick	 = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_RBUTTON) && keyclick;
+	fVec2			cur		 = Inputs::GetMousePosition();
+	cur						 = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
+	v2f s					 = v2i(Sign(cur.x), Sign(cur.y));
+	v2f f					 = v2f(fmodf(cur.x, grid.x), fmodf(cur.y, grid.y));
+	v2f i					 = v2i(cur.x / grid.x, cur.y / grid.y) + s;
 	v2f nearest;
 	nearest.x = (i.x - (abs(f.x) < 0.5 * grid.x) * s.x) * grid.x;
 	nearest.y = (i.y - (abs(f.y) < 0.5 * grid.y) * s.y) * grid.y;
@@ -298,14 +298,15 @@ void PrimManager::Process() {
 }
 
 void PrimManager::Triangulate(Geo::Polygon& poly) {
-	Geo::PolyOrientation		 ori = poly.CalcOrientation();
+	Geo::PolyOrientation			  ori = poly.CalcOrientation();
 	Geo::ConstEarClippingTriangulator ttr;
 	ttr.tlgr.Alloc(&poly, ori, pts.size());
-	ttr.Process([](Geo::Point* pt, Geo::Point* pt1)->bool{
-            if ((*pt1->Get() - *pt->Get()).magnitude() > 200.0) return 1;
-            return 0;
-        });
-	//Clean();
+	ttr.Process([](Geo::Point* pt, Geo::Point* pt1) -> bool {
+		if((*pt1->Get() - *pt->Get()).magnitude() > 200.0)
+			return 1;
+		return 0;
+	});
+	// Clean();
 	printf("TriNum: %d\n", ttr.tlgr.triNum);
 	for(int i = 0; i < ttr.tlgr.triNum * 3; i += 3) {
 		TriPoint& pt0	= AddPoint();
@@ -330,28 +331,28 @@ void PrimManager::Update() {
 	Process();
 	_TestEdges();
 
-    float gs = UIGetSliderValue(guiItems.gridSize);
-    float lw = UIGetSliderValue(guiItems.lineWidth);
-    float ps = UIGetSliderValue(guiItems.pointRad);
-    CheckboxData* ref = UIGetCheckboxData(guiItems.update);
-    grid = {gs,gs};
-    ptRad = ps;
-    lineWidth = lw;
-	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
+	float		  gs  = UIGetSliderValue(guiItems.gridSize);
+	float		  lw  = UIGetSliderValue(guiItems.lineWidth);
+	float		  ps  = UIGetSliderValue(guiItems.pointRad);
+	CheckboxData* ref = UIGetCheckboxData(guiItems.update);
+	grid			  = {gs, gs};
+	ptRad			  = ps;
+	lineWidth		  = lw;
+	Shader* sh		  = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
-	sh->SetUniform2f("uCell",gs,gs);
-    sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
-    sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
+	sh->SetUniform2f("uCell", gs, gs);
+	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+	sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
 
-    if (ref->value) {
-        for (TriPoint& pt : pts) {
-            pt.obj->Get<CircleRenderer>()->SetRadius(ps);
-        }
-        for (TriLine& line : lines) {
-            line.obj->Get<LineRenderer>()->SetWidth(lw);
-        }
-        ref->value = 0;
-    }
+	if(ref->value) {
+		for(TriPoint& pt : pts) {
+			pt.obj->Get<CircleRenderer>()->SetRadius(ps);
+		}
+		for(TriLine& line : lines) {
+			line.obj->Get<LineRenderer>()->SetWidth(lw);
+		}
+		ref->value = 0;
+	}
 }
 
 TriPoint& PrimManager::AddPoint() {

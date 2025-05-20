@@ -459,7 +459,7 @@ void ProcessBadTris(std::vector<v2r>* tris) {
 		edgeCount[MakeKey(pts[i + 2], pts[i])]++;
 	}
 	tris->clear();
-	tris->reserve(edgeCount.size() * 2);
+	tris->reserve(edgeCount.size() * 100);
 	for(const auto& kv : edgeCount) {
 		if(kv.second != 1)
 			continue;

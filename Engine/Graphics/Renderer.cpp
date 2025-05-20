@@ -99,7 +99,7 @@ void Renderer::CaptureOnCamFrame() {
 	if(!ready)
 		return;
 
-    cam->Use();
+	cam->Use();
 	cam->fbo.Bind();
 	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
 	Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);

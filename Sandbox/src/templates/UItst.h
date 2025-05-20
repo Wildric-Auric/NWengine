@@ -82,10 +82,10 @@ static void Init() {
 	man			 = &m;
 	SetWin(w);
 	AddItems(*uwin2.GetComponent<UIWindow>());
-	
+
 	s.Start();
-	w->attachedUIManager = &m;
-	uwin.Get<UIWindow>()->attachedUIManager = &m;
+	w->attachedUIManager					 = &m;
+	uwin.Get<UIWindow>()->attachedUIManager	 = &m;
 	uwin3.Get<UIWindow>()->attachedUIManager = &m;
 
 	//  printf("NW_VERSION: %s\n", NWengineGetVersionString());
@@ -100,7 +100,7 @@ static void Render() {
 	rnd(false);
 	rnd.Composite(&man->rnd);
 	compositor(&rnd, true);
-//	(*Renderer::currentRenderer)(true);
+	//	(*Renderer::currentRenderer)(true);
 
 	camC->position.x +=
 		(Inputs::GetInputKey(NWin::NWIN_KEY_RIGHT, InputKeyEvent::KeyPressed) - Inputs::GetInputKeyPressed(NWin::NWIN_KEY_LEFT)) *

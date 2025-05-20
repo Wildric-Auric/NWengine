@@ -15,9 +15,9 @@ float UIGetSliderValue(UIItem* it) {
 	return d->minn + (d->curPercent * (d->maxx - d->minn));
 }
 
-void UISetSliderValue(UIItem* it, float value) { 
-    SliderData* d = CAST(SliderData*, it->data); 
-    d->curPercent = (CLAMP(value, d->minn, d->maxx) - d->minn) / (d->maxx - d->minn);
+void UISetSliderValue(UIItem* it, float value) {
+	SliderData* d = CAST(SliderData*, it->data);
+	d->curPercent = (CLAMP(value, d->minn, d->maxx) - d->minn) / (d->maxx - d->minn);
 }
 
 UIColorScheme uiColorSchemePreset_Test = {

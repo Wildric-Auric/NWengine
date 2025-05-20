@@ -1,7 +1,7 @@
 #include "Triangulation.h"
-    
+
 namespace Geo {
-void ConstEarClippingTriangulator::Process(bool(*cond)(Point*,Point*)) {
+void ConstEarClippingTriangulator::Process(bool (*cond)(Point*, Point*)) {
 	if(tlgr.idx < 3)
 		return;
 	bool	fl;
@@ -17,9 +17,9 @@ void ConstEarClippingTriangulator::Process(bool(*cond)(Point*,Point*)) {
 	DirectedPoly* tmp;
 	ui32		  ti = 0;
 
-    int i = 0;
-	while(c->next->next != c->last && i < 1000 ) {
-        i++;
+	int i = 0;
+	while(c->next->next != c->last && i < 1000) {
+		i++;
 		pts0[0].Set(&c->last->data);
 		pts0[1].Set(&c->data);
 		pts0[2].Set(&c->next->data);
@@ -30,10 +30,10 @@ void ConstEarClippingTriangulator::Process(bool(*cond)(Point*,Point*)) {
 			c = c->next;
 			continue;
 		}
-        if (cond(&pts0[0],&pts0[1])) {
-            c = c->next;
-            continue;
-        }
+		if(cond(&pts0[0], &pts0[1])) {
+			c = c->next;
+			continue;
+		}
 
 		tri.Set(&pts[0]);
 		if(tri.IsDegenerate()) {
@@ -54,20 +54,20 @@ void ConstEarClippingTriangulator::Process(bool(*cond)(Point*,Point*)) {
 			c = c->next;
 			continue;
 		}
-		tlgr._tris[ti]	  = c->last->data;
+		tlgr._tris[ti]	   = c->last->data;
 		tlgr._tris[ti + 1] = c->data;
 		tlgr._tris[ti + 2] = c->next->data;
 		ti += 3;
 		c->last->next = c->next;
 		c->next->last = c->last;
 		c			  = c->next;
-//		if(!priorizeFans)
-//			c = c->next;
+		//		if(!priorizeFans)
+		//			c = c->next;
 	}
-	tlgr._tris[ti]	  = c->last->data;
+	tlgr._tris[ti]	   = c->last->data;
 	tlgr._tris[ti + 1] = c->data;
 	tlgr._tris[ti + 2] = c->next->data;
 	ti += 3;
 	tlgr.triNum = ti / 3;
 };
-}
+} // namespace Geo
