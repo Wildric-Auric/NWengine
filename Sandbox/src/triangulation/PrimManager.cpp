@@ -8,10 +8,12 @@
 #include "Maths.h"
 #include "NWTime.h"
 #include "Geometry.h"
+#include "Triangulation.h"
 #include "keys.h"
 #include "UIWindow.h"
 
 struct GuiItems {
+    UIWindow* win;
     UIItemLabel* gridSizeLabel;
     UIItem* gridSize  ;
     UIItemLabel* lwidthLabel;
@@ -19,7 +21,10 @@ struct GuiItems {
     UIItemLabel* pointRadLabel;
     UIItem* pointRad  ;
     UIItem* update;
+    UIItem* disableGrid;
+    UIItem* blackBg;
 };
+
 extern GuiItems guiItems;
 
 void PrimManager::Start() {
@@ -33,6 +38,8 @@ void PrimManager::Start() {
 	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
 	sh->SetUniform2f("uCell", UIGetSliderValue(guiItems.gridSize), UIGetSliderValue(guiItems.gridSize));
+    sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+    sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
 }
 
 static TriPoint* last;
@@ -292,12 +299,15 @@ void PrimManager::Process() {
 
 void PrimManager::Triangulate(Geo::Polygon& poly) {
 	Geo::PolyOrientation		 ori = poly.CalcOrientation();
-	Geo::EarClippingTriangulator ttr;
-	ttr.Alloc(&poly, ori, pts.size());
-	ttr.Process();
-	Clean();
-	printf("TriNum: %d\n", ttr.triNum);
-	for(int i = 0; i < ttr.triNum * 3; i += 3) {
+	Geo::ConstEarClippingTriangulator ttr;
+	ttr.tlgr.Alloc(&poly, ori, pts.size());
+	ttr.Process([](Geo::Point* pt, Geo::Point* pt1)->bool{
+            if ((*pt1->Get() - *pt->Get()).magnitude() > 200.0) return 1;
+            return 0;
+        });
+	//Clean();
+	printf("TriNum: %d\n", ttr.tlgr.triNum);
+	for(int i = 0; i < ttr.tlgr.triNum * 3; i += 3) {
 		TriPoint& pt0	= AddPoint();
 		TriPoint& pt1	= AddPoint();
 		TriPoint& pt2	= AddPoint();
@@ -305,14 +315,14 @@ void PrimManager::Triangulate(Geo::Polygon& poly) {
 		TriLine&  line1 = AddLine();
 		TriLine&  line2 = AddLine();
 
-		pt0.SetUp(ttr.GetTris()[i]);
-		pt1.SetUp(ttr.GetTris()[i + 1]);
-		pt2.SetUp(ttr.GetTris()[i + 2]);
+		pt0.SetUp(ttr.tlgr.GetTris()[i]);
+		pt1.SetUp(ttr.tlgr.GetTris()[i + 1]);
+		pt2.SetUp(ttr.tlgr.GetTris()[i + 2]);
 		line0.SetUp(&pt0, &pt1);
 		line1.SetUp(&pt1, &pt2);
 		line2.SetUp(&pt0, &pt2);
 	}
-	ttr.Clean();
+	ttr.tlgr.Clean();
 }
 
 void PrimManager::Update() {
@@ -330,6 +340,9 @@ void PrimManager::Update() {
 	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
 	sh->SetUniform2f("uCell",gs,gs);
+    sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+    sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
+
     if (ref->value) {
         for (TriPoint& pt : pts) {
             pt.obj->Get<CircleRenderer>()->SetRadius(ps);

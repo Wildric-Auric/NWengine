@@ -7,6 +7,7 @@
 #include "UIWindow.h"
 
 struct GuiItems {
+    UIWindow* win;
     UIItemLabel* gridSizeLabel;
     UIItem* gridSize  ;
     UIItemLabel* lwidthLabel;
@@ -14,6 +15,8 @@ struct GuiItems {
     UIItemLabel* pointRadLabel;
     UIItem* pointRad  ;
     UIItem* update;
+    UIItem* disableGrid;
+    UIItem* blackBg;
 };
 GuiItems guiItems = {};
 
@@ -37,6 +40,7 @@ void SetWin() {
 	Camera*	   cam	= Camera::ActiveCamera;
 	Transform* tr	= obj->Get<Transform>();
 	UIWindow*  uwin = &obj->Add<UIWindow>();
+    uwin->cursor.strat = CurAdvanceStrat::BreakOnHorizontalEnd;
 	v2f		   s;
 	s = cam->GetSize();
 	s.x *= 0.15;
@@ -61,6 +65,14 @@ void SetWin() {
     UIItemLabel* label = uwin->AddItem(UIItemType_Label,-1, 1);
     UISetLabel(label, "Refresh: ");
     guiItems.update = uwin->AddItem(UIItemType_Checkbox,-1, 1); 
+    guiItems.win = uwin;
+    label = uwin->AddItem(UIItemType_Label,-1,0);
+    UISetLabel(label, "Disable Background Lines ");
+    guiItems.disableGrid = uwin->AddItem(UIItemType_Checkbox,-1,1);
+    label = uwin->AddItem(UIItemType_Label,-1,0);
+    UISetLabel(label, "Black Background ");
+    guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1,1);
+    
 
     UIGetSliderData(guiItems.pointRad)->minn = 0;
     UIGetSliderData(guiItems.pointRad)->maxx = 8;
