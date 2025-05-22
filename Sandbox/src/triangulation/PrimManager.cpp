@@ -342,7 +342,6 @@ void PrimManager::Update() {
 	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
 	if(guiItems.win->clickedItem == guiItems.blackBg) {
 		UIGetCheckboxData(guiItems.whiteBg)->value = 0;
-		printf("yoo");
 		lineCol = {1.0, 1.0, 1.0, 1.0};
 		ptCol	= {1.0, 1.0, 1.0, 1.0};
 		ChangeLinesColors(*this, lineCol);
