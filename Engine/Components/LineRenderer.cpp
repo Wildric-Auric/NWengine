@@ -6,7 +6,9 @@ LineRenderer::LineRenderer(GameObject* go) {
 	attachedObject = go;
 	attachedObject->AddComponent<Transform>();
 	Sprite* spr = attachedObject->AddComponent<Sprite>();
-	spr->SetShader(NW_DEFAULT_SHADER);
+	spr->SetShader(NW_DEFAULT_SHADER_COLORED);
+	spr->shader->Use();
+	spr->shader->SetUniform4f("uCol", 1.0, 1.0, 1.0, 1.0);
 	spr->SetTexture(NW_DEFAULT_TEXTURE);
 	SetExt(_start, _end);
 	SetWidth(_width);

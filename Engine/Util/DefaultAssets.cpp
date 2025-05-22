@@ -220,12 +220,12 @@ const ShaderText ShaderTexturedColoredDefaultStr = {ShaderDefVert,
         #pragma fragment
         #version 330 core
         uniform sampler2D  uTex0;
-        uniform vec3 uCol = vec3(1.0);
+        uniform vec4 uCol = vec4(1.0);
         in vec2 uv;
         out vec4 FragColor;
         void main() {
             vec4 col = texture(uTex0, uv);
-            FragColor = col * vec4(uCol,1.0);
+            FragColor = col * uCol;
         };
 )V0G0N"};
 
