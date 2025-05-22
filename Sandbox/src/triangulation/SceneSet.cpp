@@ -17,7 +17,9 @@ struct GuiItems {
 	UIItem*		 update;
 	UIItem*		 disableGrid;
 	UIItem*		 blackBg;
+	UIItem*		 whiteBg;
 };
+
 GuiItems guiItems = {};
 
 UIColorScheme customColScheme = {
@@ -72,6 +74,9 @@ void SetWin() {
 	label				 = uwin->AddItem(UIItemType_Label, -1, 0);
 	UISetLabel(label, "Black Background ");
 	guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1, 1);
+	label			 = uwin->AddItem(UIItemType_Label, -1, 0);
+	UISetLabel(label, "White Background ");
+	guiItems.whiteBg = uwin->AddItem(UIItemType_Checkbox, -1);
 
 	UIGetSliderData(guiItems.pointRad)->minn  = 0;
 	UIGetSliderData(guiItems.pointRad)->maxx  = 8;

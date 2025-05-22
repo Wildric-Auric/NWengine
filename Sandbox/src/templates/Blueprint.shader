@@ -24,12 +24,15 @@ uniform vec2	  uCell		   = vec2(50, 50);
 uniform vec2	  uThresh	   = vec2(1, 1);
 uniform int		  uDisableGrid = 0;
 uniform int		  uBlackBg	   = 0;
+uniform int		  uWhiteBg	   = 0;
 in vec2			  uv;
 
 out vec4 FragColor;
 
 void main() {
-	vec4 col		= vec4(vec3(0.0, 0.0, 1.0) * float(uBlackBg == 0), 1.0);
+	vec4 col = vec4(vec3(1.0, 1.0, 1.0) * float(uBlackBg == 0), 1.0);
+	if(uBlackBg == 0 && uWhiteBg == 0)
+		col = vec4(vec3(0.0, 0.0, 1.0), 1.0);
 	vec2 coord		= (uv - 0.5) * uResolution;
 	vec2 orthocoord = (uv - 0.5);
 	orthocoord.y *= (uResolution.y / uResolution.x);

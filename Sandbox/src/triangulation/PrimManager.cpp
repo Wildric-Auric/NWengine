@@ -23,28 +23,42 @@ struct GuiItems {
 	UIItem*		 update;
 	UIItem*		 disableGrid;
 	UIItem*		 blackBg;
+	UIItem*		 whiteBg;
 };
 
 extern GuiItems guiItems;
 
 void PrimManager::Start() {
-	//    TriPoint& pt = AddPoint();
-	//    TriPoint& pt1 = AddPoint();
-	//    pt.SetUp(v2f(0.0,0.0));
-	//    pt1.SetUp(v2f(100.0,0.0));
-	//    TriLine& l = AddLine();
-	//    l.SetUp(&pt, &pt1);
 	edges.SetUp(sizeof(TriEdge), 0xFF);
 	Shader* sh = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
 	sh->SetUniform2f("uCell", UIGetSliderValue(guiItems.gridSize), UIGetSliderValue(guiItems.gridSize));
 	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+	sh->SetUniform1i("uWhiteBg", UIGetCheckboxData(guiItems.whiteBg)->value);
 	sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
 }
 
 static TriPoint* last;
 static TriEdge*	 edge;
 static TriEdge*	 fedge;
+
+void ChangeLinesColors(PrimManager& m, const v4f& col) {
+	Shader* sh;
+	for(auto& l : m.lines) {
+		sh = l.obj->Get<Sprite>()->shader;
+		sh->Use();
+		sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
+	}
+}
+
+void ChangePtsColors(PrimManager& m, const v4f& col) {
+	//    Shader* sh;
+	//    for (auto& l : m.lines) {
+	//        sh = l.obj->Get<Sprite>()->shader;
+	//        sh->Use();
+	//        sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
+	//    }
+}
 
 TriPoint* PrimManager::FindPt(const v2r& p) {
 	for(TriPoint& pt : pts) {
@@ -139,24 +153,6 @@ void PrimManager::_TestEdges() {
 			AddLine().SetUp(pt, pt2);
 			AddLine().SetUp(pt2, pt1);
 		}
-
-		ttr.Clean();
-		//		Geo::Point	pts[3];
-		//		Geo::Point* ptr[3];
-		//		pts[0].Set(&trid.pts[0]);
-		//		pts[1].Set(&trid.pts[1]);
-		//		pts[2].Set(&trid.pts[2]);
-		//		ptr[0] = &pts[0];
-		//		ptr[1] = &pts[1];
-		//		ptr[2] = &pts[2];
-		//		tri.Set(ptr);
-		//		GameObject* obj = Scene::currentScene->GetGameObject("disc");
-		//		if(obj) {
-		//			v2r cntr = tri.CalcCircCenter();
-		//			obj->GetComponent<CircleRenderer>()->SetPosition(cntr);
-		//			obj->GetComponent<CircleRenderer>()->SetRadius((cntr - *tri.GetPt(0)).magnitude());
-		//			obj->GetComponent<Sprite>()->Render();
-		//		}
 		return;
 	}
 
@@ -302,8 +298,8 @@ void PrimManager::Triangulate(Geo::Polygon& poly) {
 	Geo::ConstEarClippingTriangulator ttr;
 	ttr.tlgr.Alloc(&poly, ori, pts.size());
 	ttr.Process([](Geo::Point* pt, Geo::Point* pt1) -> bool {
-		if((*pt1->Get() - *pt->Get()).magnitude() > 200.0)
-			return 1;
+		//		if((*pt1->Get() - *pt->Get()).magnitude() > 200.0)
+		//			return 1;
 		return 0;
 	});
 	// Clean();
@@ -341,8 +337,28 @@ void PrimManager::Update() {
 	Shader* sh		  = Scene::currentScene->GetGameObject("blueprint")->Get<Sprite>()->GetShader();
 	sh->Use();
 	sh->SetUniform2f("uCell", gs, gs);
-	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
 	sh->SetUniform1i("uDisableGrid", UIGetCheckboxData(guiItems.disableGrid)->value);
+	sh->SetUniform1i("uWhiteBg", UIGetCheckboxData(guiItems.whiteBg)->value);
+	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
+	if(guiItems.win->clickedItem == guiItems.blackBg) {
+		UIGetCheckboxData(guiItems.whiteBg)->value = 0;
+		printf("yoo");
+		lineCol = {1.0, 1.0, 1.0, 1.0};
+		ptCol	= {1.0, 1.0, 1.0, 1.0};
+		ChangeLinesColors(*this, lineCol);
+		ChangePtsColors(*this, ptCol);
+	} else if(guiItems.win->clickedItem == guiItems.whiteBg) {
+		UIGetCheckboxData(guiItems.blackBg)->value = 0;
+		lineCol									   = {0.0, 0.0, 0.0, 1.0};
+		ptCol									   = {0.0, 0.0, 0.0, 1.0};
+		ChangeLinesColors(*this, lineCol);
+		ChangePtsColors(*this, ptCol);
+	} else if(lineCol.x != 1.0 && !UIGetCheckboxData(guiItems.whiteBg)->value && !UIGetCheckboxData(guiItems.blackBg)->value) {
+		lineCol = {1.0, 1.0, 1.0, 1.0};
+		ptCol	= {1.0, 1.0, 1.0, 1.0};
+		ChangeLinesColors(*this, lineCol);
+		ChangePtsColors(*this, ptCol);
+	}
 
 	if(ref->value) {
 		for(TriPoint& pt : pts) {
@@ -387,6 +403,8 @@ void TriLine::SetUp() {
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Sprite>()->sortingLayer = LayerConstants::LINES_LAYER;
 	LineRenderer* lr						  = obj->AddComponent<LineRenderer>();
+	obj->Get<Sprite>()->shader->Use();
+	obj->Get<Sprite>()->shader->SetUniform4f("uCol", _m->lineCol.x, _m->lineCol.y, _m->lineCol.z, _m->lineCol.a);
 	lr->SetExt(pt0->Get(), pt1->Get());
 	lr->SetWidth(_m->lineWidth);
 }

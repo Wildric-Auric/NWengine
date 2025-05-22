@@ -63,6 +63,8 @@ class PrimManager : public Scriptable {
 	float				lineWidth = 1.0f;
 	float				ptRad	  = 5.0f;
 	v2f					grid	  = v2f(50.0f, 50.0f);
+	v4f					lineCol;
+	v4f					ptCol;
 	std::list<TriPoint> pts;
 	std::list<TriLine>	lines;
 	DList				edges;
