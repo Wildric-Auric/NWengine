@@ -420,6 +420,7 @@ void UIWindow::Update() {
 
 	if(!m1)
 		draggedItem = 0;
+	clickedItem = 0;
 	for(UIItem* it : itemsOrd) {
 		UIItem& item = *it;
 		v2f		s	 = item.GetSize();
@@ -427,8 +428,6 @@ void UIWindow::Update() {
 		v2f		itp	 = cp + fVec2(s.x * 0.5, -s.y * 0.5);
 		cursor.CalcNextPosition(s);
 		item.obj.GetComponent<Transform>()->SetPosition(itp);
-
-		clickedItem = 0;
 		if(m1 && !m && selectedItem == it) {
 			// Items may be dragged without cursor being inside
 			draggedItem = selectedItem;
