@@ -383,10 +383,10 @@ void DelaunayTriangulator::GetTri(ui32 index, v2r* p0, v2r* p1, v2r* p2) {
 	*p2 = _tris[index * 3 + 2];
 }
 void DelaunayTriangulator::Alloc(PointSet* const s, const ui32 num) {
-	ptsNum = num;
-	_ptSet = s;
-    _trisCap = (2 * num + 1) * 3;
-	_tris    = (v2r*)calloc(_trisCap, sizeof(v2r));
+	ptsNum	 = num;
+	_ptSet	 = s;
+	_trisCap = (2 * num + 1) * 3;
+	_tris	 = (v2r*)calloc(_trisCap, sizeof(v2r));
 }
 
 #define CHK(pt) (pt) == tri.pts[0] || (pt) == tri.pts[1] || (pt) == tri.pts[2]
@@ -418,14 +418,14 @@ void DelaunayTriangulator::Process() {
 	DeleteSuper(trid);
 }
 
-#define REALC \
-	if(_trisCap < triNum * 3 + 3) { \
-		_trisCap = _trisCap * 2 + 3; \
-		_tris	 = (v2r*)realloc(_tris, _trisCap * sizeof(v2r)); \
-	} 
+#define REALC                                                                                                                    \
+	if(_trisCap < triNum * 3 + 3) {                                                                                              \
+		_trisCap = _trisCap * 2 + 3;                                                                                             \
+		_tris	 = (v2r*)realloc(_tris, _trisCap * sizeof(v2r));                                                                 \
+	}
 
 void DelaunayTriangulator::_AddTri(Triangle& tri) {
-    REALC;
+	REALC;
 	_tris[triNum * 3 + 0] = *tri.GetPt(0);
 	_tris[triNum * 3 + 1] = *tri.GetPt(1);
 	_tris[triNum * 3 + 2] = *tri.GetPt(2);
@@ -433,7 +433,7 @@ void DelaunayTriangulator::_AddTri(Triangle& tri) {
 }
 
 void DelaunayTriangulator::_AddTri(TriangleData& tri) {
-    REALC;
+	REALC;
 	_tris[triNum * 3 + 0] = tri.pts[0];
 	_tris[triNum * 3 + 1] = tri.pts[1];
 	_tris[triNum * 3 + 2] = tri.pts[2];
@@ -529,16 +529,16 @@ void DelaunayTriangulator::Process(TriangleData& superTri) {
 		c = n;
 	}
 	for(TriangleData& d : tris) {
-        _AddTri(d);
+		_AddTri(d);
 	}
-	//triNum = tris.size();
+	// triNum = tris.size();
 }
 
 void DelaunayTriangulator::ComputeSuperTriangle(TriangleData* tri) {
 	void* f = _ptSet->GetFirst();
 	void* c = f;
 	void* n;
-	
+
 	v2r v;	// unwrapped value
 	v2r rx; // range of x
 	v2r ry; // range of y

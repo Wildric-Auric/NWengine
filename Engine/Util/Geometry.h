@@ -143,7 +143,7 @@ class DelaunayTriangulator {
   public:
 	PointSet* _ptSet;
 	v2r*	  _tris;
-    ui32      _trisCap;
+	ui32	  _trisCap;
 	ui32	  triNum	= 0;
 	ui32	  ptsNum	= 0;
 	real	  supOffset = 10.0f;
