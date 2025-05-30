@@ -52,12 +52,12 @@ void ChangeLinesColors(PrimManager& m, const v4f& col) {
 }
 
 void ChangePtsColors(PrimManager& m, const v4f& col) {
-	    Shader* sh;
-	    for (auto& l : m.pts) {
-	        sh = l.obj->Get<Sprite>()->shader;
-	        sh->Use();
-	        sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
-	    }
+	Shader* sh;
+	for(auto& l : m.pts) {
+		sh = l.obj->Get<Sprite>()->shader;
+		sh->Use();
+		sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
+	}
 }
 
 TriPoint* PrimManager::FindPt(const v2r& p) {
@@ -239,30 +239,30 @@ void PrimManager::MakeLineOnClick() {
 				ptptr = &pttmp;
 			}
 		}
-        if (ptptr)
-            goto lab;
+		if(ptptr)
+			goto lab;
 		TriPoint& pt = AddPoint();
 		pt.SetUp(nearest);
 		TriLine* line = 0;
 		TriEdge* edge = 0;
-    	if(last) {
+		if(last) {
 			line = &AddLine();
 			line->SetUp(last, &pt);
 			line->obj->GetComponent<Sprite>()->StopRendering();
-            nbLine--;
+			nbLine--;
 		}
-        if(line) {
-                edge = CAST(TriEdge*, edges.GetContent(edges.tAddLast(TriEdge())));
-                edge->SetUp(line);
-        }
-        if(!fedge && edge) {
-                fedge		= edge;
-                fedge->line = line;
-        };
-        last = &pt;
+		if(line) {
+			edge = CAST(TriEdge*, edges.GetContent(edges.tAddLast(TriEdge())));
+			edge->SetUp(line);
+		}
+		if(!fedge && edge) {
+			fedge		= edge;
+			fedge->line = line;
+		};
+		last = &pt;
 	}
 lab:
-    void();
+	void();
 }
 
 void PrimManager::Clean() {
@@ -275,7 +275,7 @@ void PrimManager::Clean() {
 	edges.SetUp(sizeof(TriEdge), 0xFF);
 	lines.clear();
 	pts.clear();
-    nbLine = 0;
+	nbLine = 0;
 
 	last  = 0;
 	edge  = 0;
@@ -341,8 +341,8 @@ void PrimManager::Update() {
 	sh->SetUniform1i("uBlackBg", UIGetCheckboxData(guiItems.blackBg)->value);
 	if(guiItems.win->clickedItem == guiItems.blackBg) {
 		UIGetCheckboxData(guiItems.whiteBg)->value = 0;
-		lineCol = {1.0, 1.0, 1.0, 1.0};
-		ptCol	= {1.0, 1.0, 1.0, 1.0};
+		lineCol									   = {1.0, 1.0, 1.0, 1.0};
+		ptCol									   = {1.0, 1.0, 1.0, 1.0};
 		ChangeLinesColors(*this, lineCol);
 		ChangePtsColors(*this, ptCol);
 	} else if(guiItems.win->clickedItem == guiItems.whiteBg) {
@@ -378,7 +378,7 @@ TriPoint& PrimManager::AddPoint() {
 TriLine& PrimManager::AddLine() {
 	lines.push_back({});
 	lines.back()._m = this;
-    nbLine++;
+	nbLine++;
 	return lines.back();
 }
 
@@ -388,8 +388,8 @@ void TriPoint::SetUp(const v2f& pos) {
 	Transform* tr							  = obj->AddComponent<Transform>();
 	obj->AddComponent<Sprite>()->sortingLayer = LayerConstants::POINTS_LAYER;
 	CircleRenderer* cr						  = obj->AddComponent<CircleRenderer>();
-    obj->Get<Sprite>()->GetShader()->Use();
-    obj->Get<Sprite>()->GetShader()->SetUniform4f("uCol",_m->ptCol);
+	obj->Get<Sprite>()->GetShader()->Use();
+	obj->Get<Sprite>()->GetShader()->SetUniform4f("uCol", _m->ptCol);
 	tr->SetPosition(pos);
 	cr->SetRadius(_m->ptRad);
 }

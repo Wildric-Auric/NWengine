@@ -63,11 +63,11 @@ class PrimManager : public Scriptable {
 	float				lineWidth = 1.0f;
 	float				ptRad	  = 5.0f;
 	v2f					grid	  = v2f(50.0f, 50.0f);
-	v4f					lineCol   = v4f(1.0,1.0,1.0,1.0);
-	v4f					ptCol     = v4f(1.0,1.0,1.0,10);
+	v4f					lineCol	  = v4f(1.0, 1.0, 1.0, 1.0);
+	v4f					ptCol	  = v4f(1.0, 1.0, 1.0, 10);
 	std::list<TriPoint> pts;
 	std::list<TriLine>	lines;
-    int nbLine = 0;
+	int					nbLine = 0;
 	DList				edges;
 
 	TriPoint& AddPoint();

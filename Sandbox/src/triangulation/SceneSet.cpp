@@ -79,7 +79,7 @@ void SetWin() {
 	guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1, 1);
 	label			 = uwin->AddItem(UIItemType_Label, -1, 0);
 	UISetLabel(label, "White Background ");
-	guiItems.whiteBg = uwin->AddItem(UIItemType_Checkbox,-1, 5);
+	guiItems.whiteBg = uwin->AddItem(UIItemType_Checkbox, -1, 5);
 
 	guiItems.nbPts	 = uwin->AddItem(UIItemType_Label, -1, 1);
 	guiItems.nbEdges = uwin->AddItem(UIItemType_Label, -1, 1);
