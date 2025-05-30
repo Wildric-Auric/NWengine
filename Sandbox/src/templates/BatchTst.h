@@ -30,8 +30,7 @@ static void Init() {
 	s.Start();
 	Sprite* spr = obj.AddComponents<Sprite, Transform>();
 	spr->SetShader(ShaderTexturedBatchedDefaultStr, &ShaderTexturedBatchedDefaultID);
-	spr->Batch();
-
+	spr->Batch(BatchType::STATIC_BATCH);
 	printf("NW_VERSION: %s\n", NWengineGetVersionString());
 }
 

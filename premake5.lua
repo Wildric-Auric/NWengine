@@ -7,6 +7,8 @@ workspace "NWengine"
         architecture "x86"
     filter "platforms:*64*"
         architecture "x64"
+    filter "action:vs*"
+        buildoptions { "/MP" }
     filter {}
     location "Build"
     language   "C++"

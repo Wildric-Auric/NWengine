@@ -25,8 +25,9 @@ const char* ShaderDefVerBatched =
         layout(location = 3) in float sampleIDattrib;
         out vec2  uv;
         out float sampleID;
+        uniform mat4 uMvp = mat4(1.0); //identity for dynamic batch, view x proj for static
         void main() {
-            gl_Position = vec4(attribPos, 1.0);
+            gl_Position = uMvp * vec4(attribPos, 1.0);
             uv = texCoord;
             sampleID  = sampleIDattrib;
         };

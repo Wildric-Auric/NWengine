@@ -318,9 +318,9 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	desc.unitNum = extra ? extra->relativeIndex.data() : 0;
 	desc.rawNum	 = extra ? extra->rawData.size() : 0;
 	if(iter == Batch::batchMap.end()) {
-		Batch::batchMap.insert(Batch::batchMap.end(), std::make_pair(sprite->sortingLayer, std::vector<Batch*>{new Batch(desc)}))
-			->second.back()
-			->Render(obj, stride);
+		auto p = Batch::batchMap.insert(Batch::batchMap.end(), std::make_pair(sprite->sortingLayer, std::vector<Batch*>{new Batch(desc)}));
+		p->second.back()->isDynamic = sprite->_isBatched == BatchType::DYNAMIC_BATCH;
+		p->second.back()->Render(obj, stride);
 		delete[] stride;
 		return sprite->sortingLayer;
 	}
