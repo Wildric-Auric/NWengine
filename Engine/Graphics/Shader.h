@@ -93,6 +93,13 @@ class Shader : public Asset {
 
 	void SetVector2(const char* name, float value0, float value1);
 
+	void SetUniform2f(const char* name, const v2f&);
+	void SetUniform2i(const char* name, const v2i&);
+	void SetUniform3f(const char* name, const v3f&);
+	void SetUniform3i(const char* name, const v3i&);
+	void SetUniform4f(const char* name, const v4f&);
+	void SetUniform4i(const char* name, const v4i&);
+
 	void SetUniformArrayf(const char* name, float* value, int size);
 
 	void SetUniformArrayi(const char* name, int* value, int size);

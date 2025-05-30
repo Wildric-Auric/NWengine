@@ -181,6 +181,13 @@ void Shader::SetUniform4f(int loc, float x, float y, float z, float w) { NW_GL_C
 
 void Shader::SetUniform4i(int loc, int x, int y, int z, int w) { NW_GL_CALL(glUniform4i(loc, x, y, z, w)); }
 
+void Shader::SetUniform2f(const char* name, const v2f& v) { SetUniform2f(name, v.x, v.y); };
+void Shader::SetUniform2i(const char* name, const v2i& v) { SetUniform2i(name, v.x, v.y); };
+void Shader::SetUniform3f(const char* name, const v3f& v) { SetUniform3f(name, v.x, v.y, v.z); };
+void Shader::SetUniform3i(const char* name, const v3i& v) { SetUniform3i(name, v.x, v.y, v.z); };
+void Shader::SetUniform4f(const char* name, const v4f& v) { SetUniform4f(name, v.x, v.y, v.z, v.w); };
+void Shader::SetUniform4i(const char* name, const v4i& v) { SetUniform4i(name, v.x, v.y, v.z, v.w); };
+
 void Shader::SetUniformArrayf(int loc, float* value, int size) { NW_GL_CALL(glUniform1fv(loc, size, value)); }
 
 void Shader::SetUniformArray2f(int loc, float* value, int size) { NW_GL_CALL(glUniform2fv(loc, size, value)); }
@@ -207,6 +214,10 @@ void Shader::SetUniform1i(const char* name, const int value) { SetUniform1i(glGe
 
 void Shader::SetUniform3f(const char* name, float x, float y, float z) {
 	SetUniform3f(glGetUniformLocation(_glID, name), x, y, z);
+};
+
+void Shader::SetUniform3i(const char* name, int x, int y, int z) {
+	SetUniform3i(glGetUniformLocation(_glID, name), x, y, z);
 };
 
 void Shader::SetUniform4f(const char* name, float x, float y, float z, float w) {
