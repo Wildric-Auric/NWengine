@@ -173,6 +173,7 @@ const ShaderText ShaderCircleDefaultStr = {ShaderDefVert,
         #version 330 core 
         uniform sampler2D uTex0;
         uniform float uAA = 0.0;
+        uniform vec4 uCol = vec4(1.0);
         in vec2 uv;
         
         out vec4 FragColor;
@@ -181,7 +182,7 @@ const ShaderText ShaderCircleDefaultStr = {ShaderDefVert,
             vec2 c = uv - vec2(0.5,0.5);
             float p = c.x * c.x + c.y * c.y; 
             float aaval = 1.0 - smoothstep(0.25-uAA,0.25,p);
-            vec4 col = texture(uTex0,uv) * aaval; 
+            vec4 col = texture(uTex0,uv) * aaval * uCol; 
             FragColor = col;
         } 
 )V0G0N"};
