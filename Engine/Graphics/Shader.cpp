@@ -216,9 +216,7 @@ void Shader::SetUniform3f(const char* name, float x, float y, float z) {
 	SetUniform3f(glGetUniformLocation(_glID, name), x, y, z);
 };
 
-void Shader::SetUniform3i(const char* name, int x, int y, int z) {
-	SetUniform3i(glGetUniformLocation(_glID, name), x, y, z);
-};
+void Shader::SetUniform3i(const char* name, int x, int y, int z) { SetUniform3i(glGetUniformLocation(_glID, name), x, y, z); };
 
 void Shader::SetUniform4f(const char* name, float x, float y, float z, float w) {
 	SetUniform4f(glGetUniformLocation(_glID, name), x, y, z, w);

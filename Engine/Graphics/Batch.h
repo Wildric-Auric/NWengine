@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <vector>
 
-#define UNIFORM_VIEWxPROJ_STR	  "uVP"
+#define UNIFORM_VIEWxPROJ_STR	  "uMvp"
 #define UNIFORM_TEXTURE_ARRAY_STR "uTex"
 
 typedef int BatchChannelNum;

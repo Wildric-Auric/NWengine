@@ -135,7 +135,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 			Sprite* spr2 = item->obj.GetComponent<Sprite>();
 			spr2->SetShader(NW_DEFAULT_SHADER_COLORED);
 			spr2->GetShader()->Use();
-			spr2->GetShader()->SetUniform4f("uCol", 1.0, 0.0, 0.6,1.0);
+			spr2->GetShader()->SetUniform4f("uCol", 1.0, 0.0, 0.6, 1.0);
 			item->obj.Draw();
 		};
 		spr2->sortingLayer = spr->sortingLayer + layer;
