@@ -52,12 +52,12 @@ void ChangeLinesColors(PrimManager& m, const v4f& col) {
 }
 
 void ChangePtsColors(PrimManager& m, const v4f& col) {
-	//    Shader* sh;
-	//    for (auto& l : m.lines) {
-	//        sh = l.obj->Get<Sprite>()->shader;
-	//        sh->Use();
-	//        sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
-	//    }
+	    Shader* sh;
+	    for (auto& l : m.pts) {
+	        sh = l.obj->Get<Sprite>()->shader;
+	        sh->Use();
+	        sh->SetUniform4f("uCol", col.x, col.y, col.z, col.a);
+	    }
 }
 
 TriPoint* PrimManager::FindPt(const v2r& p) {
@@ -137,18 +137,13 @@ void PrimManager::_TestEdges() {
 
 	if(Inputs::GetInputOnKeyRelease('S')) {
 		Geo::DelaunayTriangulator ttr;
-		Geo::TriangleData		  trid;
 		Geo::Triangle			  tri;
 		ttr.Alloc(&poly, pts.size());
-		ttr.ComputeSuperTriangle(&trid);
 		ttr.Process();
 		for(int i = 0; i < ttr.triNum; ++i) {
 			TriPoint* pt  = FindPt(ttr._tris[i * 3]);
 			TriPoint* pt1 = FindPt(ttr._tris[i * 3 + 1]);
 			TriPoint* pt2 = FindPt(ttr._tris[i * 3 + 2]);
-#define CHK(pt) pt->Get() == trid.pts[0] || pt->Get() == trid.pts[1] || pt->Get() == trid.pts[2]
-			if(CHK(pt) || CHK(pt1) || CHK(pt2))
-				continue;
 			AddLine().SetUp(pt, pt1);
 			AddLine().SetUp(pt, pt2);
 			AddLine().SetUp(pt2, pt1);
@@ -165,7 +160,6 @@ void PrimManager::_TestEdges() {
 		trid.pts[1] = *((++this->pts.begin())->GetRef());
 		trid.pts[2] = *((++(++this->pts.begin()))->GetRef());
 
-		printf("%d\n", this->pts.size()); // TODO::Del
 		AddPoint().SetUp(trid.pts[0]);
 		AddPoint().SetUp(trid.pts[1]);
 		AddPoint().SetUp(trid.pts[2]);
@@ -245,26 +239,30 @@ void PrimManager::MakeLineOnClick() {
 				ptptr = &pttmp;
 			}
 		}
-		TriPoint& pt = !ptptr ? AddPoint() : *ptptr;
-		if(!ptptr)
-			pt.SetUp(nearest);
+        if (ptptr)
+            goto lab;
+		TriPoint& pt = AddPoint();
+		pt.SetUp(nearest);
 		TriLine* line = 0;
 		TriEdge* edge = 0;
-		if(last) {
+    	if(last) {
 			line = &AddLine();
 			line->SetUp(last, &pt);
 			line->obj->GetComponent<Sprite>()->StopRendering();
+            nbLine--;
 		}
-		if(line) {
-			edge = CAST(TriEdge*, edges.GetContent(edges.tAddLast(TriEdge())));
-			edge->SetUp(line);
-		}
-		if(!fedge && edge) {
-			fedge		= edge;
-			fedge->line = line;
-		};
-		last = &pt;
+        if(line) {
+                edge = CAST(TriEdge*, edges.GetContent(edges.tAddLast(TriEdge())));
+                edge->SetUp(line);
+        }
+        if(!fedge && edge) {
+                fedge		= edge;
+                fedge->line = line;
+        };
+        last = &pt;
 	}
+lab:
+    void();
 }
 
 void PrimManager::Clean() {
@@ -277,6 +275,7 @@ void PrimManager::Clean() {
 	edges.SetUp(sizeof(TriEdge), 0xFF);
 	lines.clear();
 	pts.clear();
+    nbLine = 0;
 
 	last  = 0;
 	edge  = 0;
@@ -379,6 +378,7 @@ TriPoint& PrimManager::AddPoint() {
 TriLine& PrimManager::AddLine() {
 	lines.push_back({});
 	lines.back()._m = this;
+    nbLine++;
 	return lines.back();
 }
 
@@ -388,6 +388,8 @@ void TriPoint::SetUp(const v2f& pos) {
 	Transform* tr							  = obj->AddComponent<Transform>();
 	obj->AddComponent<Sprite>()->sortingLayer = LayerConstants::POINTS_LAYER;
 	CircleRenderer* cr						  = obj->AddComponent<CircleRenderer>();
+    obj->Get<Sprite>()->GetShader()->Use();
+    obj->Get<Sprite>()->GetShader()->SetUniform4f("uCol",_m->ptCol);
 	tr->SetPosition(pos);
 	cr->SetRadius(_m->ptRad);
 }

@@ -15,6 +15,6 @@
 #include "triangulation/TriangulationPrj.h"
 
 int main() {
-	UITst::Run();
+	TriangulationPrj::Run();
 	return 0;
 }

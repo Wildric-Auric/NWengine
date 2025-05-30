@@ -18,6 +18,9 @@ struct GuiItems {
 	UIItem*		 disableGrid;
 	UIItem*		 blackBg;
 	UIItem*		 whiteBg;
+
+	UIItemLabel* nbPts;
+	UIItemLabel* nbEdges;
 };
 
 GuiItems guiItems = {};
@@ -76,7 +79,10 @@ void SetWin() {
 	guiItems.blackBg = uwin->AddItem(UIItemType_Checkbox, -1, 1);
 	label			 = uwin->AddItem(UIItemType_Label, -1, 0);
 	UISetLabel(label, "White Background ");
-	guiItems.whiteBg = uwin->AddItem(UIItemType_Checkbox, -1);
+	guiItems.whiteBg = uwin->AddItem(UIItemType_Checkbox,-1, 5);
+
+	guiItems.nbPts	 = uwin->AddItem(UIItemType_Label, -1, 1);
+	guiItems.nbEdges = uwin->AddItem(UIItemType_Label, -1, 1);
 
 	UIGetSliderData(guiItems.pointRad)->minn  = 0;
 	UIGetSliderData(guiItems.pointRad)->maxx  = 8;
@@ -146,15 +152,19 @@ static void SetText() {
 	spr->StopRendering();
 }
 
-void SceneSet::Update() {
-	UISetLabel(guiItems.gridSizeLabel,
-			   (std::string("Grid Size: ") + std::to_string((int)UIGetSliderValue(guiItems.gridSize))).c_str());
+static PrimManager* prim;
+void				SceneSet::Update() {
+	   UISetLabel(guiItems.gridSizeLabel,
+							  (std::string("Grid Size: ") + std::to_string((int)UIGetSliderValue(guiItems.gridSize))).c_str());
 
-	UISetLabel(guiItems.lwidthLabel,
-			   (std::string("Line Width: ") + std::to_string((int)UIGetSliderValue(guiItems.lineWidth))).c_str());
+	   UISetLabel(guiItems.lwidthLabel,
+							  (std::string("Line Width: ") + std::to_string((int)UIGetSliderValue(guiItems.lineWidth))).c_str());
 
-	UISetLabel(guiItems.pointRadLabel,
-			   (std::string("Point Radius: ") + std::to_string((int)UIGetSliderValue(guiItems.pointRad))).c_str());
+	   UISetLabel(guiItems.pointRadLabel,
+							  (std::string("Point Radius: ") + std::to_string((int)UIGetSliderValue(guiItems.pointRad))).c_str());
+
+	   UISetLabel(guiItems.nbPts, (std::string("Number of pts: ") + std::to_string(prim->pts.size())).c_str());
+	   UISetLabel(guiItems.nbEdges, (std::string("Number of lines: ") + std::to_string(prim->nbLine)).c_str());
 }
 
 void SceneSet::Start() {
@@ -163,5 +173,7 @@ void SceneSet::Start() {
 	SetBg();
 	SetWin();
 	SetText();
-	s.AddObject().AddComponent<Script>()->SetScript<PrimManager>();
+	Script& scr = s.AddObject().Add<Script>();
+	scr.SetScript<PrimManager>();
+	prim = (PrimManager*)scr.script;
 }
