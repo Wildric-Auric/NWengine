@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#define AllocSceneObj()		  new SceneObjNode
+#define DeallocSceneObj(node) delete node
+
 Scene::Scene(const std::string& name) { this->name = name; };
 
 void Scene::SortScene() {} // Deprecated
@@ -60,64 +63,103 @@ void Scene::ForceRenderStop() {
 }
 
 GameObject* Scene::GetGameObject(const uint32& position) {
-	if(position >= this->sceneObjs.size())
-		return nullptr;
-	std::list<GameObject>::iterator it = sceneObjs.begin();
-	std::advance(it, position);
-	return &*it;
+	if(position >= sceneObjsSize)
+		return 0;
+	uint32		  i = 0;
+	SceneObjNode* n = sceneObjs.first;
+	while(i++ != position) {
+		n = n->next;
+	}
+	return &n->cont;
 }
 
 GameObject* Scene::GetGameObject() {
-	if(this->sceneObjs.size() <= 0)
-		return nullptr;
-	return &this->sceneObjs.back();
+	if(sceneObjs.size == 0)
+		return 0;
+	return &sceneObjs.last->cont;
 }
 
-GameObject& Scene::AddObject() {
-	sceneObjs.emplace_back();
-	Rename("new GameObject", &sceneObjs.back());
-	return sceneObjs.back();
+GameObject& Scene::DirectAddObject() {
+	SceneObjNode* obj  = AllocSceneObj();
+	SceneObjNode* last = sceneObjs.last;
+	if(sceneObjs.first == 0)
+		sceneObjs.first = obj;
+	if(last != 0)
+		last->next = obj;
+	sceneObjs.last = obj;
+	obj->prev	   = last;
+	++sceneObjs.size;
+	return obj->cont;
 }
+
+GameObject& Scene::AddObject() { return AddObject("new GameObject"); }
 
 GameObject& Scene::AddObject(const char* n) {
-	sceneObjs.emplace_back();
-	Rename(n, &sceneObjs.back());
-	return sceneObjs.back();
+	GameObject& obj = DirectAddObject();
+	Rename(n, &obj);
+	return obj;
 }
 
-std::list<GameObject>::iterator Scene::DeleteObject(std::list<GameObject>::iterator it) {
-	GameObject* ptr = &(*it);
+SceneObjNode* Scene::DeleteObject(SceneObjNode* obj) {
+	GameObject*	  ptr = &obj->cont;
+	SceneObjNode* ret = obj->next;
+	if(sceneObjs.last == obj)
+		sceneObjs.last = obj->prev;
+	if(sceneObjs.first == obj)
+		sceneObjs.first = obj->next;
+	if(obj->prev)
+		obj->prev->next = obj->next;
+	if(obj->next)
+		obj->next->prev = obj->prev;
 	ptr->DeleteComponents();
 	if(_autoCache)
 		DeleteFromCache(*ptr);
-	return sceneObjs.erase(it);
+	DeallocSceneObj(obj);
+	--sceneObjs.size;
+	return ret;
+}
+
+void Scene::DeleteLastObject() { DeleteObject(sceneObjs.last); }
+void Scene::DeleteFirstObject() { DeleteObject(sceneObjs.first); }
+void Scene::DeleteObject(GameObject* obj) {
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		if(&node->cont != obj)
+			continue;
+		DeleteObject(node);
+		return;
+	}
 }
 
 void Scene::DeleteObject(uint32 index) {
-	auto it1 = sceneObjs.begin();
-	std::advance(it1, index);
-	DeleteObject(it1);
+	uint32		  i = 0;
+	SceneObjNode* n = sceneObjs.first;
+	while(i++ != index) {
+		n = n->next;
+	}
+	DeleteObject(n);
 };
 
-void Scene::DeleteObject(std::string name) {
-	auto it1 = sceneObjs.begin();
-	while(it1 != sceneObjs.end()) {
-		if(it1->name == name) {
-			DeleteObject(it1);
+void Scene::DeleteObject(const std::string& name) {
+	SceneObjNode* n = sceneObjs.first;
+	while(n) {
+		if(n->cont.name == name) {
+			DeleteObject(n);
 			return;
 		}
-		++it1;
+		n = n->next;
 	}
 }
 
 void Scene::DeleteCurrentObj() { _shouldDelObj = true; }
 
 GameObject* Scene::GetGameObject(std::string name) {
-	for(auto it = sceneObjs.begin(); it != sceneObjs.end(); ++it) {
-		if(it->name == name)
-			return &(*it);
+	SceneObjNode* n = sceneObjs.first;
+	while(n) {
+		if(n->cont.name == name)
+			return &n->cont;
+		n = n->next;
 	}
-	return nullptr;
+	return 0;
 }
 
 void Scene::Draw() {
@@ -155,33 +197,35 @@ bool Scene::IsCurrent() { return Scene::currentScene == this; }
 
 Scene::~Scene() {
 	// Delete all components
-	for(std::list<GameObject>::iterator it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
-		for(auto pair : it->components)
-			delete(GameComponent*)pair.second;
+	SceneObjNode* n = sceneObjs.first;
+	while(n) {
+		n = DeleteObject(n);
 	}
 }
 
 void Scene::Start() {
-	for(std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+	for(SceneObjNode* n = sceneObjs.first; n; n = n->next) {
+		GameObject* obj = &n->cont;
 		for(auto iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Start();
 		}
 		if(_autoCache)
-			AddToCache(*obj, obj);
+			AddToCache(*obj, n);
 	}
 }
 
 void Scene::Update() {
 	std::list<GameObject>::iterator last;
 
-	for(auto obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
+	for(SceneObjNode* n = sceneObjs.first; n; n = n->next) {
+		GameObject* obj = &n->cont;
 		for(auto iter = obj->components.begin(); iter != obj->components.end(); iter++) {
 			iter->second->Update();
 		}
 		if(_shouldDelObj) {
 			_shouldDelObj = 0;
-			obj			  = DeleteObject(obj);
-			--obj;
+			n			  = DeleteObject(n);
+			n			  = n->prev;
 		}
 	}
 };
@@ -191,11 +235,11 @@ const std::string& Scene::Rename(const std::string& newName, GameObject* obj) {
 	obj->name = newName;
 	while(1) {
 		bool br = 1;
-		for(auto it = sceneObjs.begin(); it != sceneObjs.end(); it++) {
-			if(it->name == obj->name && &(*it) != obj) {
+		for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+			if(node->cont.name == obj->name && obj != &node->cont) {
 				n += 1;
 				br		  = 0;
-				obj->name = newName + std::to_string(n);
+				obj->name = (newName + std::to_string(n));
 			}
 		}
 		if(br)
@@ -212,9 +256,9 @@ Scene*			 Scene::currentScene = nullptr;
 std::list<Scene> Scene::_scenes;
 
 void Scene::SetUp() {
-	for(std::list<GameObject>::iterator obj = sceneObjs.begin(); obj != sceneObjs.end(); obj++) {
-		auto iter = obj->components.find(CameraID);
-		if(iter == obj->components.end())
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		auto iter = node->cont.components.find(CameraID);
+		if(iter == node->cont.components.end())
 			continue;
 		((Camera*)iter->second)->Use();
 		break;
@@ -261,15 +305,15 @@ void Scene::DeferredDeleteCurrentGameObject() { _shouldDelObj = 1; }
 void Scene::FillCache() {
 	if(cache.size() <= 0)
 		return;
-	for(auto obj = sceneObjs.begin(); obj != sceneObjs.end(); ++obj) {
-		AddToCache(*obj, obj);
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		AddToCache(node->cont, node);
 	}
 }
 
 void Scene::FillCache(cacheCondProc proc) {
 	AddToCache(proc);
-	for(auto obj = sceneObjs.begin(); obj != sceneObjs.end(); ++obj) {
-		AddToCache(*obj);
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		AddToCache(node->cont);
 	}
 }
 
@@ -277,17 +321,17 @@ void Scene::DestroyCache(cacheCondProc proc) { cache.erase(proc); }
 
 void Scene::DestroyCache() { cache.clear(); }
 
-void Scene::AddToCache(GameObject& obj, std::list<GameObject>::iterator iter) {
+void Scene::AddToCache(GameObject& obj, SceneObjNode* node) {
 	for(auto& key : cache) {
 		if(key.first(&obj))
-			key.second[&obj] = iter;
+			key.second[&obj] = node;
 	}
 }
 
 void Scene::AddToCache(cacheCondProc key, GameObject& obj) {
 	AddToCache(key);
 	if(key(&obj))
-		cache[key][&obj] = sceneObjs.end();
+		cache[key][&obj] = sceneObjs.last;
 }
 
 void Scene::DeleteFromCache(cacheCondProc key, GameObject& obj) {
@@ -297,7 +341,7 @@ void Scene::DeleteFromCache(cacheCondProc key, GameObject& obj) {
 	iter->second.erase(&obj);
 }
 
-void Scene::AddToCache(GameObject& obj) { AddToCache(obj, sceneObjs.end()); }
+void Scene::AddToCache(GameObject& obj) { AddToCache(obj, sceneObjs.last); }
 
 void Scene::AddToCache(cacheCondProc proc) {
 	auto iter = cache.find(proc);
@@ -324,9 +368,9 @@ int Scene::CacheMap(cacheCondProc key, mapProc proc, void* data) {
 }
 
 GameObject* Scene::GetFirstObjectWith(bool (*f)(GameObject*, void*), void* data) {
-	for(GameObject& obj : sceneObjs) {
-		if(f(&obj, data))
-			return &obj;
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		if(f(&node->cont, data))
+			return &node->cont;
 	}
 	return 0;
 }
@@ -338,8 +382,8 @@ GameObject* Scene::GetFirstObjectWithComponent(uint32 compID) {
 int Scene::ObjMap(mapProc proc, void* data) {
 	int res = 1;
 	int val = 0;
-	for(auto o = sceneObjs.begin(); o != sceneObjs.end(); ++o) {
-		res += proc(&*o, data);
+	for(SceneObjNode* node = sceneObjs.first; node; node = node->next) {
+		res += proc(&node->cont, data);
 	}
 	return res;
 }
