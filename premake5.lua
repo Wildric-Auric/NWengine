@@ -32,7 +32,7 @@ workspace "NWengine"
                     }
                     files {
                         "Engine/**.cpp",
-                        "Engine/**.h",  
+                        "Engine/**.h",
                         "premake5.lua"
                     }
                     filter "configurations:*Debug*"
@@ -75,31 +75,35 @@ workspace "NWengine"
                         --"Engine/**.cpp",
                         "UnityBuild/*.cpp",
                         "Sandbox/src/**.cpp",
-                        "Engine/**.h", 
+                        "Engine/**.h",
                         "premake5.lua",
                         "*.rc",
                     }
                     links {
-                        "dwmapi.lib"
+                        "dwmapi"
                     }
     workspace "*"
         links {
-            "opengl32.lib",
-            "freetype.lib",
-            "glew32s.lib",
-            "xaudio2.lib"
+            "opengl32",
+            "freetype",
+            "glew32s",
+            "xaudio2"
         }
 
         filter "configurations:*Debug*"
             libdirs {
                  "Dependencies/glew/lib/debug/win%{cfg.platform:sub(2)}",
                  "Dependencies/freetype/lib/win%{cfg.platform:sub(2)}",
+                 "Dependencies/glew/lib/debug/linux%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/linux%{cfg.platform:sub(2)}",
             }
         filter "configurations:*Release*"
             libdirs {
                  "Dependencies/glew/lib/release/win%{cfg.platform:sub(2)}",
                  "Dependencies/freetype/lib/win%{cfg.platform:sub(2)}",
-            } 
+                 "Dependencies/glew/lib/release/release%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/release%{cfg.platform:sub(2)}",
+            }
         filter "configurations:*Debug*"
             defines {"NW_DEBUG", "_DEBUG", "NW_VERSION=%{Nw_version}"}
             staticruntime "off"
