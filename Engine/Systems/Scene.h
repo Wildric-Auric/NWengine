@@ -3,6 +3,18 @@
 #include "Sprite.h"
 #include <list>
 
+struct SceneObjNode {
+	GameObject	  cont;
+	SceneObjNode* prev = 0;
+	SceneObjNode* next = 0;
+};
+
+struct SceneObjs {
+	SceneObjNode* first = 0;
+	SceneObjNode* last	= 0;
+	uint32		  size	= 0;
+};
+
 /**
  * @brief Represents a scene in the game.
  */
@@ -16,10 +28,13 @@ class Scene {
 							   DestroyCurrentObj() for details*/
 	bool _autoCache = 0;
 
-	std::string			  name;		 /**< The name of the scene. */
-	std::list<GameObject> sceneObjs; /**< The list of game objects in the scene. */
-	std::list<Sprite*>	  drawList;	 /**< The list of sprites to be drawn in the scene. */
-	std::unordered_map<cacheCondProc, std::unordered_map<GameObject*, std::list<GameObject>::iterator>> cache;
+	std::string		   name;	  /**< The name of the scene. */
+	SceneObjs		   sceneObjs; /**< The list of game objects in the scene. */
+	SceneObjs		   inactiveObjs;
+	std::list<Sprite*> drawList; /**< The list of sprites to be drawn in the scene. */
+	uint32			   sceneObjsSize	= 0;
+	uint32			   inactiveObjsSize = 0;
+	std::unordered_map<cacheCondProc, std::unordered_map<GameObject*, SceneObjNode*>> cache;
 
 	/**
 	 * @brief For each key condition in the object cache structure
@@ -58,7 +73,7 @@ class Scene {
 	 * @param the iterator to the object in the object original container; if no need to use it,
 	 * it can be set to the end of the container.
 	 */
-	void AddToCache(GameObject& obj, std::list<GameObject>::iterator it);
+	void AddToCache(GameObject& obj, SceneObjNode* node);
 
 	/**
 	 * @brief Add GameObject to the cache.
@@ -134,6 +149,7 @@ class Scene {
 	 */
 	bool GetAutoCache();
 
+	GameObject& DirectAddObject();
 	/**
 	 * @brief Adds a new empty GameObject to the scene objects container.
 	 * @return The reference to the newly added GameObject.
@@ -159,18 +175,18 @@ class Scene {
 	 */
 	void DeleteObject(uint32 index);
 
+	void DeleteLastObject();
+	void DeleteFirstObject();
+
+	void DeleteObject(GameObject*);
+
 	/**
 	 * @brief Deletes a GameObject from the scene objects container by name.
 	 * @param name The name of the GameObject to delete.
 	 */
-	void DeleteObject(std::string name);
+	void DeleteObject(const std::string& name);
 
-	/**
-	 * @brief Deletes a GameObject from the scene objects container by iterator.
-	 * @param it The iterator of the object to delete.
-	 * @return Return value of std::list::erase()
-	 */
-	std::list<GameObject>::iterator DeleteObject(std::list<GameObject>::iterator it);
+	SceneObjNode* DeleteObject(SceneObjNode* obj);
 
 	/**
 	 * @brief This function is intended to be called within object (to-delete) component (like scripts), as DeleteObject() will
