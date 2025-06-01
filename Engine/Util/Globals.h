@@ -168,6 +168,13 @@ typedef Matrix3<float> fMat3;
 typedef Matrix4<int>   iMat4;
 typedef Matrix4<float> fMat4;
 
+typedef Matrix2<int>   imat2;
+typedef Matrix3<int>   imat3;
+typedef Matrix2<float> fmat2;
+typedef Matrix3<float> fmat3;
+typedef Matrix4<int>   imat4;
+typedef Matrix4<float> fmat4;
+
 #define NW_UI32_MAX 0xFFFFFFFF
 #define NW_UI64_MAX 0xFFFFFFFFFFFFFFFF
 #define NW_I64_MIN	0x8000000000000000

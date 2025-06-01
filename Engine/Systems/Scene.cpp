@@ -200,8 +200,8 @@ GameObject* Scene::GetGameObject(std::string name) {
 }
 
 void Scene::Draw() {
-	std::list<Sprite*>::iterator						   it = drawList.end();
-	std::unordered_map<int, std::vector<Batch*>>::iterator it0;
+	std::list<Sprite*>::iterator							 it = drawList.end();
+	std::unordered_map<int64, std::vector<Batch*>>::iterator it0;
 
 	int64 lastLayer = 0x7FFFFFFFFFFFFFFF;
 	int64 temp		= 0;

@@ -20,7 +20,7 @@ uint16	Batch::maxBatchTextures = 0;
 uint32* Batch::indices			= nullptr;
 int		Batch::indicesSize		= 0;
 
-std::unordered_map<int, std::vector<Batch*>> Batch::batchMap;
+std::unordered_map<int64, std::vector<Batch*>> Batch::batchMap;
 
 int* Batch::uniformTexArr = nullptr;
 
@@ -82,16 +82,21 @@ void Batch::BindTextures() {
 	}
 }
 
-void Batch::Init() {
-	int maxUnits = GPUCap::QueryMaxTexture();
-	Batch::ComputeIndices();
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
-	Batch::maxBatchTextures = maxUnits;
-	delete[] uniformTexArr;
-	uniformTexArr = new int[Batch::maxBatchTextures];
-	for(int i = 0; i < Batch::maxBatchTextures; ++i)
-		uniformTexArr[i] = i;
-	Shader::parser.AddCnst("MaxTexNum", std::to_string(maxUnits).c_str());
+static int* numArray = 0;
+void		Batch::Init() {
+	   int maxUnits = GPUCap::QueryMaxTexture();
+	   Batch::ComputeIndices();
+	   Batch::maxBatchTextures = maxUnits;
+	   delete[] uniformTexArr;
+	   uniformTexArr = new int[Batch::maxBatchTextures];
+	   for(int i = 0; i < Batch::maxBatchTextures; ++i)
+		   uniformTexArr[i] = i;
+	   if(numArray)
+		   NWfree(numArray);
+	   numArray = (int*)NWmalloc(sizeof(int) * maxUnits);
+	   for(int i = 0; i < maxUnits; ++i)
+		   numArray[i] = i;
+	   Shader::parser.AddCnst("MaxTexNum", std::to_string(maxUnits).c_str());
 }
 
 void Batch::Clear() {
@@ -109,6 +114,8 @@ void Batch::Destroy() {
 	Clear();
 	delete[] uniformTexArr;
 	delete[] indices;
+	if(numArray)
+		NWfree(numArray);
 }
 
 void Batch::ComputeIndices() {
@@ -177,10 +184,24 @@ bool Batch::Render(GameObject* go, float* stride) {
 	offset += Batch::strideSize * 4; // update offset
 	// call sprite draw only once if dynamic batch so that is is hadnled by batch later
 	if(!isDynamic) {
-		sprite->_shouldDraw = 0; // TODO::Maybe a better solution?
+		sprite->StopRendering();
+		objs.push_back(go);
+		_shouldDraw = 1;
 	}
-
 	return 1;
+}
+
+void Batch::InvalidateStaticBatch() {
+	offset		   = 0;
+	currentTexSlot = 0;
+	for(GameObject* obj : objs) {
+		obj->Get<Sprite>()->Render();
+	}
+	for(auto iter = textures.begin(); iter != textures.end(); iter++) {
+		iter->second = -1;
+	}
+	objs.clear();
+	_shouldDraw = 1;
 }
 
 void Batch::Draw() {
@@ -189,16 +210,17 @@ void Batch::Draw() {
 
 	Shader::resList[this->shader].Use();
 
+	Matrix4<float> mvpMat;
 	if(!isDynamic) {
-		Matrix4<float> mat = (Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix);
-		Shader::resList[this->shader].SetMat4x4(UNIFORM_VIEWxPROJ_STR, (const float*)&mat);
+		mvpMat = (Camera::ActiveCamera->projectionMatrix * Camera::ActiveCamera->viewMatrix);
+	} else {
+		mvpMat = fmat4(1.0);
 	}
+	Shader::resList[this->shader].SetMat4x4(UNIFORM_VIEWxPROJ_STR, (const float*)&mvpMat);
 
 	BindTextures();
 
-	static int arr[32] = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15,
-						  16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
-	Shader::resList[this->shader].SetUniformArrayi(UNIFORM_TEXTURE_ARRAY_STR, arr, 32);
+	Shader::resList[this->shader].SetUniformArrayi(UNIFORM_TEXTURE_ARRAY_STR, numArray, maxBatchTextures);
 
 	int size = offset / (4 * strideSize);
 
@@ -334,9 +356,23 @@ int Batch::DefaultBatchDrawCallback(void* data) {
 	}
 	// Room not found->creation of another batch;
 	iter->second.push_back(new Batch(desc));
+	iter->second.back()->isDynamic = sprite->_isBatched == BatchType::DYNAMIC_BATCH;
 	iter->second.back()->Render(obj, stride);
 	// TODO::Not accessing batch data batch vector here, call a function instead
 
 	delete[] stride;
 	return sprite->sortingLayer;
+}
+
+Batch* Batch::FindStaticWith(GameObject* obj) {
+	auto a = batchMap.find(obj->Get<Sprite>()->sortingLayer);
+	if(a == batchMap.end())
+		return 0;
+	for(auto b : a->second) {
+		for(GameObject* o : b->objs) {
+			if(o == obj)
+				return b;
+		}
+	}
+	return 0;
 }

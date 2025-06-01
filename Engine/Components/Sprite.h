@@ -35,7 +35,7 @@ class Sprite : public GameComponent {
 
 	BatchType _isBatched		= BatchType::UNBATCHED;
 	int64	  _lastSortingLayer = 0;
-	bool	  _shouldDraw		= 1;
+	ui8		  _shouldDraw		= 1;
 	bool	  _isRendered		= 1;
 
 	fVec3	vertexAttributes; /**< Vertex attributes of the sprite */

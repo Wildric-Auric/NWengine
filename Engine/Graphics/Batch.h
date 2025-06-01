@@ -45,12 +45,12 @@ class Batch {
 	int64		layer	  = 0;
 	bool		isDynamic = 1;
 
-	std::unordered_map<GameObject*, int> objs; // The value is the offset in stride unit
-	std::vector<float>					 vertices;
-	std::unordered_map<Texture*, int>	 textures; // value  is a texure slot
-	std::vector<BatchChannelNum>		 additionalData;
-	uint32								 strideSize		= defaultStrideSize;
-	uint32								 strideSizeByte = defaultStrideSize * 4;
+	std::vector<GameObject*>		  objs;
+	std::vector<float>				  vertices;
+	std::unordered_map<Texture*, int> textures; // value  is a texure slot
+	std::vector<BatchChannelNum>	  additionalData;
+	uint32							  strideSize	 = defaultStrideSize;
+	uint32							  strideSizeByte = defaultStrideSize * 4;
 
 	/**
 	 * @brief Default constructor for the Batch class.
@@ -67,19 +67,12 @@ class Batch {
 	 */
 	bool Render(GameObject* go, float* stride);
 
-	/**
-	 * @brief Binds the textures associated with the batch.
-	 */
 	void BindTextures();
 
-	/**
-	 * @brief Draws the batch.
-	 */
+	void InvalidateStaticBatch();
+
 	void Draw();
 
-	/**
-	 * @brief Deletes the batch.
-	 */
 	void Delete();
 
 	static uint32* indices;
@@ -87,7 +80,7 @@ class Batch {
 	static uint32  batchMaxQuads;
 	static uint16  maxBatchTextures;
 
-	static std::unordered_map<int, std::vector<Batch*>>
+	static std::unordered_map<int64, std::vector<Batch*>>
 		batchMap; // Batches are allocated dynamically and it's pointer is owned by this map which should be deleted with scene
 
 	static void Init();
@@ -95,15 +88,9 @@ class Batch {
 	static void Clear();
 
 	static void Destroy();
-	/**
-	 * @brief Computes the indices for the batch.
-	 */
 	static void ComputeIndices();
 
-	/**
-	 * @brief Default batch draw callback function.
-	 * @param data The data for the draw callback.
-	 * @return The result of the draw callback.
-	 */
 	static int DefaultBatchDrawCallback(void* data);
+
+	static Batch* FindStaticWith(GameObject*);
 };

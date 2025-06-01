@@ -77,18 +77,18 @@ void Sprite::UnBatch() {
 
 void Sprite::Render() {
 	_isRendered = 1;
-	_shouldDraw = 1;
+	_shouldDraw = _shouldDraw | 1;
 }
 
 void Sprite::StopRendering() { _isRendered = 0; }
 
-void Sprite::DontDraw() { _shouldDraw = 0; }
+void Sprite::DontDraw() { _shouldDraw = _shouldDraw & (~0x1); }
 
 void Sprite::Update() {
-	if(!_shouldDraw)
+	if(!(_shouldDraw & 0x1))
 		return;
 	Scene::currentScene->Rearrange(this);
-	_shouldDraw = 0;
+	DontDraw();
 }
 
 Sprite::~Sprite() {
