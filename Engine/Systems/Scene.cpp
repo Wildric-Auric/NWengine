@@ -268,6 +268,7 @@ void Scene::Update() {
 			_shouldDelObj = 0;
 			DeleteObject(n->cont);
 			n = DisableObject(n);
+            if (!n) break;
 			n = n->prev;
 		}
 		if(_shouldDisable) {
