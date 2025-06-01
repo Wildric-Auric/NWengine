@@ -5,14 +5,26 @@
 
 struct SceneObjNode {
 	GameObject	  cont;
-	SceneObjNode* prev = 0;
-	SceneObjNode* next = 0;
+	SceneObjNode* prev	   = 0;
+	SceneObjNode* next	   = 0;
+	bool		  isActive = 0;
+};
+struct SceneActiveObjNode {
+	SceneObjNode*		cont;
+	SceneActiveObjNode* prev = 0;
+	SceneActiveObjNode* next = 0;
 };
 
 struct SceneObjs {
 	SceneObjNode* first = 0;
 	SceneObjNode* last	= 0;
 	uint32		  size	= 0;
+};
+
+struct ScenesActiveObjs {
+	SceneActiveObjNode* first = 0;
+	SceneActiveObjNode* last  = 0;
+	uint32				size  = 0;
 };
 
 /**
@@ -26,14 +38,13 @@ class Scene {
   public:
 	bool _shouldDelObj = 0; /**< Internal flag that holds if currently iterated on gameobject during update should be deleted. see
 							   DestroyCurrentObj() for details*/
-	bool _autoCache = 0;
+	bool _shouldDisable = 0;
+	bool _autoCache		= 0;
 
-	std::string		   name;	  /**< The name of the scene. */
-	SceneObjs		   sceneObjs; /**< The list of game objects in the scene. */
-	SceneObjs		   inactiveObjs;
+	std::string		   name;	   /**< The name of the scene. */
+	SceneObjs		   _sceneObjs; /**< The list of game objects in the scene. */
+	ScenesActiveObjs   _activeObjs;
 	std::list<Sprite*> drawList; /**< The list of sprites to be drawn in the scene. */
-	uint32			   sceneObjsSize	= 0;
-	uint32			   inactiveObjsSize = 0;
 	std::unordered_map<cacheCondProc, std::unordered_map<GameObject*, SceneObjNode*>> cache;
 
 	/**
@@ -136,6 +147,8 @@ class Scene {
 	 */
 	void DeferredDeleteCurrentGameObject();
 
+	void DeferredDisableCurrentGameObject();
+
 	/**
 	 * @brief Sets autocache which makes the scene internally refresh the cache after each deletion
 	 of a gameobject and after calling Start.
@@ -187,6 +200,9 @@ class Scene {
 	void DeleteObject(const std::string& name);
 
 	SceneObjNode* DeleteObject(SceneObjNode* obj);
+
+	SceneActiveObjNode* EnableObject(SceneObjNode*);
+	SceneActiveObjNode* DisableObject(SceneActiveObjNode*);
 
 	/**
 	 * @brief This function is intended to be called within object (to-delete) component (like scripts), as DeleteObject() will
