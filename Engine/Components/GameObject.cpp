@@ -1,16 +1,9 @@
-#include <GL/glew.h>
-
-#include "Batch.h"
 #include "Camera.h"
 #include "CircleRenderer.h"
 #include "Components.h"
-#include "Inputs.h"
 #include "LineRenderer.h"
-#include "Primitives.h"
-#include "Scene.h"
 #include "Script.h"
 #include "ScriptingComp.h"
-#include "Shader.h"
 #include "UIWindow.h"
 
 int GameObject::numberOfGameObjects = 0;

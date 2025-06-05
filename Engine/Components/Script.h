@@ -102,8 +102,9 @@ class Script : public GameComponent {
 	 * @brief Sets the script to the specified type.
 	 * @tparam T The type of the script.
 	 */
-	template <typename T> void SetScript() {
+	template <typename T> T* SetScript() {
 		delete script;
 		script = new T(this->attachedObject);
+		return (T*)script;
 	}
 };
