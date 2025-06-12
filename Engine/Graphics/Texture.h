@@ -97,75 +97,30 @@ class Texture : public Asset {
 
 	Texture() = default;
 
-	/**
-	 * @brief Cleans up the texture.
-	 */
 	void Clean() override;
 
-	/**
-	 * @brief Binds the texture to a specified texture slot.
-	 * @param slot The texture slot to bind the texture to.
-	 */
 	void Bind(uint32 slot = 0);
 
 	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
 
-	/**
-	 * @brief Generates the texture on the GPU.
-	 * @param data The texture data.
-	 * @param channelInfo The channel information of the texture.
-	 */
 	void _GPUGen(uint8* data, TexChannelInfo channelInfo);
 
-	/**
-	 * @brief Generates mipmaps for the texture.
-	 */
 	void GenMipMap();
 
-	/**
-	 * @brief Sets the minification filter for the texture.
-	 * @param minFilter The minification filter to set.
-	 */
 	void SetMinFilter(TexMinFilter minFilter);
 
-	/**
-	 * @brief Sets the magnification filter for the texture.
-	 * @param maxFilter The magnification filter to set.
-	 */
 	void SetMaxFilter(TexMaxFilter maxFilter);
 
-	/**
-	 * @brief Sets the edge behavior for the texture.
-	 * @param edge The edge behavior to set.
-	 */
 	void SetEdgesBehaviour(TexEdge edge);
 
-	/**
-	 * @brief Gets the texture from the cache based on the identifier.
-	 * @param identifier The identifier of the texture.
-	 * @return The loaded texture from the cache.
-	 */
 	Asset* GetFromCache(void* identifier) override;
 
-	/**
-	 * @brief Loads the texture from a file.
-	 * @param path The path to the file.
-	 * @param identifier The identifier of the texture.
-	 * @return The loaded texture.
-	 */
 	Asset* LoadFromFile(const char* path, TextureIdentifierPtr identifier) override;
 
-	/**
-	 * @brief Loads the texture from a buffer.
-	 * @param buffer The buffer containing the texture data.
-	 * @param data The additional data for loading the texture.
-	 * @return The loaded texture.
-	 */
 	Asset* LoadFromBuffer(void* buffer, void* data) override;
 
 	NW_DECL_RES_LIST(TextureIdentifier, Texture)
 };
-
 /**
  * @brief Class representing a mustisample, mostly used internally.
  * @note undocumented
@@ -180,3 +135,23 @@ class MSTexture {
 	void Bind(bool unbind = 0);
 	void Clean();
 };
+
+
+class Texture3D {
+    public:
+    ui32 _glID;
+    bool _hasMipMap = 0;
+    int  _fmt = 0;
+    v3i  _size;
+
+	Texture3D() = default;
+	void Clean();
+	void Bind(uint32 slot = 0);
+	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
+	void _GPUGen(uint8* data, TexChannelInfo channelInfo, bool _16bitfmt = 0);
+	void GenMipMap();
+	void SetMinFilter(TexMinFilter minFilter);
+	void SetMaxFilter(TexMaxFilter maxFilter);
+	void SetEdgesBehaviour(TexEdge edge);
+};
+

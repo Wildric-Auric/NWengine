@@ -113,3 +113,67 @@ void MSTexture::Clean() {
 	NW_GL_CALL(glDeleteTextures(1, &this->_glID));
 	this->_glID = 0;
 }
+
+
+//-------------------------------------------
+//--------------3D Texture-------------------
+//-------------------------------------------
+
+void Texture3D::_GPUGen(uint8* pixelBuffer, TexChannelInfo info, bool _16bitfmt) {
+	NW_GL_CALL(glGenTextures(1, &_glID));
+	Bind();
+	// Upscaling parameter
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
+
+	if(info == TexChannelInfo::NW_R)
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	// TODO::Fix the following line to handle the case of one byte
+    _fmt = _16bitfmt ? GL_RGBA16F : GL_RGBA8;
+	NW_GL_CALL(glTexImage3D(GL_TEXTURE_3D, 0, _fmt, _size.x, _size.y, _size.z, 0, info, GL_UNSIGNED_BYTE, pixelBuffer));
+	if(_hasMipMap) {
+		NW_GL_CALL(glGenerateMipmap(GL_TEXTURE_3D));
+		NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR));
+		return;
+	}
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+}
+
+void Texture3D::GenMipMap() {
+	Bind();
+	_hasMipMap = 1;
+	NW_GL_CALL(glGenerateMipmap(GL_TEXTURE_3D));
+}
+
+void Texture3D::SetMinFilter(TexMinFilter value) {
+	Bind();
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, value));
+}
+
+void Texture3D::SetMaxFilter(TexMaxFilter value) {
+	Bind();
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, value));
+}
+
+void Texture3D::SetEdgesBehaviour(TexEdge value) {
+	Bind();
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, value));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, value));
+	NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, value));
+}
+
+void Texture3D::Bind(uint32 slot) {
+	NW_GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
+	NW_GL_CALL(glBindTexture(GL_TEXTURE_3D, _glID));
+}
+
+void Texture3D::BindImageTex(uint32 slot, RWImage access) {
+	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, 0, 0, access, _fmt));
+}
+
+void Texture3D::Clean() {
+	NW_GL_CALL(glDeleteTextures(1, &_glID));
+	_glID = 0;
+}
