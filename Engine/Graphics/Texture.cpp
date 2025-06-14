@@ -170,7 +170,7 @@ void Texture3D::Bind(uint32 slot) {
 }
 
 void Texture3D::BindImageTex(uint32 slot, RWImage access) {
-	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, 0, 0, access, _fmt));
+	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, GL_TRUE, 0, access, _fmt));
 }
 
 void Texture3D::Clean() {
