@@ -302,7 +302,6 @@ void ComputeShader::SetReflectedUniforms(const ShaderParser& p) {
 }
 
 Asset* ComputeShader::LoadFromFile(const char* path, void* identifier) {
-	parser.Reset();
 	ComputeShaderText res;
 	parser.ParseFromPath(path);
 	res = parser.GetComputeTxt().c_str(); // TODO::

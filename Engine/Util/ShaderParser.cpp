@@ -117,6 +117,7 @@ void ShaderParser::Reset() {
 	curType		  = ShaderType::NONE;
 	vert		  = "";
 	frag		  = "";
+    comp          = "";
 	shaderVersion = "";
 	tokens.clear();
 	uniformsData.clear();
