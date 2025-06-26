@@ -6,6 +6,7 @@
 #include "GL/glew.h"
 
 void* Context::window = nullptr;
+bool  Context::_shouldLoop = 1;
 
 int Context::WINDOW_WIDTH  = 1080;
 int Context::WINDOW_HEIGHT = 720;
@@ -81,7 +82,9 @@ void*				   Context::InitContext(int scrWidth, int scrHeight) {
 	 return window;
 }
 
-bool Context::ShouldClose() { return !((NWin::Window*)(Context::window))->shouldLoop(); }
+bool Context::ShouldClose() { return !_shouldLoop || !((NWin::Window*)(Context::window))->shouldLoop(); }
+
+void Context::DeferEndLoop() { _shouldLoop = 0;}
 
 void Context::Update() {
 	NWin::Window* w = ((NWin::Window*)(Context::window));
