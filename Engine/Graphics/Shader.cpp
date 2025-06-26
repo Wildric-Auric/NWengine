@@ -7,13 +7,29 @@
 
 ShaderParser Shader::parser;
 
+static void FmtCode(std::string& out, const char* in) {
+    if (!in) return;
+    int i = 0;
+    int j = 2;
+    char c;
+    out += "1: ";
+    while (c=in[i++]) {
+        out += c;
+        if (c == '\n')
+            out += std::to_string(j++) + ": ";
+    }
+    out += "\n";
+}
+
 bool CheckShaderCompileError(int shader, const char* code, const char* txt) {
 	char log[512];
 	int	 successInfo;
 	NW_GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &successInfo));
 	if(!successInfo) {
 		NW_GL_CALL(glGetShaderInfoLog(shader, 512, NULL, log));
-		NW_LOG_ERROR((std::string(txt) + code).c_str());
+        std::string fmc;
+        FmtCode(fmc, code);
+		NW_LOG_ERROR((std::string(txt) + "\n" + fmc).c_str());
 		NW_LOG_ERROR(log);
 	}
 	return successInfo;
