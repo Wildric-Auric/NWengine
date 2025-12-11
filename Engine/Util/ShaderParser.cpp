@@ -73,7 +73,7 @@ void General(void* ptr) {
 	} else if(p.c == '/' && p.lc == '*') {
 		p.func	   = Comment1;
 		p.curToken = "";
-	} else if(p.c == '{' || p.c == '}' || p.c == '(' || p.c == ')' || p.c == '[' || p.c == ']' || p.c == ';' || IsOp(p.c)) {
+	} else if(p.c == '{' || p.c == '}' || p.c == '(' || p.c == ')' || p.c == '[' || p.c == ']' || p.c == ';' || ',' || IsOp(p.c)) {
 		p.PushToken();
 		p.curToken = p.c;
 		p.PushToken();
