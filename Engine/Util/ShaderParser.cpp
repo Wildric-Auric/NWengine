@@ -60,6 +60,31 @@ bool IsOp(char c) {
 
 bool IsValidTokenChar(char c) { return c != '\n' && c != ' ' && c != '\t'; }
 bool IsTokenEnd(char c) { return c == ' ' || c == '\n'; }
+bool IsNum(char c) { return c >= '0' && c <= '9'; }
+
+void ExpNum(void* ptr) {
+	ShaderParser& p = *(ShaderParser*)ptr;
+	if(!IsNum(p.c)) {
+		p.PushToken();
+		p.func = General;
+		if(IsValidTokenChar(p.c))
+			p.curToken += p.c;
+		return;
+	}
+	p.curToken += p.c;
+}
+
+bool IsTokenNumEBegin(const std::string& tok) {
+	if(!tok.size())
+		return 0;
+	if(tok[tok.size() - 1] != 'e')
+		return 0;
+	for(int i = 0; i < tok.size() - 1; ++i) {
+		if(!IsNum(tok[i]))
+			return 0;
+	}
+	return 1;
+}
 
 void General(void* ptr) {
 	ShaderParser& p = *(ShaderParser*)ptr;
@@ -73,7 +98,9 @@ void General(void* ptr) {
 	} else if(p.c == '/' && p.lc == '*') {
 		p.func	   = Comment1;
 		p.curToken = "";
-	} else if(p.c == '{' || p.c == '}' || p.c == '(' || p.c == ')' || p.c == '[' || p.c == ']' || p.c == ';' || p.c == ',' || IsOp(p.c)) {
+	} else if(IsTokenNumEBegin(p.curToken) && (IsNum(p.c) || p.c == '+' || p.c == '-')) {
+		p.func = ExpNum;
+	} else if(p.c == '{' || p.c == '}' || p.c == '(' || p.c == ')' || p.c == '[' || p.c == ']' || p.c == ';' || IsOp(p.c)) {
 		p.PushToken();
 		p.curToken = p.c;
 		p.PushToken();
@@ -117,7 +144,7 @@ void ShaderParser::Reset() {
 	curType		  = ShaderType::NONE;
 	vert		  = "";
 	frag		  = "";
-    comp          = "";
+	comp		  = "";
 	shaderVersion = "";
 	tokens.clear();
 	uniformsData.clear();
