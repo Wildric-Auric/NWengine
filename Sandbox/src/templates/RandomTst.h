@@ -58,7 +58,7 @@ static void	   Init() {
 	   }
 
 	   randTex._size = {im.width, im.height};
-	   randTex._GPUGen(im.pixelBuffer, TexChannelInfo::NW_RGB);
+	   randTex._GPUGen(im.pixelBuffer, TexChannelInfo::NW_RGB, TexType_Exp_rgba16f);
 	   GameObject& obj = s.AddObject();
 	   obj.AddComponent<Transform>();
 	   Sprite* sp = obj.AddComponent<Sprite>();

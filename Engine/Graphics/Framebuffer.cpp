@@ -7,7 +7,7 @@ FrameBuffer* FrameBuffer::_current = 0;
 
 void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
 	tex._size = size;
-	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB);
+	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB, TexType_Exp_rgba32f); //TODO::Here
 	tex.SetEdgesBehaviour(TexEdge::NW_CLAMP);
 	tex.SetMinFilter(TexMinFilter::NW_MIN_LINEAR);
 	tex.SetMaxFilter(TexMaxFilter::NW_LINEAR);

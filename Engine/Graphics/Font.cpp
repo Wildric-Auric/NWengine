@@ -62,7 +62,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->texture._hasMipMap = 1;
 		character->texture._size.x	  = f->glyph->bitmap.width;
 		character->texture._size.y	  = f->glyph->bitmap.rows;
-		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R);
+		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R, TexType_Exp_r16f);
 		character->texture.GenMipMap();
 		character->texture.SetMinFilter(NW_NEAREST_MIPMAP_LINEAR);
 		character->texture.SetMaxFilter(NW_LINEAR);
