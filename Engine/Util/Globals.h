@@ -63,7 +63,14 @@ extern int print(const char* format, ...);
 	}
 #endif
 
+#ifdef PLTFRM_WIN32
 #define NW_AL_CALL(code) NW_AL_TEST(code)
+#define NW_AL_CALL_VOID(code) code
+#else
+#define NW_AL_CALL(code) 
+#define NW_AL_CALL_VOID(code)
+#endif
+
 // arch is always an integer type with size of pointer of the architecture
 typedef long arch;
 

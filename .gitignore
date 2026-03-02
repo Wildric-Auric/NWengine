@@ -6,6 +6,7 @@ Engine/Doc/
 BuildScripts/nwtmp/
 BuildScripts/Hdrasm/obj
 
+.vscode
 *.aps
 *.ico
 *.rc

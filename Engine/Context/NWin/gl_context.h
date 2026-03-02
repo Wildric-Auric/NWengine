@@ -1,6 +1,9 @@
 #pragma once
 #include "window.h"
 
+
+#ifdef __WIN32__
+
 namespace NWin {
 
 typedef void* contextHandle;
@@ -39,3 +42,5 @@ class GlContext {
 };
 
 }; // namespace NWin
+
+#endif //__WIN32__

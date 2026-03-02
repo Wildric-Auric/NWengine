@@ -62,7 +62,11 @@ ShaderText Shader::fastParseShader(const char* path) {
 			vert += line + '\n';
 	}
 	file.close();
+#ifdef _MSC_VER
 	return {_strdup(&vert[0]), _strdup(&frag[0])};
+#else
+    return {strdup(&vert[0]), strdup(&frag[0])};
+#endif
 }
 
 void Shader::_GlGen(ShaderText* src) {

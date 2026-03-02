@@ -1,5 +1,5 @@
 #pragma vertex
-#version 330 core
+#version 420 core
 
 layout(location = 0) in vec3 attribPos;
 layout(location = 1) in vec2 texCoord;
@@ -20,7 +20,7 @@ void main() {
 };
 
 #pragma fragment
-#version 330 core
+#version 420 core
 
 uniform sampler2D uTex[32];
 in vec2			  uv;

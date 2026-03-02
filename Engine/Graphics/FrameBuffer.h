@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Context.h"
 #include "Image.h"
 #include "Maths.h"

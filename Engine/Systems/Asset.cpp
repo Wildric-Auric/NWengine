@@ -1,5 +1,6 @@
 #include "Asset.h"
 #include "AssetList.h"
+#include <unordered_map>
 
 Asset* Asset::GetFromCache(void* identifier) { return nullptr; }
 Asset* Asset::LoadFromFileOrGetFromCache(void* identifier, const char* path = nullptr, void* data = nullptr) {
@@ -26,7 +27,9 @@ void Asset::Destroy() {
 		type::resList.begin()->second.Clean();
 	CLN_RES(Texture);
 	CLN_RES(Sound);
+#ifdef __WIN32__
 	CLN_RES(DllScript);
+#endif
 	CLN_RES(Font);
 	CLN_RES(Shader);
 	CLN_RES(ComputeShader);

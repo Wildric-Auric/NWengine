@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 #include <typeinfo>
 
 #define SWAP_ENDIAN_16(v) (v << 8 | v >> 8)

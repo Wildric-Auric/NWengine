@@ -4,6 +4,8 @@
 #include <cinttypes>
 #include <unordered_map>
 
+#ifdef __WIN32__
+
 namespace NWin {
 
 #define GET_NEW_ID (Window::_incID++)
@@ -126,3 +128,5 @@ class Window {
 	static Window* _stCreateRawWindow(WindowCrtInfo& crtInfo);
 };
 } // namespace NWin
+
+#endif //__WIN32__

@@ -4,15 +4,6 @@
 
 NW_FT_Lib Font::lib;
 
-namespace std {
-template <> struct hash<FontIdentifier> {
-	size_t operator()(const FontIdentifier& fid) const {
-		size_t h1 = hash<std::string>{}(fid.path);
-		size_t h2 = hash<uint32_t>{}(fid.nativeSize);
-		return h1 ^ (h2 << 1);
-	}
-};
-} // namespace std
 
 bool Font::Init() { return !FT_Init_FreeType((FT_Library*)(&Font::lib)); }
 

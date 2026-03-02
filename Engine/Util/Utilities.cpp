@@ -2,6 +2,9 @@
 #include <codecvt>
 #include <fstream>
 #include <locale>
+
+#ifdef __WIN32__
+
 #include <shlobj.h>
 #include <wchar.h>
 #include <windows.h>
@@ -413,3 +416,13 @@ bool FileMove(const std::string& dest, const std::string& source, bool failIfExi
 		FileDelete(dest);
 	return MoveFile(source.c_str(), dest.c_str());
 };
+
+#else
+
+void GetSystemFontDir(std::string* out) {
+    *out = "/usr/share/fonts/TTF";
+}
+
+#endif //__WIN32__
+
+

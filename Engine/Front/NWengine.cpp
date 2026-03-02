@@ -30,7 +30,7 @@ NW_PREFIX const char* NWengineGetVersionString() { return NWVersionString; }
 NW_PREFIX void NWengineGetVersion(NWengineVersion* outVers) {
 	const char* versionStr = NWengineGetVersionString();
 	const char* cur		   = versionStr;
-	if(cur == '\0')
+	if(!cur)
 		return;
 
 	std::string temp = "";

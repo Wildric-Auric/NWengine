@@ -10,7 +10,7 @@
 enum class TextHorizontalAlignment { LEFT = 0, RIGHT = 1, CENTER = 1 };
 
 struct TextConstraint {
-	float					boxHorizontalWrap = INFINITY;
+	float					boxHorizontalWrap = 0xFFFFFFFF;
 	float					fixedLineSpacing  = 0.0f;
 	TextHorizontalAlignment halign			  = TextHorizontalAlignment::LEFT;
 };

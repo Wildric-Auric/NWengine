@@ -1,4 +1,6 @@
 #pragma once
+#include <cstddef>
+#include <string>
 
 #define NW_DECL_RES_LIST(key, AssetClass) static std::unordered_map<key, AssetClass> resList;
 #define NW_IMPL_RES_LIST(key, AssetClass) std::unordered_map<key, AssetClass> AssetClass::resList;

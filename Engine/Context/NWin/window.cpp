@@ -1,3 +1,5 @@
+#ifdef __WIN32__
+
 #include "window.h"
 
 #include <string>
@@ -340,3 +342,5 @@ void Window::disableFullscreen(Rect& newMetrics) {
 }
 
 } // namespace NWin
+
+#endif

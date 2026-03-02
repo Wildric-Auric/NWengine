@@ -140,7 +140,7 @@ void BatchExtra::SetAttribute(int index, void* data) {
 	for(int i = 0; i < index; ++i) {
 		acc += relativeIndex[i];
 	}
-	std::memcpy(&rawData[acc], data, sizeof(float) * relativeIndex[index]);
+	NWmemcpy(&rawData[acc], data, sizeof(float) * relativeIndex[index]);
 }
 
 void* BatchExtra::GetData(int num) {

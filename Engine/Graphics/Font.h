@@ -9,14 +9,21 @@
 typedef void* NW_FT_Lib;
 typedef void* NW_FT_Face;
 
-class FontIdentifier {
-  public:
+struct FontIdentifier {
 	std::string path	   = "";
 	uint32		nativeSize = 64;
 	FontIdentifier() {};
 	FontIdentifier(const char* p, uint32 n) : path(p), nativeSize(n) {};
 	FontIdentifier(const char* p) : path(p) {};
 	bool operator==(const FontIdentifier& other) const { return path == other.path && nativeSize == other.nativeSize; }
+};
+
+template <> struct std::hash<FontIdentifier> {
+    std::size_t operator()(const FontIdentifier& fid) const {
+		size_t h1 = hash<std::string>{}(fid.path);
+		size_t h2 = std::hash<ui32>{}(fid.nativeSize);
+		return h1 ^ (h2 << 1);
+	}
 };
 
 /**

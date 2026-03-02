@@ -1,6 +1,7 @@
 
 #include "Context.h"
 #include "Globals.h"
+#include "wyn/wyn.h"
 #include "gl_context.h"
 
 #include "GL/glew.h"
@@ -15,17 +16,30 @@ int Context::_vSync = 0;
 
 OpenGLInfo Context::_glInfo;
 
-void sizeCallBack(NWin::winHandle handle, NWin::Vec2 size) {
+void sizeCallBack(void* handle, NWin::Vec2 size) {
 	Context::WINDOW_WIDTH  = size.x;
 	Context::WINDOW_HEIGHT = size.y;
 }
 
+void sizeCallback2(wyndow* w, wyn_vec2* size, void* usr_data) {
+    Context::WINDOW_WIDTH  = size->x;
+    Context::WINDOW_HEIGHT = size->y;
+}
+
 void Context::GetWinDrawAreaSize(fVec2* v) {
+#ifdef PLTFRM_LINUX
+    wyn_vec2 s;
+    wyndow* w = (wyndow*)Context::window;
+    wyn_get_metrics(w, &s,0);
+    v->x = s.x;
+    v->y = s.y;
+#else
 	NWin::Vec2	  s;
 	NWin::Window* win = (NWin::Window*)Context::window;
 	win->getDrawAreaSize(s);
 	v->x = s.x;
 	v->y = s.y;
+#endif
 }
 
 void Context::GetWinSize(fVec2* v) {
@@ -36,16 +50,43 @@ void Context::GetWinSize(fVec2* v) {
 void Context::SetViewPort(int x, int y, int sizeX, int sizeY) { NW_GL_CALL(glViewport(x, y, sizeX, sizeY)); }
 
 void Context::SetFullscreen(bool state) {
+#ifdef PLTFRM_LINUX
+    //TODO::
+#else
 	NWin::Window* win = ((NWin::Window*)Context::window);
 	if(state) {
 		win->enableFullscreen();
 		return;
 	}
 	win->disableFullscreen();
+#endif
 }
 
+#ifdef PLTFRM_LINUX
+static wyn_glctx context;
+#else
 static NWin::GlContext context; // TODO::REFACTOR this!!!!
-void*				   Context::InitContext(int scrWidth, int scrHeight) {
+#endif
+void*  Context::InitContext(int scrWidth, int scrHeight) { 
+#ifdef PLTFRM_LINUX 
+     wyndow* w = new wyndow;
+     wyn_crt_info       c{};
+     wyn_glctx_crt_info gli{};
+     c.desc      = (char*)"NWengine";
+     c.rect.pos  = {100, 100};
+     c.rect.size = {scrWidth, scrHeight};
+     wyn_create(w, &c); 
+     wyn_rz_cbk_reg(w, sizeCallback2, 0);
+     WINDOW_WIDTH  = scrWidth;     
+     WINDOW_HEIGHT = scrHeight;
+     Context::window = w;
+     gli.compatibilityProfile = 0;
+     gli.major                = _glInfo.maxVersion;
+     gli.minor                = _glInfo.minVersion;
+     gli.compatibilityProfile = !_glInfo.disableCompatibility;
+     wyn_glctx_create(w, &context, &gli);
+     wyn_glctx_make_current(w, &context);
+#else
 	 NWin::Window*		 w;
 	 NWin::WindowCrtInfo c{};
 	 c.metrics.pos	= {100, 100};
@@ -72,32 +113,50 @@ void*				   Context::InitContext(int scrWidth, int scrHeight) {
 	 context.makeCurrent();
 
 	 window = w;
+#endif
 
 	 if(glewInit() != GLEW_OK) {
 		 NW_LOG_ERROR("Failed to init GLEW");
 		 return nullptr;
 	 }
 	 NW_GL_CALL(glViewport(0, 0, scrWidth, scrHeight));
-
 	 return window;
 }
 
-bool Context::ShouldClose() { return !_shouldLoop || !((NWin::Window*)(Context::window))->shouldLoop(); }
+bool Context::ShouldClose() { 
+#ifdef PLTFRM_LINUX 
+    wyndow* w = (wyndow*)Context::window;
+    return !_shouldLoop || w->state.should_close;
+#else
+    return !_shouldLoop || !((NWin::Window*)(Context::window))->shouldLoop(); 
+#endif
+}
 
 void Context::DeferEndLoop() { _shouldLoop = 0;}
 
 void Context::Update() {
+#ifdef PLTFRM_LINUX 
+    wyndow* w = (wyndow*)Context::window;
+    wyn_update(w);
+    wyn_swap(w);
+#else
 	NWin::Window* w = ((NWin::Window*)(Context::window));
 	w->_getKeyboard().update();
 	w->swapBuffers();
 	w->update();
+#endif
 }
 
 void Context::EnableVSync(int status) {
 	if(Context::_vSync == status)
 		return;
 	_vSync = status;
+#ifdef PLTFRM_LINUX
+    wyndow* w = (wyndow*)Context::window;
+    wyn_set_vsync(w, _vSync);
+#else
 	NWin::GlContext::setCurCtxVSync(_vSync);
+#endif
 }
 
 void Context::EnableBlend(bool status) {
@@ -178,18 +237,35 @@ void Context::SetStencilWrite(bool val) {
 
 void Context::NWMemoryBarrier(int b) { NW_GL_CALL(glMemoryBarrier(b)); }
 
-void Context::SetTitle(const char* title) { ((NWin::Window*)Context::window)->setTitle(title); }
+void Context::SetTitle(const char* title) { 
+#ifdef PLTFRM_LINUX
+    wyndow* w = (wyndow*)Context::window;
+    wyn_set_title(w, title);
+#else
+    NWin::Window* w = ((NWin::Window*)Context::window);
+    w->setTitle(title);
+#endif
+}
 
 void Context::Destroy() {
+#ifdef PLTFRM_LINUX 
+    wyndow* w = (wyndow*)Context::window;
+    wyn_glctx_make_current(w, &context);
+    wyn_glctx_destroy(&context);
+    wyn_destroy(w);
+    delete w;
+    Context::window = 0;
+#else
 	NWin::Window::stDestroyWindow((NWin::Window*)(Context::window));
 	context.makeCurrent(1);
+#endif
 }
 
 namespace GPUCap {
 int QueryMaxTexture() {
 	int maxUnits = 16;
 	NW_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits));
-	return maxUnits;
+	return Max(1,maxUnits - 1);
 }
 
 bool QueryComputeShaderCap(ComputeShaderCapabilities* cap) {
@@ -204,4 +280,4 @@ bool QueryComputeShaderCap(ComputeShaderCapabilities* cap) {
 	NW_GL_CALL(glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &cap->maxInvoc));
 	return 1;
 }
-} // namespace GPUCap
+}
