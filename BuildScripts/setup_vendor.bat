@@ -5,7 +5,7 @@ pushd "%~dp0"
 
 if "%TOOLSET%"=="" (
     echo No toolset version specified. Set to hardcoded latest
-    set TOOLSET=142
+    set TOOLSET=143
     rem for /f "tokens=2 delims==" %%i in ('"wmic environment where "Name='VisualStudioVersion'" get VariableValue /value"') do set TOOLSET=%%i
 )
 
