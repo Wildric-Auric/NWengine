@@ -50,9 +50,7 @@ const ShaderText ShaderTexturedBatchedDefaultStr = {ShaderDefVerBatched,
 													R"V0G0N(
         #pragma fragment 
         #version 330 core
-        #pragma def MAX_TEX MaxTexNum
-
-        uniform sampler2D uTex[MAX_TEX];
+        uniform sampler2D uTex[MaxTexNum];
         in vec2  uv;
         in float sampleID;
         out vec4 FragColor;
@@ -110,9 +108,8 @@ const ShaderText ShaderTextBatchedStr = {
 	R"V0G0N(
         #pragma fragment 
         #version 330 core
-        #pragma def MAX_TEX MaxTexNum
 
-        uniform sampler2D uTex[MAX_TEX];
+        uniform sampler2D uTex[MaxTexNum];
         in vec2  uv;
         in vec4  color10bit;
         in float sampleID;

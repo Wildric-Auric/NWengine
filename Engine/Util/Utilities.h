@@ -7,6 +7,15 @@
 #endif
 #define WIN
 
+struct NWFile {
+    void* handle;
+    bool isDir = 0;
+    char name[256];
+};
+
+bool GetNextFile(NWFile* file);
+bool GetFirstFile(NWFile* file, const char* path);
+
 bool GetEnvVar(const char*, std::string*);
 
 // TODO::use IDWriteFontCollection to get fonts correctly
@@ -169,7 +178,7 @@ std::string ToDoubleBackSlash(const std::string& dir);
  * @return The filename and extension
  */
 std::string GetFileName(const std::string& path, std::string* bFilename = nullptr, std::string* bExtension = nullptr,
-						std::string* bRoot = nullptr);
+						std::string* bRoot = nullptr, char separator = '\\');
 
 /**
  * @brief Copy a directory and its contents to the specified destination
