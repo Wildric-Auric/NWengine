@@ -1,13 +1,47 @@
 #include "Utilities.h"
-#include <codecvt>
-#include <fstream>
-#include <locale>
+
+std::string ToSingleBackSlash(const std::string& dir) {
+	std::string ret = "";
+	bool		v	= 0;
+	for(char c : dir) {
+		if(v && c == '\\')
+			continue;
+		if(c == '\\') {
+			v = 1;
+			ret += c;
+			continue;
+		}
+		ret += c;
+		v = 0;
+	}
+	return ret;
+}
+
+std::string ToDoubleBackSlash(const std::string& dir) {
+	std::string ret = "";
+	bool		v	= 0;
+	for(char c : dir) {
+		if(v && c == '\\')
+			continue;
+		if(c == '\\') {
+			v = 1;
+			ret += "\\\\";
+			continue;
+		}
+		ret += c;
+		v = 0;
+	}
+	return ret;
+}
 
 #ifdef __WIN32__
 
 #include <shlobj.h>
 #include <wchar.h>
 #include <windows.h>
+#include <codecvt>
+#include <fstream>
+#include <locale>
 
 bool GetEnvVar(const char* var, std::string* outStr) {
 	DWORD s = GetEnvironmentVariable(var, 0, 0);
@@ -33,14 +67,6 @@ void GetSystemFontDirALT(std::string* out) {
 	*out += "\\AppData\\Local\\Microsoft\\Windows\\Fonts\\";
 }
 
-std::vector<std::string> GetNWlist(std::string path) {
-	std::fstream			 stream(path); // TODO::ERROR checking
-	std::vector<std::string> vec;
-	for(std::string line = ""; std::getline(stream, line); vec.push_back(line))
-		;
-	return vec;
-}
-
 void DllHandle::Load(const char* filename) {
 	int a = sizeof(HMODULE);
 	h	  = LoadLibrary(filename);
@@ -59,34 +85,6 @@ void DllHandle::Free() {
 
 void* GetDllFunction(DllHandle* dll, const char* functionName) { return GetProcAddress((HINSTANCE)dll->Get(), functionName); }
 
-std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
-	WIN32_FIND_DATAA findData;
-	HANDLE			 hFind = INVALID_HANDLE_VALUE;
-
-	std::string		 path = directory + "\\*";
-	std::vector<int> dirList;
-
-	hFind	  = FindFirstFileA(path.c_str(), &findData);
-	int count = -1;
-	while(FindNextFileA(hFind, &findData) != 0) {
-
-		if(count >= 0) {
-			std::string fileName = std::string(findData.cFileName);
-			if(fileName.find(".") == -1) {
-				ExtendVector(&dirList, GetRecusivelyFilesNumber(directory + "/" + fileName));
-			} else
-				dirList.push_back(0);
-		}
-		count += 1;
-	}
-	dirList.insert(dirList.begin(), count);
-
-	FindClose(hFind);
-
-	return dirList;
-}
-// DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
-// C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
 std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter) {
 	WIN32_FIND_DATAA findData;
 	HANDLE			 hFind = INVALID_HANDLE_VALUE;
@@ -118,55 +116,6 @@ std::vector<std::string> GetDirFiles(const std::string& directory, const std::st
 
 	FindClose(hFind);
 	return dirList;
-}
-
-std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
-	WIN32_FIND_DATAA findData;
-	HANDLE			 hFind = INVALID_HANDLE_VALUE;
-
-	std::string				 path = directory + "\\*";
-	std::vector<std::string> dirList;
-
-	hFind = FindFirstFileA(path.c_str(), &findData);
-
-	if(hFind == INVALID_HANDLE_VALUE) {
-		printf("ERROR::Can't find path: %s\n", path.c_str());
-		return dirList;
-	}
-
-	bool first = 0;
-	while(FindNextFileA(hFind, &findData) != 0) {
-		if(!first) {
-			first = 1;
-			continue;
-		}
-
-		std::string fileName = std::string(findData.cFileName);
-
-		if(findData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) // Is directory
-			ExtendVector(&dirList, GetRecusivelyDirFiles(directory + "\\" + fileName));
-		else
-			dirList.push_back(directory + "\\" + fileName);
-	}
-
-	FindClose(hFind);
-	return dirList;
-}
-
-inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index) {
-	int count	 = 0;
-	int children = (*a)[index];
-	count += children;
-	int last = 1;
-	for(int i = 0; i < children; i++) {
-		int temp = AccumulateChildren(a, b, index + last);
-		last += temp + 1;
-		count += temp;
-	}
-
-	(*b)[index] = count;
-
-	return count;
 }
 
 std::string GetCurrentDir() {
@@ -217,40 +166,6 @@ std::string SaveAs(const char* type) {
 		return std::string(filename);
 	}
 	return "";
-}
-
-std::string ToSingleBackSlash(const std::string& dir) {
-	std::string ret = "";
-	bool		v	= 0;
-	for(char c : dir) {
-		if(v && c == '\\')
-			continue;
-		if(c == '\\') {
-			v = 1;
-			ret += c;
-			continue;
-		}
-		ret += c;
-		v = 0;
-	}
-	return ret;
-}
-
-std::string ToDoubleBackSlash(const std::string& dir) {
-	std::string ret = "";
-	bool		v	= 0;
-	for(char c : dir) {
-		if(v && c == '\\')
-			continue;
-		if(c == '\\') {
-			v = 1;
-			ret += "\\\\";
-			continue;
-		}
-		ret += c;
-		v = 0;
-	}
-	return ret;
 }
 
 bool CopyDirectory(const std::string& dest, const std::string& src) {
@@ -419,8 +334,74 @@ bool FileMove(const std::string& dest, const std::string& source, bool failIfExi
 
 #else
 
+#include <dlfcn.h>
+#include <unistd.h>
+
 void GetSystemFontDir(std::string* out) {
     *out = "/usr/share/fonts/TTF";
+}
+
+void GetSystemFontDirALT(std::string* out) {
+    *out = "/usr/share/fonts/TTF";
+}
+
+void DllHandle::Load(const char* filename) {
+    h = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
+    if (!h) {
+		printf("Could not load Shared\n");
+    }
+}
+	
+void DllHandle::Free() {
+    if (!h) return;
+    dlclose(h);
+}
+
+void* DllHandle::Get() { return h; }
+
+void* GetDllFunction(DllHandle* dll, const char* functionName) {
+    return dlsym(dll->Get(), functionName);
+}
+
+std::string GetCurrentDir() {
+    char* path = (char*)malloc(512);
+    void* res = getcwd(path, 512);
+    if (!res)
+        return ""; 
+    std::string r = path; 
+    free(path);
+    return r;
+}
+
+std::string GetExePath() {
+    char* path = (char*)malloc(512);
+    path[0] = 0;
+    int n = readlink("/proc/self/exe", path, 512);
+    if (n != -1 && n < 512) 
+        path[n] = 0;
+    std::string ret = path;
+    free(path);
+    return ret;
+}
+
+bool FileExists(const std::string& path) {
+    return !access(path.c_str(), F_OK);
+}
+
+bool FileMove(const std::string& dest, const std::string& source, bool failIfExists) {
+    if (failIfExists && FileExists(dest)) 
+        return 0;
+    return !rename(source.c_str(), dest.c_str());
+}
+
+bool FileDelete(const std::string& name) {
+    return !remove(name.c_str());
+}
+
+bool Exec(const std::string& cmd, char* env) {
+    char name[64];
+    name[0] = 0;
+    return !execl("/bin/sh", "sh", "-c", cmd.c_str(), 0);
 }
 
 #endif //__WIN32__
