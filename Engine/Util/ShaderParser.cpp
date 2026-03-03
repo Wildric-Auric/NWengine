@@ -361,9 +361,13 @@ void ShaderParser::FillShaderText() {
         return;
     }
     bool skipPrg = 0;
+    std::string* nextTok;
     uint32_t index = 0;
     int cur   = 0;
     for (auto tokenIter = tokens.begin(); tokenIter != tokens.end(); tokenIter++) {
+        tokenIter++;
+        nextTok = tokenIter == tokens.end() ? 0 : &*tokenIter;
+        tokenIter--;
         if (cur < locs.size() && index == locs[cur].loc) {
             curShaderTxt = locs[cur].txt;
             curType      = locs[cur].type;
@@ -379,7 +383,37 @@ void ShaderParser::FillShaderText() {
             void();
         }
         else if (*tokenIter == "pragma" && curShaderTxt->back() == '#') {
-            curShaderTxt->pop_back();
+            if (nextTok && *nextTok == "define") {
+               *curShaderTxt += "define ";  
+               std::string* a = 0;
+               std::string* b = 0;
+               tokenIter++;
+               tokenIter++;
+               if (*tokenIter != "#$") {
+                    a = &*tokenIter;
+                    tokenIter++;
+                    if (*tokenIter != "#$") {
+                        b = &*tokenIter;
+                    }
+                    tokenIter--;
+               }
+               tokenIter--;
+               if (a) {
+                    *curShaderTxt += *a + " ";
+               }
+               if (b) {
+                    auto f = constants.find(*b);
+                    if (f != constants.end()) 
+                        *curShaderTxt += f->second;
+                    else 
+                        *curShaderTxt += *b;
+               }
+               if (a || b)
+                   *curShaderTxt += "\n";
+            }
+            else {
+                curShaderTxt->pop_back();
+            }
             skipPrg = 1; 
         }
         else if (*tokenIter == "#") {

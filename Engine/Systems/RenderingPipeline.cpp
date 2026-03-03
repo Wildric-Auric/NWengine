@@ -77,8 +77,8 @@ std::string combineShaderSrc =
 	R"V0G0N(        
         #pragma fragment
         #version 330 core
-
-        uniform sampler2D uTex[MaxTexNum];
+        #pragma define MaxTex MaxTexNum 
+        uniform sampler2D uTex[MaxTex];
         uniform sampler2D uTex0;
         uniform int uCascadeNum;
 

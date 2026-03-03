@@ -5,16 +5,16 @@ FrameBuffer* FrameBuffer::GetCurrent() { return _current; }
 
 FrameBuffer* FrameBuffer::_current = 0;
 
-void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, uint8 num) {
+void FrameBufferAttachment::SetUp(iVec2 size, MSAAValue msVal, TexType_Exp type, uint8 num) {
 	tex._size = size;
-	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB, TexType_Exp_rgba32f); //TODO::Here
+	tex._GPUGen(nullptr, TexChannelInfo::NW_RGB, type);
 	tex.SetEdgesBehaviour(TexEdge::NW_CLAMP);
 	tex.SetMinFilter(TexMinFilter::NW_MIN_LINEAR);
 	tex.SetMaxFilter(TexMaxFilter::NW_LINEAR);
 	if(msVal != NW_MSx1) {
 		msTex._size		  = size;
 		msTex._samplesNum = msVal;
-		msTex._GPUGen(TexChannelInfo::NW_RGB);
+		msTex._GPUGen(TexChannelInfo::NW_RGB, type);
 		tex.Clean();
 		tex._glID = ((FrameBuffer*)owner)->resolveFbo->GetAtt(num).tex._glID;
 		NW_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + num, GL_TEXTURE_2D_MULTISAMPLE, msTex._glID, 0));
@@ -50,21 +50,21 @@ FrameBufferAttachment& FrameBuffer::GetAtt(int i) { return attachments[i]; }
 
 void FrameBuffer::ClearAttachment(int i, const fVec4& clearColor) { NW_GL_CALL(glClearBufferfv(GL_COLOR, i, &clearColor.x)); }
 
-void FrameBuffer::AddAttachment(iVec2 size) {
+void FrameBuffer::AddAttachment(iVec2 size, TexType_Exp type) {
 	uint8 num = attachments.size();
 	if(_msaaVal != MSAAValue::NW_MSx1)
-		resolveFbo->AddAttachment(size);
+		resolveFbo->AddAttachment(size, type);
 
 	Bind();
 	attachments.push_back({});
 	attachments.back().owner = this;
-	attachments.back().SetUp(size, _msaaVal, num);
+	attachments.back().SetUp(size, _msaaVal, type, num);
 
 	std::vector<uint32> t(num + 1);
 	for(int i = 0; i < num + 1; i++) {
 		t[i] = GL_COLOR_ATTACHMENT0 + i;
 	}
-	glDrawBuffers(num + 1, t.data());
+	NW_GL_CALL(glDrawBuffers(num + 1, t.data()));
 
 	Unbind();
 }
@@ -80,17 +80,18 @@ bool FrameBuffer::CheckCompleteness() {
 	}
 	return status == GL_FRAMEBUFFER_COMPLETE;
 }
-void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal) {
+
+void FrameBuffer::SetUp(Vector2<int> size, MSAAValue msVal, TexType_Exp type) {
 	if(Context::window == nullptr)
 		return;
 	if(msVal != NW_MSx1) {
 		resolveFbo = new FrameBuffer();
-		resolveFbo->SetUp(size, NW_MSx1);
+		resolveFbo->SetUp(size, NW_MSx1, type);
 		NW_GL_CALL(glEnable(GL_MULTISAMPLE));
 	}
 	NW_GL_CALL(glGenFramebuffers(1, &_framebuffer));
 	_msaaVal = msVal;
-	AddAttachment(size);
+	AddAttachment(size, type);
 	if(!CheckCompleteness()) {
 		NW_GL_ERROR_NO_CHECK(-1);
 	}

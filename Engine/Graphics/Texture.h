@@ -7,6 +7,7 @@
 
 typedef void* TextureIdentifierPtr;
 
+#define NW_RGBA8    0x8058
 #define NW_RGBA32F  0x8814
 #define NW_RGB32F   0x8815
 #define NW_RGBA16F  0x881A
@@ -26,12 +27,17 @@ typedef void* TextureIdentifierPtr;
 #define NW_R16F     0x822D
 #define NW_R32F     0x822E
 #define NW_R32UI    0x8236
+#define NW_R8UI     0x8232
+
 enum TexType_Exp {
-    TexType_Exp_rgba32f = NW_RGBA32F,
-    TexType_Exp_rgba16f = NW_RGBA16F,
+    TexType_Exp_none    = 0,
+    TexType_Exp_r8ui    = NW_R8UI,
     TexType_Exp_r16f    = NW_R16F,
     TexType_Exp_r32f    = NW_R32F,
     TexType_Exp_r32ui   = NW_R32UI,
+    TexType_Exp_rgba8   = NW_RGBA8,
+    TexType_Exp_rgba16f = NW_RGBA16F,
+    TexType_Exp_rgba32f = NW_RGBA32F,
     TexType_Exp_rgba32ui= NW_RGBA32UI,
 };
 
@@ -119,6 +125,10 @@ enum TexTarget {
 	NW_TEX_2D	 = 0x0DE1, /**< 2D texture.*/
 	NW_TEX_2D_MS = 0x9100, /**< Multisample 2D texture, cannot be filtered nor be used to generate mipmaps .*/
 };
+
+enum NW_GL_TYPE {
+    NW_GL_TYPE_UNSIGNED_BYTE = 0x1401
+};
 /**
  * @brief Class representing a texture asset.
  */
@@ -137,7 +147,7 @@ class Texture : public Asset {
 
 	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
 
-	void _GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt = 0, int compType = 0x1401);
+	void _GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt = 0, int compType = NW_GL_TYPE_UNSIGNED_BYTE);
 
 	void GenMipMap();
 
@@ -165,7 +175,7 @@ class MSTexture {
 	Vector2<int> _size;			  /**< The size of the texture. */
 	uint16		 _samplesNum = 2; /**< Number of samples. */
 
-	void _GPUGen(TexChannelInfo channelInfo);
+	void _GPUGen(TexChannelInfo channelInfo, TexType_Exp type);
 	void Bind(bool unbind = 0);
 	void Clean();
 };
@@ -175,14 +185,14 @@ class Texture3D {
     public:
     ui32 _glID;
     bool _hasMipMap = 0;
-    int  _fmt = 0;
+    TexType_Exp type;
     v3i  _size;
 
 	Texture3D() = default;
 	void Clean();
 	void Bind(uint32 slot = 0);
 	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
-	void _GPUGen(uint8* data, TexChannelInfo channelInfo, bool _16bitfmt = 0);
+	void _GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp ptype);
 	void GenMipMap();
 	void SetMinFilter(TexMinFilter minFilter);
 	void SetMaxFilter(TexMaxFilter maxFilter);

@@ -85,7 +85,7 @@ Asset* Texture::LoadFromBuffer(void* buffer, void* data) {
 	result->_hasMipMap = this->_hasMipMap;
 	result->_GPUGen(im.pixelBuffer, inf, id->type);
 	return result;
-} //16x16
+}
 
 void Texture::Clean() {
 	--_usageCounter;
@@ -98,10 +98,10 @@ void Texture::Clean() {
 
 NW_IMPL_RES_LIST(TextureIdentifier, Texture)
 
-void MSTexture::_GPUGen(TexChannelInfo channelInfo) {
+void MSTexture::_GPUGen(TexChannelInfo channelInfo, TexType_Exp type) {
 	NW_GL_CALL(glGenTextures(1, &_glID));
 	Bind();
-	NW_GL_CALL(glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samplesNum, GL_RGBA32F, _size.x, _size.y, GL_TRUE));
+	NW_GL_CALL(glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samplesNum, type, _size.x, _size.y, GL_TRUE));
 	Bind(1);
 }
 
@@ -119,7 +119,8 @@ void MSTexture::Clean() {
 //--------------3D Texture-------------------
 //-------------------------------------------
 
-void Texture3D::_GPUGen(uint8* pixelBuffer, TexChannelInfo info, bool _16bitfmt) {
+void Texture3D::_GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp ptype) {
+    type = ptype;
 	NW_GL_CALL(glGenTextures(1, &_glID));
 	Bind();
 	// Upscaling parameter
@@ -131,8 +132,7 @@ void Texture3D::_GPUGen(uint8* pixelBuffer, TexChannelInfo info, bool _16bitfmt)
 	if(info == TexChannelInfo::NW_R)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	// TODO::Fix the following line to handle the case of one byte
-    _fmt = _16bitfmt ? GL_RGBA16F : GL_RGBA8;
-	NW_GL_CALL(glTexImage3D(GL_TEXTURE_3D, 0, _fmt, _size.x, _size.y, _size.z, 0, info, GL_UNSIGNED_BYTE, pixelBuffer));
+	NW_GL_CALL(glTexImage3D(GL_TEXTURE_3D, 0, type, _size.x, _size.y, _size.z, 0, info, GL_UNSIGNED_BYTE, pixelBuffer));
 	if(_hasMipMap) {
 		NW_GL_CALL(glGenerateMipmap(GL_TEXTURE_3D));
 		NW_GL_CALL(glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR));
@@ -170,7 +170,7 @@ void Texture3D::Bind(uint32 slot) {
 }
 
 void Texture3D::BindImageTex(uint32 slot, RWImage access) {
-	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, GL_TRUE, 0, access, _fmt));
+	NW_GL_CALL(glBindImageTexture(slot, _glID, 0, GL_TRUE, 0, access, type));
 }
 
 void Texture3D::Clean() {
