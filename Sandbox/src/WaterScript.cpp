@@ -17,7 +17,7 @@ void WaterScript::Start() {
 	auto	tr	= this->goc->AddComponent<Transform>();
 	this->goc->AddComponent<AudioListener>();
 	spr->SetShader("../Sandbox/assets/Shaders/Water.shader");
-	waterFbo.SetUp(cam.size);
+	waterFbo.SetUp(cam.size, MSAAValue::NW_MSx1, TexType_Exp_rgba16f);
 	spr->SetTexture(&waterFbo.GetAtt(0).tex);
 	// spr->SetTexture(&ImageDefault, &TextureDefaultID);
 	spr->SetSortingLayer(WATER_LAYER);

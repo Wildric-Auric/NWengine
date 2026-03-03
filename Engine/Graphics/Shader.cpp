@@ -76,8 +76,8 @@ void Shader::_GlGen(ShaderText* src) {
 	glCompileShader(vertexShader);
 	c = CheckShaderCompileError(vertexShader, src->vertex, "SHADER::VERTEX::COMPILATION FAILED AT: ");
 	if(!c) {
-		_glID = 0;
 		NW_GL_CALL(glDeleteShader(vertexShader));
+		_glID = 0;
 		return;
 	}
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -85,8 +85,9 @@ void Shader::_GlGen(ShaderText* src) {
 	NW_GL_CALL(glCompileShader(fragmentShader));
 	c = CheckShaderCompileError(fragmentShader, src->fragment, "SHADER::FRAGMENT::COMPILATION FAILED AT: ");
 	if(!c) {
-		_glID = 0;
+		NW_GL_CALL(glDeleteShader(vertexShader));
 		NW_GL_CALL(glDeleteShader(fragmentShader));
+		_glID = 0;
 		return;
 	}
 	_glID = glCreateProgram();
@@ -271,8 +272,9 @@ void Shader::SetUniformArrayi(const char* name, int* value, int size) {
 }
 
 void Shader::Delete() {
-	_glID = 0;
+    if (!this->_glID) return;
 	NW_GL_CALL(glDeleteProgram(this->_glID));
+	_glID = 0;
 }
 
 void Shader::Clean() {
@@ -316,9 +318,10 @@ Asset* ComputeShader::GetFromCache(void* identifier) {
 }
 
 void ComputeShader::SetReflectedUniforms(const ShaderParser& p) {
-	for(auto pp : p.GetUniforms()) {
-		reflectedUniforms.insert(pp);
-	}
+//  deprecate
+//	for(auto pp : p.GetUniforms()) {
+//		reflectedUniforms.insert(pp);
+//	}
 }
 
 Asset* ComputeShader::LoadFromFile(const char* path, void* identifier) {
@@ -353,8 +356,9 @@ void ComputeShader::Move(Asset* other) {
 }
 
 void ComputeShader::Delete() {
-	_glID = 0;
+    if (!this->_glID) return;
 	NW_GL_CALL(glDeleteProgram(_glID));
+	_glID = 0;
 }
 
 void ComputeShader::Clean() {

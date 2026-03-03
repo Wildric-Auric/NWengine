@@ -118,6 +118,29 @@ std::vector<std::string> GetDirFiles(const std::string& directory, const std::st
 	return dirList;
 }
 
+bool GetNextFile(NWFile* file) {
+    WIN32_FIND_DATAA fd; 
+    bool ret;
+    if (!file->handle || file->handle == INVALID_HANDLE_VALUE) return 0; 
+    ret = FindNextFileA(file->handle, &fd);
+    if (!ret) {
+        FindClose(file->handle);
+        file->handle = INVALID_HANDLE_VALUE;
+        return 0;
+    }
+    file->isDir  = fd.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY; 
+    memcpy(file->name, fd.cFileName, 256);
+    return ret;
+}
+
+bool GetFirstFile(NWFile* file, const char* path) {
+    WIN32_FIND_DATAA fd; 
+	std::string	path2 = path + std::string("\\*");
+    file->handle = INVALID_HANDLE_VALUE;
+    file->handle = FindFirstFileA(path2.c_str(), &fd);
+    return file->handle != INVALID_HANDLE_VALUE;
+}
+
 std::string GetCurrentDir() {
 	char dir[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, dir);
@@ -200,7 +223,7 @@ bool MakeFile(const std::string& path) {
 }
 
 // Returns filename + extension
-std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot) {
+std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator) {
 	std::string filename  = "";
 	std::string extension = "";
 	std::string root	  = "";
@@ -213,10 +236,10 @@ std::string GetFileName(const std::string& path, std::string* bFilename, std::st
 			state	  = 1;
 			slash	  = 0;
 		}
-		if(chr == '\\') {
+		if(chr == '\\' || chr == '/') {
 			if(slash)
 				continue;
-			root += filename + "\\";
+			root += filename + extension + separator;
 			filename  = "";
 			extension = "";
 			slash	  = 1;

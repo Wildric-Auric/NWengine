@@ -78,6 +78,8 @@ class Window {
 	applicationInstance _getInstance();
 	Keyboard&			_getKeyboard();
 
+    int  show();
+    int  hide();
 	void getDrawAreaSize(Vec2& size);
 	void getMousePosition(Vec2& positon); // Get the mouse position according to client area
 	int	 update();
@@ -95,6 +97,8 @@ class Window {
 
 	void enableFullscreen();
 	void disableFullscreen(Rect& newMetrics = defaultWindowMetrics);
+
+    void setMetrics(const Rect& metrics); 
 
 	// Callback setters
 	void setResizeCallback(procResizeCallback);

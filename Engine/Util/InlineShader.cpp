@@ -6,9 +6,9 @@ const ShaderText Raw = {
 	R"V0G0N( 
         #pragma vertex
         #version 330 core
-        #pragma def USR_BEG INLINE_VERT_BEG_USR
-        #pragma def USR_MAIN INLINE_VERT_MAIN_USR
-        #pragma def USR_OUT  INLINE_VERT_OUT_USR
+        #pragma define USR_BEG INLINE_VERT_BEG_USR
+        #pragma define USR_MAIN INLINE_VERT_MAIN_USR
+        #pragma define USR_OUT  INLINE_VERT_OUT_USR
         layout(location = 0) in vec3 attribPos;
         layout(location = 1) in vec2 texCoord; 
         uniform mat4 uMvp = mat4(1.0); 
@@ -23,9 +23,9 @@ const ShaderText Raw = {
 	R"V0G0N(        
         #pragma fragment
         #version 330 core
-        #pragma def USR_BEG  INLINE_FRAG_BEG_USR
-        #pragma def USR_MAIN INLINE_FRAG_MAIN_USR
-        #pragma def USR_OUT  INLINE_FRAG_OUT_USR 
+        #pragma define USR_BEG  INLINE_FRAG_BEG_USR
+        #pragma define USR_MAIN INLINE_FRAG_MAIN_USR
+        #pragma define USR_OUT  INLINE_FRAG_OUT_USR 
         uniform sampler2D uTex0;
         in vec2 uv;
         out vec4 FragColor;

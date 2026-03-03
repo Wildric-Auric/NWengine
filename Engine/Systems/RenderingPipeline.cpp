@@ -78,9 +78,8 @@ std::string combineShaderSrc =
 	R"V0G0N(        
         #pragma fragment
         #version 420 core
-        #pragma def MAX_TEX MaxTexNum 
-
-        uniform sampler2D uTex[MAX_TEX];
+        #pragma define MaxTex MaxTexNum 
+        uniform sampler2D uTex[MaxTex];
         uniform sampler2D uTex0;
         uniform int uCascadeNum;
 
@@ -103,7 +102,6 @@ std::string tonemappingShaderSrc =
 	R"V0G0N(        
         #pragma fragment
         #version 330 core
-        #pragma def MAX_TEX MaxTexNum 
 
         uniform sampler2D uTex0;
 

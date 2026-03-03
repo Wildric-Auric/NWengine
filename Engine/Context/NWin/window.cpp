@@ -185,12 +185,20 @@ Window* Window::stCreateWindow(WindowCrtInfo& crtInfo) {
 	win._dcHandle = GetDC((HWND)h);
 	win._style	  = crtInfo.style;
 	WIN_CHECK(win._dcHandle);
-	// Set winapi parameterss
-	ShowWindow((HWND)h, SW_SHOWDEFAULT); // Returns false if the window isn't visible already; does not return error directly
-	// WIN_CHECK(SetLayeredWindowAttributes((HWND)h, RGB(255, 0, 0), 100, LWA_ALPHA)); Only if WS_TRANSPARENT is set
+	// Set winapi parameterss 
+    win.show();	
+    // WIN_CHECK(SetLayeredWindowAttributes((HWND)h, RGB(255, 0, 0), 100, LWA_ALPHA)); Only if WS_TRANSPARENT is set
 
 	win._keyboard.create(crtInfo.inputBufferSize);
 	return &win;
+}
+
+int Window::show() {
+    return ShowWindow((HWND)this->_handle, SW_SHOWDEFAULT);
+}
+
+int Window::hide() {
+    return ShowWindow((HWND)this->_handle, SW_HIDE);
 }
 
 Window* Window::stGetWindow(winHandle handle) {
@@ -339,6 +347,10 @@ void Window::enableFullscreen() {
 void Window::disableFullscreen(Rect& newMetrics) {
 	enableTitleBar();
 	WIN_CHECK(SetWindowPos((HWND)_handle, NULL, newMetrics.pos.x, newMetrics.pos.y, newMetrics.size.x, newMetrics.size.y, 0));
+}
+
+void Window::setMetrics(const Rect& metrics) {
+    WIN_CHECK(SetWindowPos((HWND)_handle, NULL, metrics.pos.x, metrics.pos.y, metrics.size.x, metrics.size.y, 0))
 }
 
 } // namespace NWin

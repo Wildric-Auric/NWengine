@@ -2,6 +2,7 @@
 #include "templates/LineTst.h"
 #include "templates/PrimitivesTst.h"
 #include "templates/Sandbox.h"
+#include "templates/MSAATst.h"
 #include "templates/Simple.h"
 #include "templates/TextTst.h"
 #include "templates/UItst2.h"

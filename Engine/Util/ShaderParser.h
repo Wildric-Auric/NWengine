@@ -17,18 +17,30 @@ struct ShaderParserUniformData {
 	std::string defaultValue = "";
 	int			location	 = -1;
 };
+struct ShaderParserPragDirInfo {
+    uint32_t pos  = 0;
+    uint16_t len  = 1;
+};
+
+struct ShaderParserTypeLoc {
+    ShaderType   type   = ShaderType::NONE;
+    std::string* txt    = 0;
+    uint32_t     loc    = 0;
+};
 
 class ShaderParser {
   public:
 	char							 c;
 	char							 lc;
-	std::list<std::string>			 tokens;
-	std::list<std::string>::iterator tokenIter;
-	std::string*					 ltoken;
-	std::string						 curToken;
-	std::string*					 curShaderTxt;
-	ShaderType						 curType;
-	const char*						 cPtr;
+	std::list<std::string>			     tokens;
+	std::list<std::string>::iterator     tokenIter;
+    uint32_t                             tokenIndex;
+	std::string*					     ltoken;
+	std::string						     curToken;
+	std::string*					     curShaderTxt;
+    bool                                 preProcDir;
+	ShaderType						     curType;
+	const char*						     cPtr;
 
 	bool macroNxt;
 	bool noWhiteSpace;
@@ -44,9 +56,12 @@ class ShaderParser {
 
 	std::unordered_map<std::string, std::string>			 constants;
 	std::unordered_map<std::string, ShaderParserUniformData> uniformsData;
+    std::vector<ShaderParserPragDirInfo>                     prgmaInfo;
+    std::vector<ShaderParserTypeLoc>                         locs;                          
 	std::string												 vert		   = "";
 	std::string												 frag		   = "";
 	std::string												 comp		   = "";
+    std::string                                              unknw         = "";
 	std::string												 shaderVersion = "";
 	std::vector<uint16_t>									 enabledAtts;
 
@@ -55,6 +70,7 @@ class ShaderParser {
 	void PopToken();
 	void Tokenize();
 	void ProcessTokens();
+    void FillShaderText();
 	void _Parse();
 	void Parse(const char* src);
 	void ParseFromPath(const char* path);
@@ -62,7 +78,10 @@ class ShaderParser {
 	void Reset();
 	void AddCnst(const char* id, const char* value);
 	void ClearCnsts();
+
 	void OutputData();
+    void OutputTokens(int n);
+    void OutputPrgmaInfo();
 
 	inline const std::string&											   GetVertTxt() const { return vert; }
 	inline const std::string&											   GetFragTxt() const { return frag; }

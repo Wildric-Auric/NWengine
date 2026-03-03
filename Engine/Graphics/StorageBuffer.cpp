@@ -56,4 +56,5 @@ void StorageBuffer::Unmap() {
 void StorageBuffer::Delete() {
 	Unmap();
 	NW_GL_CALL(glDeleteBuffers(1, &_glID));
+    _glID = 0;
 }

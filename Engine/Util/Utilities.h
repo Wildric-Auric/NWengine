@@ -4,6 +4,16 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#define WIN
+
+struct NWFile {
+    void* handle;
+    bool isDir = 0;
+    char name[256];
+};
+
+bool GetNextFile(NWFile* file);
+bool GetFirstFile(NWFile* file, const char* path);
 
 bool GetEnvVar(const char*, std::string*);
 
