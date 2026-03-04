@@ -473,6 +473,18 @@ bool Exec(const std::string& cmd, char* env) {
     return !execl("/bin/sh", "sh", "-c", cmd.c_str(), 0);
 }
 
+std::string GetFile(const char* type) {
+    char val[512];
+    scanf("Input Path: %s", val);
+    return std::string(val); 
+}
+
+std::string SaveAs(const char* type) {
+    char val[512];
+    scanf("Input Path: %s", val);
+    return std::string(val); 
+}
+
 #endif //__WIN32__
 
 
