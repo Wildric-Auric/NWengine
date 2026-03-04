@@ -67,6 +67,11 @@ void GetSystemFontDirALT(std::string* out) {
 	*out += "\\AppData\\Local\\Microsoft\\Windows\\Fonts\\";
 }
 
+void GetSystemDefaultFont(std::string* out) {
+    GetSystemFontDir(out);
+    *out += std::string("Arial.ttf");
+}
+
 void DllHandle::Load(const char* filename) {
 	int a = sizeof(HMODULE);
 	h	  = LoadLibrary(filename);
@@ -357,8 +362,12 @@ bool FileMove(const std::string& dest, const std::string& source, bool failIfExi
 
 #else
 
+#include <dirent.h>
 #include <dlfcn.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <string.h>
+
 
 void GetSystemFontDir(std::string* out) {
     *out = "/usr/share/fonts/TTF";
@@ -367,6 +376,43 @@ void GetSystemFontDir(std::string* out) {
 void GetSystemFontDirALT(std::string* out) {
     *out = "/usr/share/fonts/TTF";
 }
+
+void GetSystemDefaultFont(std::string* out) {
+    GetSystemFontDir(out);
+    *out += "/" + std::string("OpenSans-Bold.ttf");
+}
+
+
+typedef struct dirent dir_entry;
+typedef struct stat stat_t;
+bool GetFirstFile(NWFile* file, const char* path) {
+    DIR* fd;
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    fd = opendir(path);
+    file->handle = fd;
+    return GetNextFile(file);
+}
+
+bool GetNextFile(NWFile* file) {
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    DIR* fd = (DIR*)file->handle;
+    if (!fd)
+        return 0;
+    ent = readdir(fd);
+    if (!ent) {
+        file->handle = 0;
+        return 0;
+    }
+    res = stat(ent->d_name, &st);
+    file->isDir = !res && st.st_mode & S_IFDIR;
+    memcpy(file->name, ent->d_name, 256);
+    return 1;
+}
+
 
 void DllHandle::Load(const char* filename) {
     h = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);

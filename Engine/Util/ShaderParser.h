@@ -20,12 +20,16 @@ struct ShaderParserUniformData {
 struct ShaderParserPragDirInfo {
     uint32_t pos  = 0;
     uint16_t len  = 1;
+    ShaderParserPragDirInfo() {}
+    ShaderParserPragDirInfo(uint32_t p, uint16_t l) { pos = p; len = l;}
 };
 
 struct ShaderParserTypeLoc {
     ShaderType   type   = ShaderType::NONE;
     std::string* txt    = 0;
     uint32_t     loc    = 0;
+    ShaderParserTypeLoc() {}
+    ShaderParserTypeLoc(ShaderType tp, std::string* text, uint32_t location) { type = tp; txt = text; loc = location;}
 };
 
 class ShaderParser {

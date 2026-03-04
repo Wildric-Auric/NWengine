@@ -168,8 +168,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		te->colors	  = currentUIColorScheme.titleText;
 		te->isBatched = false;
 		std::string fdir;
-		GetSystemFontDir(&fdir);
-		fdir += "Arial.ttf";
+		GetSystemDefaultFont(&fdir);
 		te->SetFont({fdir.c_str(), 15}, te->_shader);
 		te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
 		item->endln	   = 0;
@@ -196,8 +195,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		te->colors	  = currentUIColorScheme.text;
 		te->isBatched = false;
 		std::string fdir;
-		GetSystemFontDir(&fdir);
-		fdir += "Arial.ttf";
+		GetSystemDefaultFont(&fdir);
 		te->SetFont({fdir.c_str(), 15}, te->_shader);
 		te->layerOrder = spr->sortingLayer + layer;
 		item->endln	   = 0;

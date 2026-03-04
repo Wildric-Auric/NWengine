@@ -17,7 +17,7 @@ fVec2		  UISys::curPos;
 bool		  UISys::clickEvent			  = 0;
 bool		  UISys::clickContinuousEvent = 0;
 bool		  UISys::isResposive		  = 1;
-NWin::Key	  UISys::clickKey			  = NWin::Key::NWIN_KEY_LBUTTON;
+int           UISys::clickKey			  = NWInputKey_LMouse;
 UIWindow*	  UISys::focusedWindow		  = 0;
 UIWindow*	  UISys::topMostSelected	  = 0;
 UIWindow*	  UISys::hoveredWindow		  = 0;
@@ -55,7 +55,6 @@ void UISys::Update() {
 		UIWindow* win;
 		int64	  refLayer;
 	};
-
 	if(clickEvent && topMostSelected == 0) {
 		UnFocus();
 	}

@@ -240,7 +240,8 @@ int wyn_linux_create(wyndow* w, wyn_crt_info* crt_inf) {
 	LNX_CHECK(vi, "Get Visual failed");
 	cmap		   = XCreateColormap(dat->dsp, root, vi->visual, AllocNone);
 	swa.colormap   = cmap;
-	swa.event_mask = ExposureMask | KeyPressMask | StructureNotifyMask | KeyReleaseMask;
+	swa.event_mask = ExposureMask | KeyPressMask | StructureNotifyMask | 
+                     KeyReleaseMask | ButtonPressMask | ButtonReleaseMask;
 	win = XCreateWindow(dat->dsp, root, crt_inf->rect.pos.x, crt_inf->rect.pos.y, crt_inf->rect.size.x, crt_inf->rect.size.y, 0,
 						vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
 	dat->glx_win = glXCreateWindow(dat->dsp, dat->fb_conf, win, 0);
@@ -264,7 +265,7 @@ int wyn_linux_create(wyndow* w, wyn_crt_info* crt_inf) {
 
 int wyn_linux_kb_record(wyn_kboard* kb, KeySym c, int event) {
 	int* v = 0;
-	if(c > 255 || c < 0)
+	if(c > 511 || c < 0)
 		return 1;
 	v = &kb->events[c];
 	if(event & Wyn_OnKeyRelease) {
@@ -282,6 +283,42 @@ int wyn_linux_kb_record(wyn_kboard* kb, KeySym c, int event) {
 	kb->update_idx++;
 	kb->update_list[kb->update_idx] = c;
 	return 0;
+}
+
+int X11MouseMap(int button) {
+    switch (button) {
+        case 1: { return Wyn_Key_LMouse;}
+        case 2: { return Wyn_Key_MMouse;}
+        case 3: { return Wyn_Key_RMouse;}
+        case 4: { return Wyn_Key_FMouse;}
+        case 5: { return Wyn_Key_BMouse;}
+        default:{ return -1;}
+    }
+}
+
+int X11KeyMap(int key) {
+    if (key >= 'a' && key <= 'z') {
+        return key - 'a' + 'A';
+    }
+#define mkc(l,k) case l: {return k;}
+    switch (key) {
+        mkc(XK_Control_L, Wyn_Key_LCtrl);
+        mkc(XK_Control_R, Wyn_Key_RCtrl);
+        mkc(XK_Alt_L,     Wyn_Key_LAlt);
+        mkc(XK_Alt_R,     Wyn_Key_RAlt);
+        mkc(XK_Shift_L,   Wyn_Key_LShift);
+        mkc(XK_Shift_R,   Wyn_Key_RShift);
+        mkc(XK_Left,      Wyn_Key_LArrow);
+        mkc(XK_Right,     Wyn_Key_RArrow);
+        mkc(XK_Up,        Wyn_Key_UArrow);
+        mkc(XK_Down,      Wyn_Key_DArrow);
+        mkc(XK_Return,    Wyn_Key_Ret);
+        mkc(XK_Escape,    Wyn_Key_Esc);
+        mkc(XK_Delete,    Wyn_Key_Del);
+        mkc(XK_space,     Wyn_Key_Space);
+        default:           { return key;}
+    }
+#undef mkc
 }
 
 int wyn_linux_update(wyndow* w) {
@@ -321,14 +358,24 @@ int wyn_linux_update(wyndow* w) {
 		}
 		case KeyPress: {
 			KeySym k = XLookupKeysym(&event.xkey, 0);
-			wyn_linux_kb_record(&w->keyboard, k, Wyn_KeyPressed);
+			wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_KeyPressed);
 			break;
 		}
 		case KeyRelease: {
 			KeySym k = XLookupKeysym(&event.xkey, 0);
-			wyn_linux_kb_record(&w->keyboard, k, Wyn_OnKeyRelease);
+			wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_OnKeyRelease);
 			break;
 		}
+        case ButtonPress: {
+            int m = X11MouseMap(event.xbutton.button);
+			wyn_linux_kb_record(&w->keyboard, m, Wyn_KeyPressed);
+            break;
+        }
+        case ButtonRelease: {
+            int m = X11MouseMap(event.xbutton.button);
+			wyn_linux_kb_record(&w->keyboard, m, Wyn_OnKeyRelease);
+            break;
+        }
 		default:
 			break;
 		}
@@ -419,7 +466,7 @@ boolean wyn_linux_get_mouse_pos(wyndow* w, wyn_vec2* pos) {
     Window w1, w2;
     int x,y;
     unsigned int mask;
-    XQueryPointer(lnx->dsp, w->handle, &w1, &w2, &pos->x, &pos->y, &x, &y, &mask);
+    XQueryPointer(lnx->dsp, w->handle, &w1, &w2,  &x, &y, &pos->x, &pos->y, &mask);
     return 1;
 }
 

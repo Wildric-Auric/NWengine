@@ -49,11 +49,12 @@ struct TextureIdentifier {
 	uint8		alpha; /**< The alpha value of the texture. */
     TexType_Exp type = TexType_Exp::TexType_Exp_rgba16f;
 
-	/**
-	 * @brief Overloaded equality operator for comparing TextureIdentifier objects.
-	 * @param other The other TextureIdentifier object to compare with.
-	 * @return True if the TextureIdentifier objects are equal, false otherwise.
-	 */
+    TextureIdentifier() {};
+    TextureIdentifier(const std::string& namep, uint8 alphap, TexType_Exp typep = TexType_Exp::TexType_Exp_rgba16f) {
+        name  = namep; 
+        alpha = alphap;
+        type  = typep;
+    }
 	bool operator==(const TextureIdentifier& other) const { return other.type == type && alpha == other.alpha && name == other.name; }
 };
 

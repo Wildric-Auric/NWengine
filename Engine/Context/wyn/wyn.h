@@ -28,6 +28,28 @@ typedef struct {
 	boolean should_close;
 } wyn_state;
 
+enum wyn_key_id {
+    Wyn_Key_RMouse = 511,    
+    Wyn_Key_MMouse = 510,
+    Wyn_Key_LMouse = 509,    
+    Wyn_Key_FMouse = 508,    
+    Wyn_Key_BMouse = 507,    
+    Wyn_Key_LCtrl  = 500,
+    Wyn_Key_RCtrl  = 501,
+    Wyn_Key_LShift = 502,
+    Wyn_Key_RShift = 503,
+    Wyn_Key_LAlt   = 504,
+    Wyn_Key_RAlt   = 505,
+    Wyn_Key_RArrow = 499,
+    Wyn_Key_LArrow = 498,
+    Wyn_Key_UArrow = 497,
+    Wyn_Key_DArrow = 496,
+    Wyn_Key_Ret    = 495,
+    Wyn_Key_Esc    = 494,
+    Wyn_Key_Del    = 493,
+    Wyn_Key_Space  = 492,
+};
+
 enum wyn_event_mask {
 	Wyn_KeyPressed	   = 1 << 0,
 	Wyn_OnKeyRelease   = 1 << 1,

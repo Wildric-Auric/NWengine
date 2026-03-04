@@ -22,7 +22,7 @@ workspace "NWengine"
     filter {}
     warnings "Off"
 
-    project "NWEngineCore"
+    project "NWengineCore"
                     kind "StaticLib"
                     includedirs {
                         "./",
@@ -43,7 +43,7 @@ workspace "NWengine"
                     filter "configurations:*Release*"
                         targetname ("NWengineCore%{cfg.platform:sub(2)}")
 
-    project "NWEngineCoreUnityBuild"
+    project "NWengineCoreUnityBuild"
                     kind "StaticLib"
                     includedirs {
                         "./",

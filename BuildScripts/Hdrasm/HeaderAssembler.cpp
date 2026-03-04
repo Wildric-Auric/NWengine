@@ -1,88 +1,93 @@
 #include "HeaderAssembler.h"
-#include "fstream"
+#include <fstream>
+#include <string.h>
 #include <map>
+#define maxx(a,b) ((a)>(b)?(a):(b))
+#define minn(a,b) ((a)<(b)?(a):(b))
 
-#define WINDOWS_BLD
-#ifdef  WINDOWS_BLD
-#include <Windows.h>
+struct NWFile {
+    void* handle;
+    bool isDir = 0;
+    char name[256];
+};
 
+#ifdef __WIN32__ 
 void ToLower(std::string& str) {
     for (int i = 0; i < str.size();++i) {
         str[i] = std::tolower(str[i]);
     }
 }
-
-std::string GetFileName(std::string path, std::string* bFilename, std::string* bExtension, std::string* bRoot) {
-	std::string filename = "";
-	std::string extension = "";
-	std::string root = "";
-	bool state = 0;
-	bool slash = 0;
-	for (auto chr : path) {
-		if (chr == '.') {
-			filename += extension;
-			extension = "";
-			state = 1;
-			slash = 0;
-		}
-		if (chr == '\\') {
-			if (slash) continue;
-			root += filename + "\\";
-			filename = "";
-			extension = "";
-			slash = 1;
-			continue;
-		}
-		slash = 0;
-		if (!state) filename += chr;
-		else extension += chr;
-	}
-	if (bFilename != nullptr) *bFilename = filename;
-	if (bExtension != nullptr) *bExtension = extension;
-	if (bRoot != nullptr) *bRoot = root;
-	return filename + extension;
+bool GetNextFile(NWFile* file) {
+    WIN32_FIND_DATAA fd; 
+    bool ret;
+    if (!file->handle || file->handle == INVALID_HANDLE_VALUE) return 0; 
+    ret = FindNextFileA(file->handle, &fd);
+    if (!ret) {
+        FindClose(file->handle);
+        file->handle = INVALID_HANDLE_VALUE;
+        return 0;
+    }
+    file->isDir  = fd.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY; 
+    memcpy(file->name, fd.cFileName, 256);
+    return ret;
 }
-std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter)
-{
-	WIN32_FIND_DATAA findData;
-	HANDLE hFind = INVALID_HANDLE_VALUE;
 
-	std::string path = directory + "\\*";
-	std::vector<std::string> dirList;
-
-	hFind = FindFirstFileA(path.c_str(), &findData);
-
-	if (hFind == INVALID_HANDLE_VALUE)
-		return {};
-
-	bool first = 0;
-	while (FindNextFileA(hFind, &findData) != 0)
-	{
-		if (!first) {
-			first = 1;
-			continue;
-		}
-		std::string filename = findData.cFileName;
-		if (extensionFilter != "") {
-			std::string extension = "";
-			GetFileName(filename, nullptr, &extension);
-			if (extension == extensionFilter)
-				dirList.push_back(filename);
-			continue;
-		}
-		dirList.push_back(filename);
-	}
-
-	FindClose(hFind);
-	return dirList;
+bool GetFirstFile(NWFile* file, const char* path) {
+    WIN32_FIND_DATAA fd; 
+	std::string	path2 = path + std::string("\\*");
+    file->handle = INVALID_HANDLE_VALUE;
+    file->handle = FindFirstFileA(path2.c_str(), &fd);
+    return file->handle != INVALID_HANDLE_VALUE;
 }
-bool FileExists(std::string dir) {
+
+bool FileExists(const std::string& dir) {
 	DWORD attrib = GetFileAttributes(dir.c_str());
-	if ((attrib != INVALID_FILE_ATTRIBUTES) && !(attrib & FILE_ATTRIBUTE_DIRECTORY))
+	if((attrib != INVALID_FILE_ATTRIBUTES) && !(attrib & FILE_ATTRIBUTE_DIRECTORY))
 		return 1;
 	return 0;
-
 }
+#else
+
+#include <dirent.h>
+#include <dlfcn.h>
+#include <unistd.h>
+#include <sys/stat.h>
+
+typedef struct dirent dir_entry;
+typedef struct stat stat_t;
+
+bool GetNextFile(NWFile* file) {
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    DIR* fd = (DIR*)file->handle;
+    if (!fd)
+        return 0;
+    ent = readdir(fd);
+    if (!ent) {
+        file->handle = 0;
+        return 0;
+    }
+    res = stat(ent->d_name, &st);
+    file->isDir = !res && st.st_mode & S_IFDIR;
+    memcpy(file->name, ent->d_name, 256);
+    return 1;
+}
+
+bool GetFirstFile(NWFile* file, const char* path) {
+    DIR* fd;
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    fd = opendir(path);
+    file->handle = fd;
+    return GetNextFile(file);
+}
+
+bool FileExists(const std::string& path) {
+    return !access(path.c_str(), F_OK);
+}
+
 #endif
 
 
@@ -99,20 +104,27 @@ enum class State {
 std::map<std::string, bool> included;
 std::ofstream outputF;
 
+#ifdef __WIN32__
+#define sep "\\"
+#else
+#define sep "/"
+#endif
 void Inc(const std::string& directory, const std::string& filename) {
-	std::string path = directory + "\\" + filename;
+	std::string path = directory + sep + filename;
 	std::ifstream inp(path);
 	if (!inp) {
 		inp.close();
-		printf("Cannot open file, check src directory");
+		printf("Cannot open file, check src directory\n");
 	}
 	std::string line;
 	State s = State::Beg;
+    bool noBreak;
 	while (std::getline(inp, line)) {
 		std::string temp0 = "";
 		s = State::Beg;
+        noBreak = 0;
 		for (size_t i = 0; i < line.size(); ++i) {
-			char c = line[i];
+			char c  = line[i];
 			if (s == State::Beg) {
 				if (c == '\t' || c == ' ') {
 					outputF << c;
@@ -126,17 +138,33 @@ void Inc(const std::string& directory, const std::string& filename) {
 				}
 			}
 			else if (s == State::Directive) {
-				const char* cmp = "include";
+				static const char* cmp = "include";
+                static const char* cmp2 = "pragma once";
 				std::string temp = "";
 				State s0 = State::Inlcude;
-				for (size_t j = 0; j < 7; j++) {
+                size_t j;
+				for (j = 0; j < 11; j++) {
+					if (i + j < line.size() && cmp2[j] == line[i + j])
+						continue;
+					break;
+				}
+                if (j == 11) {
+                    //we skip pragma once        
+                    i = line.size();
+                    j = 8;
+                    noBreak = 1;
+                    s0 = State::Fail;
+                }
+                else 
+                    j = 0;
+				for (; j < 7; j++) {
 					if (i + j < line.size() && cmp[j] == line[i + j]) {
 						temp += cmp[j];
 						continue;
 					}
 					outputF << "#" << temp;
 					if (i + j < line.size())
-						i = max(i + j - 1, 0);
+						i = maxx(i + j - 1, 0);
 					s0 = State::Fail;
 					break;
 				}
@@ -154,8 +182,7 @@ void Inc(const std::string& directory, const std::string& filename) {
 
 			else if (s == State::IncludeBeg) {
 				if (c == '\"' || c == '>') {
-                    ToLower(temp0);
-					if (FileExists(directory + "\\" + temp0)) {
+					if (FileExists(directory + sep + temp0)) {
 						if (included.find(temp0) == included.end())
 							Inc(directory, temp0);
 						temp0 = "";
@@ -172,15 +199,41 @@ void Inc(const std::string& directory, const std::string& filename) {
 				outputF << c;
 			}
 		}
-		outputF << "\n";
+        if (!noBreak)
+		    outputF << "\n";
 	}
 	included.insert(std::make_pair(filename, 1));
 	inp.close();
 }
 
+void GetDirFiles(const std::string &directory, std::vector<std::string>* vec) {
+    NWFile file;
+    int len;
+    if (!GetFirstFile(&file, directory.c_str())) {
+        return; 
+    }
+    if (!file.isDir)
+        vec->push_back(file.name);
+#define check(n,c) file.name[len-n] == c 
+    while (GetNextFile(&file)) {
+        if (file.isDir)
+            continue;
+        len = strlen(file.name);
+        if (len > 3 && check(4,'.') && check(1,'p') && check(2,'p') && check(3, 'h')){
+            vec->push_back(file.name);
+            continue;
+        }
+        if (len > 2 && check(2,'.') && check(1,'h')){
+            vec->push_back(file.name);
+            continue;
+        }
+    }
+#undef check
+}
 
 void AssembleHeaders(const std::string& src, const std::string& dst, const std::string& outputName, const std::string& first) {
-	std::vector<std::string> vec = GetDirFiles(src);
+	std::vector<std::string> vec;
+    GetDirFiles(src, &vec);
     if (!first.empty()) {
         int index = -1;
 	    for (int i = 0; i < vec.size(); ++i) {
@@ -189,21 +242,20 @@ void AssembleHeaders(const std::string& src, const std::string& dst, const std::
             break;
         }
         if (index == -1) {
-            printf("\"first\" file not found, it is ignored");
+            printf("\"first\" file not found, it is ignored\n");
         }
         else {
             std::swap(vec[0], vec[index]);
         }
     }
-	outputF.open(dst + "\\" + outputName);
+	outputF.open(dst + sep + outputName);
 	if (!outputF) {
-		printf("Error openning dst file, check existence of output folder");
+		printf("Error openning dst file, check existence of output folder\n");
 		outputF.close();
 		return;
 	}
 	outputF << "#pragma once\n";
 	for (std::string& file : vec) {
-        ToLower(file);
 		if (included.find(file) != included.end())
 			continue;
 		Inc(src, file);

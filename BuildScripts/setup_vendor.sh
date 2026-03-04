@@ -53,7 +53,7 @@ cd ../build_x64
 echo Buliding Freetype x64
 make clean
 make
-cp libfreetype.a ../../../../Dependencies/freetype/lib/lnx64/freetype64.a
+cp libfreetype.a ../../../../Dependencies/freetype/lib/lnx64/freetype.a
 cd ../
 cp -r include ../../../Dependencies/freetype/
 cd ../

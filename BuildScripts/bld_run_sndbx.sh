@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
 pushd "$(dirname "$(realpath "$0")")" > /dev/null || exit 1
-./setup_vendor.sh
-cd .. || exit 1
-premake5 gmake
+./bld_sndbx.sh
+./run_sndbx.sh
 popd > /dev/null || exit 1
-

@@ -196,9 +196,9 @@ void PrimManager::_TestEdges() {
 
 void PrimManager::MakeLineOnClick() {
 	constexpr float tol		 = 0.5;
-	bool			keyclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_SHIFT);
-	bool			click	 = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON) && keyclick;
-	bool			rclick	 = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_RBUTTON) && keyclick;
+	bool			keyclick = Inputs::GetInputKeyPressed(NWInputKey_LShift);
+	bool			click	 = Inputs::GetInputOnKeyRelease(NWInputKey_LMouse) && keyclick;
+	bool			rclick	 = Inputs::GetInputKeyPressed(NWInputKey_RMouse)  && keyclick;
 	fVec2			cur		 = Inputs::GetMousePosition();
 	cur						 = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
 	v2f s					 = v2i(Sign(cur.x), Sign(cur.y));

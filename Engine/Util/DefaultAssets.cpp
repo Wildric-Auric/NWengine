@@ -108,9 +108,8 @@ const ShaderText ShaderTextBatchedStr = {
 )V0G0N",
 	R"V0G0N(
         #pragma fragment 
-        #version 330 core
-        #pragma def MAX_TEX MaxTexNum
-
+        #version 420 core
+        #pragma define MAX_TEX MaxTexNum
         uniform sampler2D uTex[MAX_TEX];
         in vec2  uv;
         in vec4  color10bit;

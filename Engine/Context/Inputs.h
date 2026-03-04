@@ -6,35 +6,20 @@
 #pragma once
 #include "Globals.h"
 
-/**
- * @def INPUT_LEFT_X
- * @brief The constant representing the input for the left X-axis.
- */
-#define INPUT_LEFT_X 0
-
-/**
- * @def INPUT_LEFT_Y
- * @brief The constant representing the input for the left Y-axis.
- */
-#define INPUT_LEFT_Y 1
-
-/**
- * @def INPUT_RIGHT_X
- * @brief The constant representing the input for the right X-axis.
- */
-#define INPUT_RIGHT_X 3
-
-/**
- * @def INPUT_RIGHT_Y
- * @brief The constant representing the input for the right Y-axis.
- */
-#define INPUT_RIGHT_Y 4
-
-/**
- * @typedef Input_Number
- * @brief Alias for the input number type.
- */
 typedef int keyN;
+
+enum NWInputKey_ {
+    NWInputKey_RMouse     = 1000,
+    NWInputKey_LMouse     = 1001,
+    NWInputKey_LShift     = 1003,
+    NWInputKey_RShift     = 1004,
+    NWInputKey_Up         = 1005,
+    NWInputKey_Down       = 1006,
+    NWInputKey_Right      = 1007,
+    NWInputKey_Left       = 1008,
+    NWInputKey_Space      = 1009,
+    NWInputKey_Ret        = 1010,
+};
 
 enum InputKeyEvent {
 	KeyPressed,
@@ -42,150 +27,20 @@ enum InputKeyEvent {
 	OnKeyPress,
 };
 
-/**
- * @class Inputs
- * @brief The Inputs class represents the input state and provides methods to process and retrieve input.
- */
 class Inputs {
   public:
-	/**
-	 *@brief Mouse cursor in window coordinates. 0,0 is the center of the window.
-	 */
 	static fVec2 _mousePos;
-
-	/**
-	 * @brief Flag indicating if the left input key is pressed.
-	 */
 	static bool left;
-
-	/**
-	 * @brief Flag indicating if the right input key is pressed.
-	 */
-	static bool right;
-
-	/**
-	 * @brief Flag indicating if the up input key is pressed.
-	 */
+    static bool right;
 	static bool up;
-
-	/**
-	 * @brief Flag indicating if the down input key is pressed.
-	 */
 	static bool down;
-
-	/**
-	 * @brief Flag indicating if the d input key is pressed.
-	 */
-	static bool d;
-
-	/**
-	 * @brief Flag indicating if the r input key is pressed.
-	 */
-	static bool r;
-
-	/**
-	 * @brief Flag indicating if the s input key is pressed.
-	 */
-	static bool s;
-
-	/**
-	 * @brief Flag indicating if the t input key is pressed.
-	 */
-	static bool t;
-
-	/**
-	 * @brief Flag indicating if the control input key is pressed.
-	 */
-	static bool ctrl;
-
-	/**
-	 * @brief Flag indicating if the left control input key is pressed.
-	 */
-	static bool left_ctrl;
-
-	/**
-	 * @brief Flag indicating if the right control input key is pressed.
-	 */
-	static bool right_ctrl;
-
-	/**
-	 * @brief Flag indicating if the left mouse button is clicked.
-	 */
-	static bool left_click;
-
-	/**
-	 * @brief Flag indicating if the 0 input key is pressed.
-	 */
-	static bool n_0;
-
-	/**
-	 * @brief Flag indicating if the 1 input key is pressed.
-	 */
-	static bool n_1;
-
-	/**
-	 * @brief Flag indicating if the 2 input key is pressed.
-	 */
-	static bool n_2;
-
-	/**
-	 * @brief Flag indicating if the 3 input key is pressed.
-	 */
-	static bool n_3;
-
-	/**
-	 * @brief Flag indicating if the 4 input key is pressed.
-	 */
-	static bool n_4;
-
-	/**
-	 * @brief Flag indicating if the enter input key is pressed.
-	 */
-	static bool enter;
-
-	/**
-	 * @brief Flag indicating if the F2 input key is pressed.
-	 */
-	static bool f2;
-
-	/**
-	 * @brief Flag indicating if the space input key is pressed.
-	 */
-	static bool space;
-
 	static bool usingJoystick;
-
-	/**
-	 * @brief Process the input events.
-	 * @param window A pointer to the window object.
-	 */
 	static void Process(void* window);
-
-	/**
-	 * @brief Get the state of the specified input key.
-	 * @param key The input key number.
-	 * @param mode The input mode.
-	 * @return True if the input key is pressed, false otherwise.
-	 */
 	static bool GetInputKey(keyN key, InputKeyEvent mode);
-
 	static bool GetInputKeyPressed(keyN);
-
 	static bool GetInputOnKeyRelease(keyN);
-
 	static bool GetInputOnKeyPress(keyN);
-
-	/**
-	 * @brief Get the state of the specified mouse input.
-	 * @param key The input key number.
-	 * @param mode The input mode.
-	 * @return True if the mouse input is pressed, false otherwise.
-	 */
 	static bool GetInputMouse(keyN key, InputKeyEvent mode);
-
-	/**
-	  @brief Get mouse position in window coordinates. See namespace CoordSys
-	*/
 	static fVec2 GetMousePosition();
 	static float joystickAxis[6];
 };
