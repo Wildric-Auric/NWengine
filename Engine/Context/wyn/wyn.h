@@ -13,6 +13,7 @@ typedef uint64_t	  ui64;
 typedef unsigned char boolean;
 
 #define WYN_RESIZE_CBK_IDX 0
+#define WYN_UPDATE_CBK_IDX 1
 
 typedef struct {
 	int x;
@@ -26,6 +27,7 @@ typedef struct {
 
 typedef struct {
 	boolean should_close;
+    boolean valid;
 } wyn_state;
 
 enum wyn_key_id {
@@ -118,6 +120,7 @@ extern boolean (*wyn_on_key_press)(wyndow* w, int key);
 extern boolean (*wyn_on_key_release)(wyndow* w, int key);
 extern boolean (*wyn_get_mouse_pos)(wyndow* w, wyn_vec2* pos);
 void wyn_rz_cbk_reg(wyndow* w, wyn_rz_callback_proc, void* usr_data);
+void wyn_set_callback(wyndow* w, int cbk_ind, void* proc, void* usr_data);
 #ifdef __cplusplus
 }
 #endif

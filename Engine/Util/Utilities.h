@@ -12,7 +12,7 @@ struct NWFile {
     char name[256];
 };
 
-bool GetNextFile(NWFile* file);
+bool GetNextFile(NWFile* file, const char* root);
 bool GetFirstFile(NWFile* file, const char* path);
 
 bool GetEnvVar(const char*, std::string*);
@@ -92,18 +92,14 @@ std::vector<std::string> GetDirFiles(const std::string& directory, const std::st
  * @return The current working directory
  */
 std::string GetCurrentDir();
-
-/**
- * @brief Get the path of the executable file
- *
- * @return The path of the executable file
- */
 std::string GetExePath();
-std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0");
-std::string SaveAs(const char* type = "Text Files\0*.txt\0*.*\0");
+std::string GetFile(char* exts[], int extsCount);
+std::string SaveAs(char* exts[], int extsCount);
+//std::string GetFile(const char* type = "Text Files\0*.txt\0*.*\0");
+//std::string SaveAs(const char* type = "Text Files\0*.txt\0*.*\0");
 std::string ToSingleBackSlash(const std::string& dir);
 std::string ToDoubleBackSlash(const std::string& dir);
-std::string GetFileName(const std::string& path, std::string* bFilename = nullptr, std::string* bExtension = nullptr, std::string* bRoot = nullptr);
+std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator);
 bool CopyDirectory(const std::string& dest, const std::string& src);
 bool MakeDir(const std::string& path);
 bool MakeFile(const std::string& path);

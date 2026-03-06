@@ -31,12 +31,14 @@ int MapKey(int key) {
         mkc(NWInputKey_Left,       Wyn_Key_LArrow);
         mkc(NWInputKey_Space,      Wyn_Key_Space);
         mkc(NWInputKey_Ret,        Wyn_Key_Ret);
+        mkc(NWInputKey_Del,        Wyn_Key_Del);
+        mkc(NWInputKey_Esc,        Wyn_Key_Esc);
         default: return key;
     }
 #else
     switch(key) {
-        mkc(NWInputKey_LMouse,  NWin::NWIN_KEY_LBUTTON);
-        mkc(NWInputKey_RMouse, NWin::NWIN_KEY_RBUTTON);
+        mkc(NWInputKey_LMouse,     NWin::NWIN_KEY_LBUTTON);
+        mkc(NWInputKey_RMouse,     NWin::NWIN_KEY_RBUTTON);
         mkc(NWInputKey_LShift,     NWin::NWIN_KEY_LSHIFT);
         mkc(NWInputKey_RShift,     NWin::NWIN_KEY_RSHIFT);
         mkc(NWInputKey_Up,         NWin::NWIN_KEY_UP);
@@ -45,6 +47,8 @@ int MapKey(int key) {
         mkc(NWInputKey_Left,       NWin::NWIN_KEY_LEFT);
         mkc(NWInputKey_Space,      NWin::NWIN_KEY_SPACE);
         mkc(NWInputKey_Ret,        NWin::NWIN_KEY_RETURN);
+        mkc(NWInputKey_Del,        NWin::NWIN_KEY_DELETE);
+        mkc(NWInputKey_Esc,        NWin::NWIN_KEY_ESCAPE);
         default: return key;
     }
 #endif

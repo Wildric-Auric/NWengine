@@ -253,6 +253,7 @@ int wyn_linux_create(wyndow* w, wyn_crt_info* crt_inf) {
 	w->handle			  = win;
 	w->extra			  = dat;
 	w->state.should_close = 0;
+    w->state.valid        = 1;
 	memset(w->_callbacks, 0, sizeof(w->_callbacks));
 	memset(w->_callbakcs_usr_data, 0, sizeof(w->_callbakcs_usr_data));
 	memset(w->keyboard.events, 0, sizeof(w->keyboard.events));
@@ -260,6 +261,8 @@ int wyn_linux_create(wyndow* w, wyn_crt_info* crt_inf) {
 	w->keyboard.update_idx = -1;
 	wyn_linux_show(w, 1);
 	wyn_linux_set_title(w, crt_inf->desc);
+    Atom wmDel = XInternAtom(dat->dsp, "WM_DELETE_WINDOW", 0);
+    XSetWMProtocols(dat->dsp, w->handle, &wmDel, 1);
 	return 0;
 }
 
@@ -283,6 +286,14 @@ int wyn_linux_kb_record(wyn_kboard* kb, KeySym c, int event) {
 	kb->update_idx++;
 	kb->update_list[kb->update_idx] = c;
 	return 0;
+}
+
+unsigned long wyn_linux_get_handle(wyndow* w) {
+   return w->handle;
+}
+
+void* wyn_linux_get_disp(wyndow* w) {
+    return (void*)get_lnx(w)->dsp;  
 }
 
 int X11MouseMap(int button) {
@@ -324,6 +335,8 @@ int X11KeyMap(int key) {
 int wyn_linux_update(wyndow* w) {
 	lnx_wyn_data* lnx = get_lnx(w);
 	int			  k;
+    Atom wmDel;
+    wmDel = XInternAtom(lnx->dsp, "WM_DELETE_WINDOW", 0);
 	while(w->keyboard.update_idx != -1) {
 		k = w->keyboard.update_list[w->keyboard.update_idx];
 		w->keyboard.events[k] &= ~Wyn_OnKeyPress;
@@ -334,51 +347,59 @@ int wyn_linux_update(wyndow* w) {
 		XWindowAttributes gwa;
 		XEvent			  event = {0};
 		XNextEvent(lnx->dsp, &event);
+        lnx_call(w->_callbacks[WYN_UPDATE_CBK_IDX], boolean(*)(XEvent*), &event);
 		switch(event.type) {
-		case Expose: {
-			XWindowAttributes attribs;
-			wyn_vec2		  s;
-			XGetWindowAttributes(lnx->dsp, w->handle, &attribs);
-			break;
-		}
-		case ConfigureNotify: {
-			XConfigureEvent ev = event.xconfigure;
-			wyn_vec2		s;
-			s.x = ev.width;
-			s.y = ev.height;
-			if(s.x != lnx->last_metrics.size.x || s.y != lnx->last_metrics.size.y) {
-				lnx_call(w->_callbacks[WYN_RESIZE_CBK_IDX], wyn_rz_callback_proc, w, &s,
-						 w->_callbakcs_usr_data[WYN_RESIZE_CBK_IDX]);
-			}
-			lnx->last_metrics.pos.x	 = ev.x;
-			lnx->last_metrics.pos.y	 = ev.y;
-			lnx->last_metrics.size.x = ev.width;
-			lnx->last_metrics.size.y = ev.height;
-			break;
-		}
-		case KeyPress: {
-			KeySym k = XLookupKeysym(&event.xkey, 0);
-			wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_KeyPressed);
-			break;
-		}
-		case KeyRelease: {
-			KeySym k = XLookupKeysym(&event.xkey, 0);
-			wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_OnKeyRelease);
-			break;
-		}
-        case ButtonPress: {
-            int m = X11MouseMap(event.xbutton.button);
-			wyn_linux_kb_record(&w->keyboard, m, Wyn_KeyPressed);
-            break;
+            case ClientMessage: {
+                if (event.xclient.data.l[0] == wmDel) {
+                    w->state.should_close = 1;
+                    w->state.valid        = 0;
+                }
+                break;
+            }
+            case Expose: {
+                XWindowAttributes attribs;
+                wyn_vec2		  s;
+                XGetWindowAttributes(lnx->dsp, w->handle, &attribs);
+                break;
+            }
+            case ConfigureNotify: {
+                XConfigureEvent ev = event.xconfigure;
+                wyn_vec2		s;
+                s.x = ev.width;
+                s.y = ev.height;
+                if(s.x != lnx->last_metrics.size.x || s.y != lnx->last_metrics.size.y) {
+                    lnx_call(w->_callbacks[WYN_RESIZE_CBK_IDX], wyn_rz_callback_proc, w, &s,
+                             w->_callbakcs_usr_data[WYN_RESIZE_CBK_IDX]);
+                }
+                lnx->last_metrics.pos.x	 = ev.x;
+                lnx->last_metrics.pos.y	 = ev.y;
+                lnx->last_metrics.size.x = ev.width;
+                lnx->last_metrics.size.y = ev.height;
+                break;
+            }
+            case KeyPress: {
+                KeySym k = XLookupKeysym(&event.xkey, 0);
+                wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_KeyPressed);
+                break;
+            }
+            case KeyRelease: {
+                KeySym k = XLookupKeysym(&event.xkey, 0);
+                wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_OnKeyRelease);
+                break;
+            }
+            case ButtonPress: {
+                int m = X11MouseMap(event.xbutton.button);
+                wyn_linux_kb_record(&w->keyboard, m, Wyn_KeyPressed);
+                break;
+            }
+            case ButtonRelease: {
+                int m = X11MouseMap(event.xbutton.button);
+                wyn_linux_kb_record(&w->keyboard, m, Wyn_OnKeyRelease);
+                break;
+            }
+            default:
+                break;
         }
-        case ButtonRelease: {
-            int m = X11MouseMap(event.xbutton.button);
-			wyn_linux_kb_record(&w->keyboard, m, Wyn_OnKeyRelease);
-            break;
-        }
-		default:
-			break;
-		}
 	}
 	return 0;
 }
@@ -391,9 +412,11 @@ int wyn_linux_swap(wyndow* w) {
 
 int wyn_linux_destroy(wyndow* win) {
 	lnx_wyn_data* data = (lnx_wyn_data*)win->extra;
-	glXDestroyWindow(data->dsp, data->glx_win);
-	XDestroyWindow(data->dsp, (Window)win->handle);
-	XCloseDisplay(data->dsp);
+    if (win->state.valid) {
+	    glXDestroyWindow(data->dsp, data->glx_win);
+	    XDestroyWindow(data->dsp, (Window)win->handle);
+	    XCloseDisplay(data->dsp);
+    }
 	wyn_free(lnx_wyn_data, win->extra);
 	win->extra	= 0;
 	win->handle = 0;
@@ -427,8 +450,10 @@ int wyn_linux_glctx_create(wyndow* w, wyn_glctx* glc, wyn_glctx_crt_info* crt_in
 
 void wyn_linux_glctx_destroy(wyn_glctx* glc) {
 	lnx_wyn_data* lnx = get_lnx(glc->owner);
-	glXMakeContextCurrent(lnx->dsp, lnx->glx_win, lnx->glx_win, 0);
-	glXDestroyContext(lnx->dsp, (GLXContext)glc->handle);
+    if (glc->owner->state.valid) {
+	    glXMakeContextCurrent(lnx->dsp, lnx->glx_win, lnx->glx_win, 0);
+	    glXDestroyContext(lnx->dsp, (GLXContext)glc->handle);
+    }
 	glc->handle = 0;
 }
 
@@ -451,8 +476,6 @@ void wyn_linux_glctx_make_current(wyndow* w, wyn_glctx* glc) {
 		return;
 	}
 	glXMakeContextCurrent(lnx->dsp, lnx->glx_win, lnx->glx_win, (GLXContext)glc->handle);
-	glc->handle = 0;
-	glc->owner	= 0;
 }
 
 boolean wyn_linux_key_pressed(wyndow* w, int key) { return w->keyboard.events[key] & Wyn_KeyPressed; }
@@ -495,9 +518,14 @@ boolean (*wyn_on_key_release)(wyndow* w, int key)				  = wyn_linux_on_key_releas
 boolean (*wyn_get_mouse_pos)(wyndow* w, wyn_vec2* pos)            = wyn_linux_get_mouse_pos;
 #endif
 
+
+void wyn_set_callback(wyndow* w, int cbk_ind, void* proc, void* usr_data) {
+    w->_callbacks[cbk_ind] = proc;
+    w->_callbakcs_usr_data[cbk_ind] = usr_data;
+}
+
 void wyn_rz_cbk_reg(wyndow* w, wyn_rz_callback_proc proc, void* usr_data) {
-	w->_callbacks[WYN_RESIZE_CBK_IDX]		   = (void*)proc;
-	w->_callbakcs_usr_data[WYN_RESIZE_CBK_IDX] = usr_data;
+    wyn_set_callback(w, WYN_RESIZE_CBK_IDX, (void*)proc, usr_data);
 }
 
 #ifdef __cplusplus

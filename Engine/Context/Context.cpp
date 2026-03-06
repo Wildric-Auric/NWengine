@@ -63,7 +63,7 @@ void Context::SetFullscreen(bool state) {
 }
 
 #ifdef PLTFRM_LINUX
-static wyn_glctx context;
+wyn_glctx context;
 #else
 static NWin::GlContext context; // TODO::REFACTOR this!!!!
 #endif
@@ -250,7 +250,6 @@ void Context::SetTitle(const char* title) {
 void Context::Destroy() {
 #ifdef PLTFRM_LINUX 
     wyndow* w = (wyndow*)Context::window;
-    wyn_glctx_make_current(w, &context);
     wyn_glctx_destroy(&context);
     wyn_destroy(w);
     delete w;

@@ -34,6 +34,43 @@ std::string ToDoubleBackSlash(const std::string& dir) {
 	return ret;
 }
 
+std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator) {
+	std::string filename  = "";
+	std::string extension = "";
+	std::string root	  = "";
+	bool		state	  = 0;
+	bool		slash	  = 0;
+	for(auto chr : path) {
+		if(chr == '.') {
+			filename += extension;
+			extension = "";
+			state	  = 1;
+			slash	  = 0;
+		}
+		if(chr == '\\' || chr == '/') {
+			if(slash)
+				continue;
+			root += filename + extension + separator;
+			filename  = "";
+			extension = "";
+			slash	  = 1;
+			continue;
+		}
+		slash = 0;
+		if(!state)
+			filename += chr;
+		else
+			extension += chr;
+	}
+	if(bFilename != nullptr)
+		*bFilename = filename;
+	if(bExtension != nullptr)
+		*bExtension = extension;
+	if(bRoot != nullptr)
+		*bRoot = root;
+	return filename + extension;
+}
+
 #ifdef __WIN32__
 
 #include <shlobj.h>
@@ -123,7 +160,7 @@ std::vector<std::string> GetDirFiles(const std::string& directory, const std::st
 	return dirList;
 }
 
-bool GetNextFile(NWFile* file) {
+bool GetNextFile(NWFile* file, const char*) {
     WIN32_FIND_DATAA fd; 
     bool ret;
     if (!file->handle || file->handle == INVALID_HANDLE_VALUE) return 0; 
@@ -158,8 +195,30 @@ std::string GetExePath() {
 	return std::string(path);
 }
 
-std::string GetFile(const char* type) {
-	char		 filename[MAX_PATH];
+int WinPrepType(char* outExt, char* filters[], int filterCount) {
+   int i, j;
+   int p = 0;
+   outExt[0] = 0;
+   ++p;
+   for (i = 0; i < filterCount; ++i) {
+       j = 0;
+       while ((*filters)[j]) {
+            outExt[p] = (*filters)[j];
+            ++p; ++j;
+       }
+       outExt[p] = 0;
+       ++p;
+       ++filters;
+   }
+   outExt[p] = 0;
+   return p+1;
+}
+
+std::string GetFile(char* exts[], int extsCount) {
+	char* filename = (char*)malloc(MAX_PATH);
+    char* type     = (char*)malloc(64);
+    type[0] = 0; filename = 0;
+    WinPrepType(type, exts, extsCount);
 	OPENFILENAME ofn;
 	ZeroMemory(&filename, sizeof(filename));
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -170,15 +229,20 @@ std::string GetFile(const char* type) {
 	ofn.nMaxFile	= MAX_PATH;
 	ofn.lpstrTitle	= "Select a File";
 	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if(GetOpenFileName(&ofn)) {
-		return std::string(filename);
+    std::string ret = "";
+	if(!GetOpenFileName(&ofn)) {
+	     ret = std::string(filename);
 	}
-	return "";
+    free(type);
+    free(filename);
+	return ret;
 }
 
 std::string SaveAs(const char* type) {
-	char		 filename[MAX_PATH];
+	char* filename = (char*)malloc(MAX_PATH);
+    char* type     = (char*)malloc(64);
+    type[0] = 0; filename = 0;
+    WinPrepType(type, exts, extsCount);
 	OPENFILENAME ofn;
 	ZeroMemory(&filename, sizeof(filename));
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -189,11 +253,13 @@ std::string SaveAs(const char* type) {
 	ofn.nMaxFile	= MAX_PATH;
 	ofn.lpstrTitle	= "Save as";
 	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
+    std::string ret = "";
 	if(GetSaveFileName(&ofn)) {
-		return std::string(filename);
+        ret = std::string(filename);
 	}
-	return "";
+    free(type);
+    free(filename);
+	return ret;
 }
 
 bool CopyDirectory(const std::string& dest, const std::string& src) {
@@ -225,44 +291,6 @@ bool MakeFile(const std::string& path) {
 		return 0;
 	CloseHandle(h);
 	return 1;
-}
-
-// Returns filename + extension
-std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator) {
-	std::string filename  = "";
-	std::string extension = "";
-	std::string root	  = "";
-	bool		state	  = 0;
-	bool		slash	  = 0;
-	for(auto chr : path) {
-		if(chr == '.') {
-			filename += extension;
-			extension = "";
-			state	  = 1;
-			slash	  = 0;
-		}
-		if(chr == '\\' || chr == '/') {
-			if(slash)
-				continue;
-			root += filename + extension + separator;
-			filename  = "";
-			extension = "";
-			slash	  = 1;
-			continue;
-		}
-		slash = 0;
-		if(!state)
-			filename += chr;
-		else
-			extension += chr;
-	}
-	if(bFilename != nullptr)
-		*bFilename = filename;
-	if(bExtension != nullptr)
-		*bExtension = extension;
-	if(bRoot != nullptr)
-		*bRoot = root;
-	return filename + extension;
 }
 
 bool FileCopy(const std::string& dest, const std::string& src, bool failIfExists) {
@@ -392,10 +420,10 @@ bool GetFirstFile(NWFile* file, const char* path) {
     int res;
     fd = opendir(path);
     file->handle = fd;
-    return GetNextFile(file);
+    return GetNextFile(file, path);
 }
 
-bool GetNextFile(NWFile* file) {
+bool GetNextFile(NWFile* file, const char* root) {
     stat_t st;
     dir_entry* ent;
     int res;
@@ -404,10 +432,22 @@ bool GetNextFile(NWFile* file) {
         return 0;
     ent = readdir(fd);
     if (!ent) {
+        closedir(fd);
         file->handle = 0;
         return 0;
     }
-    res = stat(ent->d_name, &st);
+    char* stPath = (char*)malloc(512);
+    int rl = strlen(root);
+    int nl = strlen(ent->d_name);
+    memcpy(stPath, root, rl);
+    if (rl && stPath[rl-1] != '/') {
+        stPath[rl] = '/';
+        rl++;
+    }
+    memcpy(stPath + rl, ent->d_name, nl);
+    stPath[rl + nl] = 0;
+    res = stat(stPath, &st);
+    free(stPath);
     file->isDir = !res && st.st_mode & S_IFDIR;
     memcpy(file->name, ent->d_name, 256);
     return 1;
@@ -417,7 +457,7 @@ bool GetNextFile(NWFile* file) {
 void DllHandle::Load(const char* filename) {
     h = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
     if (!h) {
-		printf("Could not load Shared\n");
+		printf("Could not load Shared Library: %s\n", filename);
     }
 }
 	
@@ -473,16 +513,84 @@ bool Exec(const std::string& cmd, char* env) {
     return !execl("/bin/sh", "sh", "-c", cmd.c_str(), 0);
 }
 
-std::string GetFile(const char* type) {
-    char val[512];
-    scanf("Input Path: %s", val);
-    return std::string(val); 
+int GetFileScanf(char* val, int maxSize, bool save) {
+    val[0] = 0;
+    printf("-----xxxx-----\n%s", save ? "Save As(Path): " : "Select a file(Path): " );
+    fgets(val, maxSize, stdin);
+    printf("\n-----Input End-----\n");
+    std::string ret = std::string(val);
+    if (ret.size() && ret.back() == '\n') ret.pop_back();
+    return ret.size(); 
 }
 
-std::string SaveAs(const char* type) {
-    char val[512];
-    scanf("Input Path: %s", val);
-    return std::string(val); 
+int KDEDialog(char* cmd, char* filters[], int filterCount, bool save) {
+    static const char* baseSaveKDE = save ? "kdialog --title \"Save as\" --getsavefilename ./ \"" : "kdialog --title \"Select a file\" --getopenfilename ./ \"";
+    int i,j,p;
+    p = 0;
+    while (baseSaveKDE[p]) {
+        cmd[p] = baseSaveKDE[p];
+        ++p;
+    }
+    for (i = 0; i < filterCount; ++i) {
+        j = 0;
+        while ((*filters)[j]) {
+            cmd[p] = (*filters)[j];
+            ++p; ++j;
+        }
+        cmd[p] = ' ';
+        p++;
+        filters++;
+    }
+    cmd[p]   = '\"';
+    cmd[p+1] = 0;
+    return p;
+}
+
+int PipeExAndRead(char* buff, char* cmd) {
+    FILE* fd = popen(cmd, "r");
+    int i = 0;
+    int res = 1;
+    if (!fd)
+        return 0;
+    while (1) {
+        res = fread(&buff[i], 1, 1, fd);
+        if (!res || res == -1)
+            break;
+        i++;
+    }
+    buff[i] = 0;
+    pclose(fd);
+    return i;
+}
+
+
+std::string LinuxDialog(char* exts[], int extsCount, bool save) {
+    char* dsk = getenv("XDG_CURRENT_DESKTOP");
+    char* cmd = (char*)malloc(1024);
+    char* path= (char*)malloc(512);
+    cmd[0]    = 0;
+    path[0]   = 0;
+    if (!strcmp("KDE", dsk)) {
+        KDEDialog(cmd, exts, extsCount, save);
+    }
+    if (cmd[0] != 0) {
+        PipeExAndRead(path, cmd);
+    }
+    else {
+        GetFileScanf(path, 512, save);
+    }
+    std::string ret = std::string(path);
+    free(cmd);
+    free(path);
+    return ret;
+}
+
+std::string GetFile(char* exts[], int extsCount) {
+    return LinuxDialog(exts, extsCount, 0);
+}
+
+std::string SaveAs(char* exts[], int extsCount) {
+    return LinuxDialog(exts, extsCount, 1);
 }
 
 #endif //__WIN32__
