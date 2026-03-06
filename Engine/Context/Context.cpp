@@ -63,7 +63,7 @@ void Context::SetFullscreen(bool state) {
 }
 
 #ifdef PLTFRM_LINUX
-wyn_glctx context;
+static wyn_glctx context;
 #else
 static NWin::GlContext context; // TODO::REFACTOR this!!!!
 #endif
