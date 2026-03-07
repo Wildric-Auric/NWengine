@@ -2,7 +2,9 @@
 
 #include "Maths.h"
 
-extern int print(const char* format, ...);
+extern int printx(const char* format, ...);
+extern int (*print)(const char* format, ...);
+
 // For now using just printf, should output to console later
 #define NW_LOG_ERROR(str)	print("%s", str)
 #define NW_LOG_ERRORI(str)	print("%d", str)
@@ -32,6 +34,8 @@ extern int print(const char* format, ...);
 			if(a != GL_NO_ERROR) {                                                                                               \
 				NW_LOG_ERROR("\n---------------------\nOpenGL ERROR: ");                                                         \
 				NW_LOG_ERRORI(a);                                                                                                \
+				NW_LOG_ERROR("; at func: ");                                                                                     \
+				NW_LOG_ERROR(__func__);                                                                                         \
 				NW_LOG_ERROR("; at line: ");                                                                                     \
 				NW_LOG_ERRORI(__LINE__);                                                                                         \
 				NW_LOG_ERROR("; at file: ");                                                                                     \
@@ -63,7 +67,14 @@ extern int print(const char* format, ...);
 	}
 #endif
 
+#ifdef PLTFRM_WIN32
 #define NW_AL_CALL(code) NW_AL_TEST(code)
+#define NW_AL_CALL_VOID(code) code
+#else
+#define NW_AL_CALL(code) 
+#define NW_AL_CALL_VOID(code)
+#endif
+
 // arch is always an integer type with size of pointer of the architecture
 typedef long arch;
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 
+#define INVALID_UNIFORM_LOCATION -1
 /**
  * @brief Struct representing the text of a shader.
  */
@@ -107,6 +108,8 @@ class Shader : public Asset {
 	void SetUniformArray2f(const char* name, float* value, int size);
 
 	void SetUniformArray2f(int loc, float* value, int size);
+
+	int GetUniformLoc(const char*);
 
 	Asset* GetFromCache(void* identifier) override;
 

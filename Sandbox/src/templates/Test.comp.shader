@@ -1,8 +1,8 @@
 #pragma compute
 #version 430 core
-#pragma def LOCAL_SIZE_X LocalSizeX
-#pragma def LOCAL_SIZE_Y LocalSizeY
-#pragma def LOCAL_SIZE_Z LocalSizeZ
+#pragma define LOCAL_SIZE_X LocalSizeX
+#pragma define LOCAL_SIZE_Y LocalSizeY
+#pragma define LOCAL_SIZE_Z LocalSizeZ
 
 layout(local_size_x = LOCAL_SIZE_X, local_size_y = LOCAL_SIZE_Y, local_size_z = LOCAL_SIZE_Z) in;
 

@@ -4,7 +4,7 @@
 bool InputStream::Open(const char* path, bool isBinary) {
 	std::fstream& str = *new std::fstream();
 	_str			  = &str;
-	str.open(path, (isBinary ? std::ios::binary : 0) | std::ios::in);
+	str.open(path, (isBinary ? std::ios::binary : (std::ios::openmode)0) | std::ios::in);
 	return str.is_open();
 }
 

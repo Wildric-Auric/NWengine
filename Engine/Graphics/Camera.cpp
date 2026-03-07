@@ -56,26 +56,35 @@ void Camera::Capture() { /// Captures  current scene (see currentScene variable 
 
 FrameBuffer* Camera::GetFbo() { return &fbo; }
 
+MSAAValue Camera::GetMSAAValue() {
+    return fbo._msaaVal;
+}
+
+TexType_Exp Camera::GetTexType() {
+    return type;
+}
+
 Camera::Camera(GameObject* go) {
 	attachedObject = go;
 	position	   = Vector2<int>(0, 0);
 };
 
-void Camera::ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa) {
-	if((sizeX == size.x) && (sizeY == size.y) && (this->_msaa == msaa))
+void Camera::ChangeOrthoFull(float sizeX, float sizeY, MSAAValue msaa, TexType_Exp ptype) {
+	if ((sizeX == size.x) && (sizeY == size.y) && (fbo._msaaVal== msaa) && type == ptype)
 		return;
 	size.x		   = sizeX;
 	size.y		   = sizeY;
 	viewPortSize.x = sizeX;
 	viewPortSize.y = sizeY;
-	_msaa		   = msaa;
-
+    type           = ptype;
 	fbo.Delete();
-	fbo.SetUp(size, msaa);
+	fbo.SetUp(size, msaa, type);
 	OrthorgraphicMat(projectionMatrix, -sizeX * 0.5f, sizeX * 0.5f, -sizeY * 0.5f, sizeY * 0.5f);
 }
 
-void Camera::ChangeOrtho(float sizeX, float sizeY) { ChangeOrthoWithMSAA(sizeX, sizeY, this->_msaa); }
+void Camera::ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa) { ChangeOrthoFull(sizeX, sizeY, msaa, type); }
+
+void Camera::ChangeOrtho(float sizeX, float sizeY) { ChangeOrthoFull(sizeX, sizeY, GetMSAAValue(), GetTexType()); }
 
 Camera* Camera::ActiveCamera = nullptr;
 

@@ -1,5 +1,6 @@
 #include "ScriptingComp.h"
 
+#ifdef __WIN32__
 DynamicScript::DynamicScript(GameObject* obj) { attachedObject = obj; }
 
 void DynamicScript::Load(const char* path) {
@@ -27,3 +28,4 @@ void DynamicScript::Unload() {
 	EraseRes<DllScript>(id);
 	dllScript = 0;
 }
+#endif

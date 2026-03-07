@@ -58,14 +58,14 @@ static void	   Init() {
 	   }
 
 	   randTex._size = {im.width, im.height};
-	   randTex._GPUGen(im.pixelBuffer, TexChannelInfo::NW_RGB);
+	   randTex._GPUGen(im.pixelBuffer, TexChannelInfo::NW_RGB, TexType_Exp_rgba16f);
 	   GameObject& obj = s.AddObject();
 	   obj.AddComponent<Transform>();
 	   Sprite* sp = obj.AddComponent<Sprite>();
 	   sp->SetTexture(&randTex);
 	   sp->SetShader(NW_DEFAULT_SHADER_COLORED);
 	   sp->GetShader()->Use();
-	   sp->GetShader()->SetUniform3f("uCol", 1.1, 1.0, 1.0);
+	   sp->GetShader()->SetUniform4f("uCol", 1.1, 1.0, 1.0, 1.0);
 
 	   for(Wave* w : wc._data) {
 		   delete(ValueNoise*)w;

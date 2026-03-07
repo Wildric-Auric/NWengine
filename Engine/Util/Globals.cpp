@@ -18,10 +18,12 @@ template class Matrix3<float>;
 template class Matrix4<int>;
 template class Matrix4<float>;
 
-int print(const char* format, ...) {
+int printx(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
 	int result = vprintf(format, args);
 	va_end(args);
 	return result;
 }
+
+int (*print)(const char* format, ...) = printx;

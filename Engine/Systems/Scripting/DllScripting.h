@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#ifdef __WIN32__
+
 typedef std::string DllScriptIdentifier;
 
 class DllScript : public Asset {
@@ -26,3 +28,5 @@ class DllScripting {
 	static bool				 Init();
 	static void				 Destroy();
 };
+
+#endif //__WIN32__

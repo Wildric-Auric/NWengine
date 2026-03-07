@@ -1,3 +1,4 @@
 @echo off
-cd %~dp0%
+pushd %~dp0%
 start cmd /k ..\Build\Sandbox.exe
+popd

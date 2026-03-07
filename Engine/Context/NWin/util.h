@@ -35,8 +35,9 @@ typedef unsigned char uchar;
 typedef unsigned int  uint;
 
 struct Vec2 {
-	int x = 0;
-	int y = 0;
+	int x;
+	int y;
+    Vec2(int xx = 0, int yy = 0) { x = xx; y = yy;}
 };
 
 struct Rect {

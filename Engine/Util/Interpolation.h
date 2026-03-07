@@ -70,11 +70,9 @@
  */
 class Interpolator {
   public:
-	struct {
-		float source;		/**< The source value of the interpolation. */
-		float target;		/**< The target value of the interpolation. */
-		float currentValue; /**< The current value of the interpolation. Internal*/
-	};
+    float source;		/**< The source value of the interpolation. */
+    float target;		/**< The target value of the interpolation. */
+    float currentValue; /**< The current value of the interpolation. Internal*/;
 
 	float duration = 0.0f; /**< The duration of the interpolation in seconds. */
 
@@ -141,11 +139,9 @@ class BezierInterpolator : public Interpolator {
 };
 
 class BezierInterpolator2 {
-	struct {
-		fVec2 source;
-		fVec2 target;
-		fVec2 currentValue;
-	};
+    fVec2 source;
+    fVec2 target;
+    fVec2 currentValue;
 	float duration;
 
 	fVec2 controlPoints[2];

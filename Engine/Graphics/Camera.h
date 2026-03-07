@@ -1,6 +1,6 @@
 #pragma once
 #include "ComponentTypes.h"
-#include "Framebuffer.h"
+#include "FrameBuffer.h"
 #include "GameObject.h"
 #include "Image.h"
 #include "Maths.h"
@@ -31,7 +31,6 @@ class Camera : public GameComponent {
 	fVec3						   clearColor = fVec3(0.0, 0.0, 0.0); /**< The clear color of the camera. */
 	float						   alpha	  = 1.0f;				  /**< The alpha value of the camera. */
 	std::unordered_map<int, fVec4> clearCols;
-	MSAAValue					   _msaa	  = NW_MSx1;
 	bool						   _wireframe = 0;
 
 	void _ClearAtts();
@@ -76,6 +75,7 @@ class Camera : public GameComponent {
 	 * @param msaa The multisample value.
 	 */
 	void ChangeOrthoWithMSAA(float sizeX, float sizeY, MSAAValue msaa);
+	void ChangeOrthoFull(float sizeX, float sizeY, MSAAValue msaa, TexType_Exp type);
 
 	/**
 	 * @brief Sets the general clear value.
@@ -95,6 +95,8 @@ class Camera : public GameComponent {
 
 	fVec2 GetPosition();
 	fVec2 GetSize();
+    MSAAValue GetMSAAValue();
+    TexType_Exp GetTexType();
 
 	FrameBuffer* GetFbo();
 	/**
@@ -102,26 +104,18 @@ class Camera : public GameComponent {
 	 */
 	void ResetClearColors();
 
-	/**
-	 * @brief Moves the camera to the target position with interpolation.
-	 * @param target The target position to move the camera to.
-	 * @param interpolationTime The time taken for the interpolation.
-	 */
 	void MoveTo(Vector2<int> target, float interpolationTime);
 
-	/**
-	 * @brief Uses the camera.
-	 */
 	void Use();
 
 	fVec2 position = fVec2(0.0f, 0.0f); /**< The position of the camera. */
 	float rotation = 0.0f;				/**< The rotation of the camera. */
 	float zoom	   = 1.0;				/**< The zoom level of the camera. */
 
+    TexType_Exp  type = TexType_Exp_rgba16f; 
 	FrameBuffer	 fbo;  /**< The frame buffer object of the camera. */
 	FrameBuffer* lfbo; // last bound before capture
 
 	static Camera* GetActiveCamera();
-
-	static Camera* ActiveCamera; /**< The active camera. */
+	static Camera* ActiveCamera;
 };

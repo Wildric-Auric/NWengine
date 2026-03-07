@@ -30,7 +30,7 @@ NW_PREFIX const char* NWengineGetVersionString() { return NWVersionString; }
 NW_PREFIX void NWengineGetVersion(NWengineVersion* outVers) {
 	const char* versionStr = NWengineGetVersionString();
 	const char* cur		   = versionStr;
-	if(cur == '\0')
+	if(!cur)
 		return;
 
 	std::string temp = "";
@@ -102,26 +102,30 @@ NW_PREFIX int NWengineInit() {
 	return 0;
 }
 
+NW_PREFIX void NWengineStep() {
+    NWTime::Init();
+    // Initializing imgui here for example
+    NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameBegin)
+    // Clearing the context
+    Context::Clear();
+    Camera::UpdateActiveCamera();
+    Scene::UpdateActiveScene();
+    // Any rendering should be done here
+    NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameIntermediate)
+    // Updating imgui for example
+    NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameEnd)
+
+    Inputs::Process(Context::window);
+    Context::Update();
+    UISys::Update();
+
+    // Calculate fps
+    NWTime::Update();
+}
+
 NW_PREFIX void NWengineLoop() {
 	while(!Context::ShouldClose()) {
-		NWTime::Init();
-		// Initializing imgui here for example
-		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameBegin)
-		// Clearing the context
-		Context::Clear();
-		Camera::UpdateActiveCamera();
-		Scene::UpdateActiveScene();
-		// Any rendering should be done here
-		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameIntermediate)
-		// Updating imgui for example
-		NW_CALL_EX(ON_MAIN_CALL_LOCATION::FrameEnd)
-
-		Inputs::Process(Context::window);
-		Context::Update();
-		UISys::Update();
-
-		// Calculate fps
-		NWTime::Update();
+        NWengineStep();
 	}
 }
 

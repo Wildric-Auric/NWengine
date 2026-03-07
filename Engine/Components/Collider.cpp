@@ -2,6 +2,10 @@
 #include "Components.h"
 #include "Maths.h"
 
+
+ui32 _inf   = 0x7F800000;
+ui32 _minf  = 0xFF800000;
+
 Collider::Collider(GameObject* go) {
 	this->attachedObject = go;
 	Start();
@@ -41,14 +45,14 @@ fVec2 Collider::GetPosition() {
 fVec2 Collider::GetEdgePosition(int index) { return GetPosition() + this->edges[index]; }
 
 bool Collider::Sat(Collider* other, fVec2* depthBuffer) {
-	float depth = INFINITY;
+	float depth = *(float*)&_inf;
 	for(int i = 0; i < this->edges.size() - 1; ++i) {
 		fVec2 side	 = GetEdgePosition((i + 1) % edges.size()) - GetEdgePosition(i);
 		fVec2 normal = fVec2(side.y, -side.x).normalize();
-		float minn	 = INFINITY;
-		float maxx	 = -INFINITY;
-		float min0	 = INFINITY;
-		float max0	 = -INFINITY;
+		float minn	 = *(float*)&_inf;
+		float maxx	 = *(float*)&_minf;
+		float min0	 = *(float*)&_inf;
+		float max0	 = *(float*)&_minf;
 
 		for(int j = 0; j < this->edges.size(); ++j) { // TODO::Improve this loop
 			fVec2 vec  = GetEdgePosition(j) - GetEdgePosition(i);
@@ -122,10 +126,10 @@ bool Collider::isInside(const fVec2& point) {
 }
 
 float CircleCollider::Sat(const fVec2& axis, const fVec2& origin, Collider* other) {
-	float minn = INFINITY;
-	float maxx = -INFINITY;
-	float min0 = INFINITY;
-	float max0 = -INFINITY;
+	float minn = *(float*)&_inf;
+	float maxx = *(float*)&_minf;
+	float min0 = *(float*)&_inf;
+	float max0 = *(float*)&_minf;
 	// Project polygon and find min max
 	for(int j = 0; j < other->edges.size(); ++j) {
 		fVec2 vec  = other->GetEdgePosition(j) - origin;
@@ -148,10 +152,10 @@ float CircleCollider::Sat(const fVec2& axis, const fVec2& origin, Collider* othe
 
 bool CircleCollider::isColliding(Collider* other, fVec2* depthBuffer) {
 
-	float depth = INFINITY;
+	float depth = *(float*)&_inf;
 	fVec2 tmp;
 	int	  nearestEdge = -1;
-	float nearestDist = INFINITY;
+	float nearestDist = *(float*)&_inf;
 
 	if(depthBuffer == 0)
 		depthBuffer = &tmp;

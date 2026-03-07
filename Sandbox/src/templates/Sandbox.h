@@ -3,6 +3,7 @@
 #include "NWengine.h"
 #include "RenderingPipeline.h"
 #include "Scene.h"
+#include "NWTime.h"
 
 RenderingPipeline		rpline;
 NWPPFX::Bloom			bloomTst;

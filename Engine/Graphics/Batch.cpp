@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include "Camera.h"
 
+#include <cstring>
+
 // TODO::Implement static batch
 
 /*Each vertex has 36 byte of data :
@@ -175,11 +177,16 @@ bool Batch::Render(GameObject* go, float* stride) {
 	*(stride + 4 * strideSize - 1) = (float)objSlot;
 	// Copying strides into vertices vector
 	if(vertices.size() < offset + strideSize * 4) {
-		for(int i = 0; i < strideSize * 4; vertices.push_back(stride[i++]))
-			;
-	} else
-		for(int i = 0; i < strideSize * 4; vertices[offset + i] = stride[i++])
-			;
+		for(int i = 0; i < strideSize * 4; ++i) {
+            vertices.push_back(stride[i]);
+        }
+	} 
+	else {
+		for(int i = 0; i < strideSize * 4; ++i) {
+            vertices[offset + i] = stride[i];
+        }
+	}
+	
 
 	offset += Batch::strideSize * 4; // update offset
 	// call sprite draw only once if dynamic batch so that is is hadnled by batch later

@@ -1,4 +1,5 @@
 #include "Wave.h"
+#include <math.h>
 
 static constexpr float dpi	= 2.0 * PI;
 static constexpr float idpi = 0.5 / PI;
@@ -83,11 +84,8 @@ float WaveComposer::Evaluate(const float x, const float y) {
 	return value;
 }
 
-constexpr uint32 NWLcg(uint32 seed) { return seed * 1664525u + 1013904223u; }
 
-constexpr uint64 NWLcg(uint64 seed) { return seed * 1664525u + 1013904223u; };
-
-constexpr uint32 NWSplitMixI32(uint32 x) {
+uint32 NWSplitMixI32(uint32 x) {
 	x += 0x9e3779b9;
 	x ^= x >> 16;
 	x *= 0x85ebca6b;
@@ -98,19 +96,17 @@ constexpr uint32 NWSplitMixI32(uint32 x) {
 }
 
 // https://prng.di.unimi.it/splitmix64.c
-constexpr uint64 NWSplitMixI64(uint64 x) {
+uint64 NWSplitMixI64(uint64 x) {
 	uint64 z = x + 0x9e3779b97f4a7c15;
 	z		 = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
 	z		 = (z ^ (z >> 27)) * 0x94d049bb133111eb;
 	return z ^ (z >> 31);
 }
 
-constexpr uint32 NWSplitMix(uint32 x) { return NWSplitMixI32(x); }
-constexpr uint64 NWSplitMix(uint64 x) { return NWSplitMixI64(x); }
-constexpr uint32 NWLcgI32(uint32 seed) { return NWLcg(seed); }
-constexpr uint64 NWLcgI64(uint64 seed) { return NWLcg(seed); }
+uint32 NWSplitMix(uint32 x) { return NWSplitMixI32(x); }
+uint64 NWSplitMix(uint64 x) { return NWSplitMixI64(x); }
 
-constexpr uint32 NWFnva_2UI32_To_1UI32(uint32 a, uint32 b) {
+uint32 NWFnva_2UI32_To_1UI32(uint32 a, uint32 b) {
 	const uint32 FNV_OFFSET_BASIS = 2166136261u;
 	const uint32 FNV_PRIME		  = 16777619u;
 	uint32		 hash			  = FNV_OFFSET_BASIS;

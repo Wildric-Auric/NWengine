@@ -62,7 +62,7 @@ bool Renderer::_DrawPrep() {
 	cam->ChangeOrtho(nativeSize.x, nativeSize.y);
 	cam->Update();
 
-	sprite->SetTexture(&target->fbo.GetAtt(0).tex);
+	sprite->texture = &target->fbo.GetAtt(0).tex;
 	sprite->texture->SetMaxFilter(_magFilter);
 	sprite->texture->SetMinFilter(_minFilter);
 	cam->viewPortSize.x = cam->size.x;
@@ -102,7 +102,6 @@ void Renderer::CaptureOnCamFrame() {
 	cam->Use();
 	cam->fbo.Bind();
 	Context::SetViewPort(0, 0, cam->viewPortSize.x, cam->viewPortSize.y);
-	Context::Clear(cam->clearColor.x, cam->clearColor.y, cam->clearColor.z, 1.0);
 	componentContainer.Draw();
 	cam->fbo.Unbind();
 

@@ -2,7 +2,6 @@
 setlocal
 
 set "BASE=%~dp0.."
-
 set "OUTDIR=%BASE%\Template"
 set "LIBDIR=%OUTDIR%\lib"
 set "HDRDIR=%OUTDIR%\include"

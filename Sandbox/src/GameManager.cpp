@@ -1,7 +1,6 @@
 #include "Asset.h"
 #include "DefaultAssets.h"
 #include "Inputs.h"
-#include "Keyboard.h"
 #include "NWTime.h"
 #include "RenderingPipeline.h"
 #include "Scene.h"
@@ -13,7 +12,6 @@
 	GameObject& variable = s->AddObject();                                                                                       \
 	s->Rename(name, &variable)
 
-DynamicScript* dynScr;
 void		   bg(int offset) {
 	  Scene*	  s	  = Scene::GetCurrent();
 	  GameObject& bg  = s->AddObject<Transform, Sprite>("Bg0");

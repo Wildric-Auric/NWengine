@@ -1,6 +1,7 @@
 #include "RenderingPipeline.h"
 #include "Batch.h"
 #include "Sprite.h"
+#include <math.h>
 
 std::string vertexShaderSrc =
 	R"V0G0N( 
@@ -76,17 +77,15 @@ std::string thresholdShaderSrc =
 std::string combineShaderSrc =
 	R"V0G0N(        
         #pragma fragment
-        #version 330 core
-        #pragma def MAX_TEX MaxTexNum 
-
-        uniform sampler2D uTex[MAX_TEX];
+        #version 420 core
+        #pragma define MaxTex MaxTexNum 
+        uniform sampler2D uTex[MaxTex];
         uniform sampler2D uTex0;
         uniform int uCascadeNum;
 
         in vec2 uv;
         
         out vec4 FragColor;
-        
         void main() {
             float contrib = 0.5;
             vec3 c = texture(uTex0,uv).xyz ;
@@ -103,7 +102,6 @@ std::string tonemappingShaderSrc =
 	R"V0G0N(        
         #pragma fragment
         #version 330 core
-        #pragma def MAX_TEX MaxTexNum 
 
         uniform sampler2D uTex0;
 

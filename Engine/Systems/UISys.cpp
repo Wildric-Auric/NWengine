@@ -17,7 +17,7 @@ fVec2		  UISys::curPos;
 bool		  UISys::clickEvent			  = 0;
 bool		  UISys::clickContinuousEvent = 0;
 bool		  UISys::isResposive		  = 1;
-NWin::Key	  UISys::clickKey			  = NWin::Key::NWIN_KEY_LBUTTON;
+int           UISys::clickKey			  = NWInputKey_LMouse;
 UIWindow*	  UISys::focusedWindow		  = 0;
 UIWindow*	  UISys::topMostSelected	  = 0;
 UIWindow*	  UISys::hoveredWindow		  = 0;
@@ -44,7 +44,6 @@ int64 UISys::GetAvailableLayer() {
 void UISys::Update() {
 	if(!isResposive)
 		return;
-	NWin::Window* win = ((NWin::Window*)(Context::window));
 	curPos			  = Inputs::GetMousePosition();
 	fVec2 scr;
 	Context::GetWinDrawAreaSize(&scr);
@@ -56,7 +55,6 @@ void UISys::Update() {
 		UIWindow* win;
 		int64	  refLayer;
 	};
-
 	if(clickEvent && topMostSelected == 0) {
 		UnFocus();
 	}
@@ -86,7 +84,10 @@ void UISys::Update() {
 	bool iswinfr = 1;
 	if(focusedWindow)
 		iswinfr = focusedWindow->GetState() == 0;
+#ifdef PLTFRM_WIN32 
+	NWin::Window* win = ((NWin::Window*)(Context::window));
 	win->setCursor(NWin::CursorIcon::ARROW);
+#endif
 	if(focusedWindow) {
 		UIWindowStateField st = focusedWindow->GetState();
 		bool			   we = st & (Window_State_ResizeXL | Window_State_ResizeXR);
@@ -95,6 +96,7 @@ void UISys::Update() {
 		bool			   nw = (st & Window_State_ResizeXL) && (st & Window_State_ResizeYU);
 		bool			   se = (st & Window_State_ResizeXR) && (st & Window_State_ResizeYD);
 		bool			   sw = (st & Window_State_ResizeXL) && (st & Window_State_ResizeYD);
+#ifdef PLTFRM_WIN32 
 		if(ne || sw)
 			win->setCursor(NWin::CursorIcon::RESIZE_DIAG_RIGHT);
 		else if(nw || se)
@@ -103,11 +105,14 @@ void UISys::Update() {
 			win->setCursor(NWin::CursorIcon::RESIZE_HORIZONTAL);
 		else if(ns)
 			win->setCursor(NWin::CursorIcon::RESIZE_VERT);
+#endif
 	}
 	if(hoveredWindow) {
 		int cur = hoveredWindow->IsCursorOnResize();
 		if(iswinfr && cur != 0) {
+#ifdef PLTFRM_WIN32 
 			win->setCursor((NWin::CursorIcon)cur);
+#endif
 		}
 	}
 }

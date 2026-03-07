@@ -2,7 +2,7 @@
 
 #include "Components.h"
 #include "Script.h"
-#include "nwin/timer.h"
+#include "timer.h"
 
 #define BG_LAYER	 500
 #define TREE_LAYER	 5

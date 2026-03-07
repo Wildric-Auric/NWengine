@@ -1,3 +1,6 @@
+
+#ifdef __WIN32__
+
 #include "DllScripting.h"
 #include "Utilities.h"
 
@@ -57,3 +60,5 @@ bool DllScripting::CompileDll(const std::vector<std::string>& srcFile, const cha
 bool DllScripting::Init() { return GetVcVarsEnv(vcVarsEnv); }
 
 void DllScripting::Destroy() {}
+
+#endif //__WIN32__

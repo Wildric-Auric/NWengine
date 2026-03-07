@@ -17,10 +17,12 @@ workspace "NWengine"
     objdir    "%{wks.location}/Bin/objs"
     defines {"GLEW_STATIC"}
     characterset("MBCS")
+    filter "system:windows"
     buildoptions { "/EHsc"}
+    filter {}
     warnings "Off"
 
-    project "NWEngineCore"
+    project "NWengineCore"
                     kind "StaticLib"
                     includedirs {
                         "./",
@@ -32,6 +34,7 @@ workspace "NWengine"
                     }
                     files {
                         "Engine/**.cpp",
+                        "Engine/**.c",
                         "Engine/**.h",
                         "premake5.lua"
                     }
@@ -40,7 +43,7 @@ workspace "NWengine"
                     filter "configurations:*Release*"
                         targetname ("NWengineCore%{cfg.platform:sub(2)}")
 
-    project "NWEngineCoreUnityBuild"
+    project "NWengineCoreUnityBuild"
                     kind "StaticLib"
                     includedirs {
                         "./",
@@ -75,21 +78,33 @@ workspace "NWengine"
                         --"Engine/**.cpp",
                         "UnityBuild/*.cpp",
                         "Sandbox/src/**.cpp",
+                        "Sandbox/src/**.c",
                         "Engine/**.h",
                         "premake5.lua",
                         "*.rc",
                     }
+                    filter "system:windows"
                     links {
                         "dwmapi"
                     }
     workspace "*"
+        filter "system:windows"
+        defines {"WIN", "WIN32", "PLTFRM_WIN32"}
         links {
             "opengl32",
             "freetype",
             "glew32s",
             "xaudio2"
         }
-
+        filter "system:linux"
+        defines {"PLTFRM_LINUX"}
+        links {
+            ":glew32s.a",
+            ":freetype.a",
+            "X11",
+            "GL"
+        }
+        filter "system:windows"
         filter "configurations:*Debug*"
             libdirs {
                  "Dependencies/glew/lib/debug/win%{cfg.platform:sub(2)}",
@@ -101,9 +116,19 @@ workspace "NWengine"
             libdirs {
                  "Dependencies/glew/lib/release/win%{cfg.platform:sub(2)}",
                  "Dependencies/freetype/lib/win%{cfg.platform:sub(2)}",
-                 "Dependencies/glew/lib/release/release%{cfg.platform:sub(2)}",
-                 "Dependencies/freetype/lib/release%{cfg.platform:sub(2)}",
+            } 
+        filter "system:linux"
+        filter "configurations:*Debug*"
+            libdirs {
+                 "Dependencies/glew/lib/debug/lnx%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/lnx%{cfg.platform:sub(2)}",
             }
+        filter "configurations:*Release*"
+            libdirs {
+                 "Dependencies/glew/lib/release/lnx%{cfg.platform:sub(2)}",
+                 "Dependencies/freetype/lib/lnx%{cfg.platform:sub(2)}",
+            }
+        filter {}
         filter "configurations:*Debug*"
             defines {"NW_DEBUG", "_DEBUG", "NW_VERSION=%{Nw_version}"}
             staticruntime "off"

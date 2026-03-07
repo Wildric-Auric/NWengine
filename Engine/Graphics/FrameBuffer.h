@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Context.h"
 #include "Image.h"
 #include "Maths.h"
@@ -29,7 +30,7 @@ class FrameBufferAttachment {
 	void*	  owner; /**< The framebuffer owner of this attachment. */
 	MSTexture msTex;
 	Texture	  tex;
-	void	  SetUp(iVec2 size, MSAAValue msVal, uint8 num);
+    void      SetUp(iVec2 size, MSAAValue msVal, TexType_Exp type, uint8 num);
 	void	  Clean();
 };
 
@@ -41,84 +42,26 @@ class FrameBufferAttachment {
  */
 class FrameBuffer {
   private:
-	uint32 _framebuffer	 = 0; /**< The framebuffer ID. */
-	uint32 _renderbuffer = 0; /**< The renderbuffer ID. */
+	uint32 _framebuffer	 = 0;
+	uint32 _renderbuffer = 0;
   public:
 	static FrameBuffer*				   _current;
 	FrameBuffer*					   resolveFbo = nullptr;
 	MSAAValue						   _msaaVal	  = NW_MSx1;
 	std::vector<FrameBufferAttachment> attachments; /**< The framebuffer attachments*/
-	/**
-	 * @brief Get the currently bound framebuffer.
-	 */
 	static FrameBuffer* GetCurrent();
-
-	/**
-	 * @brief Default constructor for the FrameBuffer class.
-	 */
 	FrameBuffer() = default;
-
 	void CopyFramebufferToCPU(Image* img, int attIndex = 0);
-	/**
-	 * @brief Sets up the framebuffer with the specified size.
-	 * @param size The size of the framebuffer.
-	 * @note Calling this method multiple times without deleting the framebuffer may result in a memory leak.
-	 */
-	void SetUp(Vector2<int> size, MSAAValue msVal = NW_MSx1);
-
-	/**
-	 * @brief Add an attachment to the the framebuffer.
-	 * @param size The size of the new attachment.
-	 * @note Multisample value is the same for all attachments.
-	 */
-	void AddAttachment(iVec2 size);
-
-	/**
-	 * @brief Get the number of attachments of the fbo.
-	 */
+	void SetUp(Vector2<int> size, MSAAValue msVal, TexType_Exp type);
+	void AddAttachment(iVec2 size, TexType_Exp type);
 	uint32 GetAttNum();
-
-	/**
-	 * @brief Get an attachment from the previously added attachments.
-	 * @param i The index of the attachment.
-	 * @return a reference to the attachment.
-	 */
 	FrameBufferAttachment& GetAtt(int i = 0);
-
-	/**
-	 * @brief Clears a specific attachement
-	 * @param i The index of the attachment.
-	 * @param clearColor The color which is used to clear the i'th attachment
-	 * @note The framebuffer should be bound before this operation
-	 * the result is otherwise undefined.
-	 */
 	void ClearAttachment(int i, const fVec4& clearColor);
-
 	bool CheckCompleteness();
-
-	/**
-	 * @brief Binds the framebuffer.
-	 */
 	void Bind(RWFrameBuffer ro = NW_RW);
-
 	void Blit(FrameBuffer* other);
-
-	/**
-	 * @brief Resolves MSAA attachment; result is copied to textureBuffer
-	 * @note  Using textureBuffer without calling resolve previously is undefined.
-	 */
 	void Resolve();
-
-	/**
-	 * @brief Unbinds the framebuffer.
-	 */
-
 	void Unbind(RWFrameBuffer ro = NW_RW);
-
-	/**
-	 * @brief Deletes the framebuffer.
-	 */
 	void Delete();
-
 	void GenDepthStencilBuffer();
 };

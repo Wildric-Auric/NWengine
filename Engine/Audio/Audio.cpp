@@ -2,9 +2,15 @@
 #include "AudioLib.h"
 #include "Globals.h"
 
-bool Sound::Init() { return !AudioLib::createCtx(); }
+bool Sound::Init() { 
+    bool res = false; 
+    NW_AL_CALL(res = AudioLib::createCtx())
+    return !res; 
+}
 
-void Sound::Destroy() { AudioLib::destroyCtx(); }
+void Sound::Destroy() { 
+    NW_AL_CALL_VOID(AudioLib::destroyCtx()); 
+}
 
 Asset* Sound::GetFromCache(void* id) {
 	auto iter = resList.find(*(SoundIdentifier*)id);
@@ -14,7 +20,8 @@ Asset* Sound::GetFromCache(void* id) {
 }
 
 Asset* Sound::LoadFromFile(const char* path, void* id) {
-	AudioLib::DataBuffer buffer = AudioLib::genBuff();
+	AudioLib::DataBuffer buffer; 
+    NW_AL_CALL(buffer = AudioLib::genBuff());
 	NW_AL_CALL(AudioLib::loadWav(path, buffer));
 	return LoadFromBuffer(buffer, id);
 }
@@ -34,8 +41,8 @@ void Sound::Clean() {
 		return;
 	SoundIdentifier id = GetIDWithAsset<Sound*, SoundIdentifier>(this);
 	this->Stop();
-	AudioLib::delSrc(_source);
-	AudioLib::delBuff(_buffID);
+	NW_AL_CALL(AudioLib::delSrc(_source));
+	NW_AL_CALL(AudioLib::delBuff(_buffID));
 	EraseRes<Sound>(id);
 }
 
@@ -89,7 +96,7 @@ bool Sound::HasFinished() { return _hasFinished; }
 
 bool Sound::_HasFinished() {
 	AudioLib::SourceInfo info;
-	AudioLib::querySrcInfo(_source, &info);
+	NW_AL_CALL_VOID(AudioLib::querySrcInfo(_source, &info));
 	return !info.isPlaying;
 }
 
@@ -98,7 +105,7 @@ void Sound::SetFrequency(float frequency) {
 	if(frequency == this->frequency)
 		return;
 	this->frequency = Clamp<float>(frequency, 0.0f, 2.0f);
-	AudioLib::setSrcPitch(_source, this->frequency); // TODO::Add error report if this fails
+	NW_AL_CALL(AudioLib::setSrcPitch(_source, this->frequency)); // TODO::Add error report if this fails
 }
 
 void Sound::SetLoop(bool loop) { isLooping = loop; }

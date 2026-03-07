@@ -1,3 +1,5 @@
+#ifdef __WIN32__
+
 #include "gl_context.h"
 #include <Windows.h>
 #include <GL/GLU.h>
@@ -179,3 +181,5 @@ NWIN_GL_STATUS GlContext::makeCurrent(bool noContext) {
 void GlContext::setCurCtxVSync(int interval) { WIN_CHECK(wglSwapIntervalEXT(interval)); }
 
 } // namespace NWin
+
+#endif

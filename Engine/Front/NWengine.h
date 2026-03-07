@@ -71,6 +71,7 @@ extern const char* NWVersionString;
 // extern std::unordered_map<ON_MAIN_CALL_LOCATION, std::vector<void (*)()>> functionMap;
 
 NW_PREFIX int  NWengineInit();
+NW_PREFIX void NWengineStep();
 NW_PREFIX void NWengineLoop();
 NW_PREFIX void NWengineShutdown();
 NW_PREFIX bool NWenginePushFunction(ON_MAIN_CALL_LOCATION loc, void (*func)());

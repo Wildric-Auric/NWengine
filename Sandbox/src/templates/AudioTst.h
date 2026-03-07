@@ -61,7 +61,7 @@ static void Render() {
 	if(Inputs::GetInputKey('A', InputKeyEvent::OnKeyRelease)) {
 		GameObject&	  obj = Scene::GetCurrent()->AddObject();
 		AudioEmitter* ae  = obj.AddComponent<AudioEmitter>();
-		ae->SetSound("C:/Programming/Games/TopDownShooter/example/assets/Sounds/wilhelm.wav");
+		ae->SetSound("../assets/Sounds/wilhelm.wav");
 		Script* s = obj.AddComponent<Script>();
 		s->SetScript<ScriptTt>();
 		s->Start();

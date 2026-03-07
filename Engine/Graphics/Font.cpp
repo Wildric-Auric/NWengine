@@ -4,15 +4,6 @@
 
 NW_FT_Lib Font::lib;
 
-namespace std {
-template <> struct hash<FontIdentifier> {
-	size_t operator()(const FontIdentifier& fid) const {
-		size_t h1 = hash<std::string>{}(fid.path);
-		size_t h2 = hash<uint32_t>{}(fid.nativeSize);
-		return h1 ^ (h2 << 1);
-	}
-};
-} // namespace std
 
 bool Font::Init() { return !FT_Init_FreeType((FT_Library*)(&Font::lib)); }
 
@@ -62,7 +53,7 @@ Asset* Font::LoadFromBuffer(void* buffer, void* data) {
 		character->texture._hasMipMap = 1;
 		character->texture._size.x	  = f->glyph->bitmap.width;
 		character->texture._size.y	  = f->glyph->bitmap.rows;
-		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R);
+		character->texture._GPUGen(f->glyph->bitmap.buffer, TexChannelInfo::NW_R, TexType_Exp_r16f);
 		character->texture.GenMipMap();
 		character->texture.SetMinFilter(NW_NEAREST_MIPMAP_LINEAR);
 		character->texture.SetMaxFilter(NW_LINEAR);

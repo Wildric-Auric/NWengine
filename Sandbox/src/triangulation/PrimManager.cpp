@@ -11,6 +11,7 @@
 #include "Triangulation.h"
 #include "keys.h"
 #include "UIWindow.h"
+#include <math.h>
 
 struct GuiItems {
 	UIWindow*	 win;
@@ -107,23 +108,23 @@ void PrimManager::_TestEdges() {
 	int	 s	  = pts.size() - 1;
 	auto beg0 = pts.begin();
 	auto end0 = --pts.end();
-	int	 beg  = 0;
-	int	 end  = pts.size() - 1;
+	ui64 beg  = 0;
+	ui64 end  = pts.size() - 1;
 	poly.SetUp((void*)beg, (void*)end,
 			   [](Geo::Polygon* p, void* e) -> void* {
-				   int c = (int)e;
-				   if(c == (int)p->_last)
+				   ui64 c = (ui64)(e);
+				   if(c == (ui64)p->_last)
 					   return p->_first;
 				   return (void*)(c + 1);
 			   },
 			   [](Geo::Polygon* p, void* e) -> void* {
-				   int c = (int)e;
-				   if(c == (int)p->_first)
+				   ui64 c = (ui64)e;
+				   if(c == (ui64)p->_first)
 					   return p->_last;
 				   return (void*)(c - 1);
 			   },
 			   [](Geo::Polygon* p, void* e) -> v2r* {
-				   int	c	= (int)e;
+				   ui64	c	= (ui64)e;
 				   auto itr = ((std::list<TriPoint>*)p->_data)->begin();
 				   std::advance(itr, c);
 				   return itr->GetRef();
@@ -195,9 +196,9 @@ void PrimManager::_TestEdges() {
 
 void PrimManager::MakeLineOnClick() {
 	constexpr float tol		 = 0.5;
-	bool			keyclick = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_SHIFT);
-	bool			click	 = Inputs::GetInputOnKeyRelease(NWin::NWIN_KEY_LBUTTON) && keyclick;
-	bool			rclick	 = Inputs::GetInputKeyPressed(NWin::NWIN_KEY_RBUTTON) && keyclick;
+	bool			keyclick = Inputs::GetInputKeyPressed(NWInputKey_LShift);
+	bool			click	 = Inputs::GetInputOnKeyRelease(NWInputKey_LMouse) && keyclick;
+	bool			rclick	 = Inputs::GetInputKeyPressed(NWInputKey_RMouse)  && keyclick;
 	fVec2			cur		 = Inputs::GetMousePosition();
 	cur						 = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(cur)));
 	v2f s					 = v2i(Sign(cur.x), Sign(cur.y));

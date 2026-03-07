@@ -1,220 +1,4 @@
 #include "Utilities.h"
-#include <codecvt>
-#include <fstream>
-#include <locale>
-#include <shlobj.h>
-#include <wchar.h>
-#include <windows.h>
-
-bool GetEnvVar(const char* var, std::string* outStr) {
-	DWORD s = GetEnvironmentVariable(var, 0, 0);
-	if(s <= 0)
-		return 0;
-	*outStr = std::string(s, ' ');
-	s		= GetEnvironmentVariable(var, &((*outStr)[0]), s);
-	if(s <= 0)
-		return 0;
-	outStr->pop_back();
-	return 1;
-}
-
-void GetSystemFontDir(std::string* out) {
-	char path[MAX_PATH];
-	if(SHGetFolderPathA(nullptr, CSIDL_FONTS, nullptr, 0, path) != S_OK)
-		return;
-	*out = std::string(path) + "\\";
-}
-
-void GetSystemFontDirALT(std::string* out) {
-	GetEnvVar("USERPROFILE", out);
-	*out += "\\AppData\\Local\\Microsoft\\Windows\\Fonts\\";
-}
-
-std::vector<std::string> GetNWlist(std::string path) {
-	std::fstream			 stream(path); // TODO::ERROR checking
-	std::vector<std::string> vec;
-	for(std::string line = ""; std::getline(stream, line); vec.push_back(line))
-		;
-	return vec;
-}
-
-void DllHandle::Load(const char* filename) {
-	int a = sizeof(HMODULE);
-	h	  = LoadLibrary(filename);
-	if(!h || h == INVALID_HANDLE_VALUE) {
-		h = nullptr;
-		printf("Cannot load DLL\n");
-	}
-}
-
-void* DllHandle::Get() { return h; }
-
-void DllHandle::Free() {
-	if(h)
-		FreeLibrary((HINSTANCE)h);
-}
-
-void* GetDllFunction(DllHandle* dll, const char* functionName) { return GetProcAddress((HINSTANCE)dll->Get(), functionName); }
-
-std::vector<int> GetRecusivelyFilesNumber(const std::string& directory) {
-	WIN32_FIND_DATAA findData;
-	HANDLE			 hFind = INVALID_HANDLE_VALUE;
-
-	std::string		 path = directory + "\\*";
-	std::vector<int> dirList;
-
-	hFind	  = FindFirstFileA(path.c_str(), &findData);
-	int count = -1;
-	while(FindNextFileA(hFind, &findData) != 0) {
-
-		if(count >= 0) {
-			std::string fileName = std::string(findData.cFileName);
-			if(fileName.find(".") == -1) {
-				ExtendVector(&dirList, GetRecusivelyFilesNumber(directory + "/" + fileName));
-			} else
-				dirList.push_back(0);
-		}
-		count += 1;
-	}
-	dirList.insert(dirList.begin(), count);
-
-	FindClose(hFind);
-
-	return dirList;
-}
-// DevNote: filesystem could be used here if C++ is minimum +17; since my intention is to use only
-// C++ 11 I did not use it; instead I use windows api; which makes the application not cross plaform for now
-std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter) {
-	WIN32_FIND_DATAA findData;
-	HANDLE			 hFind = INVALID_HANDLE_VALUE;
-
-	std::string				 path = directory + "\\*";
-	std::vector<std::string> dirList;
-
-	hFind = FindFirstFileA(path.c_str(), &findData);
-
-	if(hFind == INVALID_HANDLE_VALUE)
-		return {};
-
-	bool first = 0;
-	while(FindNextFileA(hFind, &findData) != 0) {
-		if(!first) {
-			first = 1;
-			continue;
-		}
-		std::string filename = findData.cFileName;
-		if(extensionFilter != "") {
-			std::string extension = "";
-			GetFileName(filename, nullptr, &extension);
-			if(extension == extensionFilter)
-				dirList.push_back(filename);
-			continue;
-		}
-		dirList.push_back(filename);
-	}
-
-	FindClose(hFind);
-	return dirList;
-}
-
-std::vector<std::string> GetRecusivelyDirFiles(const std::string& directory) {
-	WIN32_FIND_DATAA findData;
-	HANDLE			 hFind = INVALID_HANDLE_VALUE;
-
-	std::string				 path = directory + "\\*";
-	std::vector<std::string> dirList;
-
-	hFind = FindFirstFileA(path.c_str(), &findData);
-
-	if(hFind == INVALID_HANDLE_VALUE) {
-		printf("ERROR::Can't find path: %s\n", path.c_str());
-		return dirList;
-	}
-
-	bool first = 0;
-	while(FindNextFileA(hFind, &findData) != 0) {
-		if(!first) {
-			first = 1;
-			continue;
-		}
-
-		std::string fileName = std::string(findData.cFileName);
-
-		if(findData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY) // Is directory
-			ExtendVector(&dirList, GetRecusivelyDirFiles(directory + "\\" + fileName));
-		else
-			dirList.push_back(directory + "\\" + fileName);
-	}
-
-	FindClose(hFind);
-	return dirList;
-}
-
-inline int AccumulateChildren(std::vector<int>* a, std::vector<int>* b, int index) {
-	int count	 = 0;
-	int children = (*a)[index];
-	count += children;
-	int last = 1;
-	for(int i = 0; i < children; i++) {
-		int temp = AccumulateChildren(a, b, index + last);
-		last += temp + 1;
-		count += temp;
-	}
-
-	(*b)[index] = count;
-
-	return count;
-}
-
-std::string GetCurrentDir() {
-	char dir[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, dir);
-	return std::string(dir) + "\\";
-}
-
-std::string GetExePath() {
-	char path[MAX_PATH];
-	GetModuleFileName(NULL, path, MAX_PATH);
-	return std::string(path);
-}
-
-std::string GetFile(const char* type) {
-	char		 filename[MAX_PATH];
-	OPENFILENAME ofn;
-	ZeroMemory(&filename, sizeof(filename));
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner	= NULL;
-	ofn.lpstrFilter = type;
-	ofn.lpstrFile	= filename;
-	ofn.nMaxFile	= MAX_PATH;
-	ofn.lpstrTitle	= "Select a File";
-	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if(GetOpenFileName(&ofn)) {
-		return std::string(filename);
-	}
-	return "";
-}
-
-std::string SaveAs(const char* type) {
-	char		 filename[MAX_PATH];
-	OPENFILENAME ofn;
-	ZeroMemory(&filename, sizeof(filename));
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner	= NULL;
-	ofn.lpstrFilter = type;
-	ofn.lpstrFile	= filename;
-	ofn.nMaxFile	= MAX_PATH;
-	ofn.lpstrTitle	= "Save as";
-	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if(GetSaveFileName(&ofn)) {
-		return std::string(filename);
-	}
-	return "";
-}
 
 std::string ToSingleBackSlash(const std::string& dir) {
 	std::string ret = "";
@@ -250,6 +34,234 @@ std::string ToDoubleBackSlash(const std::string& dir) {
 	return ret;
 }
 
+std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator) {
+	std::string filename  = "";
+	std::string extension = "";
+	std::string root	  = "";
+	bool		state	  = 0;
+	bool		slash	  = 0;
+	for(auto chr : path) {
+		if(chr == '.') {
+			filename += extension;
+			extension = "";
+			state	  = 1;
+			slash	  = 0;
+		}
+		if(chr == '\\' || chr == '/') {
+			if(slash)
+				continue;
+			root += filename + extension + separator;
+			filename  = "";
+			extension = "";
+			slash	  = 1;
+			continue;
+		}
+		slash = 0;
+		if(!state)
+			filename += chr;
+		else
+			extension += chr;
+	}
+	if(bFilename != nullptr)
+		*bFilename = filename;
+	if(bExtension != nullptr)
+		*bExtension = extension;
+	if(bRoot != nullptr)
+		*bRoot = root;
+	return filename + extension;
+}
+
+#ifdef __WIN32__
+
+#include <shlobj.h>
+#include <wchar.h>
+#include <windows.h>
+#include <codecvt>
+#include <fstream>
+#include <locale>
+
+bool GetEnvVar(const char* var, std::string* outStr) {
+	DWORD s = GetEnvironmentVariable(var, 0, 0);
+	if(s <= 0)
+		return 0;
+	*outStr = std::string(s, ' ');
+	s		= GetEnvironmentVariable(var, &((*outStr)[0]), s);
+	if(s <= 0)
+		return 0;
+	outStr->pop_back();
+	return 1;
+}
+
+void GetSystemFontDir(std::string* out) {
+	char path[MAX_PATH];
+	if(SHGetFolderPathA(nullptr, CSIDL_FONTS, nullptr, 0, path) != S_OK)
+		return;
+	*out = std::string(path) + "\\";
+}
+
+void GetSystemFontDirALT(std::string* out) {
+	GetEnvVar("USERPROFILE", out);
+	*out += "\\AppData\\Local\\Microsoft\\Windows\\Fonts\\";
+}
+
+void GetSystemDefaultFont(std::string* out) {
+    GetSystemFontDir(out);
+    *out += std::string("Arial.ttf");
+}
+
+void DllHandle::Load(const char* filename) {
+	int a = sizeof(HMODULE);
+	h	  = LoadLibrary(filename);
+	if(!h || h == INVALID_HANDLE_VALUE) {
+		h = nullptr;
+		printf("Cannot load DLL\n");
+	}
+}
+
+void* DllHandle::Get() { return h; }
+
+void DllHandle::Free() {
+	if(h)
+		FreeLibrary((HINSTANCE)h);
+}
+
+void* GetDllFunction(DllHandle* dll, const char* functionName) { return GetProcAddress((HINSTANCE)dll->Get(), functionName); }
+
+std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter) {
+	WIN32_FIND_DATAA findData;
+	HANDLE			 hFind = INVALID_HANDLE_VALUE;
+
+	std::string				 path = directory + "\\*";
+	std::vector<std::string> dirList;
+
+	hFind = FindFirstFileA(path.c_str(), &findData);
+
+	if(hFind == INVALID_HANDLE_VALUE)
+		return {};
+
+	bool first = 0;
+	while(FindNextFileA(hFind, &findData) != 0) {
+		if(!first) {
+			first = 1;
+			continue;
+		}
+		std::string filename = findData.cFileName;
+		if(extensionFilter != "") {
+			std::string extension = "";
+			GetFileName(filename, nullptr, &extension);
+			if(extension == extensionFilter)
+				dirList.push_back(filename);
+			continue;
+		}
+		dirList.push_back(filename);
+	}
+
+	FindClose(hFind);
+	return dirList;
+}
+
+bool GetNextFile(NWFile* file, const char*) {
+    WIN32_FIND_DATAA fd; 
+    bool ret;
+    if (!file->handle || file->handle == INVALID_HANDLE_VALUE) return 0; 
+    ret = FindNextFileA(file->handle, &fd);
+    if (!ret) {
+        FindClose(file->handle);
+        file->handle = INVALID_HANDLE_VALUE;
+        return 0;
+    }
+    file->isDir  = fd.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY; 
+    memcpy(file->name, fd.cFileName, 256);
+    return ret;
+}
+
+bool GetFirstFile(NWFile* file, const char* path) {
+    WIN32_FIND_DATAA fd; 
+	std::string	path2 = path + std::string("\\*");
+    file->handle = INVALID_HANDLE_VALUE;
+    file->handle = FindFirstFileA(path2.c_str(), &fd);
+    return file->handle != INVALID_HANDLE_VALUE;
+}
+
+std::string GetCurrentDir() {
+	char dir[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, dir);
+	return std::string(dir) + "\\";
+}
+
+std::string GetExePath() {
+	char path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	return std::string(path);
+}
+
+int WinPrepType(char* outExt, char* filters[], int filterCount) {
+   int i, j;
+   int p = 0;
+   outExt[0] = 0;
+   ++p;
+   for (i = 0; i < filterCount; ++i) {
+       j = 0;
+       while ((*filters)[j]) {
+            outExt[p] = (*filters)[j];
+            ++p; ++j;
+       }
+       outExt[p] = 0;
+       ++p;
+       ++filters;
+   }
+   outExt[p] = 0;
+   return p+1;
+}
+
+std::string GetFile(char* exts[], int extsCount) {
+	char* filename = (char*)malloc(MAX_PATH);
+    char* type     = (char*)malloc(64);
+    type[0] = 0; filename = 0;
+    WinPrepType(type, exts, extsCount);
+	OPENFILENAME ofn;
+	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner	= NULL;
+	ofn.lpstrFilter = type;
+	ofn.lpstrFile	= filename;
+	ofn.nMaxFile	= MAX_PATH;
+	ofn.lpstrTitle	= "Select a File";
+	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+    std::string ret = "";
+	if(!GetOpenFileName(&ofn)) {
+	     ret = std::string(filename);
+	}
+    free(type);
+    free(filename);
+	return ret;
+}
+
+std::string SaveAs(const char* type) {
+	char* filename = (char*)malloc(MAX_PATH);
+    char* type     = (char*)malloc(64);
+    type[0] = 0; filename = 0;
+    WinPrepType(type, exts, extsCount);
+	OPENFILENAME ofn;
+	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner	= NULL;
+	ofn.lpstrFilter = type;
+	ofn.lpstrFile	= filename;
+	ofn.nMaxFile	= MAX_PATH;
+	ofn.lpstrTitle	= "Save as";
+	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+    std::string ret = "";
+	if(GetSaveFileName(&ofn)) {
+        ret = std::string(filename);
+	}
+    free(type);
+    free(filename);
+	return ret;
+}
+
 bool CopyDirectory(const std::string& dest, const std::string& src) {
 	SHFILEOPSTRUCTW s		= {0};
 	std::wstring	tempSrc = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(src) + L"*";
@@ -279,44 +291,6 @@ bool MakeFile(const std::string& path) {
 		return 0;
 	CloseHandle(h);
 	return 1;
-}
-
-// Returns filename + extension
-std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot) {
-	std::string filename  = "";
-	std::string extension = "";
-	std::string root	  = "";
-	bool		state	  = 0;
-	bool		slash	  = 0;
-	for(auto chr : path) {
-		if(chr == '.') {
-			filename += extension;
-			extension = "";
-			state	  = 1;
-			slash	  = 0;
-		}
-		if(chr == '\\') {
-			if(slash)
-				continue;
-			root += filename + "\\";
-			filename  = "";
-			extension = "";
-			slash	  = 1;
-			continue;
-		}
-		slash = 0;
-		if(!state)
-			filename += chr;
-		else
-			extension += chr;
-	}
-	if(bFilename != nullptr)
-		*bFilename = filename;
-	if(bExtension != nullptr)
-		*bExtension = extension;
-	if(bRoot != nullptr)
-		*bRoot = root;
-	return filename + extension;
 }
 
 bool FileCopy(const std::string& dest, const std::string& src, bool failIfExists) {
@@ -413,3 +387,212 @@ bool FileMove(const std::string& dest, const std::string& source, bool failIfExi
 		FileDelete(dest);
 	return MoveFile(source.c_str(), dest.c_str());
 };
+
+#else
+
+#include <dirent.h>
+#include <dlfcn.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <string.h>
+
+
+void GetSystemFontDir(std::string* out) {
+    *out = "/usr/share/fonts/TTF";
+}
+
+void GetSystemFontDirALT(std::string* out) {
+    *out = "/usr/share/fonts/TTF";
+}
+
+void GetSystemDefaultFont(std::string* out) {
+    GetSystemFontDir(out);
+    *out += "/" + std::string("OpenSans-Bold.ttf");
+}
+
+
+typedef struct dirent dir_entry;
+typedef struct stat stat_t;
+bool GetFirstFile(NWFile* file, const char* path) {
+    DIR* fd;
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    fd = opendir(path);
+    file->handle = fd;
+    return GetNextFile(file, path);
+}
+
+bool GetNextFile(NWFile* file, const char* root) {
+    stat_t st;
+    dir_entry* ent;
+    int res;
+    DIR* fd = (DIR*)file->handle;
+    if (!fd)
+        return 0;
+    ent = readdir(fd);
+    if (!ent) {
+        closedir(fd);
+        file->handle = 0;
+        return 0;
+    }
+    char* stPath = (char*)malloc(512);
+    int rl = strlen(root);
+    int nl = strlen(ent->d_name);
+    memcpy(stPath, root, rl);
+    if (rl && stPath[rl-1] != '/') {
+        stPath[rl] = '/';
+        rl++;
+    }
+    memcpy(stPath + rl, ent->d_name, nl);
+    stPath[rl + nl] = 0;
+    res = stat(stPath, &st);
+    free(stPath);
+    file->isDir = !res && st.st_mode & S_IFDIR;
+    memcpy(file->name, ent->d_name, 256);
+    return 1;
+}
+
+
+void DllHandle::Load(const char* filename) {
+    h = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
+    if (!h) {
+		printf("Could not load Shared Library: %s\n", filename);
+    }
+}
+	
+void DllHandle::Free() {
+    if (!h) return;
+    dlclose(h);
+}
+
+void* DllHandle::Get() { return h; }
+
+void* GetDllFunction(DllHandle* dll, const char* functionName) {
+    return dlsym(dll->Get(), functionName);
+}
+
+std::string GetCurrentDir() {
+    char* path = (char*)malloc(512);
+    void* res = getcwd(path, 512);
+    if (!res)
+        return ""; 
+    std::string r = path; 
+    free(path);
+    return r;
+}
+
+std::string GetExePath() {
+    char* path = (char*)malloc(512);
+    path[0] = 0;
+    int n = readlink("/proc/self/exe", path, 512);
+    if (n != -1 && n < 512) 
+        path[n] = 0;
+    std::string ret = path;
+    free(path);
+    return ret;
+}
+
+bool FileExists(const std::string& path) {
+    return !access(path.c_str(), F_OK);
+}
+
+bool FileMove(const std::string& dest, const std::string& source, bool failIfExists) {
+    if (failIfExists && FileExists(dest)) 
+        return 0;
+    return !rename(source.c_str(), dest.c_str());
+}
+
+bool FileDelete(const std::string& name) {
+    return !remove(name.c_str());
+}
+
+bool Exec(const std::string& cmd, char* env) {
+    char name[64];
+    name[0] = 0;
+    return !execl("/bin/sh", "sh", "-c", cmd.c_str(), 0);
+}
+
+int GetFileScanf(char* val, int maxSize, bool save) {
+    val[0] = 0;
+    printf("-----xxxx-----\n%s", save ? "Save As(Path): " : "Select a file(Path): " );
+    fgets(val, maxSize, stdin);
+    printf("\n-----Input End-----\n");
+    std::string ret = std::string(val);
+    if (ret.size() && ret.back() == '\n') ret.pop_back();
+    return ret.size(); 
+}
+
+int KDEDialog(char* cmd, char* filters[], int filterCount, bool save) {
+    static const char* baseSaveKDE = save ? "kdialog --title \"Save as\" --getsavefilename ./ \"" : "kdialog --title \"Select a file\" --getopenfilename ./ \"";
+    int i,j,p;
+    p = 0;
+    while (baseSaveKDE[p]) {
+        cmd[p] = baseSaveKDE[p];
+        ++p;
+    }
+    for (i = 0; i < filterCount; ++i) {
+        j = 0;
+        while ((*filters)[j]) {
+            cmd[p] = (*filters)[j];
+            ++p; ++j;
+        }
+        cmd[p] = ' ';
+        p++;
+        filters++;
+    }
+    cmd[p]   = '\"';
+    cmd[p+1] = 0;
+    return p;
+}
+
+int PipeExAndRead(char* buff, char* cmd) {
+    FILE* fd = popen(cmd, "r");
+    int i = 0;
+    int res = 1;
+    if (!fd)
+        return 0;
+    while (1) {
+        res = fread(&buff[i], 1, 1, fd);
+        if (!res || res == -1)
+            break;
+        i++;
+    }
+    buff[i] = 0;
+    pclose(fd);
+    return i;
+}
+
+
+std::string LinuxDialog(char* exts[], int extsCount, bool save) {
+    char* dsk = getenv("XDG_CURRENT_DESKTOP");
+    char* cmd = (char*)malloc(1024);
+    char* path= (char*)malloc(512);
+    cmd[0]    = 0;
+    path[0]   = 0;
+    if (!strcmp("KDE", dsk)) {
+        KDEDialog(cmd, exts, extsCount, save);
+    }
+    if (cmd[0] != 0) {
+        PipeExAndRead(path, cmd);
+    }
+    else {
+        GetFileScanf(path, 512, save);
+    }
+    std::string ret = std::string(path);
+    free(cmd);
+    free(path);
+    return ret;
+}
+
+std::string GetFile(char* exts[], int extsCount) {
+    return LinuxDialog(exts, extsCount, 0);
+}
+
+std::string SaveAs(char* exts[], int extsCount) {
+    return LinuxDialog(exts, extsCount, 1);
+}
+
+#endif //__WIN32__
+
+

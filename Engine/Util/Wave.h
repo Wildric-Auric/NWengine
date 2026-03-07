@@ -65,23 +65,20 @@ class WaveComposer : public Wave2 {
 	float Evaluate(const float x, const float y);
 };
 
-extern constexpr uint32 NWLcg(uint32 seed);
+constexpr uint32 NWLcg(uint32 seed) { return seed * 1664525u + 1013904223u; }
+constexpr uint64 NWLcg(uint64 seed) { return seed * 1664525u + 1013904223u; };
+constexpr uint32 NWLcgI32(uint32 seed) { return NWLcg(seed); }
+constexpr uint64 NWLcgI64(uint64 seed) { return NWLcg(seed); }
 
-extern constexpr uint64 NWLcg(uint64 seed);
+extern uint32 NWSplitMixI32(uint32 seed);
 
-extern constexpr uint32 NWLcgI32(uint32 seed);
+extern uint64 NWSplitMixI64(uint64 seed);
 
-extern constexpr uint64 NWLcgI64(uint64 seed);
+extern uint32 NWSplitMix(uint32 x);
 
-extern constexpr uint32 NWSplitMixI32(uint32 seed);
+extern uint64 NWSplitMix(uint64 x);
 
-extern constexpr uint64 NWSplitMixI64(uint64 seed);
-
-extern constexpr uint32 NWSplitMix(uint32 x);
-
-extern constexpr uint64 NWSplitMix(uint64 x);
-
-extern constexpr uint32 NWFnva_2UI32_To_1UI32(uint32, uint32);
+extern uint32 NWFnva_2UI32_To_1UI32(uint32, uint32);
 
 template <int N, int seed> struct RandomArray {
 	uint32 data[N]{};

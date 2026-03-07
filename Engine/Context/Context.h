@@ -43,6 +43,7 @@ class Context {
 	 * @brief The window handle. Should be converted to NWin::Window* to be used
 	 */
 	static void* window;
+    static bool  _shouldLoop;
 
 	static void GetWinDrawAreaSize(fVec2*);
 	static void GetWinSize(fVec2*);
@@ -60,6 +61,8 @@ class Context {
 	 * @return True if the application should close, false otherwise.
 	 */
 	static bool ShouldClose();
+    
+    static void DeferEndLoop();
 
 	/**
 	 * @brief Updates the application context.

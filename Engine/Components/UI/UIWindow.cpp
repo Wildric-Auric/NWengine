@@ -168,8 +168,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		te->colors	  = currentUIColorScheme.titleText;
 		te->isBatched = false;
 		std::string fdir;
-		GetSystemFontDir(&fdir);
-		fdir += "Arial.ttf";
+		GetSystemDefaultFont(&fdir);
 		te->SetFont({fdir.c_str(), 15}, te->_shader);
 		te->layerOrder = spr->sortingLayer - (UISys::layerConsts.windowRange - 1);
 		item->endln	   = 0;
@@ -196,8 +195,7 @@ UIItem* UIWindow::_SetUpItem(UIItem* item, UIItemType type, int64 layer) {
 		te->colors	  = currentUIColorScheme.text;
 		te->isBatched = false;
 		std::string fdir;
-		GetSystemFontDir(&fdir);
-		fdir += "Arial.ttf";
+		GetSystemDefaultFont(&fdir);
 		te->SetFont({fdir.c_str(), 15}, te->_shader);
 		te->layerOrder = spr->sortingLayer + layer;
 		item->endln	   = 0;
@@ -338,6 +336,7 @@ int UIWindow::IsCursorOnResize() {
 	bool se = rxr && ryd;
 	bool we = rxl || rxr;
 	bool ns = ryu || ryd;
+#ifdef PLTFRM_WIN32 
 	if(ne || sw)
 		return (int)NWin::CursorIcon::RESIZE_DIAG_RIGHT;
 	else if(nw || se)
@@ -346,12 +345,15 @@ int UIWindow::IsCursorOnResize() {
 		return (int)NWin::CursorIcon::RESIZE_HORIZONTAL;
 	else if(ns)
 		return (int)NWin::CursorIcon::RESIZE_VERT;
+#else
+    return ne || sw || nw || se || we || ns;
+#endif
 	return 0;
 }
 
 int UIWindow::IsCursorOnWindow() {
 	Sprite* spr = attachedObject->GetComponent<Sprite>();
-	return (abs(rpos.x) < spr->container.width * 0.5 && abs(rpos.y) < spr->container.height * 0.5);
+	return (Abs(rpos.x) < spr->container.width * 0.5 && Abs(rpos.y) < spr->container.height * 0.5);
 }
 
 bool UIWindow::IsFocused() { return UISys::focusedWindow == this; }

@@ -126,8 +126,7 @@ static void SetText() {
 	GameObject& obj = s.AddObject<Sprite, Transform, Text>();
 	Text*		te	= obj.GetComponent<Text>();
 	std::string fdir;
-	GetSystemFontDir(&fdir);
-	fdir += "Arial.ttf";
+	GetSystemDefaultFont(&fdir);
 	te->isBatched  = 1;
 	te->layerOrder = 0;
 	te->SetShader(NW_DEFAULT_SHADER_TEXT_BATCHED);

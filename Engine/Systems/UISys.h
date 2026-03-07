@@ -22,7 +22,7 @@ class UISys {
 	static bool				clickEvent;
 	static bool				clickContinuousEvent;
 	static bool				isResposive;
-	static NWin::Key		clickKey;
+	static int              clickKey;
 	static UIWindow*		focusedWindow;
 	static UIWindow*		hoveredWindow;
 	static UIWindow*		topMostSelected;
