@@ -197,8 +197,9 @@ std::string GetExePath() {
 int WinPrepType(char* outExt, char* filters[], int filterCount) {
    int i, j;
    int p = 0;
-   outExt[0] = 0;
-   ++p;
+   memcpy(outExt, "File", 4);
+   outExt[4] = 0;
+   p = 5;
    for (i = 0; i < filterCount; ++i) {
        j = 0;
        while ((*filters)[j]) {
@@ -216,10 +217,10 @@ int WinPrepType(char* outExt, char* filters[], int filterCount) {
 std::string GetFile(char* exts[], int extsCount) {
 	char* filename = (char*)malloc(MAX_PATH);
     char* type     = (char*)malloc(64);
-    type[0] = 0; filename = 0;
+    type[0] = 0;
     WinPrepType(type, exts, extsCount);
 	OPENFILENAME ofn;
-	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(filename, MAX_PATH);
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner	= NULL;
@@ -229,7 +230,7 @@ std::string GetFile(char* exts[], int extsCount) {
 	ofn.lpstrTitle	= "Select a File";
 	ofn.Flags		= OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
     std::string ret = "";
-	if(!GetOpenFileName(&ofn)) {
+	if (GetOpenFileName(&ofn)) {
 	     ret = std::string(filename);
 	}
     free(type);
@@ -240,10 +241,10 @@ std::string GetFile(char* exts[], int extsCount) {
 std::string SaveAs(char* exts[], int extsCount) {
 	char* filename = (char*)malloc(MAX_PATH);
     char* type     = (char*)malloc(64);
-    type[0] = 0; filename = 0;
+    type[0] = 0;
     WinPrepType(type, exts, extsCount);
 	OPENFILENAME ofn;
-	ZeroMemory(&filename, sizeof(filename));
+	ZeroMemory(filename, MAX_PATH);
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner	= NULL;
@@ -593,5 +594,3 @@ std::string SaveAs(char* exts[], int extsCount) {
 }
 
 #endif
-
-

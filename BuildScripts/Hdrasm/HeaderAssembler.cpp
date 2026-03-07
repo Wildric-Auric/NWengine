@@ -33,6 +33,7 @@ bool GetFirstFile(NWFile* file, const char* path) {
 	std::string	path2 = path + std::string("\\*");
     file->handle = INVALID_HANDLE_VALUE;
     file->handle = FindFirstFileA(path2.c_str(), &fd);
+    file->isDir  = fd.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY; 
     return file->handle != INVALID_HANDLE_VALUE;
 }
 
@@ -208,10 +209,8 @@ void GetDirFiles(const std::string &directory, std::vector<std::string>* vec) {
     if (!GetFirstFile(&file, directory.c_str())) {
         return; 
     }
-    if (!file.isDir)
-        vec->push_back(file.name);
 #define check(n,c) file.name[len-n] == c 
-    while (GetNextFile(&file)) {
+    do {
         if (file.isDir)
             continue;
         len = strlen(file.name);
@@ -223,7 +222,7 @@ void GetDirFiles(const std::string &directory, std::vector<std::string>* vec) {
             vec->push_back(file.name);
             continue;
         }
-    }
+    } while (GetNextFile(&file));
 #undef check
 }
 

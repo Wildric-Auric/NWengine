@@ -1,5 +1,7 @@
 #pragma once
 #include "stdf.h"
+#undef near
+#undef far
 
 #define UI8 unsigned char
 #pragma warning(disable : 4244)
