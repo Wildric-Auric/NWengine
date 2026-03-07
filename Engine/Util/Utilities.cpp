@@ -71,13 +71,12 @@ std::string GetFileName(const std::string& path, std::string* bFilename, std::st
 	return filename + extension;
 }
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #include <shlobj.h>
 #include <wchar.h>
 #include <windows.h>
 #include <codecvt>
-#include <fstream>
 #include <locale>
 
 bool GetEnvVar(const char* var, std::string* outStr) {
@@ -125,7 +124,7 @@ void DllHandle::Free() {
 		FreeLibrary((HINSTANCE)h);
 }
 
-void* GetDllFunction(DllHandle* dll, const char* functionName) { return GetProcAddress((HINSTANCE)dll->Get(), functionName); }
+void* GetDllFunction(DllHandle* dll, const char* functionName) { return (void*)GetProcAddress((HINSTANCE)dll->Get(), functionName); }
 
 std::vector<std::string> GetDirFiles(const std::string& directory, const std::string& extensionFilter) {
 	WIN32_FIND_DATAA findData;
@@ -148,7 +147,7 @@ std::vector<std::string> GetDirFiles(const std::string& directory, const std::st
 		std::string filename = findData.cFileName;
 		if(extensionFilter != "") {
 			std::string extension = "";
-			GetFileName(filename, nullptr, &extension);
+			GetFileName(filename, nullptr, &extension, 0, '/');
 			if(extension == extensionFilter)
 				dirList.push_back(filename);
 			continue;
@@ -238,7 +237,7 @@ std::string GetFile(char* exts[], int extsCount) {
 	return ret;
 }
 
-std::string SaveAs(const char* type) {
+std::string SaveAs(char* exts[], int extsCount) {
 	char* filename = (char*)malloc(MAX_PATH);
     char* type     = (char*)malloc(64);
     type[0] = 0; filename = 0;
@@ -593,6 +592,6 @@ std::string SaveAs(char* exts[], int extsCount) {
     return LinuxDialog(exts, extsCount, 1);
 }
 
-#endif //__WIN32__
+#endif
 
 

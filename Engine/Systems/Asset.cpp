@@ -27,7 +27,7 @@ void Asset::Destroy() {
 		type::resList.begin()->second.Clean();
 	CLN_RES(Texture);
 	CLN_RES(Sound);
-#ifdef __WIN32__
+#ifdef _WIN32
 	CLN_RES(DllScript);
 #endif
 	CLN_RES(Font);

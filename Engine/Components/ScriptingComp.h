@@ -3,7 +3,7 @@
 #include "DllScripting.h"
 #include "GameObject.h"
 
-#ifdef __WIN32__
+#ifdef _WIN32
 class DynamicScript : public GameComponent {
   public:
 	NW_ST_GET_TYPE_IMPL(DynamicScript);

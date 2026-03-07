@@ -11,12 +11,8 @@ struct NWFile {
     char name[256];
 };
 
-#ifdef __WIN32__ 
-void ToLower(std::string& str) {
-    for (int i = 0; i < str.size();++i) {
-        str[i] = std::tolower(str[i]);
-    }
-}
+#ifdef _WIN32 
+#include <windows.h>
 bool GetNextFile(NWFile* file) {
     WIN32_FIND_DATAA fd; 
     bool ret;
@@ -104,7 +100,7 @@ enum class State {
 std::map<std::string, bool> included;
 std::ofstream outputF;
 
-#ifdef __WIN32__
+#ifdef _WIN32
 #define sep "\\"
 #else
 #define sep "/"

@@ -3,57 +3,118 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 #define wyn_alloc(type) (type*)malloc(sizeof(type))
 #define wyn_free(type, ptr)                                                                                                      \
 	free((type*)ptr);                                                                                                            \
 	ptr = 0;
+
+int wyn_kb_record(wyn_kboard* kb, int c, int event) {
+	int* v = 0;
+	if(c > 511 || c < 0)
+		return 1;
+	v = &kb->events[c];
+	if(event & Wyn_OnKeyRelease) {
+		*v &= ~Wyn_OnKeyPressLock;
+		*v &= ~Wyn_KeyPressed;
+		*v |= Wyn_OnKeyRelease;
+	}
+	if(event & Wyn_KeyPressed) {
+		*v |= Wyn_KeyPressed;
+		if(!(*v & Wyn_OnKeyPressLock))
+			*v |= Wyn_OnKeyPress;
+		*v |= Wyn_OnKeyPressLock;
+	}
+	*v = *v | (event & Wyn_LastUpdate);
+	kb->update_idx++;
+	kb->update_list[kb->update_idx] = c;
+	return 0;
+}
+
+
+
 #ifdef PLTFRM_WIN32
 
 #include <Windows.h>
 
+typedef struct {
+	HINSTANCE inst;
+	MSG		  msg;
+	HDC		  hdc;
+	DWORD	  stl;
+} wyn_win32_data;
+
+static HWND    lkupHwnd[256] = {0};
+static wyndow* lkupWin[256] = {0};
+HWND lastHWND     = 0;
+wyndow* lastWyn = 0;
+
+
+#define win_call(func, proc, ...)                                                                                                \
+	if(func)                                                                                                                     \
+	((proc)(func))(__VA_ARGS__)
+
+int WinKeyMap(int key) {
+    if (key >= 'A' && key <= 'Z') {
+        return key;    
+    }
+#define mkc(l,k) case l: {return k;}
+    switch (key) {
+        mkc(VK_CONTROL,   Wyn_Key_LCtrl);
+        mkc(VK_RCONTROL,  Wyn_Key_RCtrl);
+        mkc(VK_MENU,      Wyn_Key_LAlt);
+        mkc(VK_RMENU,     Wyn_Key_RAlt);
+        mkc(VK_SHIFT,     Wyn_Key_LShift);
+        mkc(VK_RSHIFT,    Wyn_Key_RShift);
+        mkc(VK_LEFT,      Wyn_Key_LArrow);
+        mkc(VK_RIGHT,     Wyn_Key_RArrow);
+        mkc(VK_UP,        Wyn_Key_UArrow);
+        mkc(VK_DOWN,      Wyn_Key_DArrow);
+        mkc(VK_RETURN,    Wyn_Key_Ret);
+        mkc(VK_ESCAPE,    Wyn_Key_Esc);
+        mkc(VK_DELETE,    Wyn_Key_Del);
+        mkc(VK_SPACE,     Wyn_Key_Space);
+        default:           { return key;}
+    }
+#undef mkc
+}
+
 LRESULT CALLBACK def_win_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	// KeyEvent event;
-	// Window* win = Window::stGetWindow((winHandle)hwnd);
+    wyndow* w;
+    if (lastHWND == hwnd) {
+        w = lastWyn;
+    }
+    else {
+        for (int i = 0; i < 256; ++i) {
+            if (hwnd != lkupHwnd[i])
+                continue;
+            w = lkupWin[i];
+            lastHWND = hwnd;
+            lastWyn = w;
+            break;
+        }
+    }
+    wyn_win32_data* data = ((wyn_win32_data*)w->extra);
+    win_call(w->_callbacks[WYN_UPDATE_CBK_IDX], LRESULT(*)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), hwnd, uMsg, wParam, lParam);
 	switch(uMsg) {
 	// Inputs------------
 	case WM_KEYDOWN:
-		//			event.key		= (Key)wParam;
-		//			event.eventType = NWIN_KeyPressed;
-		//			win->_getKeyboard().record(event);
+        wyn_kb_record(&w->keyboard, WinKeyMap(wParam), Wyn_KeyPressed);
 		break;
-
 	case WM_KEYUP:
-		//			event.key = (Key)wParam;
-		//			event.eventType = NWIN_KeyReleased;
-		//			win->_getKeyboard().record(event);
+        wyn_kb_record(&w->keyboard, WinKeyMap(wParam), Wyn_OnKeyRelease);
 		break;
-
-	case WM_LBUTTONDOWN:
-		//			event.key = NWIN_KEY_LBUTTON;
-		//			event.eventType = NWIN_KeyPressed;
-		//			win->_getKeyboard().record(event);
+    case WM_LBUTTONDOWN:
+        wyn_kb_record(&w->keyboard, Wyn_Key_LMouse, Wyn_KeyPressed);
 		break;
-
 	case WM_LBUTTONUP:
-		//			event.key = NWIN_KEY_LBUTTON;
-		//			event.eventType = NWIN_KeyReleased;
-		//			win->_getKeyboard().record(event);
+        wyn_kb_record(&w->keyboard, Wyn_Key_LMouse, Wyn_OnKeyRelease);
 		break;
-
 	case WM_RBUTTONDOWN:
-		//			event.key = NWIN_KEY_RBUTTON;
-		//			event.eventType = NWIN_KeyPressed;
-		//			win->_getKeyboard().record(event);
+        wyn_kb_record(&w->keyboard, Wyn_Key_RMouse, Wyn_KeyPressed);
 		break;
-
 	case WM_RBUTTONUP:
-		//			event.key = NWIN_KEY_RBUTTON;
-		//			event.eventType = NWIN_KeyReleased;
-		//			win->_getKeyboard().record(event);
+        wyn_kb_record(&w->keyboard, Wyn_Key_RMouse, Wyn_OnKeyRelease);
 		break;
-		//-------------------
-
 	case WM_CREATE: {
 		RECT rcClient;
 		GetWindowRect(hwnd, &rcClient);
@@ -65,18 +126,21 @@ LRESULT CALLBACK def_win_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		PAINTSTRUCT ps;
 		HDC			hdc = BeginPaint(hwnd, &ps);
 		EndPaint(hwnd, &ps);
-		//			if (win != nullptr)
-		//				ReleaseDC((HWND)win->_getHandle(), hdc);
+		if (w->handle)
+		    ReleaseDC((HWND)data->hdc, hdc);
 		return 0;
 	}
 	case WM_SIZE: {
-		//			if (win == nullptr) return 0;
+        wyn_vec2 s;
+        s.x = LOWORD(lParam);
+        s.y = HIWORD(lParam);
+        win_call(w->_callbacks[WYN_RESIZE_CBK_IDX], wyn_rz_callback_proc, w, &s, w->_callbakcs_usr_data[WYN_RESIZE_CBK_IDX]);
 		//			NWIN_CALL_CALL_BACK(win->resizeCallback, (winHandle)hwnd, {LOWORD(lParam), HIWORD(lParam)});
-		//  		NWIN_CALL_CALL_BACK(win->drawCallback, (winHandle)hwnd);
 		return 0;
 	};
 	case WM_DESTROY: {
-		//			Window::stShouldNotUpdate(hwnd);
+        w->state.should_close = 1;
+        w->state.valid = 0;
 		PostQuitMessage(0);
 		return 0;
 	}
@@ -84,16 +148,9 @@ LRESULT CALLBACK def_win_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-typedef struct {
-	HINSTANCE inst;
-	MSG		  msg;
-	HDC		  hdc;
-	DWORD	  stl;
-} wyn_win32_data;
-
 int wyn_win32_create(wyndow* w, wyn_crt_info* crt_info) {
 	static char		n[16] = {'w', 'y', 'n', 1, 0};
-	static WNDCLASS wc{};
+	static WNDCLASS wc = {0};
 	++n[3];
 	HINSTANCE module;
 	RECT	  win_rect;
@@ -111,24 +168,44 @@ int wyn_win32_create(wyndow* w, wyn_crt_info* crt_info) {
 	Word stl	= 0x00000000L | 0x00C00000L | 0x00080000L | 0x00040000L | 0x00020000L | 0x00010000L;
 	handle		= CreateWindowEx(ex_stl, n, (const char*)crt_info->desc, stl, crt_info->rect.pos.x, crt_info->rect.pos.y,
 								 crt_info->rect.size.x, crt_info->rect.size.y, 0, 0, module, 0);
-	w->handle	= handle;
+	w->handle	= (uint64_t)handle;
 	if(!handle)
 		return 1;
 
 	wyn_win32_data* dat = wyn_alloc(wyn_win32_data);
 	dat->stl			= stl;
 	dat->hdc			= GetDC((HWND)handle);
-	dat->msg			= {};
 	w->extra			= dat;
 	ShowWindow((HWND)handle, SW_SHOWDEFAULT);
+    for (int i = 0; i < 256; ++i) {
+        if (lkupHwnd[i]) continue;
+        lkupHwnd[i] = (HWND)handle;
+        lkupWin[i]  = w;
+        break;
+    }
 	return 0;
 }
 
 int wyn_win32_destroy(wyndow* w) {
 	int res = DestroyWindow((HWND)w->handle);
+    for (int i = 0; i < 256; ++i) {
+        if (lkupHwnd[i] != (HWND)w->handle) continue;
+        lkupHwnd[i] = 0;
+        lkupWin[i]  = 0;
+        break;
+    }
+    if (lastWyn == w) {
+        lastWyn = 0;
+        lastHWND = 0;
+    }
 	wyn_free(wyn_win32_data, w->extra);
 	return res;
 }
+
+int wyn_win32_show(wyndow* w, boolean flag) {
+	return ShowWindow((HWND)w->handle, flag ? SW_SHOWDEFAULT : SW_HIDE);
+}
+
 #endif
 
 #ifdef PLTFRM_LINUX
@@ -266,28 +343,6 @@ int wyn_linux_create(wyndow* w, wyn_crt_info* crt_inf) {
 	return 0;
 }
 
-int wyn_linux_kb_record(wyn_kboard* kb, KeySym c, int event) {
-	int* v = 0;
-	if(c > 511 || c < 0)
-		return 1;
-	v = &kb->events[c];
-	if(event & Wyn_OnKeyRelease) {
-		*v &= ~Wyn_OnKeyPressLock;
-		*v &= ~Wyn_KeyPressed;
-		*v |= Wyn_OnKeyRelease;
-	}
-	if(event & Wyn_KeyPressed) {
-		*v |= Wyn_KeyPressed;
-		if(!(*v & Wyn_OnKeyPressLock))
-			*v |= Wyn_OnKeyPress;
-		*v |= Wyn_OnKeyPressLock;
-	}
-	*v = *v | (event & Wyn_LastUpdate);
-	kb->update_idx++;
-	kb->update_list[kb->update_idx] = c;
-	return 0;
-}
-
 unsigned long wyn_linux_get_handle(wyndow* w) {
    return w->handle;
 }
@@ -379,22 +434,22 @@ int wyn_linux_update(wyndow* w) {
             }
             case KeyPress: {
                 KeySym k = XLookupKeysym(&event.xkey, 0);
-                wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_KeyPressed);
+                wyn_kb_record(&w->keyboard, X11KeyMap(k), Wyn_KeyPressed);
                 break;
             }
             case KeyRelease: {
                 KeySym k = XLookupKeysym(&event.xkey, 0);
-                wyn_linux_kb_record(&w->keyboard, X11KeyMap(k), Wyn_OnKeyRelease);
+                wyn_kb_record(&w->keyboard, X11KeyMap(k), Wyn_OnKeyRelease);
                 break;
             }
             case ButtonPress: {
                 int m = X11MouseMap(event.xbutton.button);
-                wyn_linux_kb_record(&w->keyboard, m, Wyn_KeyPressed);
+                wyn_kb_record(&w->keyboard, m, Wyn_KeyPressed);
                 break;
             }
             case ButtonRelease: {
                 int m = X11MouseMap(event.xbutton.button);
-                wyn_linux_kb_record(&w->keyboard, m, Wyn_OnKeyRelease);
+                wyn_kb_record(&w->keyboard, m, Wyn_OnKeyRelease);
                 break;
             }
             default:
@@ -497,8 +552,8 @@ boolean wyn_linux_get_mouse_pos(wyndow* w, wyn_vec2* pos) {
 
 #ifdef PLTFRM_WIN32
 int (*wyn_create)(wyndow*, wyn_crt_info*)	 = wyn_win32_create;
-int (*wyn_destroy)(wyndow* w, wyn_crt_info*) = wyn_win32_destroy;
-int (*wyn_show)(wyndow*, boolean)				 = wyn_win32_show;
+int (*wyn_destroy)(wyndow* w)                = wyn_win32_destroy;
+int (*wyn_show)(wyndow*, boolean)	         = wyn_win32_show;
 #endif
 #ifdef PLTFRM_LINUX
 int (*wyn_create)(wyndow*, wyn_crt_info*)						  = wyn_linux_create;

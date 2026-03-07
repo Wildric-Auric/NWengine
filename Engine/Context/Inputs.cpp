@@ -33,6 +33,8 @@ int MapKey(int key) {
         mkc(NWInputKey_Ret,        Wyn_Key_Ret);
         mkc(NWInputKey_Del,        Wyn_Key_Del);
         mkc(NWInputKey_Esc,        Wyn_Key_Esc);
+        mkc(NWInputKey_LCtrl,      Wyn_Key_LCtrl);
+        mkc(NWInputKey_RCtrl,      Wyn_Key_RCtrl);
         default: return key;
     }
 #else
@@ -49,6 +51,8 @@ int MapKey(int key) {
         mkc(NWInputKey_Ret,        NWin::NWIN_KEY_RETURN);
         mkc(NWInputKey_Del,        NWin::NWIN_KEY_DELETE);
         mkc(NWInputKey_Esc,        NWin::NWIN_KEY_ESCAPE);
+        mkc(NWInputKey_LCtrl,      NWin::NWIN_KEY_CONTROL);
+        mkc(NWInputKey_RCtrl,      NWin::NWIN_KEY_RCONTROL);
         default: return key;
     }
 #endif
@@ -61,7 +65,7 @@ bool Inputs::GetInputKeyPressed(keyN key) {
     return wyn_key_pressed(w, MapKey(key));
 #else
 	NWin::Window* window = (NWin::Window*)Context::window;
-	return window->_getKeyboard().isKeyPressed((NWin::Key)key);
+	return window->_getKeyboard().isKeyPressed((NWin::Key)MapKey(key));
 #endif
 }
 
@@ -71,7 +75,7 @@ bool Inputs::GetInputOnKeyRelease(keyN key) {
     return wyn_on_key_release(w, MapKey(key));
 #else
 	NWin::Window* window = (NWin::Window*)Context::window;
-	return window->_getKeyboard().onKeyRelease((NWin::Key)key);
+	return window->_getKeyboard().onKeyRelease((NWin::Key)MapKey(key));
 #endif
 }
 
@@ -81,7 +85,7 @@ bool Inputs::GetInputOnKeyPress(keyN key) {
     return wyn_on_key_press(w, MapKey(key));
 #else
 	NWin::Window* window = (NWin::Window*)Context::window;
-	return window->_getKeyboard().onKeyPress((NWin::Key)key);
+	return window->_getKeyboard().onKeyPress((NWin::Key)MapKey(key));
 #endif
 }
 
@@ -112,6 +116,7 @@ void Inputs::Process(void* window0) {
     winSize = {(float)s.x, (float)s.y};
 #else
 	NWin::Vec2 pos;
+    NWin::Window* window = (NWin::Window*)Context::window;
 	window->getMousePosition(pos);
 	Context::GetWinDrawAreaSize(&winSize);
 	Inputs::_mousePos	= fVec2(pos.x, pos.y);

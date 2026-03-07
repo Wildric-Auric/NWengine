@@ -1,6 +1,6 @@
 #include "ScriptingComp.h"
 
-#ifdef __WIN32__
+#ifdef _WIN32
 DynamicScript::DynamicScript(GameObject* obj) { attachedObject = obj; }
 
 void DynamicScript::Load(const char* path) {

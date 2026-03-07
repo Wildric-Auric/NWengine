@@ -21,6 +21,8 @@ enum NWInputKey_ {
     NWInputKey_Ret        = 1010,
     NWInputKey_Del        = 1011,
     NWInputKey_Esc        = 1012,
+    NWInputKey_LCtrl      = 1013,
+    NWInputKey_RCtrl      = 1014,
 };
 
 enum InputKeyEvent {

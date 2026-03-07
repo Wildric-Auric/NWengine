@@ -1,4 +1,4 @@
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #include "window.h"
 
@@ -24,7 +24,7 @@ typedef enum {
 
 namespace NWin {
 
-Rect defaultWindowMetrics = {100, 100, 480, 360};
+Rect defaultWindowMetrics = {{100, 100}, {480, 360}};
 
 uint64_t							  Window::_incID = 1;
 std::unordered_map<winHandle, Window> Window::_windowsMap;

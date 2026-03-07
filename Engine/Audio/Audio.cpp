@@ -41,8 +41,8 @@ void Sound::Clean() {
 		return;
 	SoundIdentifier id = GetIDWithAsset<Sound*, SoundIdentifier>(this);
 	this->Stop();
-	NW_AL_CALL(AudioLib::delSrc(_source));
-	NW_AL_CALL(AudioLib::delBuff(_buffID));
+	NW_AL_CALL_VOID(AudioLib::delSrc(_source));
+	NW_AL_CALL_VOID(AudioLib::delBuff(_buffID));
 	EraseRes<Sound>(id);
 }
 

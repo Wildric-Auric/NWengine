@@ -4,7 +4,7 @@
 #include <cinttypes>
 #include <unordered_map>
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 namespace NWin {
 
@@ -133,4 +133,4 @@ class Window {
 };
 } // namespace NWin
 
-#endif //__WIN32__
+#endif

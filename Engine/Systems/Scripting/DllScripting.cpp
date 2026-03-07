@@ -1,5 +1,5 @@
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #include "DllScripting.h"
 #include "Utilities.h"
@@ -61,4 +61,4 @@ bool DllScripting::Init() { return GetVcVarsEnv(vcVarsEnv); }
 
 void DllScripting::Destroy() {}
 
-#endif //__WIN32__
+#endif

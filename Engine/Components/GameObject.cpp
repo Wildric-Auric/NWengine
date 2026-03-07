@@ -55,7 +55,7 @@ GameComponent* GameObject::AddComponent(const std::string& type) {
 	ADD_COMPONENT(Collider, type);
 	ADD_COMPONENT(CircleCollider, type);
 	ADD_COMPONENT(Text, type);
-#ifdef __WIN32__
+#ifdef _WIN32
 	ADD_COMPONENT(DynamicScript, type);
 #endif
 	ADD_COMPONENT(BatchExtra, type);

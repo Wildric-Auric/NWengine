@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 
-#ifdef __WIN32__
+#ifdef _WIN32
 #include <commapi.h>
 #include <xaudio2.h>
 #include <xaudio2fx.h>
@@ -251,4 +251,4 @@ int loadWav(const char* path, DataBuffer outData) {
 };
 }; // namespace AudioLib
 
-#endif //__WIN32__
+#endif

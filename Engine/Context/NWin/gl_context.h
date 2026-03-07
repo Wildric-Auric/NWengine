@@ -2,7 +2,7 @@
 #include "window.h"
 
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 namespace NWin {
 
@@ -43,4 +43,4 @@ class GlContext {
 
 }; // namespace NWin
 
-#endif //__WIN32__
+#endif

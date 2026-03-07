@@ -94,9 +94,9 @@ typedef struct {
 typedef void (*wyn_rz_callback_proc)(wyndow* w, wyn_vec2* new_size, void* usr_data);
 
 #ifdef PLTFRM_WIN32
-typedef enum { DWMWCP_DEFAULT = 0, DWMWCP_DONOTROUND = 1, DWMWCP_ROUND = 2, DWMWCP_ROUNDSMALL = 3 } DWM_WINDOW_CORNER_PREFERENCE;
+typedef enum { WYN_DWMWCP_DEFAULT = 0, WYN_DWMWCP_DONOTROUND = 1, WYN_DWMWCP_ROUND = 2, WYN_DWMWCP_ROUNDSMALL = 3 } WYN_DWM_WINDOW_CORNER_PREFERENCE;
 int wyn_win32_create(wyndow*, wyn_crt_info*);
-int wyn_win32_destroy();
+int wyn_win32_destroy(wyndow*);
 #endif
 
 #ifdef PLTFRM_LINUX

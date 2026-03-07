@@ -196,7 +196,7 @@ void PrimManager::_TestEdges() {
 
 void PrimManager::MakeLineOnClick() {
 	constexpr float tol		 = 0.5;
-	bool			keyclick = Inputs::GetInputKeyPressed(NWInputKey_LShift);
+	bool			keyclick = Inputs::GetInputKeyPressed(NWInputKey_LCtrl);
 	bool			click	 = Inputs::GetInputOnKeyRelease(NWInputKey_LMouse) && keyclick;
 	bool			rclick	 = Inputs::GetInputKeyPressed(NWInputKey_RMouse)  && keyclick;
 	fVec2			cur		 = Inputs::GetMousePosition();

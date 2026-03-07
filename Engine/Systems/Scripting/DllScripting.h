@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 typedef std::string DllScriptIdentifier;
 
@@ -29,4 +29,4 @@ class DllScripting {
 	static void				 Destroy();
 };
 
-#endif //__WIN32__
+#endif

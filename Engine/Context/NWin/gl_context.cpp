@@ -1,4 +1,4 @@
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #include "gl_context.h"
 #include <Windows.h>
