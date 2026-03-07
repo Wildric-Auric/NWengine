@@ -16,6 +16,6 @@
 #include "triangulation/TriangulationPrj.h"
 
 int main() {
-    TriangulationPrj::Run();
+    Sandbox::Run();
 	return 0;
 }

@@ -57,7 +57,11 @@ static void Render() {
 	fVec2 winSize;
 	fVec2 camSize = Camera::GetActiveCamera()->GetSize();
 	Context::GetWinDrawAreaSize(&winSize);
-	tm._fxio.GetOutput()->SetStretch(winSize / camSize);
+    winSize = winSize / camSize;
+    float m = Min(winSize.x, winSize.y);
+    winSize.x = m;
+    winSize.y = m;
+	tm._fxio.GetOutput()->SetStretch(winSize);
 
 	bloomTst.Capture();
 	cc.Capture();
