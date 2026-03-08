@@ -62,14 +62,14 @@ struct FontInfo {
 /**
  * @brief Class representing a font asset.
  */
-class Font : public Asset {
+class NWFont : public Asset {
   public:
 	NW_FT_Face						_face = nullptr; /**< The FreeType face. */
 	std::unordered_map<char, Glyph> charactersMap;	 /**< The map of characters to glyphs. */
 	uint32							_nativeSize = 64;
 	FontInfo						_inf;
 
-	Font() = default;
+	NWFont() = default;
 
 	/**
 	 * @brief Loads a font from a file.
@@ -97,7 +97,7 @@ class Font : public Asset {
 	 */
 	static void Destroy();
 
-	NW_DECL_RES_LIST(FontIdentifier, Font);
+	NW_DECL_RES_LIST(FontIdentifier, NWFont);
 };
 
 /**

@@ -151,7 +151,7 @@ class Text : public GameComponent {
 	/**
 	 * @brief font is a pointer to the font used for rendering the text.
 	 */
-	Font* font = nullptr;
+	NWFont* font = nullptr;
 
 	TextConstraint constraints;
 	/**

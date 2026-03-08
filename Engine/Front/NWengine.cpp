@@ -85,7 +85,7 @@ NW_PREFIX int NWengineInit() {
 		return -1;
 	}
 	// init Text System
-	if(!Font::Init())
+	if(!NWFont::Init())
 		return -1;
 	// Context settings
 	Context::EnableBlend();
@@ -137,7 +137,7 @@ NW_PREFIX void NWengineShutdown() {
 	Primitives::Destroy();
 	Batch::Destroy();
 	Context::Destroy();
-	Font::Destroy();
+	NWFont::Destroy();
 	Sound::Destroy();
 }
 

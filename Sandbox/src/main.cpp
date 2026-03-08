@@ -13,9 +13,10 @@
 #include "templates/BatchTst.h"
 #include "templates/ColliderTst.h"
 #include "templates/GeometryTst.h"
+#include "templates/Platformer.h"
 #include "triangulation/TriangulationPrj.h"
 
 int main() {
-    Sandbox::Run();
+    Platformer::Run();
 	return 0;
 }

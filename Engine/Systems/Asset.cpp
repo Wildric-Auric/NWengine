@@ -30,7 +30,7 @@ void Asset::Destroy() {
 #ifdef _WIN32
 	CLN_RES(DllScript);
 #endif
-	CLN_RES(Font);
+	CLN_RES(NWFont);
 	CLN_RES(Shader);
 	CLN_RES(ComputeShader);
 }

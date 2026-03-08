@@ -246,9 +246,9 @@ void Text::SetFont(const FontIdentifier& id) {
 		return;
 	if(this->font != nullptr)
 		this->font->Clean();
-	Font   loader;
+	NWFont   loader;
 	uint32 n = (id.nativeSize == 0) ? 64 : id.nativeSize;
-	font	 = (Font*)loader.LoadFromFileOrGetFromCache((void*)&id, id.path.c_str(), (void*)&n);
+	font	 = (NWFont*)loader.LoadFromFileOrGetFromCache((void*)&id, id.path.c_str(), (void*)&n);
 }
 
 void Text::SetFont(const FontIdentifier& id, Shader* shader) {

@@ -2,26 +2,26 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-NW_FT_Lib Font::lib;
+NW_FT_Lib NWFont::lib;
 
 
-bool Font::Init() { return !FT_Init_FreeType((FT_Library*)(&Font::lib)); }
+bool NWFont::Init() { return !FT_Init_FreeType((FT_Library*)(&NWFont::lib)); }
 
-void Font::Destroy() { FT_Done_FreeType((FT_Library)Font::lib); }
+void NWFont::Destroy() { FT_Done_FreeType((FT_Library)NWFont::lib); }
 
-NW_IMPL_RES_LIST(FontIdentifier, Font)
+NW_IMPL_RES_LIST(FontIdentifier, NWFont)
 
-Asset* Font::GetFromCache(void* identifier) {
-	auto iter = Font::resList.find(*(FontIdentifier*)identifier);
-	if(iter == Font::resList.end()) {
+Asset* NWFont::GetFromCache(void* identifier) {
+	auto iter = NWFont::resList.find(*(FontIdentifier*)identifier);
+	if(iter == NWFont::resList.end()) {
 		return nullptr;
 	}
 	return (Asset*)&iter->second;
 }
 
-Asset* Font::LoadFromFile(const char* path, void* data) {
+Asset* NWFont::LoadFromFile(const char* path, void* data) {
 	FT_Face tFace;
-	if(FT_New_Face((FT_Library)Font::lib, path, 0, &tFace)) {
+	if(FT_New_Face((FT_Library)NWFont::lib, path, 0, &tFace)) {
 		NW_LOG_ERROR("Error::Failed to load font at path: ");
 		NW_LOG_ERROR(path);
 		NW_LOG_ERROR("\n");
@@ -30,9 +30,9 @@ Asset* Font::LoadFromFile(const char* path, void* data) {
 	return LoadFromBuffer(tFace, data);
 }
 
-Asset* Font::LoadFromBuffer(void* buffer, void* data) {
+Asset* NWFont::LoadFromBuffer(void* buffer, void* data) {
 	FontIdentifier* fid	 = (FontIdentifier*)data;
-	Font&			font = resList.emplace(*fid, Font()).first->second;
+	NWFont&			font = resList.emplace(*fid, NWFont()).first->second;
 	_nativeSize			 = (fid->nativeSize == 0) ? 64 : fid->nativeSize;
 
 	font._face = (FT_Face)buffer;
@@ -95,7 +95,7 @@ void Glyph::GetSize(fVec2* s) {
 
 void Glyph::Delete() { this->texture.Clean(); }
 
-void Font::Clean() {
+void NWFont::Clean() {
 	--_usageCounter;
 	if(_usageCounter > 0)
 		return;
@@ -103,5 +103,5 @@ void Font::Clean() {
 		iter->second.Delete();
 	}
 	FT_Done_Face((FT_Face)_face);
-	EraseRes<Font>(GetIDWithAsset<Font*, FontIdentifier>(this));
+	EraseRes<NWFont>(GetIDWithAsset<NWFont*, FontIdentifier>(this));
 }

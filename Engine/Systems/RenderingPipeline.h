@@ -63,7 +63,7 @@ class Bloom : public Effect {
 	Shader* _GetThresholdSh();
 };
 
-enum class TonemapperType { None = 0, Reinhard = 1, Uncharted = 2, ACESNrkz = 3 };
+enum class TonemapperType { Disable = 0, Reinhard = 1, Uncharted = 2, ACESNrkz = 3 };
 
 struct TonemapperSpec {
 	TonemapperType type		  = TonemapperType::Uncharted;
