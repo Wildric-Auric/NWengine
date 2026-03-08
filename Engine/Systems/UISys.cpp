@@ -47,7 +47,7 @@ void UISys::Update() {
 	curPos			  = Inputs::GetMousePosition();
 	fVec2 scr;
 	Context::GetWinDrawAreaSize(&scr);
-	curPos				 = NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
+	curPos				 = !Camera::ActiveCamera ? curPos : NWCoordSys::WorldToViewportNonNormalized((NWCoordSys::ScreenNonNormalizedToWorld(curPos)));
 	clickEvent			 = Inputs::GetInputOnKeyPress(clickKey);
 	clickContinuousEvent = Inputs::GetInputKeyPressed(clickKey);
 	//-----------Set focus and hover logic-----------
