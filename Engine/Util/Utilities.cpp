@@ -523,8 +523,10 @@ int GetFileScanf(char* val, int maxSize, bool save) {
     return ret.size(); 
 }
 
+static const char* saveAsKDE = "kdialog --title \"Save as\" --getsavefilename ./ \"";
+static const char* selectKDE = "kdialog --title \"Select a file\" --getopenfilename ./ \"";
 int KDEDialog(char* cmd, char* filters[], int filterCount, bool save) {
-    static const char* baseSaveKDE = save ? "kdialog --title \"Save as\" --getsavefilename ./ \"" : "kdialog --title \"Select a file\" --getopenfilename ./ \"";
+    const char* baseSaveKDE = save ? saveAsKDE : selectKDE;
     int i,j,p;
     p = 0;
     while (baseSaveKDE[p]) {
@@ -558,6 +560,7 @@ int PipeExAndRead(char* buff, char* cmd) {
             break;
         i++;
     }
+    while(i > 0 && (buff[i-1] == ' ' || buff[i-1] == '\n' || buff[i-1] == '\t')) {--i;};
     buff[i] = 0;
     pclose(fd);
     return i;
