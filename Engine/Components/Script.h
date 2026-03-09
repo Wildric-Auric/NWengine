@@ -14,8 +14,8 @@
  */
 #define SCRIPT_CONSTR(scr)                                                                                                       \
 	GameObject*		   goc;                                                                                                      \
-	std::string		   __nwname = #scr;                                                                                          \
-	std::string		   GetName() { return __nwname; };                                                                           \
+	std::string		     __nwname = #scr;                                                                                          \
+	const std::string& GetName() override { return __nwname; };                                                                           \
 	static Scriptable* GetScript(GameObject* goc);                                                                               \
 	scr(GameObject* goc) { this->goc = goc; };
 
@@ -61,7 +61,7 @@ class Scriptable {
 	 * @brief Gets the name of the script.
 	 * @return The name of the script.
 	 */
-	virtual std::string GetName() { return __nwname; };
+	virtual const std::string& GetName() { return __nwname; };
 
 	void* nws = nullptr; /**< Additional script data. */
 };
