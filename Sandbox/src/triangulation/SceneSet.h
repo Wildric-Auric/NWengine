@@ -1,10 +1,11 @@
 #pragma once
 #include "Components.h"
 
-class SceneSet : public Script {
+class SceneSet : public Script{
   public:
-	SCRIPT_CONSTR(SceneSet)
-
+    GameObject* goc = 0;
+	std::string		     __nwname = "SceneSet";                                                                                          \
+	SceneSet(GameObject* goc) { this->goc = goc; };
 	void Start() override;
 	void Update() override;
 };

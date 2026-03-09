@@ -50,11 +50,7 @@ class Spawner : public Scriptable {
 
 class Leaf : public Scriptable {
   public:
-	GameObject*		   goc;
-	std::string		   __nwname = "Leaf";
-	std::string		   GetName() { return __nwname; };
-	static Scriptable* GetScript(GameObject* goc);
-	Leaf(GameObject* goc) { this->goc = goc; };
+    SCRIPT_CONSTR(Leaf);
 
 	NWin::timeMl _launchTime = 0;
 	Spawner*	 spawner	 = nullptr;

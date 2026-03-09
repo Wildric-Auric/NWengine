@@ -1,5 +1,5 @@
 
-//#include "../platformer/"
+#include "../platformer/PlayerController.h"
 #include "NWengine.h"
 #include "RenderingPipeline.h"
 #include "Scene.h"
@@ -28,10 +28,15 @@ static void Init() {
     Sprite& sp = *ply.Get<Sprite>();
     Transform& g = *gnd.Get<Transform>(); 
     Transform& p = *ply.Get<Transform>();
+    ply.Add<Script>().SetScript<PlayerController>();
+    ply.Get<Collider>()->SetEdgesSprite();
+    gnd.Get<Collider>()->SetEdgesSprite();
 
     sg.SetSize({720,32});
     sp.SetSize({32,64});
     g.SetPosition({0, -64});
+
+    s.Start();
 }
 
 static void Render() {
