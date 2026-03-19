@@ -54,7 +54,7 @@ bool DllScripting::CompileDll(const std::vector<std::string>& srcFile, const cha
 	}
 	cmd += "/link /OUT:" + std::string(dllPath);
 	cmd += " >> NWDllOut.log\" & del /Q *.obj *.exp *.lib";
-	return Exec(cmd, vcVarsEnv.data());
+	return Exec(cmd.c_str(), vcVarsEnv.data());
 }
 
 bool DllScripting::Init() { return GetVcVarsEnv(vcVarsEnv); }
