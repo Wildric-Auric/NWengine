@@ -268,9 +268,11 @@ int wyn_linux_show(wyndow* w, boolean flag) {
 	lnx_wyn_data* lnx = get_lnx(w);
 	if(flag) {
 		XMapWindow(lnx->dsp, w->handle);
+        XFlush(lnx->dsp);
 		return 0;
 	}
 	XUnmapWindow(lnx->dsp, w->handle);
+    XFlush(lnx->dsp);
 	return 0;
 }
 
@@ -506,7 +508,7 @@ int wyn_linux_glctx_create(wyndow* w, wyn_glctx* glc, wyn_glctx_crt_info* crt_in
 void wyn_linux_glctx_destroy(wyn_glctx* glc) {
 	lnx_wyn_data* lnx = get_lnx(glc->owner);
     if (glc->owner->state.valid) {
-	    glXMakeContextCurrent(lnx->dsp, lnx->glx_win, lnx->glx_win, 0);
+	    glXMakeContextCurrent(lnx->dsp, 0, 0, 0);
 	    glXDestroyContext(lnx->dsp, (GLXContext)glc->handle);
     }
 	glc->handle = 0;

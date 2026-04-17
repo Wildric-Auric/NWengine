@@ -14,6 +14,7 @@ struct NWFile {
 
 bool GetNextFile(NWFile* file, const char* root);
 bool GetFirstFile(NWFile* file, const char* path);
+bool DestroyFile(NWFile* file);
 
 bool GetEnvVar(const char*, std::string*);
 
@@ -101,10 +102,10 @@ std::string ToSingleBackSlash(const std::string& dir);
 std::string ToDoubleBackSlash(const std::string& dir);
 std::string GetFileName(const std::string& path, std::string* bFilename, std::string* bExtension, std::string* bRoot, char separator);
 bool CopyDirectory(const std::string& dest, const std::string& src);
-bool MakeDir(const std::string& path);
-bool MakeFile(const std::string& path);
-bool FileExists(const std::string& dir);
-bool Exec(const std::string& cmd, char* env = 0);
+bool MakeDir(const char*);
+bool MakeFile(const char*);
+bool FileExists(const char*, bool* isDir = 0);
+bool Exec(const char* cmd, char* env = 0);
 bool GetVcVarsEnv(std::vector<char>&);
-bool FileDelete(const std::string& name);
-bool FileMove(const std::string& dest, const std::string& source, bool failIfExists = false);
+bool FileDelete(const char* name);
+bool FileMove(const char* dest, const char* source, bool failIfExists = false);

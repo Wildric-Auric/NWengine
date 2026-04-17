@@ -174,6 +174,14 @@ bool GetNextFile(NWFile* file, const char*) {
     return ret;
 }
 
+bool DestroyFile(NWFile* file) {
+    if ((long long)file->handle <= 0) 
+        return 0;
+    FindClose(file->handle);
+    file->handle = 0;
+    return 1;
+}
+
 bool GetFirstFile(NWFile* file, const char* path) {
     WIN32_FIND_DATAA fd; 
 	std::string	path2 = path + std::string("\\*");
@@ -283,10 +291,10 @@ bool CopyDirectory(const std::string& dest, const std::string& src) {
 	return !res;
 }
 
-bool MakeDir(const std::string& path) { return CreateDirectory(path.c_str(), NULL); }
+bool MakeDir(const char* path) { return CreateDirectory(path, NULL); }
 
-bool MakeFile(const std::string& path) {
-	HANDLE h = CreateFileA(path.c_str(), FILE_READ_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, NULL);
+bool MakeFile(const char* path) {
+	HANDLE h = CreateFileA(path, FILE_READ_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, NULL);
 	if(h == INVALID_HANDLE_VALUE)
 		return 0;
 	CloseHandle(h);
@@ -297,20 +305,22 @@ bool FileCopy(const std::string& dest, const std::string& src, bool failIfExists
 	return CopyFile(src.c_str(), dest.c_str(), failIfExists);
 }
 
-bool FileExists(const std::string& dir) {
-	DWORD attrib = GetFileAttributes(dir.c_str());
-	if((attrib != INVALID_FILE_ATTRIBUTES) && !(attrib & FILE_ATTRIBUTE_DIRECTORY))
-		return 1;
-	return 0;
+bool FileExists(const char* path, bool* isDir) {
+	DWORD attrib = GetFileAttributes(path);
+	if(attrib == INVALID_FILE_ATTRIBUTES) 
+        return 0;
+    if (isDir)
+        *isDir = attrib & FILE_ATTRIBUTE_DIRECTORY;
+	return 1;
 }
 
-bool Exec(const std::string& cmd, char* env) {
+bool Exec(const char* cmd, char* env) {
 	STARTUPINFO			sInfo;
 	PROCESS_INFORMATION pInfo;
 	ZeroMemory(&sInfo, sizeof(sInfo));
 	ZeroMemory(&pInfo, sizeof(pInfo));
 
-	if(!CreateProcess(NULL, (LPSTR)cmd.c_str(), NULL, NULL, FALSE, 0, env, NULL, &sInfo, &pInfo)) {
+	if(!CreateProcess(NULL, (LPSTR)cmd, NULL, NULL, FALSE, 0, env, NULL, &sInfo, &pInfo)) {
 		return 0;
 	}
 
@@ -378,14 +388,14 @@ bool GetVcVarsEnv(std::vector<char>& env) {
 	return 1;
 }
 
-bool FileDelete(const std::string& name) { return DeleteFile(name.c_str()); };
+bool FileDelete(const char* name) { return DeleteFile(name); };
 
-bool FileMove(const std::string& dest, const std::string& source, bool failIfExists) {
+bool FileMove(const char* dest, const char* source, bool failIfExists) {
 	if(!FileExists(source))
 		return 0;
 	if(!failIfExists)
 		FileDelete(dest);
-	return MoveFile(source.c_str(), dest.c_str());
+	return MoveFile(source, dest);
 };
 
 #else
@@ -453,6 +463,14 @@ bool GetNextFile(NWFile* file, const char* root) {
     return 1;
 }
 
+bool DestroyFile(NWFile* file) {
+    if ((long long)file->handle <= 0) 
+        return 0;
+    closedir((DIR*)file->handle);
+    file->handle = 0;
+    return 1;
+}
+
 
 void DllHandle::Load(const char* filename) {
     h = dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
@@ -493,44 +511,61 @@ std::string GetExePath() {
     return ret;
 }
 
-bool FileExists(const std::string& path) {
-    return !access(path.c_str(), F_OK);
-}
-
-bool FileMove(const std::string& dest, const std::string& source, bool failIfExists) {
-    if (failIfExists && FileExists(dest)) 
+bool FileExists(const char* path, bool* isDir) {
+    struct stat st;
+    int v = stat(path, &st);
+    if (v) 
         return 0;
-    return !rename(source.c_str(), dest.c_str());
+    if (isDir)
+        *isDir = st.st_mode & S_IFDIR;
+    return 1;
 }
 
-bool FileDelete(const std::string& name) {
-    return !remove(name.c_str());
+bool FileMove(const char* dst, const char* source, bool failIfExists) {
+    if (failIfExists && FileExists(dst))
+        return 0;
+    return !rename(source, dst);
 }
 
-bool Exec(const std::string& cmd, char* env) {
-    char name[64];
-    name[0] = 0;
-    return !execl("/bin/sh", "sh", "-c", cmd.c_str(), 0);
+bool FileDelete(const char* name) {
+    return !remove(name);
 }
 
-int GetFileScanf(char* val, int maxSize, bool save) {
-    val[0] = 0;
-    printf("-----xxxx-----\n%s", save ? "Save As(Path): " : "Select a file(Path): " );
-    fgets(val, maxSize, stdin);
-    printf("\n-----Input End-----\n");
-    std::string ret = std::string(val);
-    if (ret.size() && ret.back() == '\n') ret.pop_back();
-    return ret.size(); 
+bool MakeFile(const char* path) {
+    FILE* f = fopen(path, "w");
+    if (!f) 
+        return 0;
+    fclose(f);
+    return 1;
 }
 
-static const char* saveAsKDE = "kdialog --title \"Save as\" --getsavefilename ./ \"";
-static const char* selectKDE = "kdialog --title \"Select a file\" --getopenfilename ./ \"";
-int KDEDialog(char* cmd, char* filters[], int filterCount, bool save) {
-    const char* baseSaveKDE = save ? saveAsKDE : selectKDE;
+static int lrw = 0777;
+bool MakeDir(const char* path) {
+   return !mkdir(path, lrw);
+}
+
+static const char* saveAsKDE       = "kdialog --title \"Save as\" --getsavefilename ./ ";
+static const char* selectKDE       = "kdialog --title \"Select a file\" --getopenfilename ./ ";
+static const char* saveAsGNOME     = "zenity --title=\"Save as\" --file-selection --save --filename=\"./\" ";
+static const char* selectGNOME     = "zenity --title=\"Select a file\" --file-selection --filename=\"./\" ";
+static const char* fileFilterKDE   = "\"";
+static const char* fileFilterGNOME = "--file-filter=\"";
+
+
+int GenericDialog(char* cmd, char* filters[], int filterCount, bool save, const char* head, const char* filterHead) {
     int i,j,p;
     p = 0;
-    while (baseSaveKDE[p]) {
-        cmd[p] = baseSaveKDE[p];
+    while (head[p]) {
+        cmd[p] = head[p];
+        ++p;
+    }
+    if (!filterCount) {
+        cmd[p] = 0;
+        return p;
+    }
+    while (*filterHead) {
+        cmd[p] = *(filterHead);
+        ++filterHead;
         ++p;
     }
     for (i = 0; i < filterCount; ++i) {
@@ -545,7 +580,7 @@ int KDEDialog(char* cmd, char* filters[], int filterCount, bool save) {
     }
     cmd[p]   = '\"';
     cmd[p+1] = 0;
-    return p;
+    return p+1;
 }
 
 int PipeExAndRead(char* buff, char* cmd) {
@@ -566,6 +601,15 @@ int PipeExAndRead(char* buff, char* cmd) {
     return i;
 }
 
+int GetFileScanf(char* val, int maxSize, bool save) {        
+    val[0] = 0;                                              
+    printf("-----xxxx-----\n%s", save ? "Save As(Path): ": "Select a file(Path): " );                                   
+    fgets(val, maxSize, stdin);                              
+    printf("\n-----Input End-----\n");                       
+    std::string ret = std::string(val);                      
+    if (ret.size() && ret.back() == '\n') ret.pop_back();    
+    return ret.size();                                       
+}
 
 std::string LinuxDialog(char* exts[], int extsCount, bool save) {
     char* dsk = getenv("XDG_CURRENT_DESKTOP");
@@ -574,7 +618,12 @@ std::string LinuxDialog(char* exts[], int extsCount, bool save) {
     cmd[0]    = 0;
     path[0]   = 0;
     if (!strcmp("KDE", dsk)) {
-        KDEDialog(cmd, exts, extsCount, save);
+        const char* baseSaveKDE = save ? saveAsKDE : selectKDE;
+        GenericDialog(cmd, exts, extsCount, save, baseSaveKDE, fileFilterKDE);
+    }
+    if (!strcmp("GNOME", dsk)) {
+        const char* baseSaveGNOME = save ? saveAsGNOME: selectGNOME;
+        GenericDialog(cmd, exts, extsCount, save, baseSaveGNOME, fileFilterGNOME);
     }
     if (cmd[0] != 0) {
         PipeExAndRead(path, cmd);

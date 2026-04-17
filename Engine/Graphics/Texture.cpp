@@ -67,7 +67,9 @@ Asset* Texture::LoadFromFile(const char* path, TextureIdentifierPtr identifier) 
 	Image im;
 	im.alpha = ((TextureIdentifier*)identifier)->alpha;
 	im.LoadFromFile(path, nullptr);
-	return LoadFromBuffer((void*)&im, identifier);
+	Asset* ret = LoadFromBuffer((void*)&im, identifier);
+    im.Clean();
+    return ret;
 }
 
 Asset* Texture::LoadFromBuffer(void* buffer, void* data) {

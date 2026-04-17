@@ -8,6 +8,7 @@ BuildScripts/Hdrasm/obj
 
 .vscode
 BuildScripts/Hdrasm/hdrasm
+BuildScripts/hdrasm
 *.aps
 *.ico
 *.rc
