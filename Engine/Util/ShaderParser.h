@@ -45,6 +45,7 @@ class ShaderParser {
     bool                                 preProcDir;
 	ShaderType						     curType;
 	const char*						     cPtr;
+    const char*                          path;
 
 	bool macroNxt;
 	bool noWhiteSpace;
@@ -73,11 +74,13 @@ class ShaderParser {
 	bool PushToken();
 	void PopToken();
 	void Tokenize();
+    void PreprocessTokens();
 	void ProcessTokens();
     void FillShaderText();
 	void _Parse();
 	void Parse(const char* src);
 	void ParseFromPath(const char* path);
+	void ParseFromPathBasic(const char* path);
 	bool GetNext();
 	void Reset();
 	void AddCnst(const char* id, const char* value);

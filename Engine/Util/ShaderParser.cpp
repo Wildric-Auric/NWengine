@@ -1,4 +1,5 @@
 #include "ShaderParser.h"
+#include "Utilities.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -123,7 +124,7 @@ void General(void* ptr) {
 		p.curToken = "";
 	} else if(IsTokenNumEBegin(p.curToken) && (IsNum(p.c) || p.c == '+' || p.c == '-')) {
 		p.func = ExpNum;
-	} else if(IsSep(p.c) || IsOp(p.c)) {
+	} else if(IsSep(p.c) || IsOp(p.c) || p.c == '\"') {
 		p.PushToken();
 		p.curToken = p.c;
 		p.PushToken();
@@ -132,10 +133,8 @@ void General(void* ptr) {
 		p.curToken += p.c;
         p.PushToken();
         p.preProcDir = 1;
-		//p.func  = Preprocessor;
 		return;
-	}
-
+	} 
 	if(IsValidTokenChar(p.c))
 		p.curToken += p.c;
 }
@@ -172,6 +171,7 @@ void ShaderParser::Reset() {
     unknw         = "";
     preProcDir    =  0;
 	shaderVersion = "";
+    path          = 0;
     prgmaInfo.clear();  
     locs.clear();
 	tokens.clear();
@@ -325,8 +325,8 @@ void TokenGeneral(void* ptr) {
 		p.tokenFunc = TokenDirective;
         //++p.tokenIter;
 		//TokenDirective(ptr); 
-	} else if(*p.tokenIter == "uniform") {
-		//TokenUniform(ptr); NO REFLECTED UNIFORMS ANYMORE TODO::CHECK CORRECTNESS
+	} else if(*p.tokenIter == "r32f") {
+        *p.tokenIter = "rgba32f";
 	} else if(*p.tokenIter == "out" && p.curType == ShaderType::FRAG && p.scope == 0 && p.scope2 == 0) {
 		uint16_t						 loc	 = p.enabledAtts.empty() ? 0 : p.enabledAtts.back() + 1;
 		std::list<std::string>::iterator otherIt = p.tokenIter;
@@ -338,6 +338,36 @@ void TokenGeneral(void* ptr) {
 	}
 	p.scope += (*p.tokenIter == "{") - (*p.tokenIter == "}");
 	p.scope2 += (*p.tokenIter == "(") - (*p.tokenIter == ")");
+}
+
+void ShaderParser::PreprocessTokens() {
+    std::string s;
+    ShaderParser other;
+    for (auto it = tokens.begin(); it != tokens.end(); ) {
+        auto beg = it;
+        if (*it != "#")       {it++; continue;}
+        ++it;
+        if (*it != "include") {it++; continue;}
+        ++it;
+        if (*it != "\"")     {it++; continue;}
+        ++it;
+        s = "";
+        if (path) {
+            GetFileName(path, 0, 0, &s, '/');
+            s += '/';
+        }
+        while(*it != "\"" && *it != "#$") {
+            s += *it + " ";       
+            ++it;
+        }
+        if (s.back() == ' ') s.pop_back();
+        other.ParseFromPathBasic(s.c_str());
+        while (*it != "#$")
+            ++it;
+        auto it2 = tokens.erase(beg, ++it);
+        it = tokens.insert(it2, other.tokens.begin(), other.tokens.end());
+        std::advance(it, other.tokens.size());
+    }
 }
 
 void ShaderParser::ProcessTokens() {
@@ -357,8 +387,12 @@ void ShaderParser::ProcessTokens() {
 
 void ShaderParser::FillShaderText() {
     if (curType == ShaderType::NONE || locs[0].loc) {
-        printf("Shader must start with: pragma <type>, where type is either vertex, fragment or compute.");
-        return;
+        //we remove this comment for noow, the original behaviour was
+        //that we shader is invalid if no type directive is provided
+        //printf("Warning: Shader must start with \"#pragma <type>\", where type is either vertex, fragment or compute. Defaulted to compute shader.\n");
+        //fflush(stdout);
+        curType = ShaderType::COMPUTE;
+        locs.push_back({curType, &comp, 0}); 
     }
     bool skipPrg = 0;
     std::string* nextTok;
@@ -419,6 +453,9 @@ void ShaderParser::FillShaderText() {
         else if (*tokenIter == "#") {
             *curShaderTxt += "#";
         }
+        else if (*tokenIter == "\"") {
+            *curShaderTxt += "\"";
+        }
         else if (*tokenIter == ";" || *tokenIter == "}" || *tokenIter == "{") {
             if (curShaderTxt->size() && isSpace(curShaderTxt->back()))
 			    curShaderTxt->pop_back();
@@ -447,6 +484,7 @@ void ShaderParser::ClearCnsts() { constants.clear(); }
 
 void ShaderParser::_Parse() {
 	Tokenize();
+    PreprocessTokens();
 	ProcessTokens();
     FillShaderText();
 }
@@ -460,6 +498,26 @@ void ShaderParser::Parse(const char* src) {
 	_Parse();
 }
 
+
+void ShaderParser::ParseFromPathBasic(const char* path) {
+	if(path == 0)
+		return;
+	Reset();
+	std::fstream fs;
+	fs.open(path);
+	if(!fs.is_open()) {
+		std::cout << "Warning: File not found -> " << path << std::endl; // TODO::
+		fs.close();
+		return;
+	}
+    this->path = path;
+	getNext = GetNextFromPath;
+	file	= &fs;
+	Tokenize();
+    PreprocessTokens();
+	fs.close();
+}
+
 void ShaderParser::ParseFromPath(const char* path) {
 	if(path == 0)
 		return;
@@ -471,6 +529,7 @@ void ShaderParser::ParseFromPath(const char* path) {
 		fs.close();
 		return;
 	}
+    this->path = path;
 	getNext = GetNextFromPath;
 	file	= &fs;
 	_Parse();
