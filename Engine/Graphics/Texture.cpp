@@ -2,6 +2,10 @@
 #include "GL/glew.h"
 #include "Image.h"
 
+void Texture::SetFromCPU(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt, int compType) {
+	NW_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, type, _size.x, _size.y, 0, extFmt ? extFmt : info, compType, pixelBuffer));
+}
+
 void Texture::_GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt, int compType) {
     type = atype;
 	NW_GL_CALL(glGenTextures(1, &_glID)); 

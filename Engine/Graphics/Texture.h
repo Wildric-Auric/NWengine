@@ -148,6 +148,8 @@ class Texture : public Asset {
 
 	void BindImageTex(uint32 slot = 0, RWImage access = RWImage::NW_IM_RW);
 
+    void SetFromCPU(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt = 0, int compType = NW_GL_TYPE_UNSIGNED_BYTE);
+
 	void _GPUGen(uint8* pixelBuffer, TexChannelInfo info, TexType_Exp atype, int extFmt = 0, int compType = NW_GL_TYPE_UNSIGNED_BYTE);
 
 	void GenMipMap();

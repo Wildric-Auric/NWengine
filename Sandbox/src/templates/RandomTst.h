@@ -70,7 +70,7 @@ static void	   Init() {
 	   for(Wave* w : wc._data) {
 		   delete(ValueNoise*)w;
 	   }
-	   // im.SaveToFile("..\\noise.png");
+	   //im.SaveToFile("../noise.png");
 	   im.Clean();
 	   s.Start();
 	   printf("NW_VERSION: %s\n", NWengineGetVersionString());
